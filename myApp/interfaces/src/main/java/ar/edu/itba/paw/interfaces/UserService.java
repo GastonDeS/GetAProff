@@ -5,6 +5,15 @@ import ar.edu.itba.paw.models.User;
 import java.util.List;
 
 public interface UserService {
-    User findById(String id);
+    User findById(int id);
     List<User> list();
+
+
+    /**
+     * Create a new user.
+     *
+     * @param username The name of the user.
+     * @return The created user.
+     */
+    User create(String username);
 }

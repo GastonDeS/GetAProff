@@ -1,9 +1,16 @@
 package ar.edu.itba.paw.models;
 
 public class User {
-    private String id, name, password;
 
-    public String getId() {
+    private String name, password;
+    private int id;
+
+    public User(String name, int id){
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -15,7 +22,7 @@ public class User {
         return password;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
