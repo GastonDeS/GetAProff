@@ -4,7 +4,7 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <title>getAProff</title>
-    <link rel="stylesheet"  type="text/css" href="<c:url value="${page.Context.request.contextPath}/resources/style/main.css"/>"/>
+    <link rel="stylesheet"  type="text/css" href="<c:url value="${page.Context.request.contextPath}/resources/styles/main.css"/>"/>
 </head>
 <body>
 <%--<h2>Hello ${greeting.name}!</h2>--%>
@@ -38,7 +38,7 @@
                 <input type="text" class="form-control search-slt" placeholder="Ciudad">
             </div>
             <div style="margin-left: 20px;">
-                <button type="button" class="btn btn-custom1">Search</button>
+                <button type="button" class="btn btn-primary">Search</button>
             </div>
         </div>
     </form>
