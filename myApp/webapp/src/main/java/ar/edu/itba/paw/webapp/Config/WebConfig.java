@@ -33,6 +33,5 @@ public class WebConfig {
         ds.setPassword("admin");
         return ds;
     }
-
 }
 

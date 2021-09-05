@@ -16,16 +16,19 @@ import java.util.Map;
 @Repository
 public class UserDaoJdbc implements UserDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
-    private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("username"), rs.getInt("userid"));
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+    private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
+            rs.getInt("userid"), rs.getString("mail"));
 
     @Autowired
     public UserDaoJdbc (final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users ("
                 + "userid SERIAL PRIMARY KEY,"
-                + "username varchar(100)"
+                + "name varchar(100),"
+                + "password varchar(100),"
+                + "mail varchar(100)"
                 + ")");
 
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -53,10 +56,12 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(String username) {
+    public User create(String name) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("username", username); // la key es el nombre de la columna
+        args.put("name", name); // la key es el nombre de la columna
+        args.put("password","pass");
+        args.put("mail","@.com");
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(username, userId.intValue());
+        return new User(name, "pass", userId.intValue(), "@.com");
     }
 }
