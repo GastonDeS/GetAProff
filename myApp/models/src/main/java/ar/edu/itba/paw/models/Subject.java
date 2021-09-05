@@ -4,7 +4,7 @@ public class Subject {
     private int id;
     private String name;
 
-    Subject (String name, int id){
+    public Subject(String name, int id){
         this.id = id;
         this.name = name;
     }

@@ -38,7 +38,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public User get(int id) {
-        final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?",ROW_MAPPER, id);
+        final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[] { id }, ROW_MAPPER);
         if (list.isEmpty()) {
             return null;
         }
@@ -47,7 +47,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public List<User> list() {
-        return null;
+        return jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
     }
 
     @Override
