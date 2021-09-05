@@ -24,8 +24,7 @@ body {
     border-color: black;
 }
 .align-vertically-center {
-    margin: 20px;
-    margin-top: 10%;
+    margin: 10% 20px 20px;
     border-radius: 10px;
     display: flex;
     justify-content: center;
