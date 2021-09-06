@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.TeachesDao;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
@@ -16,6 +17,12 @@ public class UserServiceImpl implements UserService {
     public User findById(int id) {
         return this.userDao.get(id);
     }
+
+    @Override
+    public List<User> findUsersBySubject(int subjectId) {
+      return null;
+    }
+
     public List<User> list() {
         return this.userDao.list();
     }

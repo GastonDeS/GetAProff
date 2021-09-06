@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.Controller;
 
+import ar.edu.itba.paw.interfaces.MateriaService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,13 @@ public class HelloWorldController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    MateriaService materiaService;
+
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("materias",materiaService.list());
         mav.addObject("greeting", userService.findById(1));
         return mav;
     }
