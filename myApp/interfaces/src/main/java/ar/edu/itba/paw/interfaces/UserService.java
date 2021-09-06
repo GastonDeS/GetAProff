@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
+
 import java.util.List;
 
 public interface UserService {
     User findById(int id);
-    List<User> findUsersBySubject(int subjectId);
+    List<CardProfile> findUsersBySubject(int subjectId);
     List<User> list();
 
     /**

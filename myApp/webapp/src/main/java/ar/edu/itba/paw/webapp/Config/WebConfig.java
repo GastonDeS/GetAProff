@@ -23,15 +23,17 @@ public class WebConfig {
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
+
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/segundo");
-        ds.setUsername("postgres");
-        ds.setPassword("admin");
+        ds.setUrl("jdbc:postgresql://localhost:5433/brittany");
+        ds.setUsername("britulin");
+        ds.setPassword("1234");
         return ds;
     }
+
 }
 
