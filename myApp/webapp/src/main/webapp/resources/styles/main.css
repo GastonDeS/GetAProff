@@ -3,19 +3,34 @@
     padding-bottom: 10px;
 }
 .navbar-custom {
-    background-color: white !important;
+    background-color: #C9FBFF !important;
 }
 
 body {
-    background-color: pink;
+    background-color: #57737A;
+    position:relative;
+    width:100vw;
+    height: 100vh;
+    margin: auto;
 }
-.box {
-    background: white !important;
+.main-search {
+    width: 200%;
 }
+.search-bar {
+    border-radius: 20px;
+    background-color: #C9FBFF;
+    border: black 1px;
+    width: 30vw;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .btn-custom {
     border-radius: 10px;
     border-color: black;
-    background-color: pink;
+    background-color: #85BDBF;
     color: black !important;
 }
 .btn-custom1 {
@@ -23,13 +38,25 @@ body {
     border-radius: 10px;
     border-color: black;
 }
+
+.search{
+    position:absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    /*background: tomato;*/
+    width: 50vw; height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .align-vertically-center {
-    margin: 10% 20px 20px;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .autocomplete {
     /*the container must be positioned relative:*/
     position: relative;
