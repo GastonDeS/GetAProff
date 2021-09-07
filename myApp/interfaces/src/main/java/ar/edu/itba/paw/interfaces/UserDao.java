@@ -13,8 +13,8 @@ public interface UserDao {
      * Create a new user.
      *
      * @param username The name of the user.
+     * @param mail The mail of the user.
      * @return The created user.
      */
-
-    User create(String username);
+    User create(String username, String mail);
 }

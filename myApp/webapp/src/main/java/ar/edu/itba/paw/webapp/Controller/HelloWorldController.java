@@ -26,9 +26,10 @@ public class HelloWorldController {
     }
 
     @RequestMapping("/create")
-    public ModelAndView create(@RequestParam(value = "name") final String username) {
+    public ModelAndView create(@RequestParam(value = "name") final String username,
+                               @RequestParam( value = "mail") final String mail) {
         final ModelAndView mav = new ModelAndView("index");
-        final User u = userService.create(username);
+        final User u = userService.create(username, mail);
         mav.addObject("currentUser", u.getName());
         return mav;
 }

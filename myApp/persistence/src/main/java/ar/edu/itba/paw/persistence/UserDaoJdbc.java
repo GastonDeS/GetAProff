@@ -24,12 +24,12 @@ public class UserDaoJdbc implements UserDao {
     @Autowired
     public UserDaoJdbc (final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users ("
-                + "userid SERIAL PRIMARY KEY,"
-                + "name varchar(100),"
-                + "password varchar(100),"
-                + "mail varchar(100)"
-                + ")");
+//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users ("
+//                + "userid SERIAL PRIMARY KEY,"
+//                + "name varchar(100),"
+//                + "password varchar(100),"
+//                + "mail varchar(100)"
+//                + ")");
 
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
@@ -56,12 +56,12 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(String name) {
+    public User create(String name, String mail) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name); // la key es el nombre de la columna
-        args.put("password","pass");
-        args.put("mail","@.com");
+        args.put("password",null);
+        args.put("mail",mail);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(name, "pass", userId.intValue(), "@.com");
+        return new User(name, "pass", userId.intValue(), mail);
     }
 }
