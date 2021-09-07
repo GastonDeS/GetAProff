@@ -37,8 +37,8 @@ public class HelloWorldController {
     @RequestMapping("/tutors")
     public ModelAndView tutors() {
         final ModelAndView mav = new ModelAndView("tutors");
-        mav.addObject("materias", materiaService.list());
-        mav.addObject("tutors", materiaService.list());
+//        mav.addObject("materias", .list());
+//        mav.addObject("tutors", materiaService.list());
         return mav;
     }
 }
