@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.models.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,5 +23,10 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject create(String subject) {
         return subjectDao.create(subject);
+    }
+
+    @Override
+    public List<Subject> list() {
+        return subjectDao.listSubjects();
     }
 }

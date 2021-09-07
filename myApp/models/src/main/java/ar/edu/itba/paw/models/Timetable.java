@@ -1,26 +1,48 @@
 package ar.edu.itba.paw.models;
 
-public class Timetable {
-    private final static int DAYS = 6;
-    private int userId;
-    private String[] range = new String[DAYS];
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 
-    public Timetable(int userId, String mon, String tue, String wed, String thu, String fri, String sat) {
+public class Timetable {
+    public final static int DAYS = 7;
+    private final int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public enum Days {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
+    }
+
+    private final EnumMap<Days,String> schedule;
+
+    public Timetable(int userId, String [] daySchedule) {
         this.userId = userId;
-        range[Days.MONDAY.ordinal()] = mon;
-        range[Days.TUESDAY.ordinal()] = tue;
-        range[Days.WEDNESDAY.ordinal()] = wed;
-        range[Days.THURSDAY.ordinal()] = thu;
-        range[Days.FRIDAY.ordinal()] = fri;
-        range[Days.SATURDAY.ordinal()] = sat;
+        schedule = new EnumMap<>(Days.class);
+        for(Days d : Days.values()){
+            schedule.put(d,daySchedule[d.ordinal()]);
+        }
+
+    }
+
+    public List<String> getSchedule() {
+        return new ArrayList<>(this.schedule.values());
+    }
+
+    public void setSchedule(String[] days){
+        if(days != null && days.length == DAYS) {
+            for (Days d : Days.values()) {
+                this.schedule.put(d,days[d.ordinal()]);
+            }
+        }
     }
 }
 
-enum Days {
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY;
-}
