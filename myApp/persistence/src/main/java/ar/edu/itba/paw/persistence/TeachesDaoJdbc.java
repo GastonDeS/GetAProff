@@ -23,14 +23,6 @@ public class TeachesDaoJdbc implements TeachesDao {
     @Autowired
     TeachesDaoJdbc (final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS teaches ("
-                + "userId INTEGER,"
-                + "subjectId INTEGER,"
-                + "price INTEGER,"
-                + "FOREIGN KEY (userId) REFERENCES users,"
-                + "FOREIGN KEY (subjectId) REFERENCES subject,"
-                + "PRIMARY KEY (userId,subjectId)"
-                + ")");
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("subject");
     }

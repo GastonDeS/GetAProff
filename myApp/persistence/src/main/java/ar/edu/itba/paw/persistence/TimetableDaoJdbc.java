@@ -22,18 +22,6 @@ public class TimetableDaoJdbc implements TimetableDao {
     @Autowired
     public TimetableDaoJdbc (final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS timetable ("
-                + "userId INTEGER,"
-                + "monday VARCHAR(100),"
-                + "tuesday VARCHAR(100),"
-                + "wednesday VARCHAR(100),"
-                + "thursday VARCHAR(100),"
-                + "friday VARCHAR(100),"
-                + "saturday VARCHAR(100),"
-                + "FOREIGN KEY (userId) REFERENCES users,"
-                + "PRIMARY KEY (userId)"
-                + ")");
-
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("timetable");
     }

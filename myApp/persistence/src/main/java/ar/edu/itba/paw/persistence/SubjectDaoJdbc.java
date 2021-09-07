@@ -22,10 +22,6 @@ public class SubjectDaoJdbc implements SubjectDao {
     @Autowired
     SubjectDaoJdbc(final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS subject ("
-                + "subjectId INTEGER PRIMARY KEY,"
-                + "name varchar(100)"
-                + ")");
 
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("subject")
