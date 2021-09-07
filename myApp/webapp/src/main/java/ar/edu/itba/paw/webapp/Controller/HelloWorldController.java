@@ -31,5 +31,13 @@ public class HelloWorldController {
         final User u = userService.create(username);
         mav.addObject("currentUser", u.getName());
         return mav;
-}
+    }
+
+    @RequestMapping("/tutors")
+    public ModelAndView tutors() {
+        final ModelAndView mav = new ModelAndView("tutors");
+        mav.addObject("materias", materiaService.list());
+        mav.addObject("tutors", materiaService.list());
+        return mav;
+    }
 }

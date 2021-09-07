@@ -16,6 +16,12 @@ body {
 .main-search {
     width: 200%;
 }
+
+.h-divider {
+    border: 0;
+    border-top: 1px solid black;
+    margin: 0;
+}
 .search-bar {
     border-radius: 20px;
     background-color: #C9FBFF;
@@ -33,10 +39,10 @@ body {
     background-color: #85BDBF;
     color: black !important;
 }
-.btn-custom1 {
-    background-color: white;
+.btn-custom-outline {
     border-radius: 10px;
     border-color: black;
+    color: black;
 }
 
 .search{
@@ -87,3 +93,9 @@ body {
     background-color: DodgerBlue !important;
     color: #ffffff;
 }
+
+/*tutors page*/
+div.bg-tutors-card-custom {
+    background-color: #C9FBFF !important;
+}
+
