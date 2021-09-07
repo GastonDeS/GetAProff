@@ -2,13 +2,11 @@ package ar.edu.itba.paw.models;
 
 public class Teaches {
     private int userId, subjectId, price;
-    private String timeInterval;
 
-    public Teaches (int userId, int subjectId, int price, String timeInterval){
+    public Teaches (int userId, int subjectId, int price){
         this.userId = userId;
         this.subjectId = subjectId;
         this.price = price;
-        this.timeInterval = timeInterval;
     }
 
     public int getUserId() {
@@ -35,11 +33,8 @@ public class Teaches {
         this.price = price;
     }
 
-    public String getTimeInterval() {
-        return timeInterval;
-    }
-
-    public void setTimeInterval(String timeInterval) {
-        this.timeInterval = timeInterval;
+    @Override
+    public String toString() {
+        return String.format("UserID: %d - SubjectID: %d - Price: %d\n", userId, subjectId, price);
     }
 }

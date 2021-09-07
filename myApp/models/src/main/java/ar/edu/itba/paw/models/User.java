@@ -5,12 +5,17 @@ public class User {
     private String name, password, mail;
     private int id;
 
-    public User(String name, String password, int id, String mail){
-        this.id = id;
+    public User(String name, String mail) {
         this.name = name;
-        this.password = password;
         this.mail = mail;
     }
+
+    public User(String name, String password, int id, String mail){
+        this(name, mail);
+        this.id = id;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }
@@ -38,7 +43,13 @@ public class User {
     public String getMail() {
         return mail;
     }
+
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Id: %d - Name: %s - Mail: %s\n", id, name, mail);
     }
 }

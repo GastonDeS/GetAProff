@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.TeachesDao;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findUsersBySubject(int subjectId) {
-      return null;
+    public List<CardProfile> findUsersBySubject(int subjectId) {
+      return userDao.findUsersBySubject(subjectId);
     }
 
     public List<User> list() {
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(String username) {
-        return userDao.create(username);
+    public User create(String username, String mail) {
+        return userDao.create(username, mail);
     }
 }
