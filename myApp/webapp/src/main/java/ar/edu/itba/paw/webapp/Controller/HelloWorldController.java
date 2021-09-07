@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.Controller;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
@@ -17,6 +18,9 @@ public class HelloWorldController {
 
     @Autowired
     SubjectService subjectService;
+
+    @Autowired
+    EmailService emailService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -40,6 +44,12 @@ public class HelloWorldController {
 //        mav.addObject("materias", .list());
 //        mav.addObject("tutors", materiaService.list());
         return mav;
+    }
+
+    @RequestMapping("/email")
+    public ModelAndView email() {
+        emailService.sendTemplateMessage("anaso@itba.edu.ar", "GetAProff: Nueva petición de clase", "sespina@itba.edu.ar", "Hola quiero tus clases de matematica, contactame!");
+        return new ModelAndView("redirect:/");
     }
 }
 

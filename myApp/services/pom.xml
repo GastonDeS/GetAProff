@@ -60,6 +60,14 @@
           <version>1.0-SNAPSHOT</version>
           <scope>compile</scope>
       </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
