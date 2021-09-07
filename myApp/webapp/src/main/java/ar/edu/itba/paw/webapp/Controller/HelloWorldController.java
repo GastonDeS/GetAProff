@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.Controller;
 
 import ar.edu.itba.paw.interfaces.SubjectService;
-import ar.edu.itba.paw.interfaces.TimetableService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +18,9 @@ public class HelloWorldController {
     @Autowired
     SubjectService subjectService;
 
-    @Autowired
-    TimetableService ts;
-
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-        System.out.println(userService.findById(1));
-        ts.createUserSchedule(1, new String[] {"1", "2","3","4","5","6","7"});
-        for(String s : ts.getUserSchedule(1))
-            System.out.println(s);
         mav.addObject("greeting", userService.findById(1));
         return mav;
     }
@@ -41,4 +33,13 @@ public class HelloWorldController {
         mav.addObject("currentUser", u.getName());
         return mav;
     }
+
+    @RequestMapping("/tutors")
+    public ModelAndView tutors() {
+        final ModelAndView mav = new ModelAndView("tutors");
+//        mav.addObject("materias", .list());
+//        mav.addObject("tutors", materiaService.list());
+        return mav;
+    }
 }
+

@@ -22,21 +22,30 @@
     </nav>
 
     <div class="search">
-        <form action="#" method="post" novalidate="novalidate">
-            <div class="search-bar">
-                <div class="main-search">
-                    <form class="form-control search-slt" id="exampleFormControlSelect1" autocomplete="off">
-                        <div class="autocomplete">
-                            <input id="myInput" type="text" class="form-control search-slt" placeholder="Materia">
-                        </div>
-                    </form>
-                </div>
+<%--        <form action="#" method="post" novalidate="novalidate">--%>
+<%--            <div class="search-bar">--%>
+<%--                <div class="main-search">--%>
+<%--                    <form class="form-control search-slt" id="exampleFormControlSelect1" autocomplete="off">--%>
+<%--                        <div class="autocomplete">--%>
+<%--                            <input id="myInput" type="text" class="form-control search-slt" placeholder="Materia">--%>
+<%--                        </div>--%>
+<%--                    </form>--%>
+<%--                </div>--%>
 
-                <div style="margin-left: 20px; ">
-                    <button type="button" class="btn btn-custom">Buscar</button>
-                </div>
-            </div>
-        </form>
+
+<%--            </div>--%>
+<%--        </form>--%>
+<%--    </div>--%>
+<%--    <div class="input-group">--%>
+
+        <select class="form-select" id="inputGroupSelect04" aria-label="Select materia">
+                <c:forEach var="materia" items="${materias}">
+                    <option><c:out value="${materia.name}"/></option>
+                </c:forEach>
+            </select>
+        <div style="margin-left: 20px; ">
+            <button onclick="window.location.href='${page.Context.request.contextPath}/tutors';" type="button" class="btn btn-custom">Buscar</button>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
