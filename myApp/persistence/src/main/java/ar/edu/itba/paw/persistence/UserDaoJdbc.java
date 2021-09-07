@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,15 +40,13 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User get(int id) {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[] { id }, ROW_MAPPER);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public List<User> list() {
-        return jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+        final List<User> list = jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+        return list.isEmpty() ? null : list;
     }
 
     @Override
@@ -63,5 +62,17 @@ public class UserDaoJdbc implements UserDao {
         args.put("mail",mail);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
         return new User(name, "pass", userId.intValue(), mail);
+    }
+
+    @Override
+    public List<CardProfile> findUsersBySubject(int subjectId) {
+        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
+                rs.getString("subject"), rs.getInt("price"));
+        List<CardProfile> list = jdbcTemplate.query(
+                "SELECT userid, aux.name AS name, s.name AS subject, price\n" +
+                "FROM (SELECT subjectid, u.userid, price, name FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
+                "JOIN subject s ON aux.subjectid = s.subjectid\n" +
+                "WHERE s.subjectID = ?", new Object[] {subjectId}, mapper);
+        return list.isEmpty() ? null : list;
     }
 }

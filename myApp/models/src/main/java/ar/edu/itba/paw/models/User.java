@@ -15,6 +15,7 @@ public class User {
         this.id = id;
         this.password = password;
     }
+
     public int getId() {
         return id;
     }
@@ -42,7 +43,13 @@ public class User {
     public String getMail() {
         return mail;
     }
+
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Id: %d - Name: %s - Mail: %s\n", id, name, mail);
     }
 }
