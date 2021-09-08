@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div style="margin-left: 20px; ">
-                <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search=1';" type="button" class="btn btn-custom">Buscar</button>
+                <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search='+document.getElementById('myInput').value;" type="button" class="btn btn-custom">Buscar</button>
             </div>
         </div>
     </div>

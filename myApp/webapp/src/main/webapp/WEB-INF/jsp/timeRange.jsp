@@ -7,13 +7,11 @@
 </head>
 <body>
     <div class="timetable">
-        <div class="day">
-            <p>Lunes</p>
-        </div>
-        <div class="timeRange">
+        <p class="day"><c:out value="${param.day}"/></p>
+        <div class="time-range">
             <input type="time" id="st1" min="09:00" max="18:00" required>
             <input type="time" id="ft1" min="09:00" max="18:00" required>
-            <button type="button" class="btn btn-custom ms-auto p-2 bd-highlight ">Agregar rango</button>
+            <button type="button" class="btn btn-custom ms-auto p-2 bd-highlight">Agregar rango</button>
         </div>
     </div>
 </body>

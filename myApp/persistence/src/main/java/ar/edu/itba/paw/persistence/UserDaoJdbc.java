@@ -73,4 +73,20 @@ public class UserDaoJdbc implements UserDao {
                 query, new Object[] {subjectId}, mapper);
         return list.isEmpty() ? null : list;
     }
+
+    @Override
+    public List<CardProfile> findUsersBySubject(String subject) {
+        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
+                rs.getString("subject"), rs.getInt("price"), new String[] { rs.getString("monday"),
+                rs.getString("tuesday"), rs.getString("wednesday"), rs.getString("thursday"),
+                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday")});
+
+        String query = "SELECT aux.userid, aux.name AS name, s.name AS subject, price, t.monday AS monday, t.tuesday AS tuesday,\n" +
+                "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday\n" +
+                "                FROM (SELECT subjectid, u.userid, price, name FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
+                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE ? LIKE s.name";
+        List<CardProfile> list = jdbcTemplate.query(
+                query, new Object[] {subject}, mapper);
+        return list.isEmpty() ? null : list;
+    }
 }

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.TimetableService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Timetable;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
 import ar.edu.itba.paw.webapp.Forms.TutorForm;
@@ -21,6 +22,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 @Controller
@@ -49,7 +51,8 @@ public class HelloWorldController {
     public ModelAndView tutorForm(final TutorForm form) {
         final ModelAndView mav = new ModelAndView("tutorForm");
         mav.addObject("tutorForm", form);
-
+        mav.addObject("days", Timetable.Days.values());
+        mav.addObject("subjects", subjectService.list());
         return mav;
     }
 
@@ -61,30 +64,36 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("index");
         final User u = userService.create(form.getName(), form.getMail());
         mav.addObject("currentUser", u);
+        mav.addObject("materias", subjectService.list());
         return mav;
     }
 
     @RequestMapping("/tutors")
-    public ModelAndView tutors(@RequestParam(value = "search") final int search) {
+    public ModelAndView tutors(@RequestParam(value = "search") @NotNull final String search) {
         final ModelAndView mav = new ModelAndView("tutors");
         mav.addObject("materias", subjectService.list());
-        mav.addObject("tutors", userService.findUsersBySubjectId(search));
+        mav.addObject("tutors", userService.findUsersBySubject(search));
         mav.addObject("weekDays",Timetable.Days.values());
         return mav;
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.GET)
-    public ModelAndView contactForm(final ContactForm form) {
+    public ModelAndView contactForm(final ContactForm form ,@RequestParam(value = "uid") @NotNull final int uid,@RequestParam(value = "subjectName") @NotNull final String subjectName) {
         final ModelAndView mav = new ModelAndView("contactForm");
         mav.addObject("contactForm", form);
+        mav.addObject("user",userService.findById(uid));
+        mav.addObject("subjectName",subjectName);
         return mav;
     }
+
     @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public ModelAndView contact(@Valid final ContactForm form, final BindingResult errors) {
+    public ModelAndView contact(@Valid final ContactForm form,@RequestParam(value = "uid") @NotNull final int uid,@RequestParam(value = "subjectName") @NotNull final String subjectName, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return contactForm(form);
+            return contactForm(form,uid,subjectName);
         }
-        emailService.sendTemplateMessage("sespina@itba.edu.ar", "GetAProff: Nueva petición de clase", form.getName(), "Matematica",form.getEmail(), form.getMessage());
+        User user = userService.findById(uid);
+        emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), subjectName,form.getEmail(), form.getMessage());
         return new ModelAndView("redirect:/");
     }
 }
+
