@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
       return userDao.findUsersBySubjectId(subjectId);
     }
 
+    @Override
+    public List<CardProfile> findUsersBySubject(String subject) {
+        return userDao.findUsersBySubject(subject);
+    }
+
     public List<User> list() {
         return this.userDao.list();
     }
