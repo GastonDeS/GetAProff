@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -43,7 +45,10 @@ public class SubjectDaoJdbc implements SubjectDao {
 
     @Override
     public Subject create (String subject) {
-        return null;
+        final Map<String, Object> args = new HashMap<>();
+        args.put("name", subject);
+        final Number subjectid = jdbcInsert.executeAndReturnKey(args);
+        return new Subject(subject, subjectid.intValue());
     }
 
     @Override
