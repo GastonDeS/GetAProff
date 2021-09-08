@@ -14,7 +14,10 @@
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
 <div >
-    <h1 class="centered">Mail Enviado</h1>
+    <div style="height: 100%;" class="main-container d-flex justify-content-center align-content-center" >
+            <h1 class="mt-5">Mail Enviado</h1>
+            <a class="btn btn-custom bd-highlight" href="${pageContext.request.contextPath}/">Volver a Inicio</a>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
