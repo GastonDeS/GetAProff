@@ -12,7 +12,8 @@
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="isMainPage" value="${true}"/>
     </jsp:include>
-    <div class="search ">}
+    <div class="search-container">
+        <img src="<c:url value="${pageContext.request.contextPath}/resources/images/main-page-img.png"/>" alt="slogan" class="slogan-img">
         <div class="search-bar">
             <div class="dropdown">
                 <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
