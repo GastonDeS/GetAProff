@@ -21,6 +21,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 @Controller
@@ -65,10 +66,10 @@ public class HelloWorldController {
     }
 
     @RequestMapping("/tutors")
-    public ModelAndView tutors(@RequestParam(value = "search") final int search) {
+    public ModelAndView tutors(@RequestParam(value = "search") @NotNull final String search) {
         final ModelAndView mav = new ModelAndView("tutors");
         mav.addObject("materias", subjectService.list());
-        mav.addObject("tutors", userService.findUsersBySubjectId(search));
+        mav.addObject("tutors", userService.findUsersBySubject(search));
         mav.addObject("weekDays",Timetable.Days.values());
         return mav;
     }
