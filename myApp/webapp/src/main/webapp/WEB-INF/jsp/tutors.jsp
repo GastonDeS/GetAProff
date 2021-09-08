@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -10,14 +10,9 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-custom">
-        <div class="container">
-            <a href="#" class="navbar-brand mb-0 h1">
-                <img src="<c:url value="${page.Context.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
-            </a>
-        </div>
-    </nav>
-
+    <jsp:include page="../components/navbar.jsp">
+        <jsp:param name="isMainPage" value="${false}"/>
+    </jsp:include>
     <hr class="h-divider">
 
     <div class="tutors-search">

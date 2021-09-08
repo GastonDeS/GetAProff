@@ -5,12 +5,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <title>GetAProff</title>
     <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
-    <link rel="stylesheet"  type="text/css" href="<c:url value="${page.Context.request.contextPath}/resources/styles/main.css"/>"/>
-    <script type="text/javascript" src="<c:url value="${page.Context.request.contextPath}/resources/js/script.js"/>"></script>
+    <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
+    <script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/script.js"/>"></script>
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp">
-    <div class="search ">
+        <jsp:param name="isMainPage" value="${true}"/>
+    </jsp:include>
+    <div class="search ">}
         <div class="search-bar">
             <div class="dropdown">
                 <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
