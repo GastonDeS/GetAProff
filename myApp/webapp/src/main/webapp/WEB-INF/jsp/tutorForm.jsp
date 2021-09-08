@@ -157,7 +157,7 @@
             </div>
             <div class="btn-container">
                 <button type="button" onclick="window.location.href='/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
-                <button type="submit" class="btn btn-custom submit-button p-2 bd-highlight"><c:out value="Enviar Formulario"/></button>
+                <input type="submit" class="btn btn-custom submit-button p-2 bd-highlight" value="Enviar Formulario"/>
             </div>
         </form:form>
     </div>
