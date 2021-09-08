@@ -38,7 +38,8 @@ public class EmailConfig {
         message.setText(
                 "<p>Hola que tal, desde GetAProff el usuario %s pide por tus clases de %s!</p>" +
                         "<p>Su email es: %s</p>" +
-                        "<p>Te escribió este mensaje: %s</p>" +
+                        "<p>Te escribió este mensaje:</p>" +
+                        "<p>%s</p>" +
                         "<p>Contáctalo para coordinar horarios!<p>");
         return message;
     }
