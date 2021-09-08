@@ -36,8 +36,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendTemplateMessage(String to, String subject,String mailFrom, String message) {
-        String text = String.format(templateMailMessage.getText(),mailFrom, message);
-        sendSimpleMessage(to,subject, text);
+    public void sendTemplateMessage(String to, String mailSubject, String userFrom, String subject,String mailFrom, String message) {
+        String text = String.format(templateMailMessage.getText(), userFrom, subject,mailFrom, message);
+        sendSimpleMessage(to,mailSubject, text);
     }
 }
