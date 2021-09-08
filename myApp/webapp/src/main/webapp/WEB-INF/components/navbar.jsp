@@ -1,8 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-    <body>
-        <nav class="navbar navbar-expand-sm navbar-custom">
+ <nav class="navbar navbar-expand-sm navbar-custom">
             <div class="container">
                 <a href="${pageContext.request.contextPath}/" class="navbar-brand mb-0 h1">
                     <img src="<c:url value="${pageContext.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
@@ -15,6 +12,4 @@
                     </div>
                 </c:if>
             </div>
-        </nav>
-    </body>
-</html>
+ </nav>

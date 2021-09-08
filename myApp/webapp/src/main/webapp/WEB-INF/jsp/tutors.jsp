@@ -100,7 +100,7 @@
                             <div class="modal-body">
                                 <c:forEach var="day" items="${tutor.userSchedule}" varStatus="loop">
                                     <c:if test="${day != null}">
-                                        <h>${weekDays[loop.index]}: ${day}<br></h>
+                                        <h>${weekDays[loop.index].getValue()}: ${day}<br></h>
                                     </c:if>
                                 </c:forEach>
                             </div>
