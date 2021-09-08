@@ -66,7 +66,7 @@ public class HelloWorldController {
     public ModelAndView tutors(@RequestParam(value = "search") final int search) {
         final ModelAndView mav = new ModelAndView("tutors");
         mav.addObject("materias", subjectService.list());
-        mav.addObject("tutors", userService.findUsersBySubject(search));
+        mav.addObject("tutors", userService.findUsersBySubjectId(search));
         mav.addObject("schedule",timetableService.findById(1));
         mav.addObject("timeService",timetableService);
         return mav;
