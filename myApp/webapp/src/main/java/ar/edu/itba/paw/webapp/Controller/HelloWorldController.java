@@ -32,6 +32,7 @@ public class HelloWorldController {
 
     @Autowired
     TimetableService timetableService;
+
     @Autowired
     EmailService emailService;
 
