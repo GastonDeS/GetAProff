@@ -3,24 +3,13 @@
 <html lang="en">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <title>getAProff</title>
+    <title>GetAProff</title>
+    <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet"  type="text/css" href="<c:url value="${page.Context.request.contextPath}/resources/styles/main.css"/>"/>
     <script type="text/javascript" src="<c:url value="${page.Context.request.contextPath}/resources/js/script.js"/>"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-custom">
-        <div class="container">
-            <a href="#" class="navbar-brand mb-0 h1">
-                <img src="<c:url value="${page.Context.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
-            </a>
-            <div class="d-flex flex-row-reverse collapse navbar-collapse " id="navbarNav">
-                <a href="${page.Context.request.contextPath}/create" class="btn nav-link active btn-custom btn-small">
-                    Dar clases particulares
-                </a>
-            </div>
-        </div>
-    </nav>
-
+    <jsp:include page="../components/navbar.jsp">
     <div class="search ">
         <div class="search-bar">
             <div class="dropdown">
