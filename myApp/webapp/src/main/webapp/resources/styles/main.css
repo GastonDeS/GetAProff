@@ -115,7 +115,7 @@ div.bg-tutors-card-custom {
 }
 
 /* The search field */
-#myInput {
+/*#myInput {*/
     /*box-sizing: border-box;*/
     /*background-image: url('searchicon.png');*/
     /*background-position: 14px 12px;*/
@@ -124,15 +124,10 @@ div.bg-tutors-card-custom {
     /*padding: 14px 20px 12px 45px;*/
     /*border: none;*/
     /*border-bottom: 1px solid #ddd;*/
-}
+/*}*/
 
 /* The search field when it gets focus/clicked on */
-#myInput:focus {outline: 3px solid #ddd;}
-
-.timetable {
-    display: flex;
-    flex-direction: column;
-}
+/*#myInput:focus {outline: 3px solid #ddd;}*/
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
@@ -165,3 +160,94 @@ div.bg-tutors-card-custom {
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+/* Tutor form */
+
+.day {
+    font-family: "Roboto Light", sans-serif;
+    font-size: 16px;
+}
+
+.form-control {
+    height: 28px;
+}
+
+.mail-input {
+    margin-top: 10px;
+}
+
+.section-container {
+    margin: 15px 0px 15px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: #C9FBFF;
+    border: black 1px;
+    height: fit-content;
+    width: 60vw;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 50%;
+    margin: 10px 0px 10px 0px;
+}
+
+.form-input {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.section-title {
+    font-family: "Roboto Light", sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    word-wrap: break-word;
+    width: 50%;
+    text-align:center;
+}
+
+.subject-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px 10px 10px;
+}
+
+.subject-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 50%;
+}
+
+.subject-check-label {
+    margin-left: 5px;
+    font-family: "Roboto Light", sans-serif;
+}
+
+.time-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 50%;
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    width: 60vw;
+    align-items: center;
+    justify-content: center;
+}

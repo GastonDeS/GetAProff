@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.Controller;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.Forms.TutorForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class HelloWorldController {
     public ModelAndView tutorForm(final TutorForm form) {
         final ModelAndView mav = new ModelAndView("tutorForm");
         mav.addObject("tutorForm", form);
-
+        mav.addObject("days", Timetable.Days.values());
+        mav.addObject("subjects", subjectService.list());
         return mav;
     }
 
@@ -50,6 +52,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("index");
         final User u = userService.create(form.getName(), form.getMail());
         mav.addObject("currentUser", u);
+        mav.addObject("materias", subjectService.list());
         return mav;
     }
 
