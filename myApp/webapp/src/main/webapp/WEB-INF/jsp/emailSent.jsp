@@ -13,8 +13,8 @@
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
-<div style="height: 100%">
-    <h1 class="align-vertically-center">Mail Enviado</h1>
+<div >
+    <h1 class="centered">Mail Enviado</h1>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>

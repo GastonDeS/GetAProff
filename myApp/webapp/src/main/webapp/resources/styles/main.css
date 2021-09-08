@@ -86,6 +86,14 @@ body {
     align-items: center;
 }
 
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
 .search-bar {
     border-radius: 20px;
     background-color: #C9FBFF;
@@ -130,6 +138,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin:auto;
 }
 
 .autocomplete {
