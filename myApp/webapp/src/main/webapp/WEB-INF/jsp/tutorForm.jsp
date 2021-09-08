@@ -75,7 +75,7 @@
             </div>
 
             <script>
-                let subjectsSelected = [];
+
 
                 function removeSubject(id) {
                     let elem = document.getElementById(id);
@@ -85,7 +85,8 @@
                 function addSubject(){
                     let subject = document.getElementById("myInput").value;
                     let price = document.getElementById("pricebox").value;
-                    if ( subject!=null && subject.toString().length >= 2 && price!=null && price.toString().length>=2) {
+                    price = Number(price);
+                    if ( subject!=null && subject.toString().length >= 2 && price>=0  ) {
                         let tr = document.createElement("tr");
                         let name = document.createElement("td");
                         let priceElem = document.createElement("td");
@@ -119,7 +120,6 @@
 
                         document.getElementById("myInput").value = null;
                         document.getElementById("pricebox").value = null;
-                        subjectsSelected.push(subject,price);
                     }
                 }
 
