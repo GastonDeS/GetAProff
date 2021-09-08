@@ -39,12 +39,11 @@
         <script>
             function setColor(btn){
                 let property = document.getElementById(btn);
-                let color = property.style.backgroundColor;
-                if (color === "transparent"){
-                    property.style.backgroundColor = "#85BDBF"
+                if (property.style.backgroundColor === "#85BDBF"){
+                    property.style.backgroundColor = "transparent"
                 }
                 else{
-                    property.style.backgroundColor = "transparent"
+                    property.style.backgroundColor = "#85BDBF"
                 }
             }
         </script>

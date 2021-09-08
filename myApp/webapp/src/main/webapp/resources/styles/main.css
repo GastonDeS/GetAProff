@@ -70,13 +70,17 @@ body {
     margin: 0;
 }
 
-.search{
-    position:absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-    margin: auto;
-    /*background: tomato;*/
-    width: 50vw; height: 50vh;
+.section-container {
+    width: fit-content;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -89,6 +93,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 40vw;
+}
+
+.slogan-img {
+    width: 40vw;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .btn-custom {
