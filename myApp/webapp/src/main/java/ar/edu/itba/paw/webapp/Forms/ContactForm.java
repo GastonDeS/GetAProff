@@ -1,16 +1,20 @@
 package ar.edu.itba.paw.webapp.Forms;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
 public class ContactForm {
 
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
     @Email
     private String email;
-
-    @NotNull
-    private String name;
 
     private String message;
 

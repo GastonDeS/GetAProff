@@ -13,41 +13,46 @@
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="isMainPage" value="${false}"/>
     </jsp:include>
-    <hr class="h-divider">
-
     <div class="tutors-search">
             <div class="search-bar">
-                <div class="dropdown">
-                    <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                    <div id="myDropdown" class="dropdown-content">
-                        <c:forEach var="materia" items="${materias}" varStatus="loop">
-                            <c:choose>
-                                <c:when test="${loop.index<=5}">
-                                    <a href="#${materia.name}" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="#${materia.name}" style="display: none" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
+                    <div class="dropdown">
+                        <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                        <div id="myDropdown" class="dropdown-content">
+                            <c:forEach var="materia" items="${materias}" varStatus="loop">
+                                <c:choose>
+                                    <c:when test="${loop.index<=5}">
+                                        <a href="#${materia.name}" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="#${materia.name}" style="display: none" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    <div style="margin-left: 20px; ">
+                        <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search='+document.getElementById('myInput').value;" type="button" class="btn btn-custom">Buscar</button>
                     </div>
                 </div>
-                <div style="margin-left: 20px; ">
-                    <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search=1';" type="button" class="btn btn-custom">Buscar</button>
-                </div>
             </div>
-        </div>
 
         <script>
             function searchFunction(value) {
-                document.getElementById("myInput").setAttribute("value",value);
+                document.getElementById("myInput").value = value;
             }
 
             function myFunction() {
-                document.getElementById("myDropdown").classList.toggle("show");
+                if (document.getElementById("myDropdown").style.display === "flex") {
+                    document.getElementById("myDropdown").style.display = "none";
+                } else {
+                    document.getElementById("myDropdown").style.display = "flex";
+                    document.getElementById("myDropdown").style.flexDirection = "column";
+                }
             }
 
             function filterFunction() {
+                document.getElementById("myDropdown").style.display = "flex";
+                document.getElementById("myDropdown").style.flexDirection = "column";
                 var input, filter, ul, li, a, i, j;
                 input = document.getElementById("myInput");
                 filter = input.value.toUpperCase();
