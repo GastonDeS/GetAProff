@@ -47,18 +47,16 @@ body {
 
 .price-container {
     display: flex;
+    margin: auto;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-
+    justify-content: center
 }
 
 .tutors-search {
     margin: 30px auto auto auto;
     width: 50vw;
 }
-
-
 
 #myInput {
     width: 30vw;

@@ -36,7 +36,7 @@
             <div class="subject-container">
                 <p class="section-title subject-title"><c:out value="Materias"/></p>
                 <div class="subjects-selector-container">
-                    <table>
+                    <table id="subjectTable">
                         <thead>
                             <tr>
                                 <th>
@@ -63,39 +63,79 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <button class="btn-custom btn-custom-plus">+</button>
+                                    <button type="button" onclick="addSubject()"  class="btn-custom btn-custom-plus">+</button>
                                 </th>
                             </tr>
                         </thead>
-
-                        <c:forEach var="subject" items="${subjects}">
-                            <tr>
-                                <td>
-                                    ${subject.name}
-                                </td>
-                                <td class="price-container" style="justify-content: center">
-                                    $965
-                                </td>
-                                <td>
-                                    <button class="btn-custom btn-custom-plus">x</button>
-                                </td>
-                            </tr>
-                        </c:forEach>
-
                     </table>
                 </div>
             </div>
 
             <script>
+                let subjectsSelected = [];
+
+                function removeSubject(id) {
+                    let elem = document.getElementById(id);
+                    elem.parentNode.removeChild(elem);
+                }
+
+                function addSubject(){
+                    let subject = document.getElementById("myInput").value;
+                    let price = document.getElementById("pricebox").value;
+                    if ( subject!=null && price!=null) {
+                        let tr = document.createElement("tr");
+                        let name = document.createElement("td");
+                        let priceElem = document.createElement("td");
+                        let deleteTd = document.createElement("td");
+                        let deleteBtn = document.createElement("button");
+
+                        let text = document.createTextNode(subject);
+                        let priceTextElem = document.createTextNode("$ "+price);
+                        console.log(price)
+                        let x = document.createTextNode("x");
+                        deleteBtn.appendChild(x);
+                        name.appendChild(text);
+                        priceElem.appendChild(priceTextElem);
+
+                        let table = document.getElementById("subjectTable");
+
+                        priceElem.className += "price-container"
+                        deleteBtn.className += "btn-custom btn-custom-plus"
+
+                        tr.id = table.childElementCount.toString();
+
+                        deleteTd.appendChild(deleteBtn);
+                        deleteTd.setAttribute("onClick","removeSubject("+tr.id+")");
+
+                        tr.appendChild(name);
+                        tr.appendChild(priceElem);
+                        tr.appendChild(deleteTd);
+
+
+                        table.appendChild(tr);
+
+                        document.getElementById("myInput").value = null;
+                        let price = document.getElementById("pricebox").value = null;
+                        subjectsSelected.push(subject,price);
+                    }
+                }
+
                 function searchFunction(value) {
-                    document.getElementById("myInput").setAttribute("value",value);
+                    document.getElementById("myInput").value = value;
                 }
 
                 function myFunction() {
-                    document.getElementById("myDropdown").classList.toggle("show");
+                    if (document.getElementById("myDropdown").style.display === "flex") {
+                        document.getElementById("myDropdown").style.display = "none";
+                    } else {
+                        document.getElementById("myDropdown").style.display = "flex";
+                        document.getElementById("myDropdown").style.flexDirection = "column";
+                    }
                 }
 
                 function filterFunction() {
+                    document.getElementById("myDropdown").style.display = "flex";
+                    document.getElementById("myDropdown").style.flexDirection = "column";
                     var input, filter, ul, li, a, i, j;
                     input = document.getElementById("myInput");
                     filter = input.value.toUpperCase();
@@ -116,7 +156,7 @@
                 <jsp:include page="../components/timetable.jsp"/>
             </div>
             <div class="btn-container">
-                <button type="submit" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
+                <button type="button" onclick="window.location.href='/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
                 <button type="submit" class="btn btn-custom submit-button p-2 bd-highlight"><c:out value="Enviar Formulario"/></button>
             </div>
         </form:form>
