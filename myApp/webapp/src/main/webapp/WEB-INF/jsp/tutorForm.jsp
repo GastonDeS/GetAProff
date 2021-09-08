@@ -82,7 +82,7 @@
                 function addSubject(){
                     let subject = document.getElementById("myInput").value;
                     let price = document.getElementById("pricebox").value;
-                    if ( subject!=null && price!=null) {
+                    if ( subject!=null && subject.toString().length >= 2 && price!=null && price.toString().length>=2) {
                         let tr = document.createElement("tr");
                         let name = document.createElement("td");
                         let priceElem = document.createElement("td");
@@ -115,7 +115,7 @@
                         table.appendChild(tr);
 
                         document.getElementById("myInput").value = null;
-                        let price = document.getElementById("pricebox").value = null;
+                        document.getElementById("pricebox").value = null;
                         subjectsSelected.push(subject,price);
                     }
                 }
