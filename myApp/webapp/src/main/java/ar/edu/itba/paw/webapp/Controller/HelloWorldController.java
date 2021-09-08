@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.Forms.TutorForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,16 +78,15 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.GET)
-    public ModelAndView contactForm(final ContactForm form ,@RequestParam(value = "uid") @NotNull final int uid,@RequestParam(value = "subjectName") @NotNull final String subjectName) {
+    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName) {
         final ModelAndView mav = new ModelAndView("contactForm");
-        mav.addObject("contactForm", form);
         mav.addObject("user",userService.findById(uid));
         mav.addObject("subjectName",subjectName);
         return mav;
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public ModelAndView contact(@Valid final ContactForm form,@RequestParam(value = "uid") @NotNull final int uid,@RequestParam(value = "subjectName") @NotNull final String subjectName, final BindingResult errors) {
+    public ModelAndView contact(@ModelAttribute("contactForm") @Valid final ContactForm form, @RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName, final BindingResult errors) {
         if (errors.hasErrors()) {
             return contactForm(form,uid,subjectName);
         }
