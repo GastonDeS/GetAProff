@@ -26,13 +26,20 @@
             <div class="dropdown">
                 <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
                 <div id="myDropdown" class="dropdown-content">
-                    <c:forEach var="materia" items="${materias}">
-                        <a href="#${materia}" onclick="searchFunction('${materia}')"><c:out value="${materia}"/></a>
+                    <c:forEach var="materia" items="${materias}" varStatus="loop">
+                        <c:choose>
+                            <c:when test="${loop.index<=5}">
+                                <a href="#${materia.name}" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="#${materia.name}" style="display: none" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
                 </div>
             </div>
             <div style="margin-left: 20px; ">
-                <button onclick="window.location.href='${page.Context.request.contextPath}/tutors';" type="button" class="btn btn-custom">Buscar</button>
+                <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search=1';" type="button" class="btn btn-custom">Buscar</button>
             </div>
         </div>
     </div>
@@ -47,15 +54,16 @@
         }
 
         function filterFunction() {
-            var input, filter, ul, li, a, i;
+            var input, filter, ul, li, a, i, j;
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
             div = document.getElementById("myDropdown");
             a = div.getElementsByTagName("a");
-            for (i = 0; i < a.length; i++) {
+            for (i = 0, j = 0; i < a.length; i++) {
                 txtValue = a[i].textContent || a[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {
                     a[i].style.display = "";
+                    j = j + 1;
                 } else {
                     a[i].style.display = "none";
                 }
