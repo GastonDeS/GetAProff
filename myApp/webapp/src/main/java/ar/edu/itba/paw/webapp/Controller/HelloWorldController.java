@@ -67,8 +67,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("tutors");
         mav.addObject("materias", subjectService.list());
         mav.addObject("tutors", userService.findUsersBySubjectId(search));
-        mav.addObject("schedule",timetableService.findById(1));
-        mav.addObject("timeService",timetableService);
+        mav.addObject("weekDays",Timetable.Days.values());
         return mav;
     }
 
