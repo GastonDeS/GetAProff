@@ -38,12 +38,14 @@
         </div>
         <script>
             function setColor(btn){
-                let property = document.getElementById(btn);
-                if (property.style.backgroundColor === "#85BDBF"){
-                    property.style.backgroundColor = "transparent"
+                let color = document.getElementById(btn).style.backgroundColor;
+                let darkblueElem = document.createElement("p");
+                darkblueElem.style.backgroundColor = "#85BDBF";
+                if (color === darkblueElem.style.backgroundColor ){
+                    document.getElementById(btn).style.backgroundColor = "transparent"
                 }
                 else{
-                    property.style.backgroundColor = "#85BDBF"
+                    document.getElementById(btn).style.backgroundColor = "#85BDBF"
                 }
             }
         </script>

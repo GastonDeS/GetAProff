@@ -92,7 +92,13 @@ public class HelloWorldController {
         }
         User user = userService.findById(uid);
         emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), subjectName,form.getEmail(), form.getMessage());
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/emailSent");
+    }
+
+    @RequestMapping("/emailSent")
+    public ModelAndView emailSent() {
+        final ModelAndView mav = new ModelAndView("emailSent");
+        return mav;
     }
 }
 

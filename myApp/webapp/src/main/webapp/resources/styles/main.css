@@ -55,7 +55,10 @@ body {
 
 .tutors-search {
     margin: 30px auto auto auto;
-    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #myInput {
@@ -83,10 +86,19 @@ body {
     align-items: center;
 }
 
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
 .search-bar {
     border-radius: 20px;
     background-color: #C9FBFF;
     border: black 1px;
+    margin: auto;
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -126,6 +138,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin:auto;
 }
 
 .autocomplete {

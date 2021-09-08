@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +9,7 @@
     <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
     <script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/script.js"/>"></script>
+    <spring:message code="home.search.placeholder" var="searchPlaceholder"/>
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp">
@@ -16,7 +19,8 @@
         <img src="<c:url value="${pageContext.request.contextPath}/resources/images/main-page-img.png"/>" alt="slogan" class="slogan-img">
         <div class="search-bar">
             <div class="dropdown">
-                <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                <input onclick="myFunction()" class="form-control  search-stl" type="text"
+                       placeholder= "${searchPlaceholder}" id="myInput" onkeyup="filterFunction()">
                 <div id="myDropdown" class="dropdown-content">
                     <c:forEach var="materia" items="${materias}" varStatus="loop">
                         <c:choose>
@@ -31,21 +35,29 @@
                 </div>
             </div>
             <div style="margin-left: 20px; ">
-                <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search='+document.getElementById('myInput').value;" type="button" class="btn btn-custom">Buscar</button>
+                <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search='+document.getElementById('myInput').value;"
+                        type="button" class="btn btn-custom"><spring:message code="home.search.buttonText"/></button>
             </div>
         </div>
     </div>
 
     <script>
         function searchFunction(value) {
-            document.getElementById("myInput").setAttribute("value",value);
+            document.getElementById("myInput").value = value;
         }
 
         function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
+            if (document.getElementById("myDropdown").style.display === "flex") {
+                document.getElementById("myDropdown").style.display = "none";
+            } else {
+                document.getElementById("myDropdown").style.display = "flex";
+                document.getElementById("myDropdown").style.flexDirection = "column";
+            }
         }
 
         function filterFunction() {
+            document.getElementById("myDropdown").style.display = "flex";
+            document.getElementById("myDropdown").style.flexDirection = "column";
             var input, filter, ul, li, a, i, j;
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
