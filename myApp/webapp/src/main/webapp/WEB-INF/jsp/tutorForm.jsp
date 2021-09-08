@@ -47,14 +47,7 @@
                 </div>
             </div>
             <div class="section-container">
-                <p class="section-title"><c:out value="Horarios"/></p>
-                <div class="time-section">
-                    <c:forEach var="day" items="${days}">
-                        <jsp:include page="timeRange.jsp">
-                            <jsp:param name="day" value="${day}" />
-                        </jsp:include>
-                    </c:forEach>
-                </div>
+                <jsp:include page="../components/timetable.jsp"/>
             </div>
             <div class="btn-container">
                 <button type="submit" class="btn btn-custom ms-auto p-2 bd-highlight"><c:out value="Submit"/></button>

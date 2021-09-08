@@ -51,7 +51,6 @@ public class HelloWorldController {
     public ModelAndView tutorForm(final TutorForm form) {
         final ModelAndView mav = new ModelAndView("tutorForm");
         mav.addObject("tutorForm", form);
-        mav.addObject("days", Timetable.Days.values());
         mav.addObject("subjects", subjectService.list());
         return mav;
     }
