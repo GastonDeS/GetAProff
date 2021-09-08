@@ -16,6 +16,42 @@ body {
 .main-search {
     width: 200%;
 }
+.main-container {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.subjects-selector-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0 30px 30px 30px;
+}
+
+.subject-price-input {
+    width: 100px;
+}
+
+.subject-list {
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.price-icon {
+    margin: 0 10px;
+}
+
+.price-container {
+    display: flex;
+    margin: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center
+}
 
 .tutors-search {
     margin: 30px auto auto auto;
@@ -70,6 +106,13 @@ body {
     background-color: #85BDBF;
     color: black !important;
 }
+
+.btn-custom-plus {
+    margin-left: 5px;
+    border-color: transparent;
+    background-color: #85BDBF;
+}
+
 .btn-custom-outline {
     border-radius: 10px;
     border-color: black;
@@ -161,7 +204,7 @@ div.bg-tutors-card-custom {
 .dropdown-content {
     display: none;
     position: absolute;
-    top: 60px;
+    top: 100%;
     width: 100%;
     /*display: flex;*/
     background-color: #f6f6f6;
@@ -211,6 +254,24 @@ div.bg-tutors-card-custom {
     height: fit-content;
     width: 60vw;
 }
+
+.subject-container {
+    margin: 15px 0px 15px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: #C9FBFF;
+    border: black 1px;
+    height: fit-content;
+    width: 60vw;
+}
+
+.subject-title {
+    margin-top: 30px;
+}
+
 
 .input-section {
     display: flex;
@@ -274,6 +335,11 @@ div.bg-tutors-card-custom {
     align-items: center;
     justify-content: center;
 }
+.submit-button {
+    margin: auto;
+    font-size: 1.5em;
+    padding: 2em;
+}
 
 /*Timetable*/
 
@@ -315,7 +381,10 @@ div.bg-tutors-card-custom {
 
 .time-range{
     text-align: center;
+    justify-content: center;
     width: 100%;
+    height: 100%;
+    margin: auto;
     color: black;
     font-size: 16px;
     font-family: "Roboto Light", sans-serif;

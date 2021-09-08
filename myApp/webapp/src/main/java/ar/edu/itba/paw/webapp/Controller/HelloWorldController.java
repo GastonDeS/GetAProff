@@ -64,7 +64,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("index");
         final User u = userService.create(form.getName(), form.getMail());
         mav.addObject("currentUser", u);
-        mav.addObject("materias", subjectService.list());
+        mav.addObject("subjects", subjectService.list());
         return mav;
     }
 
