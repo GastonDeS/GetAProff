@@ -9,11 +9,11 @@
 <html>
 <body>
 <div class="container">
-    <h1>Contactarse</h1>
+    <h1>Contactarse con ${user.name} .. ${user.mail} .... ${subjectName}</h1>
     <div class="container jumbotron">
         <div class="row">
             <div class="col-md-8 mx-auto ">
-                <c:url value="/contact" var="contactUrl"/>
+                <c:url value="/contact?uid=${user.id}&subjectName=${subjectName}" var="contactUrl"/>
                 <form:form modelAttribute="contactForm" action="${contactUrl}" method="post">
                     <div class="form-group">
                         <form:label path="name"/>
