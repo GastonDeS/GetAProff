@@ -25,18 +25,18 @@
             <div class="input-section">
                 <div class="form-input">
                     <form:label path="name">Tu nombre:</form:label>
-                    <form:input type="text" path="name" placeholder="nombre"/>
+                    <form:input type="text" path="name" class="form-control" placeholder="nombre"/>
                     <form:errors path="name" element="p" cssStyle="color: red"/>
                 </div>
                 <div class="form-input">
                     <form:label path="email">Tu email:</form:label>
-                    <form:input type="text" path="email" placeHolder="example@gmail.com"/>
+                    <form:input type="text" path="email" class="form-control" placeHolder="example@gmail.com"/>
                     <form:errors path="email" element="p" cssStyle="color: red"/>
                 </div>
                 <div class="form-input">
                     <form:label path="message">Tu mensaje:</form:label>
                     <form:textarea cssStyle="height: 150px" type="text" path="message"
-                                   placeHolder="Que tal, me gustaría que fueses mi profesor, mis horarios son..."/>
+                                   class="form-control" placeHolder="Que tal, me gustaría que fueses mi profesor, mis horarios son..."/>
                     <form:errors path="message" element="p" cssStyle="color: red"/>
                 </div>
                 <div class="btn-container">
