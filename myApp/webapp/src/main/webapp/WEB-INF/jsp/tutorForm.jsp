@@ -16,45 +16,49 @@
             </a>
         </div>
     </nav>
-    <div class="mainContainer">
+    <div class="main-container">
         <c:url value="/create" var="postPath"/>
         <form:form modelAttribute="tutorForm" action="${postPath}"  method="post">
-            <div class="form-group">
-                <form:label path="name"></form:label>
-                <form:input type="text" class="form-control" path="name" placeholder="Nombre"/>
-                <form:errors path="name" cssClass="formError" element="p"/>
+            <div class="section-container">
+                <p class="section-title"><c:out value="Información Personal"/></p>
+                <div class="input-section">
+                    <div class="form-input">
+                        <form:input type="text" class="form-control" path="name" placeholder="Nombre"/>
+                        <form:errors path="name" cssClass="formError" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <div class="mail-input">
+                            <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="Correo Electrónico"/>
+                            <small id="emailHelp" class="form-text text-muted"><c:out value="Por ejemplo, user@mail.com"/></small>
+                            <form:errors path="mail" cssClass="formError" element="p"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <form:label path="mail"></form:label>
-                <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="Ingresar correo electrónico"/>
-                <small id="emailHelp" class="form-text text-muted">Por ejemplo, user@mail.com</small>
-                <form:errors path="mail" cssClass="formError" element="p"/>
+            <div class="section-container">
+                <p class="section-title"><c:out value="Materias"/></p>
+                <div class="subject-section">
+                    <c:forEach var="subject" items="${subjects}">
+                        <div class="subject-box">
+                            <input type="checkbox" id="${subject}box">
+                            <label class="subject-check-label" for="${subject}box"><c:out value="${subject}"/></label>
+                        </div>
+                    </c:forEach>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <div class="section-container">
+                <p class="section-title"><c:out value="Horarios"/></p>
+                <div class="time-section">
+                    <c:forEach var="day" items="${days}">
+                        <jsp:include page="timeRange.jsp">
+                            <jsp:param name="day" value="${day}" />
+                        </jsp:include>
+                    </c:forEach>
+                </div>
             </div>
-            <div class="timetable">
-                <jsp:include page="../components/timeRange.jsp">
-                    <jsp:param name="day" value="lunes" />
-                </jsp:include>
-                <jsp:include page="../components/timeRange.jsp">
-                    <jsp:param name="day" value="lunes" />
-                </jsp:include>
-                <jsp:include page="../components/timeRange.jsp">
-                    <jsp:param name="day" value="lunes" />
-                </jsp:include>
-                <jsp:include page="../components/timeRange.jsp">
-                    <jsp:param name="day" value="lunes" />
-                </jsp:include>
-                <jsp:include page="../components/timeRange.jsp">
-                    <jsp:param name="day" value="lunes" />
-                </jsp:include>
-                <jsp:include page="../components/timeRange.jsp">
-                    <jsp:param name="day" value="lunes" />
-                </jsp:include>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-custom ms-auto p-2 bd-highlight"><c:out value="Submit"/></button>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
         </form:form>
     </div>
 </body>

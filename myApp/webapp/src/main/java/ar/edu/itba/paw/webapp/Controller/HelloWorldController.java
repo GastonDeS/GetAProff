@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.TimetableService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Timetable;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
 import ar.edu.itba.paw.webapp.Forms.TutorForm;
@@ -50,7 +51,8 @@ public class HelloWorldController {
     public ModelAndView tutorForm(final TutorForm form) {
         final ModelAndView mav = new ModelAndView("tutorForm");
         mav.addObject("tutorForm", form);
-
+        mav.addObject("days", Timetable.Days.values());
+        mav.addObject("subjects", subjectService.list());
         return mav;
     }
 
@@ -62,6 +64,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("index");
         final User u = userService.create(form.getName(), form.getMail());
         mav.addObject("currentUser", u);
+        mav.addObject("materias", subjectService.list());
         return mav;
     }
 
@@ -93,3 +96,4 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/");
     }
 }
+
