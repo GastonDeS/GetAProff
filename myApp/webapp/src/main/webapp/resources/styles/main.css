@@ -55,7 +55,10 @@ body {
 
 .tutors-search {
     margin: 30px auto auto auto;
-    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #myInput {
@@ -87,6 +90,7 @@ body {
     border-radius: 20px;
     background-color: #C9FBFF;
     border: black 1px;
+    margin: auto;
     padding: 20px;
     display: flex;
     justify-content: center;
