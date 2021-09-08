@@ -71,7 +71,7 @@
 
     <div class="container">
         <div class="row">
-            <c:forEach var="tutor" items="${tutors}">
+            <c:forEach var="tutor" items="${tutors}" varStatus="loop">
                 <div style="margin-top: 30px" class="col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="card bg-tutors-card-custom">
                         <div class="card-body">
@@ -82,7 +82,7 @@
                             <li class="list-group-item">Precio: $${tutor.price}</li>
                         </ul>
                         <div class="card-body d-flex">
-                            <button type="button" class="btn btn-custom-outline" data-bs-toggle="modal" data-bs-target="#timeModal">
+                            <button type="button" class="btn btn-custom-outline" data-bs-toggle="modal" data-bs-target="#timeModal${loop.index}">
                                 Horarios
                             </button>
                             <button type="button" class="btn btn-custom ms-auto p-2 bd-highlight ">Contactar</button>
@@ -92,28 +92,20 @@
                 </div>
 
                 <!-- Modal -->
-                <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
+                <div class="modal fade" id="timeModal${loop.index}" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="timeModalLabel">${tutor.name} - ${tutor.subject} - $${tutor.price}</h5>
+                                <h5 class="modal-title" id="timeModalLabel">Horarios de ${tutor.name}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-<%--                                <c:forEach var="day" items="${schedule.schedule}">--%>
-<%--                                    <c:if test="${day != null}">--%>
-<%--                                        <h>${day}<br></h>--%>
-<%--                                    </c:if>--%>
-<%--                                </c:forEach>--%>
-<%--                                <c:forEach var="day" items="${timeService.findById(tutor.userId)}">--%>
-<%--                                    <c:if test="${day != null}">--%>
-<%--                                        <h>${day}<br></h>--%>
-<%--                                    </c:if>--%>
-<%--                                </c:forEach>--%>
+                                <c:forEach var="day" items="${tutor.userSchedule}" varStatus="loop">
+                                    <c:if test="${day != null}">
+                                        <h>${weekDays[loop.index]}: ${day}<br></h>
+                                    </c:if>
+                                </c:forEach>
                             </div>
-<%--                            <div class="modal-footer">--%>
-<%--                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>--%>
-<%--                            </div>--%>
                         </div>
                     </div>
                 </div>
