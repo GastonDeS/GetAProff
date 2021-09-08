@@ -14,7 +14,7 @@
                 <img src="<c:url value="${page.Context.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
             </a>
             <div class="d-flex flex-row-reverse collapse navbar-collapse " id="navbarNav">
-                <a href="https://forms.gle/8e17B1P1dBgrxxVt9" class="btn nav-link active btn-custom btn-small">
+                <a href="${page.Context.request.contextPath}/create" class="btn nav-link active btn-custom btn-small">
                     Dar clases particulares
                 </a>
             </div>
