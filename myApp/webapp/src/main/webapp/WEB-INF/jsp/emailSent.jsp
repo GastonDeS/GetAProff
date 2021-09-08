@@ -13,11 +13,9 @@
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
-<div >
-    <div style="height: 100%;" class="main-container d-flex justify-content-center align-content-center" >
-            <h1 class="mt-5">Mail Enviado</h1>
-            <a class="btn btn-custom bd-highlight" href="${pageContext.request.contextPath}/">Volver a Inicio</a>
-    </div>
+<div class="centered">
+        <h1 class="mt-5">Mail enviado</h1>
+        <a class="btn btn-custom bd-highlight centered-horizontal" href="${pageContext.request.contextPath}/">Volver a Inicio</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
