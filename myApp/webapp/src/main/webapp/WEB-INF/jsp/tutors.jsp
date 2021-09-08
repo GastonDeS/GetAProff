@@ -1,22 +1,18 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
-    <title>Tutors</title>
+    <title>Tutors – GetAProff</title>
+    <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-custom">
-        <div class="container">
-            <a href="#" class="navbar-brand mb-0 h1">
-                <img src="<c:url value="${page.Context.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
-            </a>
-        </div>
-    </nav>
-
+    <jsp:include page="../components/navbar.jsp">
+        <jsp:param name="isMainPage" value="${false}"/>
+    </jsp:include>
     <hr class="h-divider">
 
     <div class="tutors-search">
@@ -85,7 +81,9 @@
                             <button type="button" class="btn btn-custom-outline" data-bs-toggle="modal" data-bs-target="#timeModal${loop.index}">
                                 Horarios
                             </button>
-                            <button type="button" class="btn btn-custom ms-auto p-2 bd-highlight ">Contactar</button>
+                            <button type="button" class="btn btn-custom ms-auto p-2 bd-highlight "
+                                onclick="window.location.href='${pageContext.request.contextPath}/contact?uid=${tutor.userId}&subjectName=${tutor.subject}';"
+                            >Contactar</button>
                         </div>
                     </div>
 
@@ -102,7 +100,7 @@
                             <div class="modal-body">
                                 <c:forEach var="day" items="${tutor.userSchedule}" varStatus="loop">
                                     <c:if test="${day != null}">
-                                        <h>${weekDays[loop.index]}: ${day}<br></h>
+                                        <h>${weekDays[loop.index].getValue()}: ${day}<br></h>
                                     </c:if>
                                 </c:forEach>
                             </div>

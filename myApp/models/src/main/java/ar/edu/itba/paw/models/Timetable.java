@@ -13,13 +13,23 @@ public class Timetable {
     }
 
     public enum Days {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
+        MONDAY("Lunes"),
+        TUESDAY("Martes"),
+        WEDNESDAY("Miercoles"),
+        THURSDAY("Jueves"),
+        FRIDAY("Viernes"),
+        SATURDAY("Sabado"),
+        SUNDAY("Domingo");
+
+        public String getValue(){
+            return value;
+        }
+
+        private final String value;
+
+        Days(String value) {
+            this.value = value;
+        }
     }
 
     private final EnumMap<Days,String> schedule;
