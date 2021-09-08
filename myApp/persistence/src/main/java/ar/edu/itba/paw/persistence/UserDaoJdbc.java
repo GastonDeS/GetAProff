@@ -59,7 +59,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<CardProfile> findUsersBySubject(int subjectId) {
+    public List<CardProfile> findUsersBySubjectId(int subjectId) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getString("subject"), rs.getInt("price"), new String[] { rs.getString("monday"),
                 rs.getString("tuesday"), rs.getString("wednesday"), rs.getString("thursday"),

@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS subject (
                 subjectId INTEGER PRIMARY KEY,
                 name varchar(100)
             );
+
 CREATE TABLE IF NOT EXISTS timetable (
                 userId INTEGER,
                 monday VARCHAR(100),

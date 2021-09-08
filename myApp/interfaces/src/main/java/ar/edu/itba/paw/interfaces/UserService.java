@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
     User findById(int id);
-    List<CardProfile> findUsersBySubject(int subjectId);
+    List<CardProfile> findUsersBySubjectId(int subjectId);
     List<User> list();
     /**
      * Create a new user.
