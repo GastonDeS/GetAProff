@@ -84,7 +84,7 @@ public class UserDaoJdbc implements UserDao {
         String query = "SELECT aux.userid, aux.name AS name, s.name AS subject, price, t.monday AS monday, t.tuesday AS tuesday,\n" +
                 "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday\n" +
                 "                FROM (SELECT subjectid, u.userid, price, name FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
-                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE ? LIKE s.name";
+                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE s.name SIMILAR TO '%'||?||'%'";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject}, mapper);
         return list.isEmpty() ? null : list;
