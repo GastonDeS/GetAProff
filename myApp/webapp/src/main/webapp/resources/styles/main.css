@@ -17,16 +17,36 @@ body {
     width: 200%;
 }
 
+.tutors-search {
+    margin: 30px auto auto auto;
+    width: 50vw;
+}
+
+#myInput {
+    width: 30vw;
+}
+
 .h-divider {
     border: 0;
     border-top: 1px solid black;
     margin: 0;
 }
+
+.search{
+    position:absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    /*background: tomato;*/
+    width: 50vw; height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .search-bar {
     border-radius: 20px;
     background-color: #C9FBFF;
     border: black 1px;
-    /*width: 30vw;*/
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -45,16 +65,7 @@ body {
     color: black;
 }
 
-.search{
-    position:absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-    margin: auto;
-    /*background: tomato;*/
-    width: 50vw; height: 50vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 
 .align-vertically-center {
     border-radius: 10px;
@@ -140,6 +151,7 @@ div.bg-tutors-card-custom {
     display: none;
     position: absolute;
     top: 60px;
+    width: 100%;
     /*display: flex;*/
     background-color: #f6f6f6;
     min-width: 230px;
