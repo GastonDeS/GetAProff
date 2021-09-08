@@ -38,14 +38,21 @@
 
         <script>
             function searchFunction(value) {
-                document.getElementById("myInput").setAttribute("value",value);
+                document.getElementById("myInput").value = value;
             }
 
             function myFunction() {
-                document.getElementById("myDropdown").classList.toggle("show");
+                if (document.getElementById("myDropdown").style.display === "flex") {
+                    document.getElementById("myDropdown").style.display = "none";
+                } else {
+                    document.getElementById("myDropdown").style.display = "flex";
+                    document.getElementById("myDropdown").style.flexDirection = "column";
+                }
             }
 
             function filterFunction() {
+                document.getElementById("myDropdown").style.display = "flex";
+                document.getElementById("myDropdown").style.flexDirection = "column";
                 var input, filter, ul, li, a, i, j;
                 input = document.getElementById("myInput");
                 filter = input.value.toUpperCase();
