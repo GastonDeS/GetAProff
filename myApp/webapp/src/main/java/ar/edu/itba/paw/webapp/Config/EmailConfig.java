@@ -36,9 +36,10 @@ public class EmailConfig {
     public SimpleMailMessage templateSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setText(
-                "<p>Hola que tal, desde GetAProff una persona pide por tus clases</p>" +
-                        "<p>Su email es:%s</p>" +
-                        "<p>Te escribió este mensaje: %s</p>");
+                "<p>Hola que tal, desde GetAProff el usuario %s pide por tus clases de %s!</p>" +
+                        "<p>Su email es: %s</p>" +
+                        "<p>Te escribió este mensaje: %s</p>" +
+                        "<p>Contáctalo para coordinar horarios!<p>");
         return message;
     }
 }
