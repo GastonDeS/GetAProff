@@ -20,7 +20,7 @@
     <div class="">
         <select class="form-select" id="inputGroupSelect04" aria-label="Select materia">
             <c:forEach var="materia" items="${materias}">
-                <option><c:out value="${materia.name}"/></option>
+                <option><c:out value="${materia}"/></option>
             </c:forEach>
         </select>
         <div style="margin-left: 20px; ">
@@ -60,16 +60,15 @@
                             </div>
                             <div class="modal-body">
                                 <p>Lunes:</p>
-                                <p>Martes:</p>
+<%--                                <p>Martes:</p>--%>
                                 <p>Miercoles:</p>
-                                <p>Jueves:</p>
+<%--                                <p>Jueves:</p>--%>
                                 <p>Viernes:</p>
                                 <p>Sabado:</p>
-                                <p>Domingo:</p>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
+<%--                            <div class="modal-footer">--%>
+<%--                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>--%>
+<%--                            </div>--%>
                         </div>
                     </div>
                 </div>

@@ -50,7 +50,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User create(String name, String mail) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("name", name); // la key es el nombre de la columna
+        args.put("name", name);
         args.put("password",null);
         args.put("mail",mail);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
