@@ -99,3 +99,7 @@ div.bg-tutors-card-custom {
     background-color: #C9FBFF !important;
 }
 
+.timetable {
+    display: flex;
+    flex-direction: column;
+}

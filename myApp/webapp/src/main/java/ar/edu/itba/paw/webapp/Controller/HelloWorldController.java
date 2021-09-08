@@ -3,11 +3,16 @@ package ar.edu.itba.paw.webapp.Controller;
 import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.Forms.TutorForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 
 @Controller
@@ -25,20 +30,28 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping("/create")
-    public ModelAndView create(@RequestParam(value = "name") final String username,
-                               @RequestParam( value = "mail") final String mail) {
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public ModelAndView tutorForm(final TutorForm form) {
+        final ModelAndView mav = new ModelAndView("tutorForm");
+        mav.addObject("tutorForm", form);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ModelAndView create(@Valid final TutorForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return tutorForm(form);
+        }
         final ModelAndView mav = new ModelAndView("index");
-        final User u = userService.create(username, mail);
-        mav.addObject("currentUser", u.getName());
+        final User u = userService.create(form.getName(), form.getMail());
+        mav.addObject("currentUser", u);
         return mav;
     }
 
     @RequestMapping("/tutors")
     public ModelAndView tutors() {
         final ModelAndView mav = new ModelAndView("tutors");
-//        mav.addObject("materias", .list());
-//        mav.addObject("tutors", materiaService.list());
         return mav;
     }
 }

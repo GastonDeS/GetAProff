@@ -5,7 +5,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <title>getAProff</title>
     <link rel="stylesheet"  type="text/css" href="<c:url value="${page.Context.request.contextPath}/resources/styles/main.css"/>"/>
-
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-custom">
@@ -14,7 +13,7 @@
                 <img src="<c:url value="${page.Context.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
             </a>
             <div class="d-flex flex-row-reverse collapse navbar-collapse " id="navbarNav">
-                <a href="https://forms.gle/8e17B1P1dBgrxxVt9" class="btn nav-link active btn-custom btn-small">
+                <a href="${page.Context.request.contextPath}/create" class="btn nav-link active btn-custom btn-small">
                     Dar clases particulares
                 </a>
             </div>
