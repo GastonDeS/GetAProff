@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.Controller;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.TimetableService;
 import ar.edu.itba.paw.interfaces.UserService;
@@ -28,6 +29,8 @@ public class HelloWorldController {
 
     @Autowired
     TimetableService timetableService;
+    @Autowired
+    EmailService emailService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -55,5 +58,10 @@ public class HelloWorldController {
         mav.addObject("timeService",timetableService);
         return mav;
     }
-}
 
+    @RequestMapping("/email")
+    public ModelAndView email() {
+        emailService.sendTemplateMessage("anaso@itba.edu.ar", "GetAProff: Nueva petición de clase", "sespina@itba.edu.ar", "Hola quiero tus clases de matematica, contactame!");
+        return new ModelAndView("redirect:/");
+    }
+}
