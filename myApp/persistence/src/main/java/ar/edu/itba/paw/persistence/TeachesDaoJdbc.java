@@ -27,7 +27,7 @@ public class TeachesDaoJdbc implements TeachesDao {
     TeachesDaoJdbc (final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("subject");
+                .withTableName("teaches");
     }
 
     @Override
@@ -36,21 +36,21 @@ public class TeachesDaoJdbc implements TeachesDao {
         args.put("userid", userid);
         args.put("subjectid",subjectid);
         args.put("price",price);
-        final Number userId = jdbcInsert.execute(args);
+        jdbcInsert.execute(args);
         return new Teaches(userid, subjectid, price);
     }
 
     @Override
     public List<Teaches> findUserBySubject(int subjectId) {
-        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE 'subjectId' = ?", new Object[] { subjectId },
-                ROW_MAPPER);
+        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE 'subjectId' = ?",
+                new Object[] { subjectId }, ROW_MAPPER);
         return list.isEmpty() ? null : list ;
     }
 
     @Override
     public List<Teaches> findSubjectByUser(int userId) {
-        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE 'userId' = ?",  new Object[] { userId },
-                ROW_MAPPER);
+        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE 'userId' = ?",
+                new Object[] { userId }, ROW_MAPPER);
         return list.isEmpty() ? null : list ;
     }
 }

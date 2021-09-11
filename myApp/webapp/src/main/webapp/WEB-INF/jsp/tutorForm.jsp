@@ -11,6 +11,9 @@
     <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
     <spring:message code="tutorCreate.form.namePlaceholder" var="namePlaceholder"/>
     <spring:message code="tutorCreate.form.mailPlaceholder" var="mailPlaceholder"/>
+    <spring:message code="tutorCreate.form.subjectPlaceholder" var="subjectPlaceholder"/>
+    <spring:message code="tutorCreate.form.pricePlaceholder" var="pricePlaceholder"/>
+    <spring:message code="tutorCreate.form.backButton" var="backButton"/>
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp">
@@ -27,7 +30,7 @@
                         <form:errors path="name" cssClass="formError" element="p"/>
                     </div>
                     <div class="form-input">
-                        <div class="mail-input">
+                        <div class="lower-input">
                             <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="${mailPlaceholder}"/>
                             <small id="emailHelp" class="form-text text-muted"><spring:message code="tutorCreate.form.mailHint"/> user@mail.com</small>
                             <form:errors path="mail" cssClass="formError" element="p"/>
@@ -62,7 +65,7 @@
                                 <th>
                                     <div class="price-container">
                                         <span class="price-icon">$</span>
-                                        <input  class="form-control subject-price-input " placeholder="Precio" type="text" id="pricebox">
+                                        <input  class="form-control subject-price-input " placeholder="${pricePlaceholder}" type="text" id="pricebox">
                                     </div>
                                 </th>
                                 <th>
@@ -159,7 +162,7 @@
                 <jsp:include page="../components/timetable.jsp"/>
             </div>
             <div class="btn-container">
-                <button type="button" onclick="window.location.href='/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
+                <button type="button" onclick="window.location.href='/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="${backButton}"/></button>
                 <button type="submit" class="btn btn-custom submit-button p-2 bd-highlight">
                     <spring:message code="tutorCreate.form.buttonText"/>
                 </button>

@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Timetable;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 public class TutorForm {
 
@@ -14,7 +13,9 @@ public class TutorForm {
     @NotNull
     private String name;
 
-    private Map<Integer,Integer> subjects;
+    private String subject;
+
+    private Integer price;
 
     private Timetable userSchedule;
 
@@ -34,19 +35,27 @@ public class TutorForm {
         this.mail = mail;
     }
 
-    public Map<Integer,Integer> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(Map<Integer,Integer> subjects) {
-        this.subjects = subjects;
-    }
-
     public Timetable getUserSchedule() {
         return userSchedule;
     }
 
     public void setUserSchedule(Timetable userSchedule) {
         this.userSchedule = userSchedule;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }
