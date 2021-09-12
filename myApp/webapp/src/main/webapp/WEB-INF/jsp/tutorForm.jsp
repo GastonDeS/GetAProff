@@ -3,12 +3,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title><spring:message code="tutorCreate.title"/> – GetAProff</title>
-    <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
+    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
+    <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
     <spring:message code="tutorCreate.form.namePlaceholder" var="namePlaceholder"/>
     <spring:message code="tutorCreate.form.mailPlaceholder" var="mailPlaceholder"/>
 </head>
@@ -95,7 +95,6 @@
 
                         let text = document.createTextNode(subject);
                         let priceTextElem = document.createTextNode("$ "+price);
-                        console.log(price)
                         let x = document.createTextNode("x");
                         deleteBtn.appendChild(x);
                         name.appendChild(text);
@@ -159,7 +158,7 @@
                 <jsp:include page="../components/timetable.jsp"/>
             </div>
             <div class="btn-container">
-                <button type="button" onclick="window.location.href='/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
+                <button type="button" onclick="window.location.href='${pageContext.request.contextPath}/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
                 <button type="submit" class="btn btn-custom submit-button p-2 bd-highlight">
                     <spring:message code="tutorCreate.form.buttonText"/>
                 </button>

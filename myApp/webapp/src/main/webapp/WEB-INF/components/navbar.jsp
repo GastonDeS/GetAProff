@@ -3,7 +3,7 @@
  <nav class="navbar navbar-expand-sm navbar-custom">
             <div class="container">
                 <a href="${pageContext.request.contextPath}/" class="navbar-brand mb-0 h1">
-                    <img src="<c:url value="${pageContext.request.contextPath}/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
+                    <img src="<c:url value="/resources/images/logo_black.png"/>" alt="logo" class="d-inline-block align-top">
                 </a>
                 <c:if test="${param.isMainPage}">
                     <div class="d-flex flex-row-reverse collapse navbar-collapse " id="navbarNav">
