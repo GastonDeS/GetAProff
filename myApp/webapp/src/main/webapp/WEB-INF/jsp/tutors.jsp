@@ -83,10 +83,10 @@
                             <li class="list-group-item">Precio: $${tutor.price}</li>
                         </ul>
                         <div class="card-body d-flex">
-                            <button type="button" class="btn btn-custom-outline" data-bs-toggle="modal" data-bs-target="#timeModal${loop.index}">
+                            <button type="button" class="btn-custon" data-bs-toggle="modal" data-bs-target="#timeModal${loop.index}">
                                 Horarios
                             </button>
-                            <button type="button" class="btn btn-custom ms-auto p-2 bd-highlight "
+                            <button type="button" class="btn-custom ms-auto p-2 bd-highlight "
                                 onclick="window.location.href='${pageContext.request.contextPath}/contact?uid=${tutor.userId}&subjectName=${tutor.subject}';"
                             >Contactar</button>
                         </div>

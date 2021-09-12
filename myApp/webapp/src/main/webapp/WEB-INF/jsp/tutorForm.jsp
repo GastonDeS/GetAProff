@@ -9,11 +9,6 @@
     <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
-    <spring:message code="tutorCreate.form.namePlaceholder" var="namePlaceholder"/>
-    <spring:message code="tutorCreate.form.mailPlaceholder" var="mailPlaceholder"/>
-    <spring:message code="tutorCreate.form.subjectPlaceholder" var="subjectPlaceholder"/>
-    <spring:message code="tutorCreate.form.pricePlaceholder" var="pricePlaceholder"/>
-    <spring:message code="tutorCreate.form.backButton" var="backButton"/>
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp">
@@ -26,12 +21,12 @@
                 <p class="section-title"><spring:message code="tutorCreate.form.title"/> </p>
                 <div class="input-section">
                     <div class="form-input">
-                        <form:input type="text" class="form-control" path="name" placeholder="${namePlaceholder}"/>
+                        <form:input type="text" class="form-control" path="name" placeholder="nombre"/>
                         <form:errors path="name" cssClass="formError" element="p"/>
                     </div>
                     <div class="form-input">
                         <div class="lower-input">
-                            <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="${mailPlaceholder}"/>
+                            <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="mail"/>
                             <small id="emailHelp" class="form-text text-muted"><spring:message code="tutorCreate.form.mailHint"/> user@mail.com</small>
                             <form:errors path="mail" cssClass="formError" element="p"/>
                         </div>
@@ -65,7 +60,7 @@
                                 <th>
                                     <div class="price-container">
                                         <span class="price-icon">$</span>
-                                        <input  class="form-control subject-price-input " placeholder="${pricePlaceholder}" type="text" id="pricebox">
+                                        <input  class="form-control subject-price-input " placeholder="Precio" type="text" id="pricebox">
                                     </div>
                                 </th>
                                 <th>
@@ -162,10 +157,8 @@
                 <jsp:include page="../components/timetable.jsp"/>
             </div>
             <div class="btn-container">
-                <button type="button" onclick="window.location.href='/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="${backButton}"/></button>
-                <button type="submit" class="btn btn-custom submit-button p-2 bd-highlight">
-                    <spring:message code="tutorCreate.form.buttonText"/>
-                </button>
+                <button type="button" onclick="window.location.href='/'" class="btn-custom"><c:out value="Volver"/></button>
+                <button type="submit" class="btn btn-custom">Submit</button>
             </div>
         </form:form>
     </div>
