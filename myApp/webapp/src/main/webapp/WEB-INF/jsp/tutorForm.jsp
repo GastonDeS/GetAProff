@@ -27,7 +27,7 @@
                     <div class="form-input">
                         <div class="lower-input">
                             <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="mail"/>
-                            <small id="emailHelp" class="form-text text-muted"><spring:message code="tutorCreate.form.mailHint"/> user@mail.com</small>
+                            <small id="emailHelp" class="form-text text-muted"><spring:message code="register.form.mailHint"/> user@mail.com</small>
                             <form:errors path="mail" cssClass="formError" element="p"/>
                         </div>
                     </div>
