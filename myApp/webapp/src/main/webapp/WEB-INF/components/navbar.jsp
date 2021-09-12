@@ -7,8 +7,8 @@
                 </a>
                 <c:if test="${param.isMainPage}">
                     <div class="d-flex flex-row-reverse collapse navbar-collapse " id="navbarNav">
-                        <a href="${pageContext.request.contextPath}/create" class="btn nav-link active btn-custom btn-small">
-                            <spring:message code="nav.button.startTeaching.text"/>
+                        <a href="${pageContext.request.contextPath}/register" class="btn nav-link active btn-custom">
+                            <spring:message code="nav.button.register"/>
                         </a>
                     </div>
                 </c:if>

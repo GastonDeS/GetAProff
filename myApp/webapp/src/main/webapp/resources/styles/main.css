@@ -3,19 +3,145 @@
     padding-bottom: 10px;
 }
 .navbar-custom {
-    background-color: #C9FBFF !important;
+    background-color: #9fedd7 !important;
 }
 
 body {
-    background-color: #57737A;
+    background-color: #edeae5;
     position:relative;
     width:100vw;
-    height: 100vh;
-    margin: auto;
+    height: fit-content;
 }
+
+/*Page container without nav bar*/
+.page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100vw;
+    height: 85vh;
+    padding: 2em;
+}
+
+/*Main page*/
+
+.search-bar {
+    border-radius: 20px;
+    background-color: #9fedd7;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+}
+
+.main-img-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 50vw;
+    height: 60vh;
+    margin-top: 30px;
+}
+
+.txt-img {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    width: 33%;
+    height: 100%;
+}
+
+.main-txt {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Roboto Light", sans-serif;
+    color: #026670;
+    text-align: center;
+}
+
+.main-img {
+    width: 80%;
+}
+
+/*Register page*/
+.register-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: fit-content;
+    background-color: #9fedd7;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px;
+}
+
+.register-title {
+    font-size: 32px;
+    font-weight: bold;
+    font-family: "Roboto Light", sans-serif;
+    color: #026670;
+}
+
+.mail-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 80%;
+}
+
+.mail-hint {
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    color: #026670;
+    padding-left: 5px;
+}
+
+.form-control {
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    height: fit-content;
+    width: 80%;
+    margin: 8px 0px 8px 0px;
+}
+
+/* Button design */
+
+.btn-custom {
+    border-radius: 10px;
+    background-color: #026670;
+    color: white;
+    width: fit-content;
+    height: fit-content;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    border-color: transparent;
+}
+
+.btn-custom:hover {
+    color: black;
+}
+
+.submit-btn {
+    width: 20%;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+/*Se puede sacar*/
+.btn-custom-plus {
+    margin-left: 5px;
+}
+
 .main-search {
     width: 200%;
 }
+
 .main-container {
     margin: auto;
     display: flex;
@@ -79,13 +205,6 @@ body {
     justify-content: flex-start;
 }
 
-.search-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 .centered {
     position: fixed;
     top: 50%;
@@ -101,82 +220,12 @@ body {
 .centered-horizontal {margin: auto;
 }
 
-.search-bar {
-    border-radius: 20px;
-    background-color: #C9FBFF;
-    border: black 1px;
-    margin: auto;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40vw;
-}
-
-.slogan-img {
-    width: 40vw;
-    margin-bottom: 30px;
-    margin-top: 30px;
-}
-
-.btn-custom {
-    border-radius: 10px;
-    border-color: black;
-    background-color: #85BDBF;
-    color: black !important;
-}
-
-.btn-custom-plus {
-    margin-left: 5px;
-    border-color: transparent;
-    background-color: #85BDBF;
-}
-
-.btn-custom-outline {
-    border-radius: 10px;
-    border-color: black;
-    color: black;
-}
-
-
-
 .align-vertically-center {
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin:auto;
-}
-
-.autocomplete {
-    /*the container must be positioned relative:*/
-    position: relative;
-}
-.autocomplete-items {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    border-bottom: none;
-    border-top: none;
-    z-index: 99;
-    /*position the autocomplete items to be the same width as the container:*/
-    top: 100%;
-    left: 0;
-    right: 0;
-}
-.autocomplete-items div {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #fff;
-    border-bottom: 1px solid #d4d4d4;
-}
-.autocomplete-items div:hover {
-    /*when hovering an item:*/
-    background-color: #e9e9e9;
-}
-.autocomplete-active {
-    /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important;
-    color: #ffffff;
 }
 
 /*tutors page*/
@@ -254,11 +303,7 @@ div.bg-tutors-card-custom {
     font-size: 16px;
 }
 
-.form-control {
-    height: 28px;
-}
-
-.mail-input {
+.lower-input {
     margin-top: 10px;
 }
 
@@ -269,8 +314,8 @@ div.bg-tutors-card-custom {
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    background-color: #C9FBFF;
-    border: black 1px;
+    background-color: #edf5e1;
+    /*border: white 1px;*/
     height: fit-content;
     width: 60vw;
 }
@@ -282,8 +327,7 @@ div.bg-tutors-card-custom {
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    background-color: #C9FBFF;
-    border: black 1px;
+    background-color: #9fedd7;
     height: fit-content;
     width: 60vw;
 }
@@ -291,7 +335,6 @@ div.bg-tutors-card-custom {
 .subject-title {
     margin-top: 30px;
 }
-
 
 .input-section {
     display: flex;
@@ -355,35 +398,13 @@ div.bg-tutors-card-custom {
     align-items: center;
     justify-content: center;
 }
-.submit-button {
-    margin: auto;
-    font-size: 1.5em;
-    padding: 2em;
-}
 
 /*Timetable*/
 
 .bg-light-gray {
     background-color: #f7f7f7;
 }
-.table-bordered thead td, .table-bordered thead th {
-    border-bottom-width: 2px;
-}
-.table thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
-}
-.table-bordered td, .table-bordered th {
-    border: 1px solid #dee2e6;
-}
 
-.text-light-gray {
-    color: #d6d5d5;
-}
-
-.table-bordered td, .table-bordered th {
-    border: 1px solid #dee2e6;
-}
 .table th {
     padding: .75rem;
     vertical-align: top;

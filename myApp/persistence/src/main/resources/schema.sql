@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
             );
 
 CREATE TABLE IF NOT EXISTS subject (
-                subjectId INTEGER PRIMARY KEY,
+                subjectId SERIAL PRIMARY KEY,
                 name varchar(100)
             );
 

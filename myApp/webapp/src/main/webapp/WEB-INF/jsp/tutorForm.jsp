@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title><spring:message code="tutorCreate.title"/> – GetAProff</title>
     <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
@@ -29,7 +29,7 @@
                     <div class="form-input">
                         <div class="mail-input">
                             <form:input type="email" class="form-control" path="mail" aria-describedby="emailHelp" placeholder="${mailPlaceholder}"/>
-                            <small id="emailHelp" class="form-text text-muted"><spring:message code="tutorCreate.form.mailHint"/> user@mail.com</small>
+                            <small id="emailHelp" class="form-text text-muted"><spring:message code="register.form.mailHint"/> user@mail.com</small>
                             <form:errors path="mail" cssClass="formError" element="p"/>
                         </div>
                     </div>
@@ -158,8 +158,8 @@
                 <jsp:include page="../components/timetable.jsp"/>
             </div>
             <div class="btn-container">
-                <button type="button" onclick="window.location.href='${pageContext.request.contextPath}/'" class="btn btn-custom-outline submit-button p-2 bd-highlight"><c:out value="Volver atras"/></button>
-                <button type="submit" class="btn btn-custom submit-button p-2 bd-highlight">
+                <button type="button" onclick="window.location.href='/'" class="btn-custom"><c:out value="Volver"/></button>
+                <button type="submit" class="btn btn-custom">
                     <spring:message code="tutorCreate.form.buttonText"/>
                 </button>
             </div>

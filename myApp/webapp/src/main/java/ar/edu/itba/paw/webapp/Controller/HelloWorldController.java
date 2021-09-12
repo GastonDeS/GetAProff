@@ -1,14 +1,10 @@
 package ar.edu.itba.paw.webapp.Controller;
 
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.SubjectService;
-import ar.edu.itba.paw.interfaces.TimetableService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
-import ar.edu.itba.paw.models.Timetable;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
+import ar.edu.itba.paw.webapp.Forms.RegisterForm;
 import ar.edu.itba.paw.webapp.Forms.TutorForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -39,6 +32,9 @@ public class HelloWorldController {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    TeachesService teachesService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -65,6 +61,24 @@ public class HelloWorldController {
         final User u = userService.create(form.getName(), form.getMail());
         mav.addObject("currentUser", u);
         mav.addObject("subjects", subjectService.list());
+        return mav;
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public ModelAndView register(final RegisterForm form) {
+        final ModelAndView mav = new ModelAndView("register");
+        mav.addObject("register", form);
+        return mav;
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ModelAndView register(@Valid final RegisterForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return register(form);
+        }
+        final ModelAndView mav = new ModelAndView("index");
+        final User u = userService.create(form.getName(), form.getMail());
+        mav.addObject("currentUser", u);
         return mav;
     }
 

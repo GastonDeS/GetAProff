@@ -55,7 +55,7 @@ public class UserDaoJdbc implements UserDao {
         args.put("password",null);
         args.put("mail",mail);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(name, "pass", userId.intValue(), mail);
+        return new User(name, null, userId.intValue(), mail);
     }
 
     @Override
