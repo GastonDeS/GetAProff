@@ -100,7 +100,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public ModelAndView contact(@ModelAttribute("contactForm") @Valid final ContactForm form, @RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName, final BindingResult errors) {
+    public ModelAndView contact(@RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName, @ModelAttribute("contactForm") @Valid final ContactForm form,final BindingResult errors) {
         if (errors.hasErrors()) {
             return contactForm(form,uid,subjectName);
         }
