@@ -60,18 +60,8 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public List<CardProfile> findUsersBySubjectId(int subjectId) {
-        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
-                rs.getString("subject"), rs.getInt("price"), new String[] { rs.getString("monday"),
-                rs.getString("tuesday"), rs.getString("wednesday"), rs.getString("thursday"),
-                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday")});
-
-        String query = "SELECT aux.userid, aux.name AS name, s.name AS subject, price, t.monday AS monday, t.tuesday AS tuesday,\n" +
-                "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday\n" +
-                "                FROM (SELECT subjectid, u.userid, price, name FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
-                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE s.subjectID = ?";
-        List<CardProfile> list = jdbcTemplate.query(
-                query, new Object[] {subjectId}, mapper);
-        return list.isEmpty() ? null : list;
+        List<String> subjectName = jdbcTemplate.queryForList("SELECT name FROM subject WHERE subjectId = ?", new Object[] {subjectId}, String.class);
+        return subjectName.isEmpty() ? null : findUsersBySubject(subjectName.get(0));
     }
 
     @Override
@@ -84,9 +74,9 @@ public class UserDaoJdbc implements UserDao {
         String query = "SELECT aux.userid, aux.name AS name, s.name AS subject, price, t.monday AS monday, t.tuesday AS tuesday,\n" +
                 "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday\n" +
                 "                FROM (SELECT subjectid, u.userid, price, name FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
-                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE s.name SIMILAR TO '%'||?||'%'";
+                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE lower(s.name) SIMILAR TO '%'||?||'%'";
         List<CardProfile> list = jdbcTemplate.query(
-                query, new Object[] {subject}, mapper);
+                query, new Object[] {subject.toLowerCase()}, mapper);
         return list.isEmpty() ? null : list;
     }
 }

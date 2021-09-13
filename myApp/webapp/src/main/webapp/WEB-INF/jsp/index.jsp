@@ -1,3 +1,4 @@
+<%--suppress HtmlFormInputWithoutLabel --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
@@ -17,24 +18,10 @@
     </jsp:include>
     <div class="page-container">
         <div class="search-bar">
-<%--            <div class="dropdown">--%>
-<%--                <input onclick="myFunction()" class="form-control  search-stl" type="text"--%>
-<%--                       placeholder= "${searchPlaceholder}" id="myInput" onkeyup="filterFunction()">--%>
-<%--                <div id="myDropdown" class="dropdown-content">--%>
-<%--                    <c:forEach var="materia" items="${materias}" varStatus="loop">--%>
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${loop.index<=5}">--%>
-<%--                                <a href="#${materia.name}" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>--%>
-<%--                            </c:when>--%>
-<%--                            <c:otherwise>--%>
-<%--                                <a href="#${materia.name}" style="display: none" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>--%>
-<%--                            </c:otherwise>--%>
-<%--                        </c:choose>--%>
-<%--                    </c:forEach>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-            <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search='+document.getElementById('myInput').value;"
-                    type="button" class="btn btn-custom"><spring:message code="home.search.buttonText"/></button>
+            <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
+                <input type="search" id="query" name="query" placeholder="${searchPlaceholder}" required/>
+                <button type="submit" class="btn btn-custom"><spring:message code="home.search.buttonText"/></button>
+            </form>
         </div>
         <div class="main-img-container">
             <div class="txt-img">

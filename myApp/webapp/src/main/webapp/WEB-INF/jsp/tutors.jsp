@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -14,61 +15,47 @@
         <jsp:param name="isMainPage" value="${false}"/>
     </jsp:include>
     <div class="tutors-search">
-            <div class="search-bar">
-                    <div class="dropdown">
-                        <input onclick="myFunction()" class="form-control  search-stl" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                        <div id="myDropdown" class="dropdown-content">
-                            <c:forEach var="materia" items="${materias}" varStatus="loop">
-                                <c:choose>
-                                    <c:when test="${loop.index<=5}">
-                                        <a href="#${materia.name}" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="#${materia.name}" style="display: none" onclick="searchFunction('${materia.name}')"><c:out value="${materia.name}"/></a>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </div>
-                    </div>
-                    <div style="margin-left: 20px; ">
-                        <button onclick="window.location.href='${pageContext.request.contextPath}/tutors?search='+document.getElementById('myInput').value;" type="button" class="btn btn-custom">Buscar</button>
-                    </div>
-                </div>
-            </div>
+        <div class="search-bar">
+            <form action="${pageContext.request.contextPath}/tutors" method="get" >
+                <input type="text" id="query" name="query" value="<%=request.getParameter("query")%>" required/>
+                <button type="submit" class="btn btn-custom">
+                    <spring:message code="home.search.buttonText"/>
+                </button>
+            </form>
+        </div>
+<%--        <script>--%>
+<%--            function searchFunction(value) {--%>
+<%--                document.getElementById("myInput").value = value;--%>
+<%--            }--%>
 
-        <script>
-            function searchFunction(value) {
-                document.getElementById("myInput").value = value;
-            }
+<%--            function myFunction() {--%>
+<%--                if (document.getElementById("myDropdown").style.display === "flex") {--%>
+<%--                    document.getElementById("myDropdown").style.display = "none";--%>
+<%--                } else {--%>
+<%--                    document.getElementById("myDropdown").style.display = "flex";--%>
+<%--                    document.getElementById("myDropdown").style.flexDirection = "column";--%>
+<%--                }--%>
+<%--            }--%>
 
-            function myFunction() {
-                if (document.getElementById("myDropdown").style.display === "flex") {
-                    document.getElementById("myDropdown").style.display = "none";
-                } else {
-                    document.getElementById("myDropdown").style.display = "flex";
-                    document.getElementById("myDropdown").style.flexDirection = "column";
-                }
-            }
-
-            function filterFunction() {
-                document.getElementById("myDropdown").style.display = "flex";
-                document.getElementById("myDropdown").style.flexDirection = "column";
-                var input, filter, ul, li, a, i, j;
-                input = document.getElementById("myInput");
-                filter = input.value.toUpperCase();
-                div = document.getElementById("myDropdown");
-                a = div.getElementsByTagName("a");
-                for (i = 0, j = 0; i < a.length; i++) {
-                    txtValue = a[i].textContent || a[i].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {
-                        a[i].style.display = "";
-                        j = j + 1;
-                    } else {
-                        a[i].style.display = "none";
-                    }
-                }
-            }
-        </script>
+<%--            function filterFunction() {--%>
+<%--                document.getElementById("myDropdown").style.display = "flex";--%>
+<%--                document.getElementById("myDropdown").style.flexDirection = "column";--%>
+<%--                var input, filter, ul, li, a, i, j;--%>
+<%--                input = document.getElementById("myInput");--%>
+<%--                filter = input.value.toUpperCase();--%>
+<%--                div = document.getElementById("myDropdown");--%>
+<%--                a = div.getElementsByTagName("a");--%>
+<%--                for (i = 0, j = 0; i < a.length; i++) {--%>
+<%--                    txtValue = a[i].textContent || a[i].innerText;--%>
+<%--                    if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {--%>
+<%--                        a[i].style.display = "";--%>
+<%--                        j = j + 1;--%>
+<%--                    } else {--%>
+<%--                        a[i].style.display = "none";--%>
+<%--                    }--%>
+<%--                }--%>
+<%--            }--%>
+<%--        </script>--%>
 
     <div class="container">
         <div class="row">

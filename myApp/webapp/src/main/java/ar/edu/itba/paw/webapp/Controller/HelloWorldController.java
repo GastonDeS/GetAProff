@@ -82,8 +82,8 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping("/tutors")
-    public ModelAndView tutors(@RequestParam(value = "search") @NotNull final String search) {
+    @RequestMapping(value = "/tutors", method = RequestMethod.GET)
+    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String search) {
         final ModelAndView mav = new ModelAndView("tutors");
         mav.addObject("materias", subjectService.list());
         mav.addObject("tutors", userService.findUsersBySubject(search));
