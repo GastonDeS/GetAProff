@@ -2,60 +2,61 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<html>
-<head>
-    <title>Tutors – GetAProff</title>
-    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Tutors – GetAProff</title>
+        <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
 
-</head>
-<body>
-    <jsp:include page="../components/navbar.jsp">
-        <jsp:param name="isMainPage" value="${false}"/>
-    </jsp:include>
-    <div class="tutors-search">
-        <div class="search-bar">
-            <form action="${pageContext.request.contextPath}/tutors" method="get" >
-                <input type="text" id="query" name="query" value="<%=request.getParameter("query")%>" required/>
-                <button type="submit" class="btn btn-custom">
-                    <spring:message code="home.search.buttonText"/>
-                </button>
-            </form>
-        </div>
-<%--        <script>--%>
-<%--            function searchFunction(value) {--%>
-<%--                document.getElementById("myInput").value = value;--%>
-<%--            }--%>
+    </head>
+    <body>
+        <jsp:include page="../components/navbar.jsp">
+            <jsp:param name="isMainPage" value="${false}"/>
+        </jsp:include>
+        <div class="tutors-search">
+            <div class="search-bar">
+                <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
+                    <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" required/>
+                    <button type="submit" class="btn btn-custom">
+                        <spring:message code="home.search.buttonText"/>
+                    </button>
+                </form>
+            </div>
+    <%--        <script>--%>
+    <%--            function searchFunction(value) {--%>
+    <%--                document.getElementById("myInput").value = value;--%>
+    <%--            }--%>
 
-<%--            function myFunction() {--%>
-<%--                if (document.getElementById("myDropdown").style.display === "flex") {--%>
-<%--                    document.getElementById("myDropdown").style.display = "none";--%>
-<%--                } else {--%>
-<%--                    document.getElementById("myDropdown").style.display = "flex";--%>
-<%--                    document.getElementById("myDropdown").style.flexDirection = "column";--%>
-<%--                }--%>
-<%--            }--%>
+    <%--            function myFunction() {--%>
+    <%--                if (document.getElementById("myDropdown").style.display === "flex") {--%>
+    <%--                    document.getElementById("myDropdown").style.display = "none";--%>
+    <%--                } else {--%>
+    <%--                    document.getElementById("myDropdown").style.display = "flex";--%>
+    <%--                    document.getElementById("myDropdown").style.flexDirection = "column";--%>
+    <%--                }--%>
+    <%--            }--%>
 
-<%--            function filterFunction() {--%>
-<%--                document.getElementById("myDropdown").style.display = "flex";--%>
-<%--                document.getElementById("myDropdown").style.flexDirection = "column";--%>
-<%--                var input, filter, ul, li, a, i, j;--%>
-<%--                input = document.getElementById("myInput");--%>
-<%--                filter = input.value.toUpperCase();--%>
-<%--                div = document.getElementById("myDropdown");--%>
-<%--                a = div.getElementsByTagName("a");--%>
-<%--                for (i = 0, j = 0; i < a.length; i++) {--%>
-<%--                    txtValue = a[i].textContent || a[i].innerText;--%>
-<%--                    if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {--%>
-<%--                        a[i].style.display = "";--%>
-<%--                        j = j + 1;--%>
-<%--                    } else {--%>
-<%--                        a[i].style.display = "none";--%>
-<%--                    }--%>
-<%--                }--%>
-<%--            }--%>
-<%--        </script>--%>
+    <%--            function filterFunction() {--%>
+    <%--                document.getElementById("myDropdown").style.display = "flex";--%>
+    <%--                document.getElementById("myDropdown").style.flexDirection = "column";--%>
+    <%--                var input, filter, ul, li, a, i, j;--%>
+    <%--                input = document.getElementById("myInput");--%>
+    <%--                filter = input.value.toUpperCase();--%>
+    <%--                div = document.getElementById("myDropdown");--%>
+    <%--                a = div.getElementsByTagName("a");--%>
+    <%--                for (i = 0, j = 0; i < a.length; i++) {--%>
+    <%--                    txtValue = a[i].textContent || a[i].innerText;--%>
+    <%--                    if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {--%>
+    <%--                        a[i].style.display = "";--%>
+    <%--                        j = j + 1;--%>
+    <%--                    } else {--%>
+    <%--                        a[i].style.display = "none";--%>
+    <%--                    }--%>
+    <%--                }--%>
+    <%--            }--%>
+    <%--        </script>--%>
 
 
 
@@ -108,9 +109,8 @@
                 </div>
             </c:forEach>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+    </body>
 </html>
