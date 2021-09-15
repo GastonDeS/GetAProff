@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,6 +24,10 @@
                     </button>
                 </form>
             </div>
+        </div>
+        <c:if test="${fn:length(tutors)==0}">
+            <h1 class="not-found-header">No hay resultados para esta busqueda</h1>
+        </c:if>
     <%--        <script>--%>
     <%--            function searchFunction(value) {--%>
     <%--                document.getElementById("myInput").value = value;--%>
@@ -63,7 +67,7 @@
     <div class="container">
         <div class="row">
             <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                <div style="margin-top: 30px" class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
                     <div class="container">
                         <jsp:include page="../components/tutorCard.jsp">
                             <jsp:param name="name" value="${tutor.name}"/>
