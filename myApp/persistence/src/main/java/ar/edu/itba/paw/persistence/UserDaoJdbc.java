@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +13,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserDaoJdbc implements UserDao {
@@ -49,13 +49,13 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(String name, String mail) {
+    public User create(String name, String mail, String password) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name);
-        args.put("password",null);
+        args.put("password",password);
         args.put("mail",mail);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(name, null, userId.intValue(), mail);
+        return new User(name, password, userId.intValue(), mail);
     }
 
     @Override
@@ -78,5 +78,11 @@ public class UserDaoJdbc implements UserDao {
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase()}, mapper);
         return list.isEmpty() ? null : list;
+    }
+
+    @Override
+    public Optional<User> findByEmail(String mail) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[] {mail}, ROW_MAPPER)
+                .stream().findFirst();
     }
 }

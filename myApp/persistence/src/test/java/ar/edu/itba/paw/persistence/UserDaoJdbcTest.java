@@ -40,7 +40,7 @@ public class UserDaoJdbcTest {
     @Test
     public void testCreate(){
 
-        final User newUser = userDao.create(USERNAME,USER_MAIL);
+        final User newUser = userDao.create(USERNAME,USER_MAIL,USER_PASS);
 
         Assert.assertNotNull(newUser);
         Assert.assertEquals(USER_MAIL,newUser.getMail());

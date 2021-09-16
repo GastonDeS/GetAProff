@@ -1,4 +1,3 @@
-<%--suppress HtmlFormInputWithoutLabel --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
@@ -17,14 +16,14 @@
             <jsp:param name="isMainPage" value="${true}"/>
         </jsp:include>
         <div class="page-container">
-            <div class="search-bar">
-                <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
-                    <input type="search" id="query" name="query"  class="search-input" placeholder="${searchPlaceholder}" required/>
+            <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
+                <div class="search-bar">
+                    <input type="search" id="query" name="query"  class="form-control" style="width: 30vw" placeholder="${searchPlaceholder}" required/>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
             <div class="main-img-container">
                 <div class="txt-img">
                     <img class="main-img" src="<c:url value="${pageContext.request.contextPath}/resources/images/teacher_icon.png"/>">
@@ -40,42 +39,5 @@
                 </div>
             </div>
         </div>
-
-    <%--    <script>--%>
-    <%--        function searchFunction(value) {--%>
-    <%--            document.getElementById("myInput").value = value;--%>
-    <%--        }--%>
-
-    <%--        function myFunction() {--%>
-    <%--            if (document.getElementById("myDropdown").style.display === "flex") {--%>
-    <%--                document.getElementById("myDropdown").style.display = "none";--%>
-    <%--            } else {--%>
-    <%--                document.getElementById("myDropdown").style.display = "flex";--%>
-    <%--                document.getElementById("myDropdown").style.flexDirection = "column";--%>
-    <%--            }--%>
-    <%--        }--%>
-
-    <%--        function filterFunction() {--%>
-    <%--            document.getElementById("myDropdown").style.display = "flex";--%>
-    <%--            document.getElementById("myDropdown").style.flexDirection = "column";--%>
-    <%--            var input, filter, ul, li, a, i, j;--%>
-    <%--            input = document.getElementById("myInput");--%>
-    <%--            filter = input.value.toUpperCase();--%>
-    <%--            div = document.getElementById("myDropdown");--%>
-    <%--            a = div.getElementsByTagName("a");--%>
-    <%--            for (i = 0, j = 0; i < a.length; i++) {--%>
-    <%--                txtValue = a[i].textContent || a[i].innerText;--%>
-    <%--                if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {--%>
-    <%--                    a[i].style.display = "";--%>
-    <%--                    j = j + 1;--%>
-    <%--                } else {--%>
-    <%--                    a[i].style.display = "none";--%>
-    <%--                }--%>
-    <%--            }--%>
-    <%--        }--%>
-    <%--    </script>--%>
-
-    <%--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>--%>
-    <%--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>--%>
     </body>
 </html>

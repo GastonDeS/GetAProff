@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
 import ar.edu.itba.paw.webapp.Forms.RegisterForm;
-import ar.edu.itba.paw.webapp.Forms.TutorForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,9 +27,6 @@ public class HelloWorldController {
     SubjectService subjectService;
 
     @Autowired
-    TimetableService timetableService;
-
-    @Autowired
     EmailService emailService;
 
     @Autowired
@@ -44,40 +40,23 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public ModelAndView tutorForm(final TutorForm form) {
-        final ModelAndView mav = new ModelAndView("tutorForm");
-        mav.addObject("tutorForm", form);
-        mav.addObject("subjects", subjectService.list());
-        return mav;
-    }
-
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@Valid final TutorForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return tutorForm(form);
-        }
-        final ModelAndView mav = new ModelAndView("index");
-        final User u = userService.create(form.getName(), form.getMail());
-        mav.addObject("currentUser", u);
-        mav.addObject("subjects", subjectService.list());
-        return mav;
+    @RequestMapping("/login")
+    public ModelAndView login() {
+        return new ModelAndView("login");
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public ModelAndView register(final RegisterForm form) {
-        final ModelAndView mav = new ModelAndView("register");
-        mav.addObject("register", form);
-        return mav;
+    public ModelAndView register(@ModelAttribute("register") final RegisterForm form) {
+        return new ModelAndView("register");
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@Valid final RegisterForm form, final BindingResult errors) {
+    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
             return register(form);
         }
         final ModelAndView mav = new ModelAndView("index");
-        final User u = userService.create(form.getName(), form.getMail());
+        final User u = userService.create(form.getName(), form.getMail(), form.getPassword());
         mav.addObject("currentUser", u);
         return mav;
     }
@@ -92,7 +71,8 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.GET)
-    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName) {
+    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @RequestParam(value = "uid") @NotNull final int uid,
+                                    @RequestParam(value = "subjectName") @NotNull final String subjectName) {
         final ModelAndView mav = new ModelAndView("contactForm");
         mav.addObject("user",userService.findById(uid));
         mav.addObject("subjectName",subjectName);
@@ -100,7 +80,8 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public ModelAndView contact(@RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName, @ModelAttribute("contactForm") @Valid final ContactForm form,final BindingResult errors) {
+    public ModelAndView contact(@RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName,
+                                @ModelAttribute("contactForm") @Valid final ContactForm form,final BindingResult errors) {
         if (errors.hasErrors()) {
             return contactForm(form,uid,subjectName);
         }
