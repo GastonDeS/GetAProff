@@ -47,7 +47,7 @@
                 </div>
             <div class="search-bar">
                 <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
-                    <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" required/>
+                    <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" on required/>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
                     </button>

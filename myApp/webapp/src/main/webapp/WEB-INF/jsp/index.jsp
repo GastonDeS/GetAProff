@@ -16,14 +16,14 @@
             <jsp:param name="isMainPage" value="${true}"/>
         </jsp:include>
         <div class="page-container">
-            <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
-                <div class="search-bar">
-                    <input type="search" id="query" name="query"  class="form-control" style="width: 30vw" placeholder="${searchPlaceholder}" required/>
+            <div class="search-bar">
+                <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
+                    <input type="search" id="query" name="query" class="search-input" placeholder="${searchPlaceholder}" required/>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
             <div class="main-img-container">
                 <div class="txt-img">
                     <img class="main-img" src="<c:url value="${pageContext.request.contextPath}/resources/images/teacher_icon.png"/>">

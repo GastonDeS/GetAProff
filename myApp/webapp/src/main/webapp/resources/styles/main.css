@@ -7,12 +7,6 @@
     width: 15vw;
 }
 
-.container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
 .navbar-custom {
     background-color: #9fedd7 !important;
 }
@@ -250,7 +244,7 @@ div.bg-tutors-card-custom {
 
 .search-filters {
     display: flex;
-    width: 50vw;
+    width: 40vw;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
@@ -307,6 +301,14 @@ div.bg-tutors-card-custom {
 }
 
 /* search specific*/
+
+.search-input {
+        width: 30vw;
+        border-radius: 8px;
+        height: 38px;
+        vertical-align: middle;
+}
+
 .dropbtn {
     background-color: #04AA6D;
     color: white;
