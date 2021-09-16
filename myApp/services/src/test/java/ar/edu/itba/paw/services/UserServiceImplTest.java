@@ -28,9 +28,9 @@ public class UserServiceImplTest {
     @Test
     public void testCreate(){
         //Setup
-        Mockito.when(mockDao.create(eq(USERNAME), eq(USER_MAIL))).thenReturn(new User(USERNAME,USER_MAIL));
+        Mockito.when(mockDao.create(eq(USERNAME), eq(USER_MAIL), eq(USER_PASS))).thenReturn(new User(USERNAME,USER_MAIL,USER_PASS));
         //Test
-        final User user = userService.create(USERNAME, USER_MAIL);
+        final User user = userService.create(USERNAME, USER_MAIL, USER_PASS);
         //Postconditions
         Assert.assertNotNull(user);
         Assert.assertEquals(USERNAME, user.getName());

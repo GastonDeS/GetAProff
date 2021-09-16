@@ -5,15 +5,15 @@ public class User {
     private String name, password, mail;
     private int id;
 
-    public User(String name, String mail) {
+    public User(String name, String mail, String password) {
         this.name = name;
         this.mail = mail;
+        this.password = password;
     }
 
     public User(String name, String password, int id, String mail){
-        this(name, mail);
+        this(name, mail, password);
         this.id = id;
-        this.password = password;
     }
 
     public int getId() {

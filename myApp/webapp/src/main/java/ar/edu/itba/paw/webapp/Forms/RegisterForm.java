@@ -1,16 +1,16 @@
 package ar.edu.itba.paw.webapp.Forms;
 
-import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class RegisterForm {
-    @NotNull
-    @Email
+
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String mail;
 
-    @NotNull
+    @NotBlank
     private String name;
 
     @Size(min = 8)

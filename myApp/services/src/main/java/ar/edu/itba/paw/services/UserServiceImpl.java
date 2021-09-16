@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,7 +34,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(String username, String mail) {
-        return userDao.create(username, mail);
+    public User create(String username, String mail, String password) {
+        return userDao.create(username, mail, password);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String mail) {
+        return userDao.findByEmail(mail);
     }
 }
