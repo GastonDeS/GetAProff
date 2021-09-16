@@ -221,8 +221,7 @@ body {
     align-items: center;
 }
 
-.centered-horizontal {margin: auto;
-}
+.centered-horizontal { margin: auto;}
 
 .align-vertically-center {
     border-radius: 10px;
@@ -237,13 +236,13 @@ div.bg-tutors-card-custom {
     background-color: #C9FBFF !important;
 }
 
-.card {
+.tutor-card {
     transition: 0.5s ease;
     cursor: pointer;
     border-radius: 10px;
 }
 
-.card:hover {
+.tutor-card:hover {
     transform: scale(1.1);
     box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
 }
