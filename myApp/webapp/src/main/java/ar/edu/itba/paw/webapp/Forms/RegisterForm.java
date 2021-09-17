@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.Forms;
 
+import ar.edu.itba.paw.webapp.annotations.UniqueUser;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
@@ -7,6 +8,7 @@ import javax.validation.constraints.Size;
 
 public class RegisterForm {
 
+    @UniqueUser
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String mail;
 

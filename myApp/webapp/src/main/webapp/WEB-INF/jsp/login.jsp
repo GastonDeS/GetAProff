@@ -5,7 +5,7 @@
 <html>
 <head>
     <title><spring:message code="login.form.title"/> – GetAProff</title>
-    <link rel="shortcut icon" href="<c:url value="${pageContext.request.contextPath}/resources/images/favicon.png"/>" type="image/x-icon">
+    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet"  type="text/css" href="<c:url value="${pageContext.request.contextPath}/resources/styles/main.css"/>"/>
     <spring:message code="login.form.mail" var="mailPlaceholder"/>
@@ -33,7 +33,7 @@
                 <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="login.not.registered"/></p>
-                    <a class="account-check-link" href="/register">
+                    <a class="account-check-link" href="register">
                         <spring:message code="nav.button.register"/>
                     </a>
                 </div>
