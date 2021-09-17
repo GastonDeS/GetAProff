@@ -26,15 +26,15 @@
             </div>
             <div class="main-img-container">
                 <div class="txt-img">
-                    <img class="main-img" src="<c:url value="${pageContext.request.contextPath}/resources/images/teacher_icon.png"/>">
+                    <img class="main-img" src="<c:url value="/resources/images/teacher_icon.png"/>">
                     <p class="main-txt"><spring:message code="home.findTeacher"/></p>
                 </div>
                 <div class="txt-img">
-                    <img class="main-img" src="<c:url value="${pageContext.request.contextPath}/resources/images/fill_form_icon.png"/>">
+                    <img class="main-img" src="<c:url value="/resources/images/fill_form_icon.png"/>">
                     <p class="main-txt"><spring:message code="home.fillForm"/></p>
                 </div>
                 <div class="txt-img">
-                    <img class="main-img" src="<c:url value="${pageContext.request.contextPath}/resources/images/connect_icon.png"/>">
+                    <img class="main-img" src="<c:url value="/resources/images/connect_icon.png"/>">
                     <p class="main-txt"><spring:message code="home.contactTeacher"/></p>
                 </div>
             </div>
