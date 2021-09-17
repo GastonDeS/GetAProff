@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -56,7 +57,7 @@ public class HelloWorldController {
             return register(form);
         }
         final ModelAndView mav = new ModelAndView("index");
-        final User u = userService.create(form.getName(), form.getMail(), form.getPassword());
+        final User u = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole());
         mav.addObject("currentUser", u);
         return mav;
     }
@@ -95,5 +96,10 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("emailSent");
         return mav;
     }
+
+//    @RequestMapping("/default")
+//    public String defaultAfterLogin(HttpServletRequest request) {
+//        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
+//    }
 }
 

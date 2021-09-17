@@ -19,7 +19,7 @@
     </jsp:include>
     <div class="page-container">
         <c:url value="/register" var="registerURL"/>
-        <form:form modelAttribute="register" action="${postPath}"  method="post">
+        <form:form modelAttribute="register" action="${registerURL}"  method="post">
             <div class="form-container">
                 <p class="form-title"><spring:message code="register.form.title"/></p>
                 <div class="form-input-container">
@@ -38,10 +38,26 @@
                     <form:input type="text" class="form-control" path="confirmPass" placeholder="${confirmPassPlaceholder}"/>
                     <form:errors path="confirmPass" element="p" cssClass="form-error"/>
                 </div>
+                <div class="radio-btn-container">
+                    <label class="rad-label">
+                        <form:radiobutton cssClass="rad-input" path="userRole" value="1"/>
+                        <div class="rad-design"></div>
+                        <div class="rad-text">
+                            <spring:message code="register.teacher"/>
+                        </div>
+                    </label>
+                    <label class="rad-label">
+                        <form:radiobutton cssClass="rad-input" path="userRole" value="0"/>
+                        <div class="rad-design"></div>
+                        <div class="rad-text">
+                            <spring:message code="register.student"/>
+                        </div>
+                    </label>
+                </div>
                 <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="register.registered"/></p>
-                    <a class="account-check-link" href="${pageContext.request.contextPath}/login">
+                    <a class="account-check-link" href="/login">
                         <spring:message code="nav.button.login"/>
                     </a>
                 </div>

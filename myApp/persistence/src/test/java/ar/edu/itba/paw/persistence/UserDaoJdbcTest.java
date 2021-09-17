@@ -23,6 +23,7 @@ public class UserDaoJdbcTest {
     private static final String USER_MAIL = "John@Doe.com";
     private static final String USER_PASS = "1234";
     private static final int USER_ID = 1;
+    private static final int USER_ROLE = 1;
 
     @Autowired
     private UserDaoJdbc userDao;
@@ -40,7 +41,7 @@ public class UserDaoJdbcTest {
     @Test
     public void testCreate(){
 
-        final User newUser = userDao.create(USERNAME,USER_MAIL,USER_PASS);
+        final User newUser = userDao.create(USERNAME,USER_MAIL,USER_PASS,USER_ROLE);
 
         Assert.assertNotNull(newUser);
         Assert.assertEquals(USER_MAIL,newUser.getMail());
