@@ -4,6 +4,7 @@ public class User {
 
     private String name, password, mail;
     private int id;
+    private int userRole; // 1 teacher ; 0 student
 
     public User(String name, String mail, String password) {
         this.name = name;
@@ -11,9 +12,10 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String password, int id, String mail){
+    public User(String name, String password, int id, String mail, int userRole){
         this(name, mail, password);
         this.id = id;
+        this.userRole = userRole;
     }
 
     public int getId() {
@@ -46,6 +48,14 @@ public class User {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public int getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(int userRole) {
+        this.userRole = userRole;
     }
 
     @Override

@@ -33,7 +33,7 @@
                 <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="login.not.registered"/></p>
-                    <a class="account-check-link" href="${pageContext.request.contextPath}/register">
+                    <a class="account-check-link" href="/register">
                         <spring:message code="nav.button.register"/>
                     </a>
                 </div>

@@ -18,6 +18,7 @@ public class UserServiceImplTest {
     public static final String USER_MAIL = "John@Doe.com";
     public static final String USER_PASS = "1234";
     public static final int USER_ID = 1;
+    public static final int USER_ROLE = 1;
 
     @InjectMocks
     private  UserServiceImpl userService = new UserServiceImpl();
@@ -28,9 +29,9 @@ public class UserServiceImplTest {
     @Test
     public void testCreate(){
         //Setup
-        Mockito.when(mockDao.create(eq(USERNAME), eq(USER_MAIL), eq(USER_PASS))).thenReturn(new User(USERNAME,USER_MAIL,USER_PASS));
+        Mockito.when(mockDao.create(eq(USERNAME), eq(USER_MAIL), eq(USER_PASS), eq(USER_ROLE))).thenReturn(new User(USERNAME,USER_MAIL,USER_PASS));
         //Test
-        final User user = userService.create(USERNAME, USER_MAIL, USER_PASS);
+        final User user = userService.create(USERNAME, USER_MAIL, USER_PASS, USER_ROLE);
         //Postconditions
         Assert.assertNotNull(user);
         Assert.assertEquals(USERNAME, user.getName());
@@ -40,7 +41,7 @@ public class UserServiceImplTest {
     @Test
     public void findById(){
         //Setup
-        Mockito.when(mockDao.get(eq(USER_ID))).thenReturn(new User(USERNAME,USER_PASS,USER_ID,USER_MAIL));
+        Mockito.when(mockDao.get(eq(USER_ID))).thenReturn(new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,USER_ROLE));
         //Test
         final User possibleUser = userService.findById(USER_ID);
         //Postconditions

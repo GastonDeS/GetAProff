@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS users (
                 userId SERIAL PRIMARY KEY,
                 name varchar(100),
                 password varchar(100),
-                mail varchar(100)
+                mail varchar(100),
+                userRole INTEGER
             );
 
 CREATE TABLE IF NOT EXISTS subject (

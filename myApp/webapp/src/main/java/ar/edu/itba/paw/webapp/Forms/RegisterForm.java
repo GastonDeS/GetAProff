@@ -18,6 +18,8 @@ public class RegisterForm {
 
     private String confirmPass;
 
+    private int userRole;
+
     public String getMail() {
         return mail;
     }
@@ -48,5 +50,13 @@ public class RegisterForm {
 
     public void setConfirmPass(String confirmPass) {
         this.confirmPass = confirmPass;
+    }
+
+    public int getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(int userRole) {
+        this.userRole = userRole;
     }
 }
