@@ -5,17 +5,57 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Tutors – GetAProff</title>
+        <title><spring:message code="tutors.title"/> – GetAProff</title>
         <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
-
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="tutors-search">
+            <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
+                <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
+                        <div class="dropdown">
+                            <button class="filter-item" type="button" id="priceDropdownButton"
+                                    data-bs-toggle="dropdown" aria-expanded="true" aria-haspopup="true">
+                                Precio
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="priceDropdownButton" style="width: 18vw;">
+                                <div class="d-flex flex-column px-2">
+                                    <h4 id="priceDisplay">Seleccione precio máx. </h4>
+                                    <div class="d-flex justify-content-center">
+                                        <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}" value="<%=request.getParameter("price")%>>"
+                                                   name="price" oninput="updatePrice(this.value,${maxPrice})" onfocus="keepPriceButtonFocused()">
+                                    </div>
+                                    <hr class="dropdown-divider">
+                                    <button type="button" class="btn btn-custom align-self-end" onclick="showFilterButton()">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="filter-item" type="button" id="levelDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Nivel
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="levelDropdownButton">
+                                <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check1" autocomplete="off" value="1" onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check1" >Primario</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check2" autocomplete="off" value="2"  onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check2">Secundario</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check" autocomplete="off" value="3"  onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check">Universitario</label>
+                                </li>
+                            </ul>
+                        </div>
+                <button type="submit" id="filter-button" class="btn" style="display: none;">Aplicar Filtros</button>
+                <button type="button" id="clear-filter-button" style="display: none;" onclick="resetFilters()"> Resetear Filtros</button>
+            </form>
             <div class="search-bar">
                 <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
                     <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" required/>
@@ -26,94 +66,22 @@
             </div>
         </div>
         <c:if test="${fn:length(tutors)==0}">
-            <h1 class="not-found-header">No hay resultados para esta busqueda</h1>
+            <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
         </c:if>
-    <%--        <script>--%>
-    <%--            function searchFunction(value) {--%>
-    <%--                document.getElementById("myInput").value = value;--%>
-    <%--            }--%>
-
-    <%--            function myFunction() {--%>
-    <%--                if (document.getElementById("myDropdown").style.display === "flex") {--%>
-    <%--                    document.getElementById("myDropdown").style.display = "none";--%>
-    <%--                } else {--%>
-    <%--                    document.getElementById("myDropdown").style.display = "flex";--%>
-    <%--                    document.getElementById("myDropdown").style.flexDirection = "column";--%>
-    <%--                }--%>
-    <%--            }--%>
-
-    <%--            function filterFunction() {--%>
-    <%--                document.getElementById("myDropdown").style.display = "flex";--%>
-    <%--                document.getElementById("myDropdown").style.flexDirection = "column";--%>
-    <%--                var input, filter, ul, li, a, i, j;--%>
-    <%--                input = document.getElementById("myInput");--%>
-    <%--                filter = input.value.toUpperCase();--%>
-    <%--                div = document.getElementById("myDropdown");--%>
-    <%--                a = div.getElementsByTagName("a");--%>
-    <%--                for (i = 0, j = 0; i < a.length; i++) {--%>
-    <%--                    txtValue = a[i].textContent || a[i].innerText;--%>
-    <%--                    if (txtValue.toUpperCase().indexOf(filter) > -1 && j <= 5) {--%>
-    <%--                        a[i].style.display = "";--%>
-    <%--                        j = j + 1;--%>
-    <%--                    } else {--%>
-    <%--                        a[i].style.display = "none";--%>
-    <%--                    }--%>
-    <%--                }--%>
-    <%--            }--%>
-    <%--        </script>--%>
-
-
-
-    <div class="container">
-        <div class="row">
-            <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                    <div class="container">
-                        <jsp:include page="../components/tutorCard.jsp">
-                            <jsp:param name="name" value="${tutor.name}"/>
-                        </jsp:include>
+        <div class="container">
+            <div class="row">
+                <c:forEach var="tutor" items="${tutors}" varStatus="loop">
+                    <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                        <div class="container">
+                            <jsp:include page="../components/tutorCard.jsp">
+                                <jsp:param name="name" value="${tutor.name}"/>
+                            </jsp:include>
+                        </div>
                     </div>
-<%--                    <div class="card bg-tutors-card-custom">--%>
-<%--                        <div class="card-body">--%>
-<%--                            <h5 class="card-title text-center">${tutor.name}</h5>--%>
-<%--                        </div>--%>
-<%--                        <ul class=" list-group list-group-flush bg-tutors-card-custom">--%>
-<%--                            <li class="list-group-item">Materia: ${tutor.subject}</li>--%>
-<%--                            <li class="list-group-item">Precio: $${tutor.price}</li>--%>
-<%--                        </ul>--%>
-<%--                        <div class="card-body d-flex">--%>
-<%--                            <button type="button" class="btn-custon" data-bs-toggle="modal" data-bs-target="#timeModal${loop.index}">--%>
-<%--                                Horarios--%>
-<%--                            </button>--%>
-<%--                            <button type="button" class="btn-custom ms-auto p-2 bd-highlight "--%>
-<%--                                onclick="window.location.href='${pageContext.request.contextPath}/contact?uid=${tutor.userId}&subjectName=${tutor.subject}';"--%>
-<%--                            >Contactar</button>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-
-<%--                </div>--%>
-
-<%--                <!-- Modal -->--%>
-<%--                <div class="modal fade" id="timeModal${loop.index}" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">--%>
-<%--                    <div class="modal-dialog modal-dialog-centered">--%>
-<%--                        <div class="modal-content">--%>
-<%--                            <div class="modal-header">--%>
-<%--                                <h5 class="modal-title" id="timeModalLabel">Horarios de ${tutor.name}</h5>--%>
-<%--                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--%>
-<%--                            </div>--%>
-<%--                            <div class="modal-body">--%>
-<%--                                <c:forEach var="day" items="${tutor.userSchedule}" varStatus="loop">--%>
-<%--                                    <c:if test="${day != null}">--%>
-<%--                                        <h>${weekDays[loop.index].getValue()}: ${day}<br></h>--%>
-<%--                                    </c:if>--%>
-<%--                                </c:forEach>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-                </div>
-            </c:forEach>
+                </c:forEach>
+            </div>
         </div>
-
+        <script type="text/javascript" src="resources/js/script.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
     </body>

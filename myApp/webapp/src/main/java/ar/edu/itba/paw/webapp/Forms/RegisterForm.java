@@ -1,22 +1,26 @@
 package ar.edu.itba.paw.webapp.Forms;
 
-import org.hibernate.validator.constraints.Email;
+import ar.edu.itba.paw.webapp.annotations.UniqueUser;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class RegisterForm {
-    @NotNull
-    @Email
+
+    @UniqueUser
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String mail;
 
-    @NotNull
+    @NotBlank
     private String name;
 
     @Size(min = 8)
     private String password;
 
     private String confirmPass;
+
+    private int userRole;
 
     public String getMail() {
         return mail;
@@ -48,5 +52,13 @@ public class RegisterForm {
 
     public void setConfirmPass(String confirmPass) {
         this.confirmPass = confirmPass;
+    }
+
+    public int getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(int userRole) {
+        this.userRole = userRole;
     }
 }
