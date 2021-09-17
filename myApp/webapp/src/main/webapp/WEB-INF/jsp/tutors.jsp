@@ -15,39 +15,50 @@
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="tutors-search">
-                <div class="search-filters">
-                    <div class="dropdown">
-                        <button class="filter-item" type="button" id="priceDropdownButton"
-                                data-bs-toggle="dropdown" aria-expanded="true" aria-haspopup="true">
-                            Precio
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="priceDropdownButton" style="width: 18vw;">
-                            <form class="px-2 py-2">
-                                <div class="d-flex flex-column">
-                                    <h4 id="priceDisplay">Price: </h4>
-                                    <div class="d-flex justify-content-center pb-2">
-                                        <input type="range" id="priceRange" class="form-range" min="1" max="999"
-                                               value="filtered-price" oninput="updatePrice(this.value)" onfocus="keepButtonFocused()">
+            <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
+                <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
+                        <div class="dropdown">
+                            <button class="filter-item" type="button" id="priceDropdownButton"
+                                    data-bs-toggle="dropdown" aria-expanded="true" aria-haspopup="true">
+                                Precio
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="priceDropdownButton" style="width: 18vw;">
+                                <div class="d-flex flex-column px-2">
+                                    <h4 id="priceDisplay">Seleccione precio máx. </h4>
+                                    <div class="d-flex justify-content-center">
+                                        <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}" value="<%=request.getParameter("price")%>>"
+                                                   name="price" oninput="updatePrice(this.value,${maxPrice})" onfocus="keepPriceButtonFocused()">
                                     </div>
-                                    <button type="submit" class="btn btn-custom align-self-end">Apply</button>
+                                    <hr class="dropdown-divider">
+                                    <button type="button" class="btn btn-custom align-self-end" onclick="showFilterButton()">Apply</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="filter-item" type="button" id="levelDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            Nivel
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="levelDropdownButton">
-                            <li><a class="dropdown-item" href="#">Primario</a></li>
-                            <li><a class="dropdown-item" href="#">Secundario</a></li>
-                            <li><a class="dropdown-item" href="#">Universitario</a></li>
-                        </ul>
-                    </div>
-                </div>
+                        <div class="dropdown">
+                            <button class="filter-item" type="button" id="levelDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Nivel
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="levelDropdownButton">
+                                <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check1" autocomplete="off" value="1" onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check1" >Primario</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check2" autocomplete="off" value="2"  onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check2">Secundario</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check" autocomplete="off" value="3"  onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check">Universitario</label>
+                                </li>
+                            </ul>
+                        </div>
+                <button type="submit" id="filter-button" class="btn" style="display: none;">Aplicar Filtros</button>
+                <button type="button" id="clear-filter-button" style="display: none;" onclick="resetFilters()"> Resetear Filtros</button>
+            </form>
             <div class="search-bar">
                 <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
-                    <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" on required/>
+                    <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" required/>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
                     </button>

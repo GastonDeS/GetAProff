@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
 import ar.edu.itba.paw.webapp.Forms.RegisterForm;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -65,12 +69,24 @@ public class HelloWorldController {
         return new ModelAndView("index").addObject("currentUser", u);
     }
 
-    @RequestMapping(value = "/tutors", method = RequestMethod.GET)
-    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String search) {
+    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
+    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery) {
+        CardProfile mostExpensiveUser = null;
         final ModelAndView mav = new ModelAndView("tutors");
         mav.addObject("materias", subjectService.list());
-        mav.addObject("tutors", userService.findUsersBySubject(search));
+        List<CardProfile> users = userService.findUsersBySubject(searchQuery);
+        if(users != null)
+            mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getPrice)).orElse(null);
+        mav.addObject("tutors", users);
+        Integer price = mostExpensiveUser == null ? 0 : mostExpensiveUser.getPrice();
+        mav.addObject("maxPrice",price);
         mav.addObject("weekDays",Timetable.Days.values());
+        return mav;
+    }
+    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query,price,level")
+    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String priceRange,
+                               @RequestParam(value = "level") @NotNull final String level) {
+        final ModelAndView mav = tutors(searchQuery);
         return mav;
     }
 
