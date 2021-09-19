@@ -55,11 +55,16 @@
                 <h3>Materias</h3>
                 <ul class="list-group">
                     <li class="list-group-item">Nivel Inicial
-                        <ul>
-                            <li class="list-group-item">Matematica</li>
-                            <li class="list-group-item">Ingles</li>
-                            <li class="list-group-item">Fisica</li>
-                        </ul>
+                        <div>
+                            <span class="badge rounded-pill btn-custom mb-2">Fisica</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Matematica</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Ingles</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                        </div>
                     </li>
                     <li class="list-group-item">Nivel Secundario</li>
                     <li class="list-group-item">Nivel Terciario</li>
