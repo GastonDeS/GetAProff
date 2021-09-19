@@ -3,9 +3,13 @@ package ar.edu.itba.paw.webapp.Controller;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.Forms.RegisterForm;
+import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
+import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +23,14 @@ public class RegisterController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RegisterFormValidator registerFormValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder){
+        webDataBinder.setValidator(registerFormValidator);
+    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView register(@ModelAttribute("register") final RegisterForm form) {
@@ -36,5 +48,26 @@ public class RegisterController {
             return new ModelAndView("subjectsForm").addObject("currentUser", u);
         }
         return new ModelAndView("login");
+    }
+
+    @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
+    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
+        return new ModelAndView("subjectsForm");
+    }
+
+    @RequestMapping(value = "/register/subjectsForm")
+    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return subjectsForm(form);
+        }
+        return new ModelAndView("index");
+    }
+
+    public RegisterFormValidator getRegisterFormValidator() {
+        return registerFormValidator;
+    }
+
+    public void setRegisterFormValidator(RegisterFormValidator registerFormValidator) {
+        this.registerFormValidator = registerFormValidator;
     }
 }

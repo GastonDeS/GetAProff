@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
-import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,19 +45,6 @@ public class HelloWorldController {
     @RequestMapping("/login")
     public ModelAndView login() {
         return new ModelAndView("login");
-    }
-
-    @RequestMapping(value = "/subjectsForm", method = RequestMethod.GET)
-    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        return new ModelAndView("subjectsForm");
-    }
-
-    @RequestMapping(value = "/subjectsForm")
-    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return subjectsForm(form);
-        }
-        return new ModelAndView("/");
     }
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
