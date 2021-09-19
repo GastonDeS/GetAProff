@@ -4,26 +4,25 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
-import ar.edu.itba.paw.webapp.Forms.RegisterForm;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
 public class HelloWorldController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldController.class);
+
     @Autowired
     UserService userService;
 
@@ -49,24 +48,17 @@ public class HelloWorldController {
         return new ModelAndView("login");
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public ModelAndView register(@ModelAttribute("register") final RegisterForm form) {
-        return new ModelAndView("register");
+    @RequestMapping(value = "/subjectsForm", method = RequestMethod.GET)
+    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
+        return new ModelAndView("subjectsForm");
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) {
+    @RequestMapping(value = "/subjectsForm")
+    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return register(form);
+            return subjectsForm(form);
         }
-        if (userService.findByEmail(form.getMail()).isPresent()) {
-
-        }
-        final User u = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole());
-        if (form.getUserRole() == 1) {
-            return new ModelAndView("subjectsForm").addObject("currentUser", u);
-        }
-        return new ModelAndView("index").addObject("currentUser", u);
+        return new ModelAndView("/");
     }
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
@@ -83,6 +75,7 @@ public class HelloWorldController {
         mav.addObject("weekDays",Timetable.Days.values());
         return mav;
     }
+
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query,price,level")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String priceRange,
                                @RequestParam(value = "level") @NotNull final String level) {
@@ -116,9 +109,5 @@ public class HelloWorldController {
         return mav;
     }
 
-//    @RequestMapping("/default")
-//    public String defaultAfterLogin(HttpServletRequest request) {
-//        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
-//    }
 }
 

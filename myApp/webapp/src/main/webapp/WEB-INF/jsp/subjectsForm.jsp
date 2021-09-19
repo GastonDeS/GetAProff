@@ -13,6 +13,12 @@
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
+        <div class="page-container">
+            <c:url value="/subjectsForm" var="subjectsURL"/>
+            <form:form modelAttribute="subjectsForm" action="${subjectsURL}"  method="post">
+                <div class="form-container">
+                </div>
+            </form:form>
+        </div>
     </body>
-    <div class="page-container"></div>
 </html>

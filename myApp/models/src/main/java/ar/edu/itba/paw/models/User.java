@@ -6,16 +6,16 @@ public class User {
     private int id;
     private int userRole; // 1 teacher ; 0 student
 
-    public User(String name, String mail, String password) {
+    public User(String name, String mail, String password, int userRole) {
         this.name = name;
         this.mail = mail;
         this.password = password;
+        this.userRole = userRole;
     }
 
     public User(String name, String password, int id, String mail, int userRole){
-        this(name, mail, password);
+        this(name, mail, password, userRole);
         this.id = id;
-        this.userRole = userRole;
     }
 
     public int getId() {
