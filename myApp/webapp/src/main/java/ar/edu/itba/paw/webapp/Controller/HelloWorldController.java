@@ -99,8 +99,8 @@ public class HelloWorldController {
 //    public String defaultAfterLogin(HttpServletRequest request) {
 //        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
 //    }
-    @RequestMapping("/profile")
-    public ModelAndView profile(@RequestParam(value = "uid") @NotNull final int uid) {
+    @RequestMapping("/profile/{uid}")
+    public ModelAndView profile(@PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
         return mav;
