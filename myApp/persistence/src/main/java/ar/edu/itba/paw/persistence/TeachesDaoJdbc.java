@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TeachesDao;
 import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +20,7 @@ public class TeachesDaoJdbc implements TeachesDao {
     private SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<Teaches> ROW_MAPPER = (rs, rowNum) ->
             new Teaches(rs.getInt("userId"), rs.getInt("subjectId"),
-                    rs.getInt("price"));
+                    rs.getInt("price"), rs.getInt("level"));
 
     @Autowired
     TeachesDaoJdbc (final DataSource ds){
@@ -31,13 +30,14 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public Teaches addSubjectToUser(int userid, int subjectid, int price) {
+    public Teaches addSubjectToUser(int userid, int subjectid, int price, int level) {
         final Map<String, Object> args = new HashMap<>();
         args.put("userid", userid);
-        args.put("subjectid",subjectid);
-        args.put("price",price);
+        args.put("subjectid", subjectid);
+        args.put("price", price);
+        args.put("level", level);
         jdbcInsert.execute(args);
-        return new Teaches(userid, subjectid, price);
+        return new Teaches(userid, subjectid, price, level);
     }
 
     @Override
