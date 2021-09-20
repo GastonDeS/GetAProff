@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
 import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
+import ar.edu.itba.paw.webapp.Forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +99,10 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("emailSent");
         return mav;
     }
+    //    @RequestMapping("/default")
+//    public String defaultAfterLogin(HttpServletRequest request) {
+//        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
+//    }
 
     @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
@@ -118,11 +124,24 @@ public class HelloWorldController {
         return new ModelAndView("index");
     }
 
-    @RequestMapping("/profile")
-    public ModelAndView profile(@RequestParam(value = "uid") @NotNull final int uid) {
+    @RequestMapping("/profile/{uid}")
+    public ModelAndView profile(@PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
         return mav;
     }
-}
 
+    @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
+    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") final TimeRangeForm form) {
+        return new ModelAndView("timeForm");
+    }
+
+    @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
+    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") @Valid final TimeRangeForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return timeRegister(form);
+
+        return new ModelAndView("timeForm");
+    }
+
+}

@@ -545,3 +545,17 @@ div.bg-tutors-card-custom {
     background-size: auto;
     height: auto;
 }
+
+/*time form*/
+.hour-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.hour-separator {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
