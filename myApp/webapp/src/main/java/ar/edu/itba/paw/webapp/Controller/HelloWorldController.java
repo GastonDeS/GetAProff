@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.Forms.ContactForm;
+import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
+import ar.edu.itba.paw.webapp.Forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -103,5 +106,19 @@ public class HelloWorldController {
         mav.addObject("user", userService.findById(uid));
         return mav;
     }
+
+    @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
+    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") final TimeRangeForm form) {
+        return new ModelAndView("timeForm");
+    }
+
+    @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
+    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") @Valid final TimeRangeForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return timeRegister(form);
+
+        return new ModelAndView("timeForm");
+    }
+
 }
 
