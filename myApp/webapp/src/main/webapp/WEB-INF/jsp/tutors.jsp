@@ -26,11 +26,11 @@
                                 <div class="d-flex flex-column px-2">
                                     <h4 id="priceDisplay">Seleccione precio máx. </h4>
                                     <div class="d-flex justify-content-center">
-                                        <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}" value="<%=request.getParameter("price")%>>"
-                                                   name="price" oninput="updatePrice(this.value,${maxPrice})" onfocus="keepPriceButtonFocused()">
+                                        <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}" value="${maxPrice}"
+                                                   name="price" oninput="updatePrice(this.value)" onfocus="keepPriceButtonFocused()">
                                     </div>
                                     <hr class="dropdown-divider">
-                                    <button type="button" class="btn btn-custom align-self-end" onclick="showFilterButton()">Apply</button>
+                                    <button type="button" class="btn btn-custom align-self-end">Apply</button>
                                 </div>
                             </div>
                         </div>
@@ -40,6 +40,11 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="levelDropdownButton">
                                 <li>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check4" autocomplete="off" value="0"
+                                           onclick="updateLevel(this.value)" checked>
+                                    <label class="dropdown-item" for="btn-check4">Todos</label>
+                                </li>
+                                <li>
                                     <input type="radio" name="level" class="btn-check" id="btn-check1" autocomplete="off" value="1" onclick="updateLevel(this.value)">
                                     <label class="dropdown-item" for="btn-check1" >Primario</label>
                                 </li>
@@ -48,8 +53,8 @@
                                     <label class="dropdown-item" for="btn-check2">Secundario</label>
                                 </li>
                                 <li>
-                                    <input type="radio" name="level" class="btn-check" id="btn-check" autocomplete="off" value="3"  onclick="updateLevel(this.value)">
-                                    <label class="dropdown-item" for="btn-check">Universitario</label>
+                                    <input type="radio" name="level" class="btn-check" id="btn-check3" autocomplete="off" value="3"  onclick="updateLevel(this.value)">
+                                    <label class="dropdown-item" for="btn-check3">Universitario</label>
                                 </li>
                             </ul>
                         </div>

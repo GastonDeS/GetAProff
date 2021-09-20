@@ -39,5 +39,8 @@
                 </div>
             </div>
         </div>
+        <jsp:include page="../components/footer.jsp">
+            <jsp:param name="" value=""/>
+        </jsp:include>
     </body>
 </html>
