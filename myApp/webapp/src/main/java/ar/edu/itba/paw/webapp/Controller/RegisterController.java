@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.Controller;
 
+import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.Forms.RegisterForm;
-import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,11 +25,24 @@ public class RegisterController {
     UserService userService;
 
     @Autowired
+    SubjectService subjectService;
+
+    @Autowired
     RegisterFormValidator registerFormValidator;
+
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
-        webDataBinder.setValidator(registerFormValidator);
+        Object target = webDataBinder.getTarget();
+        if (target == null) {
+            return;
+        }
+        System.out.println("Target=" + target);
+
+        if (target.getClass() == RegisterForm.class) {
+            webDataBinder.setValidator(registerFormValidator);
+        }
+//        webDataBinder.addValidators(registerFormValidator);
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -48,19 +61,6 @@ public class RegisterController {
             return new ModelAndView("subjectsForm").addObject("currentUser", u);
         }
         return new ModelAndView("login");
-    }
-
-    @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
-    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        return new ModelAndView("subjectsForm");
-    }
-
-    @RequestMapping(value = "/register/subjectsForm")
-    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return subjectsForm(form);
-        }
-        return new ModelAndView("index");
     }
 
     public RegisterFormValidator getRegisterFormValidator() {

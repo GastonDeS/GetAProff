@@ -43,10 +43,12 @@ public class SubjectDaoJdbc implements SubjectDao {
 
     @Override
     public Subject create (String subject) {
-//        final List<Subject> list = jdbcTemplate.query("SELECT * FROM subject WHERE name = ?", new Object[] {subject}, ROW_MAPPER);
-//        if (!list.isEmpty()) {
-//            return list.get(0);
-//        }
+        final List<Subject> list = jdbcTemplate.query(
+                "SELECT * FROM subject WHERE levenshtein(?, name) < 3",
+                new Object[] {subject}, ROW_MAPPER);
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
         final Map<String, Object> args = new HashMap<>();
         args.put("name", subject);
         final Number subjectid = jdbcInsert.executeAndReturnKey(args);
