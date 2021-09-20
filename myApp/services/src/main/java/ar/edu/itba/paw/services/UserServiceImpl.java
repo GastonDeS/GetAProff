@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(String username, String mail, String password, int userRole) {
-        return userDao.create(username, mail, passwordEncoder.encode(password), userRole);
+    public Optional<User> create(String username, String mail, String password, int userRole) {
+        return Optional.of(userDao.create(username, mail, passwordEncoder.encode(password), userRole));
     }
 
     @Override

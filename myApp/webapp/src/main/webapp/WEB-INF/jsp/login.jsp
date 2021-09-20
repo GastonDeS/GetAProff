@@ -24,7 +24,7 @@
                     <input type="text" class="form-control" name="j_email" placeholder="${mailPlaceholder}"/>
                 </div>
                 <div class="form-input-container">
-                    <input type="text" class="form-control" name="j_password" placeholder="${passPlaceholder}"/>
+                    <input type="password" class="form-control" name="j_password" placeholder="${passPlaceholder}"/>
                 </div>
                 <label class="login-checkbox">
                     <input class="checkbox" name="j_rememberme" type="checkbox"/>

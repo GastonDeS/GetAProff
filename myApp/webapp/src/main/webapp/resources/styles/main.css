@@ -471,3 +471,41 @@ div.bg-tutors-card-custom {
     align-items: center;
     justify-content: center;
 }
+
+/*Timetable*/
+
+.bg-light-gray {
+    background-color: #f7f7f7;
+}
+
+.table th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table td {
+    width: fit-content;
+    height: fit-content;
+    text-align: center;
+    padding: 5px 15px 5px 15px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.time-range{
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    color: black;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+}
+
+.headerMain {
+    background-color: white;
+    background-size: auto;
+    height: auto;
+}
