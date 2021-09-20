@@ -9,8 +9,11 @@ import java.util.Optional;
 public interface UserService {
     User findById(int id);
     List<CardProfile> findUsersBySubjectId(int subjectId);
-    List<CardProfile> findUsersBySubject(String subject);
+    List<CardProfile> filterUsers(String subject, String price, String level);
+    List<CardProfile> filterUsers(String subject);
     List<User> list();
+    Integer mostExpensiveUserFee(String subject);
+
     /**
      * Create a new user.
      *

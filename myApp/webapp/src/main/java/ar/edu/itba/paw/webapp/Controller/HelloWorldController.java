@@ -71,22 +71,23 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery) {
-        CardProfile mostExpensiveUser = null;
         final ModelAndView mav = new ModelAndView("tutors");
-        mav.addObject("materias", subjectService.list());
-        List<CardProfile> users = userService.findUsersBySubject(searchQuery);
-        if(users != null)
-            mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getPrice)).orElse(null);
+        List<CardProfile> users = userService.filterUsers(searchQuery);
         mav.addObject("tutors", users);
-        Integer price = mostExpensiveUser == null ? 0 : mostExpensiveUser.getPrice();
-        mav.addObject("maxPrice",price);
+        mav.addObject("materias", subjectService.list());
+        mav.addObject("maxPrice",userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays",Timetable.Days.values());
         return mav;
     }
-    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query,price,level")
-    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String priceRange,
+    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = {"query","price","level"})
+    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String price,
                                @RequestParam(value = "level") @NotNull final String level) {
-        final ModelAndView mav = tutors(searchQuery);
+        final ModelAndView mav = new ModelAndView("tutors");
+        List<CardProfile> users = userService.filterUsers(searchQuery, price, level);
+        mav.addObject("tutors", users);
+        mav.addObject("materias", subjectService.list());
+        mav.addObject("maxPrice",userService.mostExpensiveUserFee(searchQuery));
+        mav.addObject("weekDays",Timetable.Days.values());
         return mav;
     }
 
