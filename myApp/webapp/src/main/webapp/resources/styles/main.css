@@ -471,3 +471,22 @@ div.bg-tutors-card-custom {
     align-items: center;
     justify-content: center;
 }
+
+.footer {
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px;
+}
+
+.footer-link {
+    color: black;
+    text-decoration: none;
+}
