@@ -1,13 +1,14 @@
 package ar.edu.itba.paw.models;
 
 public class CardProfile {
-    private int userId, price;
+    private int userId, price, level;
     private String name, subject;
     private String[] userSchedule;
 
-    public CardProfile(int userId, String name, String subject, int price, String[] userSchedule) {
+    public CardProfile(int userId, String name, String subject, int price, int level, String[] userSchedule) {
         this.userId = userId;
         this.name = name;
+        this.level = level;
         this.subject = subject;
         this.price = price;
         this.userSchedule = userSchedule;

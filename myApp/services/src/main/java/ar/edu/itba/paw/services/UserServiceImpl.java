@@ -8,11 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.smartcardio.Card;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    public static final Integer ANY_LEVEL = 0;
+    public static final Integer MAX_LEVEL = 3;
 
     @Autowired
     private UserDao userDao;
@@ -30,12 +36,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<CardProfile> findUsersBySubject(String subject) {
-        return userDao.findUsersBySubject(subject);
+    public List<CardProfile> filterUsers(String subject, String price, String level) {
+        int lvl = Integer.parseInt(level);
+        if(lvl < 0 || lvl > MAX_LEVEL)
+            lvl = ANY_LEVEL;
+        int maxPrice = mostExpensiveUserFee(subject);
+        int intPrice = Integer.parseInt(price);
+            if (intPrice > maxPrice)
+                intPrice = maxPrice;
+        return userDao.filterUsers(subject, intPrice,lvl);
+    }
+
+    @Override
+    public List<CardProfile> filterUsers(String subject) {
+        return userDao.filterUsers(subject,Integer.MAX_VALUE,ANY_LEVEL);
     }
 
     public List<User> list() {
         return this.userDao.list();
+    }
+
+    @Override
+    public Integer mostExpensiveUserFee(String subject) {
+        CardProfile mostExpensiveUser;
+        List<CardProfile> users = filterUsers(subject);
+        if(users != null) {
+            mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getPrice)).orElse(null);
+            if (mostExpensiveUser != null)
+                return mostExpensiveUser.getPrice();
+        }
+        return 0;
     }
 
     @Override

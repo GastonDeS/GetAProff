@@ -10,7 +10,7 @@ public interface UserDao {
     List<User> list();
     User save(User user);
     List<CardProfile> findUsersBySubjectId(int subjectId);
-    List<CardProfile> findUsersBySubject(String subject);
+    List<CardProfile> filterUsers(String subject, Integer price, Integer level);
 
     /**
      * Create a new user.
