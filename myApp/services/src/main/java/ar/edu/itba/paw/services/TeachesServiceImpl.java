@@ -13,7 +13,7 @@ public class TeachesServiceImpl implements TeachesService {
     TeachesDao teachesDao;
 
     @Override
-    public Teaches addSubjectToUser(int userid, int subjectid, int price) {
-        return teachesDao.addSubjectToUser(userid, subjectid, price);
+    public Teaches addSubjectToUser(int userid, int subjectid, int price, int level) {
+        return teachesDao.addSubjectToUser(userid, subjectid, price, level);
     }
 }
