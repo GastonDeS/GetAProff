@@ -31,11 +31,11 @@
                     <form:errors path="mail" element="p" cssClass="form-error"/>
                 </div>
                 <div class="form-input-container">
-                    <form:input type="text" class="form-control" path="password" placeholder="${passPlaceholder}"/>
+                    <form:input type="password" class="form-control" path="password" placeholder="${passPlaceholder}"/>
                     <form:errors path="password" element="p" cssClass="form-error"/>
                 </div>
                 <div class="form-input-container">
-                    <form:input type="text" class="form-control" path="confirmPass" placeholder="${confirmPassPlaceholder}"/>
+                    <form:input type="password" class="form-control" path="confirmPass" placeholder="${confirmPassPlaceholder}"/>
                     <form:errors path="confirmPass" element="p" cssClass="form-error"/>
                 </div>
                 <div class="radio-btn-container">
