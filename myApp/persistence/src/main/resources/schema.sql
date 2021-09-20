@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
                 name varchar(100),
                 password varchar(100),
                 mail varchar(100),
-                userRole INTEGER
+                userrole INTEGER
             );
 
 CREATE TABLE IF NOT EXISTS subject (
@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS teaches (
                  userId INTEGER,
                  subjectId INTEGER,
                  price INTEGER,
+                 level INTEGER,
                  FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
                  FOREIGN KEY (subjectId) REFERENCES subject ON DELETE CASCADE,
                  PRIMARY KEY (userId,subjectId)
