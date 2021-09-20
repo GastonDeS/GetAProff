@@ -9,6 +9,9 @@ import ar.edu.itba.paw.webapp.Forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -96,10 +100,33 @@ public class HelloWorldController {
         return mav;
     }
 
-//    @RequestMapping("/default")
-//    public String defaultAfterLogin(HttpServletRequest request) {
-//        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
-//    }
+    @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
+    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
+        Map<String, Integer> subjects = form.getSubjects();
+        return new ModelAndView("subjectsForm").addObject("subjects", subjects);
+    }
+
+    @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.POST)
+    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return subjectsForm(form);
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = 0;
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String userMail = authentication.getName();
+            User u = userService.findByEmail(userMail).get();
+            userId = u.getId();
+        }
+        for (Map.Entry<String, Integer> entry : form.getSubjects().entrySet()) {
+            String capitalized = entry.getKey().toUpperCase();
+            int subjectId = subjectService.create(capitalized).getId();
+            if (userId != 0)
+            teachesService.addSubjectToUser(userId, subjectId, entry.getValue());
+        }
+        return new ModelAndView("index");
+    }
+
     @RequestMapping("/profile")
     public ModelAndView profile(@RequestParam(value = "uid") @NotNull final int uid) {
         final ModelAndView mav = new ModelAndView("profile");
@@ -121,4 +148,3 @@ public class HelloWorldController {
     }
 
 }
-
