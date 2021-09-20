@@ -77,9 +77,10 @@
             <div class="row">
                 <c:forEach var="tutor" items="${tutors}" varStatus="loop">
                     <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                        <div class="container" onclick="window.location.href='${pageContext.request.contextPath}/profile/${tutor.userId}'">
+                        <div class="container">
                             <jsp:include page="../components/tutorCard.jsp">
                                 <jsp:param name="name" value="${tutor.name}"/>
+                                <jsp:param name="uid" value="${tutor.userId}"/>
                             </jsp:include>
                         </div>
                     </div>
