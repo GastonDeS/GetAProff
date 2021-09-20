@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,7 +26,7 @@ public class RegisterController {
     UserService userService;
 
     @Autowired
-    RegisterFormValidator registerFormValidator;
+    Validator registerFormValidator;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -63,7 +64,7 @@ public class RegisterController {
         return new ModelAndView("index");
     }
 
-    public RegisterFormValidator getRegisterFormValidator() {
+    public Validator getRegisterFormValidator() {
         return registerFormValidator;
     }
 
