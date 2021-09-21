@@ -1,12 +1,21 @@
 package ar.edu.itba.paw.models;
 
 public class Teaches {
-    private int userId, subjectId, price;
+    private int userId, subjectId, price, level;
 
-    public Teaches (int userId, int subjectId, int price){
+    public Teaches (int userId, int subjectId, int price, int level){
         this.userId = userId;
         this.subjectId = subjectId;
         this.price = price;
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public int getUserId() {
@@ -36,5 +45,12 @@ public class Teaches {
     @Override
     public String toString() {
         return String.format("UserID: %d - SubjectID: %d - Price: %d\n", userId, subjectId, price);
+    }
+
+    public enum Level {
+        NONE,
+        PRIMARY,
+        SECONDARY,
+        TERTIARY;
     }
 }

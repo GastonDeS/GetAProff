@@ -106,8 +106,7 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        Map<String, Integer> subjects = form.getSubjects();
-        return new ModelAndView("subjectsForm").addObject("subjects", subjects);
+        return new ModelAndView("subjectsForm");
     }
 
     @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.POST)
@@ -121,12 +120,6 @@ public class HelloWorldController {
             String userMail = authentication.getName();
             User u = userService.findByEmail(userMail).get();
             userId = u.getId();
-        }
-        for (Map.Entry<String, Integer> entry : form.getSubjects().entrySet()) {
-            String capitalized = entry.getKey().toUpperCase();
-            int subjectId = subjectService.create(capitalized).getId();
-            if (userId != 0)
-            teachesService.addSubjectToUser(userId, subjectId, entry.getValue());
         }
         return new ModelAndView("index");
     }

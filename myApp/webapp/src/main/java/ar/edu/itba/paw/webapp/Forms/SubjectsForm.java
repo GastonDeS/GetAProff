@@ -1,15 +1,35 @@
 package ar.edu.itba.paw.webapp.Forms;
 
-import java.util.Map;
 
 public class SubjectsForm {
-    private Map<String, Integer> subjects;
 
-    public Map<String, Integer> getSubjects() {
-        return subjects;
+    private final int MAX_SUBJECTS = 15;
+
+    private String[] names = new String[MAX_SUBJECTS];
+    private Integer[] prices = new Integer[MAX_SUBJECTS];
+    private Integer[] levels = new Integer[MAX_SUBJECTS];
+
+    public String[] getNames() {
+        return names;
     }
 
-    public void setSubjects(Map<String, Integer> subjects) {
-        this.subjects = subjects;
+    public void setNames(String[] names) {
+        this.names = names;
+    }
+
+    public Integer[] getPrices() {
+        return prices;
+    }
+
+    public void setPrices(Integer[] prices) {
+        this.prices = prices;
+    }
+
+    public Integer[] getLevels() {
+        return levels;
+    }
+
+    public void setLevels(Integer[] levels) {
+        this.levels = levels;
     }
 }
