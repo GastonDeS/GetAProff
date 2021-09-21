@@ -1,16 +1,13 @@
 package ar.edu.itba.paw.webapp.Forms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TimeRangeForm {
-    String[] day0 = new String[2];
-    String[] day1 = new String[2];
-    String[] day2 = new String[2];
-    String[] day3 = new String[2];
-    String[] day4 = new String[2];
-    String[] day5 = new String[2];
-    String[] day6 = new String[2];
+    private String[] day0 = new String[2];
+    private String[] day1 = new String[2];
+    private String[] day2 = new String[2];
+    private String[] day3 = new String[2];
+    private String[] day4 = new String[2];
+    private String[] day5 = new String[2];
+    private String[] day6 = new String[2];
 
     public String[] getDay0() {
         return day0;
