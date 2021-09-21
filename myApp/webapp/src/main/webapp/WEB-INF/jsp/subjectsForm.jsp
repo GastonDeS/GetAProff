@@ -26,23 +26,32 @@
                 <div class="form-container">
                     <p class="form-title"><spring:message code="subjects.form.enter"/></p>
                     <div class="subject-form-container">
-                        <div class="subject-input-container w-40">
+                        <div class="subject-input-container w-60">
                             <form:input type="text" path="name" class="form-control w-100" placeholder="${subjectPlaceholder}"/>
                             <form:errors path="name" element="p" cssClass="form-error"/>
                         </div>
-                        <div class="subject-input-container w-20">
+                        <div class="subject-input-container w-10">
                             <form:input type="number" path="price" class="form-control w-100" placeholder="${pricePlaceholder}"/>
                             <form:errors path="price" element="p" cssClass="form-error"/>
                         </div>
                         <form:select path="level" cssClass="level-container">
-                            <form:option cssClass="select-level" value="NONE" label="${levelPlaceholder}" />
                             <form:option cssClass="select-level" value="0" label="${nonePlaceholder}"/>
                             <form:option cssClass="select-level" value="1" label="${primaryPlaceholder}"/>
                             <form:option cssClass="select-level" value="2" label="${secondaryPlaceholder}"/>
                             <form:option cssClass="select-level" value="3" label="${tertiaryPlaceholder}"/>
                         </form:select>
+                        <input type="submit" class="btn-custom submit-btn" value="+"/>
                     </div>
-                    <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
+                    <table>
+                        <c:forEach items="${subjects}" var="subject">
+                            <tr>
+                                <td>${subject.name}</td>
+                                <td>${subject.price}</td>
+                                <td>${subject.level}</td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    <input type="button" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
                 </div>
             </form:form>
         </div>

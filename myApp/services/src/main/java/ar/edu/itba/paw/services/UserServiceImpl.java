@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> create(String username, String mail, String password, int userRole) {
         User u = userDao.create(username, mail, passwordEncoder.encode(password), userRole);
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
         return Optional.of(u);
     }

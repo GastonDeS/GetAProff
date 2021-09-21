@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.Config;
+package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;

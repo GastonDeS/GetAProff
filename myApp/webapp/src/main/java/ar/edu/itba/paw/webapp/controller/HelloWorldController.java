@@ -1,10 +1,10 @@
-package ar.edu.itba.paw.webapp.Controller;
+package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
-import ar.edu.itba.paw.webapp.Forms.ContactForm;
-import ar.edu.itba.paw.webapp.Forms.TimeRangeForm;
+import ar.edu.itba.paw.webapp.forms.ContactForm;
+import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -39,11 +40,6 @@ public class HelloWorldController {
         mav.addObject("materias", subjectService.list());
         mav.addObject("greeting", userService.findById(1));
         return mav;
-    }
-
-    @RequestMapping("/login")
-    public ModelAndView login() {
-        return new ModelAndView("login");
     }
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
@@ -96,22 +92,15 @@ public class HelloWorldController {
 
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final int uid) {
+        Optional<User> u = userService.getCurrentUser();
+        if (!u.isPresent()) {
+            return new ModelAndView("profile").addObject("edit", 0);
+        }
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
+        mav.addObject("edit", u.get().getId());
         return mav;
     }
 
-    @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
-    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") final TimeRangeForm form) {
-        return new ModelAndView("timeForm");
-    }
-
-    @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
-    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") @Valid final TimeRangeForm form, final BindingResult errors) {
-        if (errors.hasErrors())
-            return timeRegister(form);
-
-        return new ModelAndView("timeForm");
-    }
 
 }

@@ -1,10 +1,15 @@
-package ar.edu.itba.paw.webapp.Forms;
+package ar.edu.itba.paw.models;
 
-
-public class SubjectsForm {
+public class SubjectInfo {
 
     private String name;
     private int price, level;
+
+    public SubjectInfo(String name, int price, int level) {
+        this.name = name;
+        this.price = price;
+        this.level = level;
+    }
 
     public String getName() {
         return name;

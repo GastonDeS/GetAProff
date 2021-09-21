@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.validators;
 
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.Forms.RegisterForm;
+import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

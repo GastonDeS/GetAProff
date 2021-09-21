@@ -1,11 +1,14 @@
-package ar.edu.itba.paw.webapp.Controller;
+package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.TeachesService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.webapp.Forms.RegisterForm;
-import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.forms.RegisterForm;
+import ar.edu.itba.paw.webapp.forms.SubjectsForm;
+import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -42,7 +46,6 @@ public class RegisterController {
         if (target == null) {
             return;
         }
-        System.out.println("Target=" + target);
 
         if (target.getClass() == RegisterForm.class) {
             webDataBinder.setValidator(registerFormValidator);
@@ -60,9 +63,12 @@ public class RegisterController {
             return register(form);
         }
         userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole());
+        int id = userService.getCurrentUser().get().getId();
 
         if (form.getUserRole() == 1) {
-            return subjectsForm(new SubjectsForm());
+            String redirect = "redirect:/profile/" + id;
+            return new ModelAndView(redirect);
+//            return new ModelAndView("subjectsForm").addObject("subjectsFrom", new SubjectsForm());
         }
         return new ModelAndView("index");
     }
@@ -71,12 +77,17 @@ public class RegisterController {
     @RequestMapping(value = "/subjectsForm", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
         List<Teaches> teachesList;
+        List<SubjectInfo> subjectsList = new ArrayList<>();
         if (userService.getCurrentUser().isPresent()) {
             int uid = userService.getCurrentUser().get().getId();
             teachesList = teachesService.getSubjectListByUser(uid);
-            return new ModelAndView("subjectsForm").addObject("subjects", teachesList);
+            for(Teaches t : teachesList) {
+                String name = subjectService.findById(t.getSubjectId()).get().getName();
+                subjectsList.add(new SubjectInfo(name, t.getPrice(), t.getLevel()));
+            }
+            return new ModelAndView("subjectsForm").addObject("subjects", subjectsList);
         }
-        return new ModelAndView("index");
+        return new ModelAndView("login"); //Send to 403
     }
 
     // Save subject form
@@ -89,6 +100,19 @@ public class RegisterController {
         int sid = subjectService.create(form.getName()).getId();
         teachesService.addSubjectToUser(uid, sid, form.getPrice(), form.getLevel());
         return new ModelAndView("subjectsForm");
+    }
+
+    @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
+    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") final TimeRangeForm form) {
+        return new ModelAndView("timeForm");
+    }
+
+    @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
+    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") @Valid final TimeRangeForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return timeRegister(form);
+
+        return new ModelAndView("timeForm");
     }
 
     public Validator getRegisterFormValidator() {

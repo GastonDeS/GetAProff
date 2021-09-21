@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.Forms;
+package ar.edu.itba.paw.webapp.forms;
 
 public class TimeRangeForm {
     private String[] day0 = new String[2];

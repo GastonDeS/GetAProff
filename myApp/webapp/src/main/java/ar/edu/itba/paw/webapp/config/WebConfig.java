@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.Config;
+package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -20,7 +20,8 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.Controller" , "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
+@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services",
+        "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.validators"})
 @Configuration
 public class WebConfig {
 
@@ -39,11 +40,10 @@ public class WebConfig {
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
+        ds.setUrl("jdbc:postgresql://localhost:5433/brittany");
         ds.setUsername("postgres");
-        ds.setPassword("admin");
+        ds.setPassword("postgres");
         return ds;
     }
 
