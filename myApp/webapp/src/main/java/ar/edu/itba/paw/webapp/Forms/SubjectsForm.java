@@ -3,33 +3,30 @@ package ar.edu.itba.paw.webapp.Forms;
 
 public class SubjectsForm {
 
-    private final int MAX_SUBJECTS = 15;
+    private String name;
+    private int price, level;
 
-    private String[] names = new String[MAX_SUBJECTS];
-    private Integer[] prices = new Integer[MAX_SUBJECTS];
-    private Integer[] levels = new Integer[MAX_SUBJECTS];
-
-    public String[] getNames() {
-        return names;
+    public String getName() {
+        return name;
     }
 
-    public void setNames(String[] names) {
-        this.names = names;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer[] getPrices() {
-        return prices;
+    public int getPrice() {
+        return price;
     }
 
-    public void setPrices(Integer[] prices) {
-        this.prices = prices;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public Integer[] getLevels() {
-        return levels;
+    public int getLevel() {
+        return level;
     }
 
-    public void setLevels(Integer[] levels) {
-        this.levels = levels;
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

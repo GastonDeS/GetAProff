@@ -47,11 +47,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
                     .antMatchers("/login", "/register").anonymous()
-
-                .antMatchers("/", "/tutors","/profile","/timeRegister").permitAll()
-
-                    .antMatchers("/", "/tutors").permitAll()
-
+                    .antMatchers("/", "/tutors","/profile/1","/timeRegister").permitAll()
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .usernameParameter("j_email")
@@ -73,6 +69,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/styles/**", "/resources/js/**", "/resources/images/**", "/resources/favicon.ico", "/403");
+        web.ignoring().antMatchers("/resources/styles/**", "/resources/js/**", "/resources/images/**", "/resources/favicon.ico", "/403").anyRequest();
     }
 }

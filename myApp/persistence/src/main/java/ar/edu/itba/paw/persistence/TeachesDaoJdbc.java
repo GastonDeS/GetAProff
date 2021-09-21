@@ -42,15 +42,16 @@ public class TeachesDaoJdbc implements TeachesDao {
 
     @Override
     public List<Teaches> findUserBySubject(int subjectId) {
-        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE 'subjectId' = ?",
+        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE subjectId = ?",
                 new Object[] { subjectId }, ROW_MAPPER);
         return list.isEmpty() ? null : list ;
     }
 
     @Override
     public List<Teaches> findSubjectByUser(int userId) {
-        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE 'userId' = ?",
+        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE userId = ?",
                 new Object[] { userId }, ROW_MAPPER);
         return list.isEmpty() ? null : list ;
     }
+
 }
