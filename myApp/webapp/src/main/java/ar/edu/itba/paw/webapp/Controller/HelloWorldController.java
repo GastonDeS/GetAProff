@@ -99,11 +99,14 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("emailSent");
         return mav;
     }
+    //    @RequestMapping("/default")
+//    public String defaultAfterLogin(HttpServletRequest request) {
+//        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
+//    }
 
     @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        Map<String, Integer> subjects = form.getSubjects();
-        return new ModelAndView("subjectsForm").addObject("subjects", subjects);
+        return new ModelAndView("subjectsForm");
     }
 
     @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.POST)
@@ -118,17 +121,11 @@ public class HelloWorldController {
             User u = userService.findByEmail(userMail).get();
             userId = u.getId();
         }
-        for (Map.Entry<String, Integer> entry : form.getSubjects().entrySet()) {
-            String capitalized = entry.getKey().toUpperCase();
-            int subjectId = subjectService.create(capitalized).getId();
-            if (userId != 0)
-            teachesService.addSubjectToUser(userId, subjectId, entry.getValue());
-        }
         return new ModelAndView("index");
     }
 
-    @RequestMapping("/profile")
-    public ModelAndView profile(@RequestParam(value = "uid") @NotNull final int uid) {
+    @RequestMapping("/profile/{uid}")
+    public ModelAndView profile(@PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
         return mav;
