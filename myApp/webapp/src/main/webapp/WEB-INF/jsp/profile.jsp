@@ -62,7 +62,15 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col-md-5">
-                    <h3><spring:message code="profile.timeTable"/></h3>
+                    <div class="d-flex flex-row justify-content-between">
+                        <h3><spring:message code="profile.timeTable"/></h3>
+                        <c:if test="${edit == 1}">
+                            <a href="#"
+                               class="btn nav-link active btn-custom mb-2">
+                                <spring:message code="profile.btn.edit.timeTable"/>
+                            </a>
+                        </c:if>
+                    </div>
                     <ul class="list-group">
                         <c:forEach var="day" items="${timetable}" varStatus="loop">
                             <c:if test="${day != null}">
@@ -75,7 +83,13 @@
                     </ul>
                 </div>
                 <div class="col-md-7">
-                    <h3><spring:message code="profile.subjects"/></h3>
+                    <div class="d-flex flex-row justify-content-between">
+                        <h3><spring:message code="profile.subjects"/></h3>
+                        <a href="#"
+                           class="btn nav-link active btn-custom mb-2">
+                            <spring:message code="profile.btn.edit.subjects"/>
+                        </a>
+                    </div>
                     <ul class="list-group">
                         <li class="list-group-item">Nivel Inicial
                             <div>
