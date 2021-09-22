@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS users (
                 name varchar(100),
                 password varchar(100),
                 mail varchar(100),
-                userrole INTEGER
+                userrole INTEGER,
+                description varchar(256)
             );
 
 CREATE TABLE IF NOT EXISTS subject (

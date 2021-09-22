@@ -2,16 +2,17 @@ package ar.edu.itba.paw.models;
 
 public class CardProfile {
     private int userId, price, level;
-    private String name, subject;
+    private String name, subject, description;
     private String[] userSchedule;
 
-    public CardProfile(int userId, String name, String subject, int price, int level, String[] userSchedule) {
+    public CardProfile(int userId, String name, String subject, int price, int level, String[] userSchedule, String desc) {
         this.userId = userId;
         this.name = name;
         this.level = level;
         this.subject = subject;
         this.price = price;
         this.userSchedule = userSchedule;
+        this.description = desc;
     }
 
     public int getUserId() {
@@ -53,6 +54,15 @@ public class CardProfile {
     public void setUserSchedule(String[] userSchedule) {
         this.userSchedule = userSchedule;
     }
+
+    public int getLevel() {
+        return level;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
 
     @Override
     public String toString() {

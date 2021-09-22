@@ -70,7 +70,7 @@ public class UserDaoJdbc implements UserDao {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getString("subject"), rs.getInt("price"),rs.getInt("level"), new String[] { rs.getString("monday"),
                 rs.getString("tuesday"), rs.getString("wednesday"), rs.getString("thursday"),
-                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday")});
+                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday")}, rs.getString("description"));
 
         int minLevel, maxLevel;
         if( level == 0) { minLevel = 1; maxLevel = 3;}
@@ -78,8 +78,8 @@ public class UserDaoJdbc implements UserDao {
             minLevel = maxLevel = level;
 
         String query = "SELECT aux.userid, aux.name AS name, s.name AS subject, price, level, t.monday AS monday, t.tuesday AS tuesday,\n" +
-                "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday\n" +
-                "                FROM (SELECT subjectid, u.userid, price, name, level FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
+                "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday, description\n" +
+                "                FROM (SELECT subjectid, u.userid, price, name, level, description FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
                 "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
                 "                AND price <= ? AND level IN (?,?) ";
         List<CardProfile> list = jdbcTemplate.query(
