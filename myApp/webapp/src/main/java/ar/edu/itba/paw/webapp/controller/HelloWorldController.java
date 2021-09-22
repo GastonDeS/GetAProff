@@ -110,6 +110,10 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
         mav.addObject("timetable", userService.getUserSchedule(uid));
+        mav.addObject("primaryLevel",userService.getUserSubjectsAndLevels(uid).get(1));
+        mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(uid).get(2));
+        mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(uid).get(3));
+        mav.addObject("noLevel",userService.getUserSubjectsAndLevels(uid).get(0));
         mav.addObject("edit", (u.get().getId() == uid) ? 1 : 0);
         return mav;
     }
@@ -123,6 +127,10 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", u.get());
         mav.addObject("timetable", userService.getUserSchedule(u.get().getId()));
+        mav.addObject("primaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(1));
+        mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(2));
+        mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(3));
+        mav.addObject("noLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(0));
         mav.addObject("edit", 1);
         return mav;
     }

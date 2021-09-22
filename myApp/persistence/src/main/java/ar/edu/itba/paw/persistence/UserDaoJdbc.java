@@ -99,13 +99,12 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
-        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("subject"));
+        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
         List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
                 new Object[] { userId}, pairRowMapper);
         Map<Integer,List<String>> map = new HashMap<>();
         for(Pair<Integer,String> p : rSet){
-            if(map.get(p.getValue1()).isEmpty())
-                map.put(p.getValue1(), new ArrayList<>());
+            map.computeIfAbsent(p.getValue1(), k -> new ArrayList<>());
             map.get(p.getValue1()).add(p.getValue2());
         }
         return map;

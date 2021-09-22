@@ -90,22 +90,35 @@
                             <spring:message code="profile.btn.edit.subjects"/>
                         </a>
                     </div>
-                    <ul class="list-group">
+                    <li class="list-group">
                         <li class="list-group-item">Nivel Inicial
                             <div>
-                                <span class="badge rounded-pill pill-custom mb-2">Fisica</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Matematica</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Ingles</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
-                                <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                                <c:forEach var="subject" items="${primaryLevel}">
+                                    <span class="badge rounded-pill pill-custom mb-2">${subject}</span>
+                                </c:forEach>
                             </div>
                         </li>
-                        <li class="list-group-item">Nivel Secundario</li>
-                        <li class="list-group-item">Nivel Terciario</li>
-                        <li class="list-group-item">No niveladas</li>
+                        <li class="list-group-item">Nivel Secundario
+                            <c:forEach var="subject" items="${secondaryLevel}">
+                                    <div>
+                                        <span class="badge rounded-pill pill-custom mb-2">${subject}</span>
+                                    </div>
+                            </c:forEach>
+                        </li>
+                        <li class="list-group-item">Nivel Terciario
+                            <c:forEach var="subject" items="${tertiaryLevel}">
+                                <div>
+                                    <span class="badge rounded-pill pill-custom mb-2">${subject}</span>
+                                </div>
+                            </c:forEach>
+                        </li>
+                        <li class="list-group-item">No niveladas
+                            <c:forEach var="subject" items="${noLevel}">
+                                <div>
+                                    <span class="badge rounded-pill pill-custom mb-2">${subject}</span>
+                                </div>
+                            </c:forEach>
+                        </li>
                     </ul>
                 </div>
             </div>
