@@ -9,7 +9,7 @@ import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
-import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
+import ar.edu.itba.paw.webapp.forms.TimeForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +44,13 @@ public class RegisterController {
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
-        Optional<Object> validator = Optional.ofNullable(webDataBinder.getTarget())
-                .filter(field -> field.getClass().equals(RegisterForm.class));
-        if (validator.isPresent()) {
-            webDataBinder.setValidator(registerFormValidator);
-        }
-        else {
-            webDataBinder.setValidator(subjectsFormValidator);
+        Object target = webDataBinder.getTarget();
+        if (target != null) {
+            if (target.getClass().equals(RegisterForm.class)) {
+                webDataBinder.setValidator(registerFormValidator);
+            } else if (target.getClass().equals(SubjectsForm.class)) {
+                webDataBinder.setValidator(subjectsFormValidator);
+            }
         }
     }
 
@@ -104,7 +104,7 @@ public class RegisterController {
         return subjectsForm(form);
     }
 
-    @RequestMapping(value = "/remove/{sid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/subjectsForm/remove/{sid}", method = RequestMethod.GET)
     public String removeSubject(@PathVariable("sid") final int sid) {
         if (userService.getCurrentUser().isPresent()) {
             int uid = userService.getCurrentUser().get().getId();
@@ -115,15 +115,14 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
-    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") final TimeRangeForm form) {
+    public ModelAndView timeRegister(@ModelAttribute("timeForm") final TimeForm form) {
         return new ModelAndView("timeForm");
     }
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
-    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") @Valid final TimeRangeForm form, final BindingResult errors) {
+    public ModelAndView timeRegister(@ModelAttribute("timeForm") @Valid final TimeForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return timeRegister(form);
-
         return new ModelAndView("timeForm");
     }
 }

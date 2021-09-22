@@ -23,40 +23,38 @@
         <div class="page-container">
             <c:url value="/subjectsForm" var="subjectsURL"/>
             <form:form modelAttribute="subjectsForm" action="${subjectsURL}"  method="post">
-                <div class="form-container">
+                <div class="form-container vw-90">
                     <p class="form-title"><spring:message code="subjects.form.enter"/></p>
                     <div class="subject-form-container">
-                        <div class="subject-input-container">
-                            <form:input type="text" path="name" class="form-control w-100" placeholder="${subjectPlaceholder}"/>
-                            <form:errors path="name" element="p" cssClass="form-error"/>
-                        </div>
-                        <div class="price-input-container">
-                            <form:input type="number" path="price" class="form-control w-100" placeholder="${pricePlaceholder}"/>
-                            <form:errors path="price" element="p" cssClass="form-error"/>
-                        </div>
+                        <form:input type="text" path="name" class="subject-form-control" placeholder="${subjectPlaceholder}"/>
+                        <form:input type="number" path="price" class="price-form-control" placeholder="${pricePlaceholder}"/>
                         <div class="level-container">
-                            <form:select path="level">
+                            <form:select path="level" class="subject-level-drop">
                                 <form:option cssClass="select-level" value="0" label="${nonePlaceholder}"/>
                                 <form:option cssClass="select-level" value="1" label="${primaryPlaceholder}"/>
                                 <form:option cssClass="select-level" value="2" label="${secondaryPlaceholder}"/>
                                 <form:option cssClass="select-level" value="3" label="${tertiaryPlaceholder}"/>
                             </form:select>
                         </div>
-                        <input type="submit" class="btn-custom" value="+"/>
+                        <input type="submit" class="btn btn-custom sign-btn" value="+"/>
+                    </div>
+                    <div class="errors-container">
+                        <form:errors path="name" element="p" cssClass="form-error"/>
+                        <form:errors path="price" element="p" cssClass="form-error"/>
                     </div>
                     <table class="subjects-table">
                         <c:forEach items="${subjects}" var="subject">
                             <tr class="subjects-row">
-                                <td class="subjects-col"><c:out value="${subject.name}"/></td>
-                                <td class="subjects-col">$<c:out value="${subject.price}"/></td>
-                                <td class="subjects-col"><spring:message code="subjects.form.level.${subject.level}"/></td>
-                                <td class="subjects-col">
-                                    <a href="/remove/${subject.id}" class="btn btn-custom">-</a>
+                                <td style="width: 50%"><c:out value="${subject.name}"/></td>
+                                <td style="width: 10%">$<c:out value="${subject.price}"/></td>
+                                <td style="width: 45%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                <td class="remove-btn">
+                                    <a href="/subjectsForm/remove/${subject.id}" class="btn btn-custom sign-btn">-</a>
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
-                    <input type="button" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
+                    <a href="/timeRegister" class="btn btn-custom submit-btn"><spring:message code="submit.button"/></a>
                 </div>
             </form:form>
         </div>
