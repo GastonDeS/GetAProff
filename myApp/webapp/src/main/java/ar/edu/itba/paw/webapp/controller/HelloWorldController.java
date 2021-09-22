@@ -72,8 +72,7 @@ public class HelloWorldController {
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
             mav.addObject("present", 1);
-        }
-        else {
+        } else {
             mav.addObject("present", 0);
         }
         return mav;
