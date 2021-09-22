@@ -102,5 +102,17 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping("/profile")
+    public ModelAndView profile() {
+        Optional<User> u = userService.getCurrentUser();
+        if (!u.isPresent()) {
+            return new ModelAndView("profile").addObject("edit", 0);
+        }
+        final ModelAndView mav = new ModelAndView("profile");
+        mav.addObject("user", u.get());
+        mav.addObject("edit", u.get().getId());
+        return mav;
+    }
+
 
 }
