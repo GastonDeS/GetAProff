@@ -47,7 +47,7 @@
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <a href="/subjectsForm" class="btn nav-link active btn-custom">
+                                <a href="#" class="btn nav-link active btn-custom">
                                     <spring:message code="profile.btn.edit"/>
                                 </a>
                             </c:otherwise>
@@ -65,7 +65,7 @@
                     <div class="d-flex flex-row justify-content-between">
                         <h3><spring:message code="profile.timeTable"/></h3>
                         <c:if test="${edit == 1}">
-                            <a href="#"
+                            <a href="${pageContext.request.contextPath}/timeRegister"
                                class="btn nav-link active btn-custom mb-2">
                                 <spring:message code="profile.btn.edit.timeTable"/>
                             </a>
@@ -85,10 +85,12 @@
                 <div class="col-md-7">
                     <div class="d-flex flex-row justify-content-between">
                         <h3><spring:message code="profile.subjects"/></h3>
-                        <a href="#"
-                           class="btn nav-link active btn-custom mb-2">
-                            <spring:message code="profile.btn.edit.subjects"/>
-                        </a>
+                        <c:if test="${edit == 1}">
+                            <a href="${pageContext.request.contextPath}/subjectsForm"
+                               class="btn nav-link active btn-custom mb-2">
+                                <spring:message code="profile.btn.edit.subjects"/>
+                            </a>
+                        </c:if>
                     </div>
                     <li class="list-group">
                         <li class="list-group-item">Nivel Inicial
