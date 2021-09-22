@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.forms;
 
-public class TimeRangeForm {
+public class TimeForm {
     private String[] day0 = new String[2];
     private String[] day1 = new String[2];
     private String[] day2 = new String[2];

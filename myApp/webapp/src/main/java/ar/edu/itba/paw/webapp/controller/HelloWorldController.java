@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
-import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,11 +90,12 @@ public class HelloWorldController {
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         Optional<User> u = userService.getCurrentUser();
         if (!u.isPresent()) {
-            return new ModelAndView("profile").addObject("edit", 0);
+            return new ModelAndView("profile").addObject("edit", 0).addObject("user", userService.findById(uid)).addObject("timetable", userService.getUserSchedule(uid));
         }
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
-        mav.addObject("edit", u.get().getId());
+        mav.addObject("timetable", userService.getUserSchedule(uid));
+        mav.addObject("edit", (u.get().getId() == uid)? 1:0);
         return mav;
     }
 
@@ -107,7 +107,8 @@ public class HelloWorldController {
         }
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", u.get());
-        mav.addObject("edit", u.get().getId());
+        mav.addObject("timetable", userService.getUserSchedule(u.get().getId()));
+        mav.addObject("edit", 1);
         return mav;
     }
 
