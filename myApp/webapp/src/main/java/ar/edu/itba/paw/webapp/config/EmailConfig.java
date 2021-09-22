@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.Config;
+package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.util.Properties;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.Controller" , "ar.edu.itba.paw.services"})
+@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services"})
 @Configuration
 public class EmailConfig {
 

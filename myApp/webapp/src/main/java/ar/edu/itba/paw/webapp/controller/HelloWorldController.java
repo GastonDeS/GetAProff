@@ -1,26 +1,21 @@
-package ar.edu.itba.paw.webapp.Controller;
+package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
-import ar.edu.itba.paw.webapp.Forms.ContactForm;
-import ar.edu.itba.paw.webapp.Forms.SubjectsForm;
-import ar.edu.itba.paw.webapp.Forms.TimeRangeForm;
+import ar.edu.itba.paw.webapp.forms.ContactForm;
+import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -45,11 +40,6 @@ public class HelloWorldController {
         mav.addObject("materias", subjectService.list());
         mav.addObject("greeting", userService.findById(1));
         return mav;
-    }
-
-    @RequestMapping("/login")
-    public ModelAndView login() {
-        return new ModelAndView("login");
     }
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
@@ -99,49 +89,18 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("emailSent");
         return mav;
     }
-    //    @RequestMapping("/default")
-//    public String defaultAfterLogin(HttpServletRequest request) {
-//        return request.isUserInRole("ROLE_TEACHER") ? "redirect:/" : "redirect:/";
-//    }
-
-    @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.GET)
-    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        return new ModelAndView("subjectsForm");
-    }
-
-    @RequestMapping(value = "/register/subjectsForm", method = RequestMethod.POST)
-    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return subjectsForm(form);
-        }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = 0;
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String userMail = authentication.getName();
-            User u = userService.findByEmail(userMail).get();
-            userId = u.getId();
-        }
-        return new ModelAndView("index");
-    }
 
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final int uid) {
+        Optional<User> u = userService.getCurrentUser();
+        if (!u.isPresent()) {
+            return new ModelAndView("profile").addObject("edit", 0);
+        }
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
+        mav.addObject("edit", u.get().getId());
         return mav;
     }
 
-    @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
-    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") final TimeRangeForm form) {
-        return new ModelAndView("timeForm");
-    }
-
-    @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
-    public ModelAndView timeRegister(@ModelAttribute("timeRangeForm") @Valid final TimeRangeForm form, final BindingResult errors) {
-        if (errors.hasErrors())
-            return timeRegister(form);
-
-        return new ModelAndView("timeForm");
-    }
 
 }

@@ -58,9 +58,3 @@ const checkFilters = () => {
     }
 }
 window.onload = checkFilters;
-
-// Subjects form js
-
-const addSubjectForm = () => {
-
-}

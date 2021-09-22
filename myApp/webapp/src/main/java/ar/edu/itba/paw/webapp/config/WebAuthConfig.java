@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.Config;
+package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +47,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
                     .antMatchers("/login", "/register").anonymous()
-
-                .antMatchers("/", "/tutors","/profile","/timeRegister").permitAll()
-
-                    .antMatchers("/", "/tutors").permitAll()
-
+                    .antMatchers("/", "/tutors","/profile/**","/timeRegister").permitAll()
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .usernameParameter("j_email")
