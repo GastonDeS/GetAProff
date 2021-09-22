@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public interface UserService {
     List<CardProfile> findUsersBySubjectId(int subjectId);
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject);
+    Timetable getUserSchedule(int userId);
     List<User> list();
     Integer mostExpensiveUserFee(String subject);
 

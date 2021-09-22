@@ -7,6 +7,7 @@ import java.util.List;
 public class Timetable {
     public final static int DAYS = 7;
     private final int userId;
+    private final EnumMap<Days,String> schedule;
 
     public int getUserId() {
         return userId;
@@ -31,8 +32,6 @@ public class Timetable {
             this.value = value;
         }
     }
-
-    private final EnumMap<Days,String> schedule;
 
     public Timetable(int userId, String [] daySchedule) {
         this.userId = userId;
