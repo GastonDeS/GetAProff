@@ -95,12 +95,11 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Timetable getUserSchedule(int userId) {
+    public List<String> getUserSchedule(int userId) {
         RowMapper<Timetable> timetableRowMapper = (rs, rowNum) ->  new Timetable(rs.getInt("userid"), new String[] {
                 rs.getString("monday"),  rs.getString("tuesday"),  rs.getString("wednesday"),  rs.getString("thursday"),
                 rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday") } );
         List<Timetable> resultSet =  jdbcTemplate.query("SELECT * FROM timetable WHERE userid = ?", new Object[] { userId }, timetableRowMapper );
-        return resultSet.isEmpty() ? null  : resultSet.get(0);
-
+        return resultSet.isEmpty() ? null  : resultSet.get(0).getSchedule();
     }
 }

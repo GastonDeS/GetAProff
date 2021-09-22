@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Timetable getUserSchedule(int userId) {
+    public List<String> getUserSchedule(int userId) {
         return userDao.getUserSchedule(userId);
     }
 

@@ -23,5 +23,5 @@ public interface UserDao {
     User create(String username, String mail, String password, int userRole);
     Optional<User> findByEmail(String mail);
 
-    Timetable getUserSchedule(int userId);
+    List<String> getUserSchedule(int userId);
 }

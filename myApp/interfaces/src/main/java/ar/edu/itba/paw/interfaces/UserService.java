@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -12,8 +11,27 @@ public interface UserService {
     List<CardProfile> findUsersBySubjectId(int subjectId);
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject);
-    Timetable getUserSchedule(int userId);
+
+    /**
+     * Retrieves user schedule
+     *
+     * @param userId The id of the user.
+     * @return A List of strings ordered from monday to sunday with the schedule of each day.
+     */
+    List<String> getUserSchedule(int userId);
+
+    /**
+     * Retrieves all the users registered
+     *
+     * @return A list of User
+     */
     List<User> list();
+
+    /**
+     * Retrieves the fee of the most expensive user
+     * @param subject Subject to search for highest fee
+     * @return Fee of most expensive user
+     */
     Integer mostExpensiveUserFee(String subject);
 
     /**
