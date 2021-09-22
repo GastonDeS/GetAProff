@@ -82,7 +82,8 @@
                                 <jsp:param name="name" value="${tutor.name}"/>
                                 <jsp:param name="uid" value="${tutor.userId}"/>
                                 <jsp:param name="description" value="${tutor.description}"/>
-                                <jsp:param name="price" value="${tutor.price}"/>
+                                <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
+                                <jsp:param name="minPrice" value="${tutor.minPrice}"/>
                             </jsp:include>
                         </div>
                     </div>

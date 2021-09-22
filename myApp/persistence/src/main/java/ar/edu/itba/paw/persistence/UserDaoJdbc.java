@@ -68,19 +68,17 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public List<CardProfile> filterUsers(String subject, Integer price, Integer level) {
-        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
-                rs.getString("subject"), rs.getInt("price"),rs.getInt("level"), rs.getString("description"));
+        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"), rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"));
 
         int minLevel, maxLevel;
         if( level == 0) { minLevel = 1; maxLevel = 3;}
         else
             minLevel = maxLevel = level;
 
-        String query = "SELECT aux.userid, aux.name AS name, s.name AS subject, price, level, t.monday AS monday, t.tuesday AS tuesday,\n" +
-                "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday, description\n" +
+        String query = "SELECT aux.userid, aux.name AS name, max(price) as maxPrice, min(price) as minPrice, description\n" +
                 "                FROM (SELECT subjectid, u.userid, price, name, level, description FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
                 "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
-                "                AND price <= ? AND ( level IN (?,?) OR level = 0 ) ";
+                "                AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0 ) GROUP BY aux.userid, aux.name, aux.description";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase(),price, minLevel, maxLevel }, mapper);
         return list.isEmpty() ? null : list;
