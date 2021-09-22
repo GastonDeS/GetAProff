@@ -56,14 +56,14 @@
                 <ul class="list-group">
                     <li class="list-group-item">Nivel Inicial
                         <div>
-                            <span class="badge rounded-pill btn-custom mb-2">Fisica</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Matematica</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Ingles</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Fisica</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Matematica</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Ingles</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
                         </div>
                     </li>
                     <li class="list-group-item">Nivel Secundario</li>
