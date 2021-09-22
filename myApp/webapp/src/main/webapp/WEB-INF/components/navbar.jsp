@@ -7,10 +7,10 @@
                 </a>
                 <c:if test="${param.isMainPage}">
                     <div class="navbarNav">
-                        <a href="${pageContext.request.contextPath}/login" class="btn nav-link active btn-custom">
+                        <a href="/login" class="btn nav-link active btn-custom">
                             <spring:message code="nav.button.login"/>
                         </a>
-                        <a href="${pageContext.request.contextPath}/register" class="btn nav-link active btn-custom">
+                        <a href="/register" class="btn nav-link active btn-custom">
                             <spring:message code="nav.button.register"/>
                         </a>
                     </div>

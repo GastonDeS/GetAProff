@@ -14,45 +14,44 @@
         <spring:message code="subjects.form.level.primary" var="primaryPlaceholder"/>
         <spring:message code="subjects.form.level.secondary" var="secondaryPlaceholder"/>
         <spring:message code="subjects.form.level.tertiary" var="tertiaryPlaceholder"/>
+        <spring:message code="subjects.form.level.select" var="levelPlaceholder"/>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="page-container">
-            <c:url value="/register/subjectsForm" var="subjectsURL"/>
+            <c:url value="/subjectsForm" var="subjectsURL"/>
             <form:form modelAttribute="subjectsForm" action="${subjectsURL}"  method="post">
                 <div class="form-container">
                     <p class="form-title"><spring:message code="subjects.form.enter"/></p>
-                    <div class="form-input-container">
-                        <c:set var="counter" value="0"/>
-                        <c:forEach begin="0" end="14" varStatus="loop">
-                            <c:if test="${loop.index == counter}">
-                                <div class="subject-input-container">
-                                    <form:input path="names[${loop}]" class="subject-input-form w-50" placeholder="${subjectPlaceholder}"/>
-                                    <form:input path="prices[${loop}]" class="subject-input-form w-30" placeholder="${pricePlaceholder}"/>
-                                    <form:select path="levels[${loop}]">
-                                        <form:option value="0" label="${nonePlaceholder}"/>
-                                        <form:option value="1" label="${primaryPlaceholder}"/>
-                                        <form:option value="2" label="${secondaryPlaceholder}"/>
-                                        <form:option value="3" label="${tertiaryPlaceholder}"/>
-                                    </form:select>
-                                </div>
-                                <input type="button" class="btn-custom submit-btn" value="+" onclick="addSubjectForm()"/>
-                            </c:if>
-                            <c:if test="${loop.index < counter}">
-                                <form:input path="names[${counter}]" class="subject-input-form w-50" placeholder="${subjectPlaceholder}"/>
-                                <form:input path="prices[${counter}]" class="subject-input-form w-30" placeholder="${pricePlaceholder}"/>
-                                <form:select path="levels[${counter}]">
-                                    <form:option value="0" label="${nonePlaceholder}"/>
-                                    <form:option value="1" label="${primaryPlaceholder}"/>
-                                    <form:option value="2" label="${secondaryPlaceholder}"/>
-                                    <form:option value="3" label="${tertiaryPlaceholder}"/>
-                                </form:select>
-                                <input type="button" class="btn-custom submit-btn" value="-" onclick="addSubjectForm()"/>
-                            </c:if>
-                        </c:forEach>
+                    <div class="subject-form-container">
+                        <div class="subject-input-container w-60">
+                            <form:input type="text" path="name" class="form-control w-100" placeholder="${subjectPlaceholder}"/>
+                            <form:errors path="name" element="p" cssClass="form-error"/>
+                        </div>
+                        <div class="subject-input-container w-10">
+                            <form:input type="number" path="price" class="form-control w-100" placeholder="${pricePlaceholder}"/>
+                            <form:errors path="price" element="p" cssClass="form-error"/>
+                        </div>
+                        <form:select path="level" cssClass="level-container">
+                            <form:option cssClass="select-level" value="0" label="${nonePlaceholder}"/>
+                            <form:option cssClass="select-level" value="1" label="${primaryPlaceholder}"/>
+                            <form:option cssClass="select-level" value="2" label="${secondaryPlaceholder}"/>
+                            <form:option cssClass="select-level" value="3" label="${tertiaryPlaceholder}"/>
+                        </form:select>
+                        <input type="submit" class="btn-custom submit-btn" value="+"/>
                     </div>
+                    <table>
+                        <c:forEach items="${subjects}" var="subject">
+                            <tr>
+                                <td>${subject.name}</td>
+                                <td>${subject.price}</td>
+                                <td>${subject.level}</td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    <input type="button" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
                 </div>
             </form:form>
         </div>

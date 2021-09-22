@@ -5,13 +5,17 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.smartcardio.Card;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserDetailsService userDetailsService;
 
     public User findById(int id) {
         return this.userDao.get(id);
@@ -70,11 +77,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> create(String username, String mail, String password, int userRole) {
-        return Optional.of(userDao.create(username, mail, passwordEncoder.encode(password), userRole));
+        User u = userDao.create(username, mail, passwordEncoder.encode(password), userRole);
+        UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
+        Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        return Optional.of(u);
     }
 
     @Override
     public Optional<User> findByEmail(String mail) {
         return userDao.findByEmail(mail);
+    }
+
+    @Override
+    public Optional<User> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String userMail = authentication.getName();
+            return userDao.findByEmail(userMail);
+        }
+        return Optional.empty();
     }
 }
