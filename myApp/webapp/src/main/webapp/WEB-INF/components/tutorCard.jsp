@@ -6,6 +6,14 @@
     <div class="card-body">
         <h5 class="card-title"><c:out value="${param.name}"/></h5>
         <p class="card-text-custom"><c:out value="${param.description}"/></p>
-        <p class="card-text-custom card-price">$<c:out value="${param.price}"/></p>
+        <c:choose>
+            <c:when test="${param.minPrice != param.maxPrice}">
+                <p class="card-text-custom card-price">$<c:out value="${param.minPrice}"/> - $<c:out value="${param.maxPrice}"/></p>
+            </c:when>
+            <c:otherwise>
+                <p class="card-text-custom card-price">$<c:out value="${param.minPrice}"/></p>
+            </c:otherwise>
+        </c:choose>
+
     </div>
 </div>

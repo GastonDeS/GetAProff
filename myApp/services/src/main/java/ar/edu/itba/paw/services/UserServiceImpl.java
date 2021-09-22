@@ -74,9 +74,9 @@ public class UserServiceImpl implements UserService {
         CardProfile mostExpensiveUser;
         List<CardProfile> users = filterUsers(subject);
         if(users != null) {
-            mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getPrice)).orElse(null);
+            mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getMaxPrice)).orElse(null);
             if (mostExpensiveUser != null)
-                return mostExpensiveUser.getPrice();
+                return mostExpensiveUser.getMaxPrice();
         }
         return 0;
     }
