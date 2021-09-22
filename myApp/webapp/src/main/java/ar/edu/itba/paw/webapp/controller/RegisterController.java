@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.SubjectService;
 import ar.edu.itba.paw.interfaces.TeachesService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
@@ -15,10 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -83,7 +81,7 @@ public class RegisterController {
             teachesList = teachesService.getSubjectListByUser(uid);
             for(Teaches t : teachesList) {
                 String name = subjectService.findById(t.getSubjectId()).get().getName();
-                subjectsList.add(new SubjectInfo(name, t.getPrice(), t.getLevel()));
+                subjectsList.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
             }
             return new ModelAndView("subjectsForm").addObject("subjects", subjectsList);
         }
@@ -97,9 +95,22 @@ public class RegisterController {
             return subjectsForm(form);
         }
         int uid = userService.getCurrentUser().get().getId();
-        int sid = subjectService.create(form.getName()).getId();
-        teachesService.addSubjectToUser(uid, sid, form.getPrice(), form.getLevel());
-        return new ModelAndView("subjectsForm");
+        if (form.getName() == null) {
+            return subjectsForm(form);
+        }
+        Subject s = subjectService.create(form.getName());
+        teachesService.addSubjectToUser(uid, s.getId(), form.getPrice(), form.getLevel());
+        return subjectsForm(form);
+    }
+
+    @RequestMapping(value = "/remove/{sid}", method = RequestMethod.GET)
+    public String removeSubject(@PathVariable("sid") final int sid) {
+        if (userService.getCurrentUser().isPresent()) {
+            int uid = userService.getCurrentUser().get().getId();
+            teachesService.removeSubjectToUser(uid, sid);
+            return "redirect:/subjectsForm";
+        }
+        return "redirect:/login";
     }
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
