@@ -13,18 +13,19 @@ public class User {
         this.userRole = userRole;
     }
 
-    public User(String name, String mail, String password, int userRole, String description) {
-        this(name, mail, password, userRole);
-        this.description = description;
-    }
-
     public User(String name, String password, int id, String mail, int userRole){
         this(name, mail, password, userRole);
         this.id = id;
+
     }
 
-    public User(String name, String password, int userid, String mail, int userRole, String description) {
+    public User(String name, String password, int id, String mail, int userRole,String description){
+        this(name,password,id,mail, userRole);
+        this.description = description;
+
     }
+
+
 
     public int getId() {
         return id;
