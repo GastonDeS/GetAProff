@@ -103,17 +103,19 @@ public class HelloWorldController {
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         Optional<User> u = userService.getCurrentUser();
-        if (!u.isPresent()) {
-            return new ModelAndView("profile").addObject("edit", 0).addObject("user", userService.findById(uid)).addObject("timetable", userService.getUserSchedule(uid));
-        }
         final ModelAndView mav = new ModelAndView("profile");
+        if (!u.isPresent()) {
+            mav.addObject("edit", 0);
+        } else {
+            mav.addObject("edit", (u.get().getId() == uid) ? 1 : 0);
+        }
         mav.addObject("user", userService.findById(uid));
         mav.addObject("timetable", userService.getUserSchedule(uid));
         mav.addObject("primaryLevel",userService.getUserSubjectsAndLevels(uid).get(1));
         mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(uid).get(2));
         mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(uid).get(3));
         mav.addObject("noLevel",userService.getUserSubjectsAndLevels(uid).get(0));
-        mav.addObject("edit", (u.get().getId() == uid) ? 1 : 0);
+
         return mav;
     }
 
