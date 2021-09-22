@@ -28,19 +28,19 @@
                     <c:choose>
                         <c:when test="${user.userRole == 1}">
                             <small>
-                                <spring:message code="profile.btn.teacher"/>
+                                <spring:message code="profile.teacher"/>
                             </small>
                         </c:when>
                         <c:otherwise>
                             <small>
-                                <spring:message code="profile.btn.student"/>
+                                <spring:message code="profile.student"/>
                             </small>
                         </c:otherwise>
                     </c:choose>
                     <p>${user.description}</p>
                     <c:if test="${user.userRole == 1}">
                         <c:choose>
-                            <c:when test="${edit == 1}">
+                            <c:when test="${edit == 0}">
                                 <a href="${pageContext.request.contextPath}/contact/${uid}"
                                    class="btn nav-link active btn-custom">
                                     <spring:message code="profile.btn.contact"/>
@@ -62,7 +62,7 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col-md-5">
-                    <h3>Horarios</h3>
+                    <h3><spring:message code="profile.timeTable"/></h3>
                     <ul class="list-group">
                         <c:forEach var="day" items="${timetable}" varStatus="loop">
                             <c:if test="${day != null}">
@@ -75,7 +75,7 @@
                     </ul>
                 </div>
                 <div class="col-md-7">
-                    <h3>Materias</h3>
+                    <h3><spring:message code="profile.subjects"/></h3>
                     <ul class="list-group">
                         <li class="list-group-item">Nivel Inicial
                             <div>
