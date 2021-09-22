@@ -6,6 +6,6 @@
     <div class="card-body">
         <h5 class="card-title"><c:out value="${param.name}"/></h5>
         <p class="card-text-custom"><c:out value="${param.description}"/></p>
-        <p class="card-text-custom card-price">$854</p>
+        <p class="card-text-custom card-price">$<c:out value="${param.price}"/></p>
     </div>
 </div>
