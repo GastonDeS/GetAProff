@@ -17,7 +17,7 @@
     <jsp:param name="isMainPage" value="${false}"/>
 </jsp:include>
 <div class="page-container">
-    <header class="headerMain mb-3 w-100 h-100">
+    <header class="headerMain mb-3 w-100">
         <div class="container">
             <div class="row">
                 <div class="col-md-3 mb-2">
