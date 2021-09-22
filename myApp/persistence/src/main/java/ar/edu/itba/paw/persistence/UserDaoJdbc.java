@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,5 +92,14 @@ public class UserDaoJdbc implements UserDao {
     public Optional<User> findByEmail(String mail) {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[] {mail}, ROW_MAPPER)
                 .stream().findFirst();
+    }
+
+    @Override
+    public List<String> getUserSchedule(int userId) {
+        RowMapper<Timetable> timetableRowMapper = (rs, rowNum) ->  new Timetable(rs.getInt("userid"), new String[] {
+                rs.getString("monday"),  rs.getString("tuesday"),  rs.getString("wednesday"),  rs.getString("thursday"),
+                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday") } );
+        List<Timetable> resultSet =  jdbcTemplate.query("SELECT * FROM timetable WHERE userid = ?", new Object[] { userId }, timetableRowMapper );
+        return resultSet.isEmpty() ? null  : resultSet.get(0).getSchedule();
     }
 }

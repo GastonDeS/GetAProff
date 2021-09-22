@@ -15,7 +15,7 @@
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="tutors-search">
-            <form action="/tutors" class="search-filters" method="get">
+            <form action="tutors" class="search-filters" method="get">
                 <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
                         <div class="dropdown">
                             <button class="filter-item" type="button" id="priceDropdownButton" data-bs-toggle="dropdown"
@@ -82,6 +82,7 @@
                                 <jsp:param name="name" value="${tutor.name}"/>
                                 <jsp:param name="uid" value="${tutor.userId}"/>
                                 <jsp:param name="description" value="${tutor.description}"/>
+                                <jsp:param name="price" value="${tutor.price}"/>
                             </jsp:include>
                         </div>
                     </div>

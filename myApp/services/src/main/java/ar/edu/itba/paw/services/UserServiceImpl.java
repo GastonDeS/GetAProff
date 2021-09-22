@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -57,6 +58,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<CardProfile> filterUsers(String subject) {
         return userDao.filterUsers(subject,Integer.MAX_VALUE,ANY_LEVEL);
+    }
+
+    @Override
+    public List<String> getUserSchedule(int userId) {
+        return userDao.getUserSchedule(userId);
     }
 
     public List<User> list() {

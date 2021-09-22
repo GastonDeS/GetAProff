@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,6 @@ public interface UserDao {
      */
     User create(String username, String mail, String password, int userRole);
     Optional<User> findByEmail(String mail);
+
+    List<String> getUserSchedule(int userId);
 }
