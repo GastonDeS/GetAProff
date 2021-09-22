@@ -11,8 +11,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +80,7 @@ public class UserDaoJdbc implements UserDao {
                 "                t.wednesday AS wednesday, t.thursday AS thursday, t.friday AS friday, t.saturday AS saturday, t.sunday AS sunday, description\n" +
                 "                FROM (SELECT subjectid, u.userid, price, name, level, description FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
                 "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
-                "                AND price <= ? AND level IN (?,?) ";
+                "                AND price <= ? AND ( level IN (?,?) OR level = 0 ) ";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase(),price, minLevel, maxLevel }, mapper);
         return list.isEmpty() ? null : list;

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.TimeForm;
@@ -63,15 +64,15 @@ public class RegisterController {
         if (errors.hasErrors()) {
             return register(form);
         }
-        userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole());
-
-        if (form.getUserRole() == 1) {
-            return new ModelAndView("redirect:/subjectsForm");
+        //TODO: validar bien
+        User createdUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
+        if (form.getUserRole() == 1 && createdUser != null) {
+            return new ModelAndView("redirect:/profile/" + createdUser.getId());
         }
         return new ModelAndView("index");
     }
 
-    // Get subject form
+    //Get subject form
     @RequestMapping(value = "/subjectsForm", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
         List<Teaches> teachesList;
