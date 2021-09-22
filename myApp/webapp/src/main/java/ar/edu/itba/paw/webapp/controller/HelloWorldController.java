@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
-import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
