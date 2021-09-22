@@ -21,7 +21,7 @@ public class UserDaoJdbc implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
-            rs.getInt("userid"), rs.getString("mail"), rs.getInt("userRole"));
+            rs.getInt("userid"), rs.getString("mail"), rs.getInt("userRole"), rs.getString("description"));
 
     @Autowired
     public UserDaoJdbc (final DataSource ds){
@@ -68,9 +68,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public List<CardProfile> filterUsers(String subject, Integer price, Integer level) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
-                rs.getString("subject"), rs.getInt("price"),rs.getInt("level"), new String[] { rs.getString("monday"),
-                rs.getString("tuesday"), rs.getString("wednesday"), rs.getString("thursday"),
-                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday")}, rs.getString("description"));
+                rs.getString("subject"), rs.getInt("price"),rs.getInt("level"), rs.getString("description"));
 
         int minLevel, maxLevel;
         if( level == 0) { minLevel = 1; maxLevel = 3;}
