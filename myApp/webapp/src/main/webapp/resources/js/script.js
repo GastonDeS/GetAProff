@@ -1,6 +1,5 @@
 //Tutors js
 
-let maxPrice;
 const resetFilters = () => {
     const urlParams = new URLSearchParams(location.search);
     let url = window.location.href;
