@@ -17,7 +17,7 @@
     </jsp:include>
     <div class="main-container">
         <c:url value="/contact/${uid}" var="contactUrl"/>
-        <h1 class="d-flex justify-content-center mt-4">Contactarse con ${user.name}</h1>
+        <h1 class="d-flex justify-content-center mt-4"><spring:message code="contact.form.contact.with"> <c:out value="${user.name}"></h1>
         <form:form class="d-flex justify-content-center" modelAttribute="contactForm" action="${contactUrl}" method="post">
             <div class="section-container">
                 <div class="input-section">

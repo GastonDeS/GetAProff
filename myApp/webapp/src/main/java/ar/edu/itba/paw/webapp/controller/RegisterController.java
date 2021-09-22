@@ -6,15 +6,14 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.TimeRangeForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
+import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class RegisterController {
@@ -33,20 +33,23 @@ public class RegisterController {
     SubjectService subjectService;
 
     @Autowired
-    Validator registerFormValidator;
+    private RegisterFormValidator registerFormValidator;
+
+    @Autowired
+    private SubjectsFormValidator subjectsFormValidator;
 
     @Autowired
     TeachesService teachesService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
-        Object target = webDataBinder.getTarget();
-        if (target == null) {
-            return;
-        }
-
-        if (target.getClass() == RegisterForm.class) {
+        Optional<Object> validator = Optional.ofNullable(webDataBinder.getTarget())
+                .filter(field -> field.getClass().equals(RegisterForm.class));
+        if (validator.isPresent()) {
             webDataBinder.setValidator(registerFormValidator);
+        }
+        else {
+            webDataBinder.setValidator(subjectsFormValidator);
         }
     }
 
@@ -61,12 +64,9 @@ public class RegisterController {
             return register(form);
         }
         userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole());
-        int id = userService.getCurrentUser().get().getId();
 
         if (form.getUserRole() == 1) {
-            String redirect = "redirect:/profile/" + id;
-            return new ModelAndView(redirect);
-//            return new ModelAndView("subjectsForm").addObject("subjectsFrom", new SubjectsForm());
+            return new ModelAndView("redirect:/subjectsForm");
         }
         return new ModelAndView("index");
     }
@@ -124,13 +124,5 @@ public class RegisterController {
             return timeRegister(form);
 
         return new ModelAndView("timeForm");
-    }
-
-    public Validator getRegisterFormValidator() {
-        return registerFormValidator;
-    }
-
-    public void setRegisterFormValidator(RegisterFormValidator registerFormValidator) {
-        this.registerFormValidator = registerFormValidator;
     }
 }
