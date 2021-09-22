@@ -15,6 +15,9 @@ public class ContactForm {
 
     private String message;
 
+    @NotBlank
+    private String subject;
+
     public String getEmail() {
         return email;
     }
@@ -37,5 +40,13 @@ public class ContactForm {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String materia) {
+        this.subject = materia;
     }
 }

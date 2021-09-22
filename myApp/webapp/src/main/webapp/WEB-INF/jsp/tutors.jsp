@@ -18,13 +18,13 @@
             <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
                 <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
                         <div class="dropdown">
-                            <button class="filter-item" type="button" id="priceDropdownButton"
-                                    data-bs-toggle="dropdown" aria-expanded="true" aria-haspopup="true">
-                                Precio
+                            <button class="filter-item" type="button" id="priceDropdownButton" data-bs-toggle="dropdown"
+                                        aria-expanded="true" aria-haspopup="true">
+                                <spring:message code="search.dropdown.price.buttonText"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="priceDropdownButton" style="width: 18vw;">
                                 <div class="d-flex flex-column px-2">
-                                    <h4 id="priceDisplay">Seleccione precio máx. </h4>
+                                    <h4 id="priceDisplay"><spring:message code="search.dropdown.price.buttonText"/></h4>
                                     <div class="d-flex justify-content-center">
                                         <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}" value="${maxPrice}"
                                                    name="price" oninput="updatePrice(this.value)" onfocus="keepPriceButtonFocused()">
@@ -36,25 +36,25 @@
                         </div>
                         <div class="dropdown">
                             <button class="filter-item" type="button" id="levelDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                Nivel
+                                <spring:message code="search.dropdown.level.buttonText"/>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="levelDropdownButton">
                                 <li>
                                     <input type="radio" name="level" class="btn-check" id="btn-check4" autocomplete="off" value="0"
                                            onclick="updateLevel(this.value)" checked>
-                                    <label class="dropdown-item" for="btn-check4">Todos</label>
+                                    <label class="dropdown-item" for="btn-check4"><spring:message code="search.dropdown.level.any"/></label>
                                 </li>
                                 <li>
                                     <input type="radio" name="level" class="btn-check" id="btn-check1" autocomplete="off" value="1" onclick="updateLevel(this.value)">
-                                    <label class="dropdown-item" for="btn-check1" >Primario</label>
+                                    <label class="dropdown-item" for="btn-check1"><spring:message code="search.dropdown.level.elementary"/></label>
                                 </li>
                                 <li>
                                     <input type="radio" name="level" class="btn-check" id="btn-check2" autocomplete="off" value="2"  onclick="updateLevel(this.value)">
-                                    <label class="dropdown-item" for="btn-check2">Secundario</label>
+                                    <label class="dropdown-item" for="btn-check2"><spring:message code="search.dropdown.level.middle"/></label>
                                 </li>
                                 <li>
                                     <input type="radio" name="level" class="btn-check" id="btn-check3" autocomplete="off" value="3"  onclick="updateLevel(this.value)">
-                                    <label class="dropdown-item" for="btn-check3">Universitario</label>
+                                    <label class="dropdown-item" for="btn-check3"><spring:message code="search.dropdown.level.college"/></label>
                                 </li>
                             </ul>
                         </div>

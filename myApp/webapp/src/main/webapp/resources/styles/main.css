@@ -77,6 +77,7 @@ body {
 /*Register page*/
 
 .form-container {
+    min-width: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -309,9 +310,18 @@ body {
     font-family: "Roboto Light", sans-serif;
     border-color: transparent;
 }
-
 .btn-custom:hover {
     color: black;
+}
+
+.pill-custom {
+    border-radius: 10px;
+    background-color: #026670;
+    color: white;
+    width: fit-content;
+    height: fit-content;
+    font-family: "Roboto Light", sans-serif;
+    border-color: transparent;
 }
 
 .submit-btn {

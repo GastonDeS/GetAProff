@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models;
 
 public class User {
 
-    private String name, password, mail;
+    private String name, password, mail, description;
     private int id;
     private int userRole; // 1 teacher ; 0 student
 
@@ -56,6 +56,14 @@ public class User {
 
     public void setUserRole(int userRole) {
         this.userRole = userRole;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

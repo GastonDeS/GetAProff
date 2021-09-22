@@ -7,16 +7,16 @@
 <head>
     <title><spring:message code="contact.title"/> – GetAProff </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
-    <script type="text/javascript" src="<c:url value="resources/js/script.js"/>"></script>
+    <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
+    <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="isMainPage" value="${false}"/>
     </jsp:include>
     <div class="main-container">
-        <c:url value="/contact?uid=${user.id}&subjectName=${subjectName}" var="contactUrl"/>
+        <c:url value="/contact/${uid}" var="contactUrl"/>
         <h1 class="d-flex justify-content-center mt-4">Contactarse con ${user.name}</h1>
         <form:form class="d-flex justify-content-center" modelAttribute="contactForm" action="${contactUrl}" method="post">
             <div class="section-container">
@@ -30,6 +30,11 @@
                         <form:label path="email">Tu email:</form:label>
                         <form:input type="text" path="email" class="form-control" placeHolder="example@gmail.com"/>
                         <form:errors path="email" element="p" cssClass="form-error"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="subject">Seleccionar Materia:</form:label>
+                        <form:input type="text" path="subject" class="form-control" placeHolder="matematica 1"/>
+                        <form:errors path="subject" element="p" cssClass="form-error"/>
                     </div>
                     <div class="form-input">
                         <form:label path="message">Tu mensaje:</form:label>

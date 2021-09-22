@@ -64,23 +64,20 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "/contact", method = RequestMethod.GET)
-    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @RequestParam(value = "uid") @NotNull final int uid,
-                                    @RequestParam(value = "subjectName") @NotNull final String subjectName) {
+    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
+    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("contactForm");
         mav.addObject("user", userService.findById(uid));
-        mav.addObject("subjectName", subjectName);
         return mav;
     }
 
-    @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public ModelAndView contact(@RequestParam(value = "uid") @NotNull final int uid, @RequestParam(value = "subjectName") @NotNull final String subjectName,
-                                @ModelAttribute("contactForm") @Valid final ContactForm form, final BindingResult errors) {
+    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
+    public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return contactForm(form, uid, subjectName);
+            return contactForm(form, uid);
         }
         User user = userService.findById(uid);
-        emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), subjectName, form.getEmail(), form.getMessage());
+        emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), form.getSubject(), form.getEmail(), form.getMessage());
         return new ModelAndView("redirect:/emailSent");
     }
 
@@ -98,6 +95,18 @@ public class HelloWorldController {
         }
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
+        mav.addObject("edit", u.get().getId());
+        return mav;
+    }
+
+    @RequestMapping("/profile")
+    public ModelAndView profile() {
+        Optional<User> u = userService.getCurrentUser();
+        if (!u.isPresent()) {
+            return new ModelAndView("profile").addObject("edit", 0);
+        }
+        final ModelAndView mav = new ModelAndView("profile");
+        mav.addObject("user", u.get());
         mav.addObject("edit", u.get().getId());
         return mav;
     }
