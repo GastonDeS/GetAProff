@@ -13,4 +13,6 @@ public interface SubjectDao {
     Subject create (String subject);
 
     List<Subject> listSubjects();
+
+    Optional<Subject> findByName(String name);
 }

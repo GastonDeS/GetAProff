@@ -10,10 +10,10 @@
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>">
         <spring:message code="subjects.form.enter" var="subjectPlaceholder"/>
         <spring:message code="subjects.form.price" var="pricePlaceholder"/>
-        <spring:message code="subjects.form.level.none" var="nonePlaceholder"/>
-        <spring:message code="subjects.form.level.primary" var="primaryPlaceholder"/>
-        <spring:message code="subjects.form.level.secondary" var="secondaryPlaceholder"/>
-        <spring:message code="subjects.form.level.tertiary" var="tertiaryPlaceholder"/>
+        <spring:message code="subjects.form.level.0" var="nonePlaceholder"/>
+        <spring:message code="subjects.form.level.1" var="primaryPlaceholder"/>
+        <spring:message code="subjects.form.level.2" var="secondaryPlaceholder"/>
+        <spring:message code="subjects.form.level.3" var="tertiaryPlaceholder"/>
         <spring:message code="subjects.form.level.select" var="levelPlaceholder"/>
     </head>
     <body>
@@ -26,28 +26,33 @@
                 <div class="form-container">
                     <p class="form-title"><spring:message code="subjects.form.enter"/></p>
                     <div class="subject-form-container">
-                        <div class="subject-input-container w-60">
+                        <div class="subject-input-container">
                             <form:input type="text" path="name" class="form-control w-100" placeholder="${subjectPlaceholder}"/>
                             <form:errors path="name" element="p" cssClass="form-error"/>
                         </div>
-                        <div class="subject-input-container w-10">
+                        <div class="price-input-container">
                             <form:input type="number" path="price" class="form-control w-100" placeholder="${pricePlaceholder}"/>
                             <form:errors path="price" element="p" cssClass="form-error"/>
                         </div>
-                        <form:select path="level" cssClass="level-container">
-                            <form:option cssClass="select-level" value="0" label="${nonePlaceholder}"/>
-                            <form:option cssClass="select-level" value="1" label="${primaryPlaceholder}"/>
-                            <form:option cssClass="select-level" value="2" label="${secondaryPlaceholder}"/>
-                            <form:option cssClass="select-level" value="3" label="${tertiaryPlaceholder}"/>
-                        </form:select>
-                        <input type="submit" class="btn-custom submit-btn" value="+"/>
+                        <div class="level-container">
+                            <form:select path="level">
+                                <form:option cssClass="select-level" value="0" label="${nonePlaceholder}"/>
+                                <form:option cssClass="select-level" value="1" label="${primaryPlaceholder}"/>
+                                <form:option cssClass="select-level" value="2" label="${secondaryPlaceholder}"/>
+                                <form:option cssClass="select-level" value="3" label="${tertiaryPlaceholder}"/>
+                            </form:select>
+                        </div>
+                        <input type="submit" class="btn-custom" value="+"/>
                     </div>
-                    <table>
+                    <table class="subjects-table">
                         <c:forEach items="${subjects}" var="subject">
-                            <tr>
-                                <td>${subject.name}</td>
-                                <td>${subject.price}</td>
-                                <td>${subject.level}</td>
+                            <tr class="subjects-row">
+                                <td class="subjects-col"><c:out value="${subject.name}"/></td>
+                                <td class="subjects-col">$<c:out value="${subject.price}"/></td>
+                                <td class="subjects-col"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                <td class="subjects-col">
+                                    <a href="/remove/${subject.id}" class="btn btn-custom">-</a>
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>

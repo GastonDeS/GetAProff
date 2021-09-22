@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,20 @@ public class TeachesDaoJdbc implements TeachesDao {
     public List<Teaches> findSubjectByUser(int userId) {
         final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE userId = ?",
                 new Object[] { userId }, ROW_MAPPER);
-        return list.isEmpty() ? null : list ;
+        return list.isEmpty() ? new ArrayList<>() : list ;
+    }
+
+    @Override
+    public Teaches findUserSubject(int userId, int subjectId) {
+        final List<Teaches> list = jdbcTemplate.query(
+                "SELECT * FROM teaches WHERE userId = ? AND subjectId = ?", new Object[] {userId, subjectId}, ROW_MAPPER);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public int removeSubjectToUser(int userId, int subjectId) {
+        return jdbcTemplate.update("DELETE FROM teaches WHERE userId = ? AND subjectId = ?", userId, subjectId);
+        // Returns != 0 if removed correctly
     }
 
 }

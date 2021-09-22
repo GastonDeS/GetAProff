@@ -239,7 +239,7 @@ body {
 
 .subject-form-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     width: 80%;
 }
@@ -247,19 +247,55 @@ body {
 .subject-input-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    width: 60%;
+    padding: 0 5px 5px 0;
+}
+
+.price-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    padding: 0 5px 5px 0;
 }
 
 .level-container {
     width: fit-content;
     background-color: white;
     border-radius: 10px;
+    padding: 0 5px 5px 0;
 }
 
 .select-level {
     font-size: 16px;
     font-family: "Roboto Light", sans-serif;
+}
+
+.sign-btn {
+    width: 2px;
+    height: 2px;
+}
+
+.subjects-table {
+    width: 80%;
+}
+
+.subjects-row {
+    background: hsla(185, 96%, 22%, 0.35);
+    box-shadow: 0 0 9px 0 rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 8px;
+}
+
+.subjects-col {
+
 }
 
 /* Button design */
@@ -293,7 +329,6 @@ body {
     font-size: 20px;
     margin-top: 5px;
 }
-
 
 .main-container {
     margin: auto;

@@ -37,18 +37,18 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
+    public Optional<Subject> findByName(String name) {
+        return jdbcTemplate.query("SELECT * FROM subject WHERE lower(name) LIKE lower(?)",
+                        new Object[] { name }, ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
     public Subject save(Subject subject) {
         return null;
     }
 
     @Override
     public Subject create (String subject) {
-        final List<Subject> list = jdbcTemplate.query(
-                "SELECT * FROM subject WHERE levenshtein(?, name) < 3",
-                new Object[] {subject}, ROW_MAPPER);
-        if (!list.isEmpty()) {
-            return list.get(0);
-        }
         final Map<String, Object> args = new HashMap<>();
         args.put("name", subject);
         final Number subjectid = jdbcInsert.executeAndReturnKey(args);

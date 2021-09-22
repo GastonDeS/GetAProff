@@ -22,7 +22,8 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject create(String subject) {
-        return subjectDao.create(subject);
+        Optional<Subject> s = subjectDao.findByName(subject);
+        return s.orElseGet(() -> subjectDao.create(subject));
     }
 
     @Override
