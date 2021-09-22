@@ -24,15 +24,26 @@
                     <img class="img-thumbnail mb-2" src="http://placehold.it/200x200" alt="...">
                 </div>
                 <div class="col">
-                    <h1>Segundo Espina</h1>
-                    <small>Profesor</small>
+                    <h1>${user.name}</h1>
+                    <c:choose>
+                        <c:when test="${user.userRole == 1}">
+                            <small>
+                                <spring:message code="profile.btn.teacher"/>
+                            </small>
+                        </c:when>
+                        <c:otherwise>
+                            <small>
+                                <spring:message code="profile.btn.student"/>
+                            </small>
+                        </c:otherwise>
+                    </c:choose>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi inventore provident quae.
                         At delectus dolores excepturi neque quasi ratione sit. Dolor dolores doloribus dolorum fugiat id
                         laborum
                     </p>
                     <c:choose>
                         <c:when test="${edit == 1}">
-                            <a href="/contact" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn nav-link active btn-custom">
                                 <spring:message code="profile.btn.contact"/>
                             </a>
                         </c:when>
@@ -52,13 +63,27 @@
             <div class="col-md-5">
                 <h3>Horarios</h3>
                 <ul class="list-group">
-                    <li class="list-group-item">Lunes:</li>
-                    <li class="list-group-item">Martes:</li>
-                    <li class="list-group-item">Miercoles:</li>
-                    <li class="list-group-item">Jueves:</li>
-                    <li class="list-group-item">Viernes:</li>
-                    <li class="list-group-item">Sabado:</li>
-                    <li class="list-group-item">Domingo:</li>
+                    <li class="list-group-item">
+                        <spring:message code="days.0"/>
+                    </li>
+                    <li class="list-group-item">
+                        <spring:message code="days.1"/>
+                    </li>
+                    <li class="list-group-item">
+                        <spring:message code="days.2"/>
+                    </li>
+                    <li class="list-group-item">
+                        <spring:message code="days.3"/>
+                    </li>
+                    <li class="list-group-item">
+                        <spring:message code="days.4"/>
+                    </li>
+                    <li class="list-group-item">
+                        <spring:message code="days.5"/>
+                    </li>
+                    <li class="list-group-item">
+                        <spring:message code="days.6"/>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-7">
@@ -66,14 +91,14 @@
                 <ul class="list-group">
                     <li class="list-group-item">Nivel Inicial
                         <div>
-                            <span class="badge rounded-pill btn-custom mb-2">Fisica</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Matematica</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Ingles</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
-                            <span class="badge rounded-pill btn-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Fisica</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Matematica</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Ingles</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
+                            <span class="badge rounded-pill pill-custom mb-2">Jardineria</span>
                         </div>
                     </li>
                     <li class="list-group-item">Nivel Secundario</li>
