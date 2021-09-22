@@ -45,9 +45,9 @@
                     <table class="subjects-table">
                         <c:forEach items="${subjects}" var="subject">
                             <tr class="subjects-row">
-                                <td style="width: 55%"><c:out value="${subject.name}"/></td>
+                                <td style="width: 50%"><c:out value="${subject.name}"/></td>
                                 <td style="width: 10%">$<c:out value="${subject.price}"/></td>
-                                <td style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                <td style="width: 45%"><spring:message code="subjects.form.level.${subject.level}"/></td>
                                 <td class="remove-btn">
                                     <a href="/subjectsForm/remove/${subject.id}" class="btn btn-custom sign-btn">-</a>
                                 </td>
