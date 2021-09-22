@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -47,19 +48,20 @@ public class HelloWorldController {
         List<CardProfile> users = userService.filterUsers(searchQuery);
         mav.addObject("tutors", users);
         mav.addObject("materias", subjectService.list());
-        mav.addObject("maxPrice",userService.mostExpensiveUserFee(searchQuery));
-        mav.addObject("weekDays",Timetable.Days.values());
+        mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
+        mav.addObject("weekDays", Timetable.Days.values());
         return mav;
     }
-    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = {"query","price","level"})
+
+    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = {"query", "price", "level"})
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String price,
                                @RequestParam(value = "level") @NotNull final String level) {
         final ModelAndView mav = new ModelAndView("tutors");
         List<CardProfile> users = userService.filterUsers(searchQuery, price, level);
         mav.addObject("tutors", users);
         mav.addObject("materias", subjectService.list());
-        mav.addObject("maxPrice",userService.mostExpensiveUserFee(searchQuery));
-        mav.addObject("weekDays",Timetable.Days.values());
+        mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
+        mav.addObject("weekDays", Timetable.Days.values());
         return mav;
     }
 
@@ -67,8 +69,16 @@ public class HelloWorldController {
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("contactForm");
         mav.addObject("user", userService.findById(uid));
+        Optional<User> u = userService.getCurrentUser();
+        if (u.isPresent()) {
+            mav.addObject("present", 1);
+        }
+        else {
+            mav.addObject("present", 0);
+        }
         return mav;
     }
+
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
     public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form, final BindingResult errors) {
@@ -76,7 +86,12 @@ public class HelloWorldController {
             return contactForm(form, uid);
         }
         User user = userService.findById(uid);
-        emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), form.getSubject(), form.getEmail(), form.getMessage());
+        Optional<User> u = userService.getCurrentUser();
+        if (u.isPresent()) {
+            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), form.getSubject(), u.get().getMail(), form.getMessage());
+        } else {
+            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), form.getSubject(), form.getEmail(), form.getMessage());
+        }
         return new ModelAndView("redirect:/emailSent");
     }
 
@@ -95,7 +110,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(uid));
         mav.addObject("timetable", userService.getUserSchedule(uid));
-        mav.addObject("edit", (u.get().getId() == uid)? 1:0);
+        mav.addObject("edit", (u.get().getId() == uid) ? 1 : 0);
         return mav;
     }
 
