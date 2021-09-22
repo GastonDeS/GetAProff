@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
@@ -11,6 +13,8 @@ public interface UserService {
     List<CardProfile> findUsersBySubjectId(int subjectId);
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject);
+
+    Map<Integer,List<String>> getUserSubjectsAndLevels(int userId);
 
     /**
      * Retrieves user schedule

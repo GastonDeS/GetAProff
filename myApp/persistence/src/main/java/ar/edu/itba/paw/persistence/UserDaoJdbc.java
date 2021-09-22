@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserDaoJdbc implements UserDao {
@@ -97,5 +95,19 @@ public class UserDaoJdbc implements UserDao {
                 rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday") } );
         List<Timetable> resultSet =  jdbcTemplate.query("SELECT * FROM timetable WHERE userid = ?", new Object[] { userId }, timetableRowMapper );
         return resultSet.isEmpty() ? null  : resultSet.get(0).getSchedule();
+    }
+
+    @Override
+    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
+        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("subject"));
+        List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
+                new Object[] { userId}, pairRowMapper);
+        Map<Integer,List<String>> map = new HashMap<>();
+        for(Pair<Integer,String> p : rSet){
+            if(map.get(p.getValue1()).isEmpty())
+                map.put(p.getValue1(), new ArrayList<>());
+            map.get(p.getValue1()).add(p.getValue2());
+        }
+        return map;
     }
 }
