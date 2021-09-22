@@ -16,7 +16,16 @@ public class User {
     public User(String name, String password, int id, String mail, int userRole){
         this(name, mail, password, userRole);
         this.id = id;
+
     }
+
+    public User(String name, String password, int id, String mail, int userRole,String description){
+        this(name,password,id,mail, userRole);
+        this.description = description;
+
+    }
+
+
 
     public int getId() {
         return id;

@@ -17,11 +17,11 @@
     <jsp:param name="isMainPage" value="${false}"/>
 </jsp:include>
 <div class="page-container">
-    <header class="headerMain mb-3">
+    <header class="headerMain mb-3 w-100 h-100">
         <div class="container">
             <div class="row">
-                <div class="col-md-3">
-                    <img class="img-thumbnail mb-2" src="http://placehold.it/200x200" alt="...">
+                <div class="col-md-3 mb-2">
+                    <img class="img-thumbnail mb-2 mt-2" src="http://placehold.it/200x200" alt="...">
                 </div>
                 <div class="col">
                     <h1>${user.name}</h1>
@@ -37,10 +37,7 @@
                             </small>
                         </c:otherwise>
                     </c:choose>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi inventore provident quae.
-                        At delectus dolores excepturi neque quasi ratione sit. Dolor dolores doloribus dolorum fugiat id
-                        laborum
-                    </p>
+                    <p>${user.description}</p>
                     <c:choose>
                         <c:when test="${edit == 1}">
                             <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn nav-link active btn-custom">
