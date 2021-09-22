@@ -18,6 +18,14 @@ body {
     height: fit-content;
 }
 
+input {
+    border-color: transparent;
+}
+
+input:focus {
+    outline: none;
+}
+
 /*Page container without nav bar*/
 
 .page-container {
@@ -26,7 +34,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     width: 100vw;
-    height: 85vh;
+    height: 100vh;
     padding: 2em;
 }
 
@@ -37,11 +45,19 @@ body {
     background-color: #9fedd7;
     padding: 20px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     width: 40vw;
     height: 12vh;
 }
+
+.search-bar > form {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 
 .main-img-container {
     display: flex;
@@ -237,50 +253,56 @@ body {
 
 /* Subject form */
 
+.price-form-control::-webkit-outer-spin-button,
+.price-form-control::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
 .subject-form-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 80%;
+    width: 95%;
+    margin-bottom: 8px;
 }
 
-.subject-input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 60%;
-    padding: 0 5px 5px 0;
+.subject-form-control {
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    height: fit-content;
+    margin-right: 5px;
+    padding: 5px;
+    width: 55%;
 }
 
-.price-input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 20%;
-    padding: 0 5px 5px 0;
+.price-form-control {
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    height: fit-content;
+    margin-right: 5px;
+    padding: 5px;
+    width: 10%;
+    -moz-appearance:textfield;
 }
 
 .level-container {
-    width: fit-content;
-    background-color: white;
-    border-radius: 10px;
-    padding: 0 5px 5px 0;
+    width: 25%;
+    background-color: transparent;
 }
 
-.select-level {
-    font-size: 16px;
-    font-family: "Roboto Light", sans-serif;
-}
-
-.sign-btn {
-    width: 2px;
-    height: 2px;
+.errors-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 95%;
+    height: fit-content;
 }
 
 .subjects-table {
-    width: 80%;
+    width: 95%;
 }
 
 .subjects-row {
@@ -294,8 +316,17 @@ body {
     margin-bottom: 8px;
 }
 
-.subjects-col {
+.subjects-table > td {
+    text-align: start;
+}
 
+.remove-btn {
+    align-items: center;
+}
+
+.sign-btn {
+    width: 10px;
+    height: 10px;
 }
 
 /* Button design */
@@ -448,10 +479,10 @@ div.bg-tutors-card-custom {
 /* search specific*/
 
 .search-input {
-        width: 30vw;
-        border-radius: 8px;
-        height: 38px;
-        vertical-align: middle;
+    width: 30vw;
+    border-radius: 8px;
+    height: 38px;
+    vertical-align: middle;
 }
 
 .dropbtn {
