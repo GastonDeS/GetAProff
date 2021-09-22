@@ -81,6 +81,7 @@
                             <jsp:include page="../components/tutorCard.jsp">
                                 <jsp:param name="name" value="${tutor.name}"/>
                                 <jsp:param name="uid" value="${tutor.userId}"/>
+                                <jsp:param name="description" value="${tutor.description}"/>
                             </jsp:include>
                         </div>
                     </div>
