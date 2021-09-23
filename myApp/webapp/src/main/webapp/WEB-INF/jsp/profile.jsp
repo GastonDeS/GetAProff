@@ -72,7 +72,7 @@
                         </c:if>
                     </div>
                     <div class="user-schedule-display">
-                        ACA VAN LOS HORARIOS
+                            ${user.schedule}
                     </div>
                 </div>
                 <div class="col-md-7">

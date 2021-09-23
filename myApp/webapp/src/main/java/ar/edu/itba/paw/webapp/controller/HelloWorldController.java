@@ -138,7 +138,7 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/profile", method= RequestMethod.POST)
     public ModelAndView profile( @ModelAttribute("scheduleInput") String schedule){
-        System.out.println(schedule);
+        userService.setUserSchedule(userService.getCurrentUser().get().getId(), schedule);
         return profile();
     }
 

@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS users (
                 password varchar(100),
                 mail varchar(100),
                 userrole INTEGER,
-                description varchar(256)
+                description varchar(256) default '',
+                schedule varchar(256) default ''
             );
 
 CREATE TABLE IF NOT EXISTS subject (

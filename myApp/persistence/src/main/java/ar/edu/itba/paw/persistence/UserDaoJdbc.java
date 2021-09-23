@@ -20,7 +20,8 @@ public class UserDaoJdbc implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
-            rs.getInt("userid"), rs.getString("mail"), rs.getInt("userRole"), rs.getString("description"));
+            rs.getInt("userid"), rs.getString("mail"), rs.getInt("userRole"), rs.getString("description")
+    ,rs.getString("schedule"));
 
     @Autowired
     public UserDaoJdbc (final DataSource ds){
@@ -108,5 +109,11 @@ public class UserDaoJdbc implements UserDao {
             map.get(p.getValue1()).add(p.getValue2());
         }
         return map;
+    }
+
+    @Override
+    public int setUserSchedule(int userId, String schedule) {
+        String query = "UPDATE users SET schedule=? WHERE userid=?";
+        return jdbcTemplate.update(query, new Object[] { schedule, userId});
     }
 }

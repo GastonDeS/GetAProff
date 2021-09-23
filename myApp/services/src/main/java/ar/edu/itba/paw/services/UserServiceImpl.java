@@ -110,4 +110,8 @@ public class UserServiceImpl implements UserService {
         }
         return Optional.empty();
     }
+
+    public int setUserSchedule(int userId, String schedule){
+        return userDao.setUserSchedule(userId, schedule);
+    }
 }

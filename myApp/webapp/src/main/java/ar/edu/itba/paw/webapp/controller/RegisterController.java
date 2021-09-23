@@ -116,7 +116,10 @@ public class RegisterController {
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
     public ModelAndView timeRegister(@ModelAttribute("timeForm") final TimeForm form) {
-        return new ModelAndView("timeForm");
+        Optional<User> currentUser = userService.getCurrentUser();
+        ModelAndView mav = new ModelAndView("timeForm");
+        currentUser.ifPresent(user -> mav.addObject("userSchedule", user.getSchedule()));
+        return mav;
     }
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
