@@ -1,3 +1,21 @@
+.user-schedule-display{
+    height: fit-content;
+    margin-top: 1px;
+    width: auto;
+    background: white;
+    padding: 16px 10px 16px 10px;
+    word-break: break-all;
+    /*box-shadow: -4px 5px 17px -7px rgba(0,0,0,70);*/
+}
+
+.schedule-form {
+    height: 55vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+
 .navbarNav {
     padding-top: 10px;
     padding-bottom: 10px;

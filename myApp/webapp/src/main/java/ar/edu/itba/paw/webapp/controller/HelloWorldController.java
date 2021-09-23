@@ -136,5 +136,11 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(value = "/profile", method= RequestMethod.POST)
+    public ModelAndView profile( @ModelAttribute("scheduleInput") String schedule){
+        System.out.println(schedule);
+        return profile();
+    }
+
 
 }

@@ -71,16 +71,9 @@
                             </a>
                         </c:if>
                     </div>
-                    <ul class="list-group">
-                        <c:forEach var="day" items="${timetable}" varStatus="loop">
-                            <c:if test="${day != null}">
-                                <li class="list-group-item">
-                                    <spring:message code="days.${loop.index}"/>
-                                    <p class="mt-1"><c:out value="${day}"/></p>
-                                </li>
-                            </c:if>
-                        </c:forEach>
-                    </ul>
+                    <div class="user-schedule-display">
+                        ACA VAN LOS HORARIOS
+                    </div>
                 </div>
                 <div class="col-md-7">
                     <div class="d-flex flex-row justify-content-between">

@@ -15,24 +15,14 @@
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="page-container">
-            <c:url value="/timeRegister" var="timeRegisterURL"/>
-            <form:form modelAttribute="timeForm" action="${timeRegisterURL}" method="post">
-                <div class="form-container">
-                    <p class="form-title"><spring:message code="time.form.title"/></p>
-                    <h5>Ingresa tus disponibilidad de horarios</h5>
-                    <c:forEach begin="0" end="6" varStatus="loop">
-                        <div class="time-input">
-                            <h5><spring:message code="days.${loop.index}"/></h5>
-                            <div class="hour-form">
-                                <form:input type="time" path="day${loop.index}[0]"/>
-                                <h5 class="hour-separator"> - </h5>
-                                <form:input type="time" path="day${loop.index}[1]"/>
-                            </div>
-                        </div>
-                    </c:forEach>
-                    <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
+            <h1><spring:message code="time.form.description"/></h1>
+            <form action="${pageContext.request.contextPath}/profile" method="post">
+                <div class="schedule-form">
+                    <textarea name="scheduleInput" id="scheduleInput" placeholder="Los lunes estoy libre..." style="height: 40vh; max-height: 45vh; min-height: 38vh; width: 40vw; min-width: 200px"></textarea>
+                    <button type="submit" class="btn btn-custom align-self-end"><spring:message code="button.saveChanges"/></button>
                 </div>
-            </form:form>
+            </form>
+
         </div>
     </body>
 </html>
