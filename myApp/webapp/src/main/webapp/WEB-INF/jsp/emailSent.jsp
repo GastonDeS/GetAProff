@@ -13,7 +13,7 @@
 
     <body>
         <jsp:include page="../components/navbar.jsp">
-            <jsp:param name="isMainPage" value="${false}"/>
+            <jsp:param name="isMainPage" value="${true}"/>
         </jsp:include>
     <div class="centered">
             <h1 class="mt-5"><spring:message code="email.sent.title"/></h1>

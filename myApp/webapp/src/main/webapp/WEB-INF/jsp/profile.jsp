@@ -14,14 +14,14 @@
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
-    <jsp:param name="isMainPage" value="${false}"/>
+    <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
 <div class="page-container">
     <header class="headerMain mb-3 w-100">
         <div class="container">
             <div class="row">
                 <div class="col-md-3 mb-2">
-                    <img class="img-thumbnail mb-2 mt-2" src="http://placehold.it/200x200" alt="...">
+                    <img class="img-thumbnail mb-2 mt-2" src="${pageContext.request.contextPath}/resources/images/tutor.jpg" alt="...">
                 </div>
                 <div class="col">
                     <h1>${user.name}</h1>

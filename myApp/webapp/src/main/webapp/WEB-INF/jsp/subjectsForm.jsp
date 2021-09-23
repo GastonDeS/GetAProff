@@ -54,7 +54,7 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <a href="/timeRegister" class="btn btn-custom submit-btn"><spring:message code="submit.button"/></a>
+                    <a href="${pageContext.request.contextPath}/profile" class="btn btn-custom submit-btn"><spring:message code="submit.button"/></a>
                 </div>
             </form:form>
         </div>

@@ -9,18 +9,18 @@
                 <c:if test="${param.isMainPage}">
                     <div class="navbarNav">
                         <sec:authorize access="!isAuthenticated()">
-                            <a href="/login" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/login" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.login"/>
                             </a>
-                            <a href="/register" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/register" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.register"/>
                             </a>
                         </sec:authorize>
                         <sec:authorize access="isAuthenticated()">
-                            <a href="/profile" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/profile" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.profile"/>
                             </a>
-                            <a href="/logout" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/logout" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.logout"/>
                             </a>
                         </sec:authorize>

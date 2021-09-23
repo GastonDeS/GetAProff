@@ -12,10 +12,10 @@
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
-            <jsp:param name="isMainPage" value="${false}"/>
+            <jsp:param name="isMainPage" value="${true}"/>
         </jsp:include>
         <div class="tutors-search">
-            <form action="tutors" class="search-filters" method="get">
+            <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
                 <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
                         <div class="dropdown">
                             <button class="filter-item" type="button" id="priceDropdownButton" data-bs-toggle="dropdown"
@@ -62,7 +62,7 @@
                 <button type="button" id="clear-filter-button" style="display: none;" onclick="resetFilters()"> Resetear Filtros</button>
             </form>
             <div class="search-bar">
-                <form name="Search" action="/tutors" method="get" >
+                <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
                     <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" required/>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>

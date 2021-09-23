@@ -14,7 +14,7 @@
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
-    <jsp:param name="isMainPage" value="${false}"/>
+    <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
 <div class="main-container">
     <c:url value="/contact/${uid}" var="contactUrl"/>

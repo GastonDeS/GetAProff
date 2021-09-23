@@ -75,10 +75,10 @@ public class UserDaoJdbc implements UserDao {
 
         String query = "SELECT aux.userid, aux.name AS name, max(price) as maxPrice, min(price) as minPrice, description\n" +
                 "                FROM (SELECT subjectid, u.userid, price, name, level, description FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
-                "                JOIN subject s ON aux.subjectid = s.subjectid JOIN timetable t ON t.userid = aux.userid WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
+                "                JOIN subject s ON aux.subjectid = s.subjectid  WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
                 "                AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0 ) GROUP BY aux.userid, aux.name, aux.description";
         List<CardProfile> list = jdbcTemplate.query(
-                query, new Object[] {subject.toLowerCase(),price, minLevel, maxLevel }, mapper);
+                query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel }, mapper);
         return list.isEmpty() ? null : list;
     }
 
