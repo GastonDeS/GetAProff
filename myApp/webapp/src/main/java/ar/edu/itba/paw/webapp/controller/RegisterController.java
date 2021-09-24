@@ -76,15 +76,19 @@ public class RegisterController {
     @RequestMapping(value = "/subjectsForm", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
         List<Teaches> teachesList;
-        List<SubjectInfo> subjectsList = new ArrayList<>();
+        List<Subject> subjectsNotGiven;
+        List<SubjectInfo> subjectsGiven = new ArrayList<>();
         if (userService.getCurrentUser().isPresent()) {
             int uid = userService.getCurrentUser().get().getId();
+            subjectsNotGiven = subjectService.subjectsNotGiven(uid);
             teachesList = teachesService.getSubjectListByUser(uid);
             for(Teaches t : teachesList) {
                 String name = subjectService.findById(t.getSubjectId()).get().getName();
-                subjectsList.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
+                subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
             }
-            return new ModelAndView("subjectsForm").addObject("subjects", subjectsList);
+            return new ModelAndView("subjectsForm")
+                    .addObject("given", subjectsGiven)
+                    .addObject("toGive", subjectsNotGiven);
         }
         return new ModelAndView("login"); //Send to 403
     }
@@ -96,11 +100,7 @@ public class RegisterController {
             return subjectsForm(form);
         }
         int uid = userService.getCurrentUser().get().getId();
-        if (form.getName() == null) {
-            return subjectsForm(form);
-        }
-        Subject s = subjectService.create(form.getName());
-        teachesService.addSubjectToUser(uid, s.getId(), form.getPrice(), form.getLevel());
+        teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
         return subjectsForm(form);
     }
 
@@ -116,7 +116,10 @@ public class RegisterController {
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
     public ModelAndView timeRegister(@ModelAttribute("timeForm") final TimeForm form) {
-        return new ModelAndView("timeForm");
+        Optional<User> currentUser = userService.getCurrentUser();
+        ModelAndView mav = new ModelAndView("timeForm");
+        currentUser.ifPresent(user -> mav.addObject("userSchedule", user.getSchedule()));
+        return mav;
     }
 
     @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)

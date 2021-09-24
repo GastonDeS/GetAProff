@@ -18,7 +18,7 @@
             <h1><spring:message code="time.form.description"/></h1>
             <form action="${pageContext.request.contextPath}/profile" method="post">
                 <div class="schedule-form">
-                    <textarea name="scheduleInput" id="scheduleInput" placeholder="Los lunes estoy libre..." style="height: 40vh; max-height: 45vh; min-height: 38vh; width: 40vw; min-width: 200px"></textarea>
+                    <textarea name="scheduleInput" id="scheduleInput" placeholder="Los lunes estoy libre..." style="height: 40vh; max-height: 45vh; min-height: 38vh; width: 40vw; min-width: 200px">${userSchedule}</textarea>
                     <button type="submit" class="btn btn-custom align-self-end"><spring:message code="button.saveChanges"/></button>
                 </div>
             </form>
