@@ -21,7 +21,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 mb-2">
-                    <img class="img-thumbnail mb-2 mt-2" src="${pageContext.request.contextPath}/resources/images/tutor.jpg" alt="...">
+                    <img class="img-thumbnail mb-2 mt-2" src="${image}" alt="...">
                 </div>
                 <div class="col">
                     <h1>${user.name}</h1>
@@ -122,3 +122,4 @@
 </div>
 
 </body>
+

@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,9 @@ public class HelloWorldController {
 
     @Autowired
     TeachesService teachesService;
+
+    @Autowired
+    ImageService imageService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -115,7 +121,7 @@ public class HelloWorldController {
         mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(uid).get(2));
         mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(uid).get(3));
         mav.addObject("noLevel",userService.getUserSubjectsAndLevels(uid).get(0));
-
+        mav.addObject("image",getImage(uid));
         return mav;
     }
 
@@ -132,6 +138,7 @@ public class HelloWorldController {
         mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(2));
         mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(3));
         mav.addObject("noLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(0));
+        mav.addObject("image",getImage(u.get().getId()));
         mav.addObject("edit", 1);
         return mav;
     }
@@ -140,6 +147,37 @@ public class HelloWorldController {
     public ModelAndView profile( @ModelAttribute("scheduleInput") String schedule){
         System.out.println(schedule);
         return profile();
+    }
+
+    @RequestMapping(value = "image/${uid}", method = RequestMethod.GET)
+    public String getImage(@PathVariable("uid") final int uid) {
+        Optional<Image> image = imageService.findImageById(uid);
+        if (!image.isPresent()) {
+            return null;
+        }
+        String imgData = DatatypeConverter.printBase64Binary(image.get().getImage());
+        String imgRef = "data:image/png;base64,";
+        return imgRef.concat(imgData);
+    }
+
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
+    public ModelAndView uploadFile(@ModelAttribute("img") final MultipartFile form) {
+
+        return new ModelAndView("uploadFile");
+    }
+
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public String submit(@RequestParam("file") MultipartFile imageFile) {
+        Optional<User> u = userService.getCurrentUser();
+        if (!u.isPresent()) {
+            return "redirect:/login";
+        }
+        try {
+            imageService.create(u.get().getId(), (int) imageFile.getSize(),imageFile.getBytes(),imageFile.getContentType());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/profile";
     }
 
 
