@@ -8,6 +8,13 @@ CREATE TABLE IF NOT EXISTS users (
                 schedule varchar(256) default ''
             );
 
+CREATE TABLE IF NOT EXISTS timetable (
+                userId INTEGER,
+                image bytea,
+                FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
+                PRIMARY KEY (userId)
+            );
+
 CREATE TABLE IF NOT EXISTS subject (
                 subjectId SERIAL PRIMARY KEY,
                 name varchar(100)

@@ -19,8 +19,7 @@ public class ImageDaoJdbc implements ImageDao {
     private final JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<Image> ROW_MAPPER = (rs, rowNum) ->
-            new Image(rs.getInt("userid"), rs.getInt("imglength"),
-            rs.getBytes("image"),rs.getString("phototype"));
+            new Image(rs.getInt("userid"), rs.getBytes("image"));
 
     @Autowired
     public ImageDaoJdbc(final DataSource ds) {
@@ -30,14 +29,12 @@ public class ImageDaoJdbc implements ImageDao {
     }
 
     @Override
-    public Image create(int uid, int imgLength, byte[] image, String photoType) {
+    public Image create(int uid, byte[] image) {
         final Map<String, Object> args = new HashMap<>();
         args.put("userid", uid);
         args.put("image", image);
-        args.put("imglength", imgLength);
-        args.put("phototype", photoType);
         jdbcInsert.execute(args);
-        return new Image(uid, imgLength, image, photoType);
+        return new Image(uid, image);
     }
 
     @Override

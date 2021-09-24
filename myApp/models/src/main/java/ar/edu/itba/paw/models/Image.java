@@ -4,19 +4,13 @@ public class Image {
 
     private int uid;
 
-    private byte[] image;
-    private int imgLength;
-    private String photoType;
-
-    public Image(int uid, int imgLength, byte[] image, String photoType) {
-        this.uid = uid;
-        this.image = image;
-        this.imgLength = imgLength;
-        this.photoType = photoType;
-    }
-
     public int getUid() {
         return uid;
+    }
+
+    public Image(int uid, byte[] image) {
+        this.uid = uid;
+        this.image = image;
     }
 
     public void setUid(int uid) {
@@ -31,19 +25,5 @@ public class Image {
         this.image = image;
     }
 
-    public int getImgLength() {
-        return imgLength;
-    }
-
-    public void setImgLength(int imgLength) {
-        this.imgLength = imgLength;
-    }
-
-    public String getPhotoType() {
-        return photoType;
-    }
-
-    public void setPhotoType(String photoType) {
-        this.photoType = photoType;
-    }
+    private byte[] image;
 }

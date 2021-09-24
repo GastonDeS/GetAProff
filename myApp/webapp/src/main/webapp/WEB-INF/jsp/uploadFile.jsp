@@ -12,7 +12,7 @@
                 <table>
                     <tr>
                         <td><label>Select a file to upload</label></td>
-                        <td><input type="file" name="file" /></td>
+                        <td><input type="file" width="200px" height="200px" accept="image" name="file" /></td>
                     </tr>
                     <tr>
                         <td><input type="submit" value="Submit" /></td>

@@ -161,7 +161,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
-    public ModelAndView uploadFile(@ModelAttribute("img") final MultipartFile form) {
+    public ModelAndView uploadFile() {
 
         return new ModelAndView("uploadFile");
     }
@@ -173,7 +173,7 @@ public class HelloWorldController {
             return "redirect:/login";
         }
         try {
-            imageService.create(u.get().getId(), (int) imageFile.getSize(),imageFile.getBytes(),imageFile.getContentType());
+            imageService.create(u.get().getId(),imageFile.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
