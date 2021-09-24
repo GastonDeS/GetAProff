@@ -3,15 +3,14 @@ package ar.edu.itba.paw.webapp.forms;
 
 public class SubjectsForm {
 
-    private String name;
-    private int price, level;
+    private int subjectid, price, level;
 
-    public String getName() {
-        return name;
+    public int getSubjectid() {
+        return subjectid;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSubjectid(int subjectid) {
+        this.subjectid = subjectid;
     }
 
     public int getPrice() {
