@@ -15,4 +15,6 @@ public interface SubjectDao {
     List<Subject> listSubjects();
 
     Optional<Subject> findByName(String name);
+
+    List<Subject> subjectsNotGiven(int userId);
 }

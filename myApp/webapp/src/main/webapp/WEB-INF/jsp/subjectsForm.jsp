@@ -10,11 +10,8 @@
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>">
         <spring:message code="subjects.form.enter" var="subjectPlaceholder"/>
         <spring:message code="subjects.form.price" var="pricePlaceholder"/>
-        <spring:message code="subjects.form.level.0" var="nonePlaceholder"/>
-        <spring:message code="subjects.form.level.1" var="primaryPlaceholder"/>
-        <spring:message code="subjects.form.level.2" var="secondaryPlaceholder"/>
-        <spring:message code="subjects.form.level.3" var="tertiaryPlaceholder"/>
         <spring:message code="subjects.form.level.select" var="levelPlaceholder"/>
+        <spring:message code="subjects.form.add" var="addBtnPlaceholder"/>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
@@ -23,38 +20,47 @@
         <div class="page-container">
             <c:url value="/subjectsForm" var="subjectsURL"/>
             <form:form modelAttribute="subjectsForm" action="${subjectsURL}"  method="post">
-                <div class="form-container vw-90">
-                    <p class="form-title"><spring:message code="subjects.form.enter"/></p>
+                <div class="form-container">
+                    <p class="form-title">${subjectPlaceholder}</p>
                     <div class="subject-form-container">
-                        <form:input type="text" path="name" class="subject-form-control" placeholder="${subjectPlaceholder}"/>
-                        <form:input type="number" path="price" class="price-form-control" placeholder="${pricePlaceholder}"/>
-                        <div class="level-container">
-                            <form:select path="level" class="subject-level-drop">
-                                <form:option cssClass="select-level" value="0" label="${nonePlaceholder}"/>
-                                <form:option cssClass="select-level" value="1" label="${primaryPlaceholder}"/>
-                                <form:option cssClass="select-level" value="2" label="${secondaryPlaceholder}"/>
-                                <form:option cssClass="select-level" value="3" label="${tertiaryPlaceholder}"/>
+                        <form:select path="subjectid">
+                            <c:forEach items="${toGive}" var="subject">
+                                <form:option value="${subject.id}" label="${subject.name}"/>
+                            </c:forEach>
+                        </form:select>
+                        <div class="price-level-container">
+                            <p>${pricePlaceholder}</p>
+                            <form:input cssClass="price-form-control" type="number" path="price"/>
+                        </div>
+                        <form:errors path="price" element="p" cssClass="form-error"/>
+                        <div class="price-level-container">
+                            <p>${levelPlaceholder}</p>
+                            <form:select path="level" cssStyle="width: 65%">
+                                <c:forEach begin="0" end="3" varStatus="loop">
+                                    <c:set var="label"><spring:message code="subjects.form.level.${loop.index}"/></c:set>
+                                    <form:option value="${loop.index}" label="${label}"/>"/>
+                                </c:forEach>
                             </form:select>
                         </div>
-                        <input type="submit" class="btn btn-custom sign-btn" value="+"/>
                     </div>
-                    <div class="errors-container">
-                        <form:errors path="name" element="p" cssClass="form-error"/>
-                        <form:errors path="price" element="p" cssClass="form-error"/>
-                    </div>
+                    <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
                     <table class="subjects-table">
-                        <c:forEach items="${subjects}" var="subject">
+                        <c:forEach items="${given}" var="subject">
                             <tr class="subjects-row">
-                                <td style="width: 50%"><c:out value="${subject.name}"/></td>
+                                <td style="width: 45%"><c:out value="${subject.name}"/></td>
                                 <td style="width: 10%">$<c:out value="${subject.price}"/></td>
-                                <td style="width: 45%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                <td style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
                                 <td class="remove-btn">
-                                    <a href="/subjectsForm/remove/${subject.id}" class="btn btn-custom sign-btn">-</a>
+                                    <a href="/subjectsForm/remove/${subject.id}" class="btn btn-custom">
+                                        <spring:message code="subjects.form.remove"/>
+                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
-                    <a href="${pageContext.request.contextPath}/profile" class="btn btn-custom submit-btn"><spring:message code="submit.button"/></a>
+                    <a href="${pageContext.request.contextPath}/profile" class="btn btn-custom">
+                        <spring:message code="subjects.form.save"/>
+                    </a>
                 </div>
             </form:form>
         </div>

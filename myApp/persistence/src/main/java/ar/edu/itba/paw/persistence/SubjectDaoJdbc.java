@@ -58,6 +58,15 @@ public class SubjectDaoJdbc implements SubjectDao {
     @Override
     public List<Subject> listSubjects() {
         final List<Subject> list = jdbcTemplate.query("SELECT * FROM subject", ROW_MAPPER);
-        return list.isEmpty() ? null : list;
+        return list;
     }
+
+    @Override
+    public List<Subject> subjectsNotGiven(int userId) {
+        final List<Subject> list = jdbcTemplate.query(
+                "SELECT * FROM subject WHERE subjectid NOT IN " +
+                        "(SELECT subjectid FROM teaches WHERE userid = ?) ",
+                new Object[] {userId}, ROW_MAPPER);
+        return list;
+     }
 }
