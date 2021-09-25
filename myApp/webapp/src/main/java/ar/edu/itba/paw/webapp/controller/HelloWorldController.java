@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +39,9 @@ public class HelloWorldController {
     TeachesService teachesService;
 
     private String[] sections = {"subjects", "schedule"};
+
+    @Autowired
+    ImageService imageService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -143,6 +149,37 @@ public class HelloWorldController {
 //        System.out.println(schedule);
 //        return profile("schedule");
 //    }
+
+    @RequestMapping(value = "image/${uid}", method = RequestMethod.GET)
+    public String getImage(@PathVariable("uid") final int uid) {
+        Optional<Image> image = imageService.findImageById(uid);
+        if (!image.isPresent()) {
+            return null;
+        }
+        String imgData = DatatypeConverter.printBase64Binary(image.get().getImage());
+        String imgRef = "data:image/png;base64,";
+        return imgRef.concat(imgData);
+    }
+
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
+    public ModelAndView uploadFile() {
+
+        return new ModelAndView("uploadFile");
+    }
+
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public String submit(@RequestParam("file") MultipartFile imageFile) {
+        Optional<User> u = userService.getCurrentUser();
+        if (!u.isPresent()) {
+            return "redirect:/login";
+        }
+        try {
+            imageService.create(u.get().getId(),imageFile.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/profile";
+    }
 
 
 }

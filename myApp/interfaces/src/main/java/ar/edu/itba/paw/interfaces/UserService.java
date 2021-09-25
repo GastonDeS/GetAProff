@@ -49,4 +49,5 @@ public interface UserService {
     Optional<User> findByEmail(String mail);
     Optional<User> getCurrentUser();
     String getUserDescription(int userId);
+    int setUserSchedule(int userId, String schedule);
 }

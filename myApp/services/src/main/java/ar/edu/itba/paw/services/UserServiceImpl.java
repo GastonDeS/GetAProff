@@ -116,4 +116,8 @@ public class UserServiceImpl implements UserService {
         User u = userDao.get(userId);
         return u == null ? null : u.getDescription();
     }
+
+    public int setUserSchedule(int userId, String schedule){
+        return userDao.setUserSchedule(userId, schedule);
+    }
 }

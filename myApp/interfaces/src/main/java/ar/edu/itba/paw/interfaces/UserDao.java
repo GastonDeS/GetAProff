@@ -27,4 +27,6 @@ public interface UserDao {
     List<String> getUserSchedule(int userId);
 
     Map<Integer, List<String>> getUserSubjectsAndLevels(int userId);
+
+    int setUserSchedule(int userId, String schedule);
 }
