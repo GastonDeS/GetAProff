@@ -90,15 +90,6 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<String> getUserSchedule(int userId) {
-        RowMapper<Timetable> timetableRowMapper = (rs, rowNum) ->  new Timetable(rs.getInt("userid"), new String[] {
-                rs.getString("monday"),  rs.getString("tuesday"),  rs.getString("wednesday"),  rs.getString("thursday"),
-                rs.getString("friday"), rs.getString("saturday"), rs.getString("sunday") } );
-        List<Timetable> resultSet =  jdbcTemplate.query("SELECT * FROM timetable WHERE userid = ?", new Object[] { userId }, timetableRowMapper );
-        return resultSet.isEmpty() ? null  : resultSet.get(0).getSchedule();
-    }
-
-    @Override
     public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
         RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
         List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
@@ -113,7 +104,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public int setUserSchedule(int userId, String schedule) {
-        String query = "UPDATE users SET schedule=? WHERE userid=?";
-        return jdbcTemplate.update(query, new Object[] { schedule, userId});
+        return jdbcTemplate.update("UPDATE users SET schedule = ? WHERE userid = ?", schedule, userId);
     }
 }

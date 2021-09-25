@@ -125,6 +125,13 @@ public class RegisterController {
     public ModelAndView timeForm(@ModelAttribute("timeForm") @Valid final TimeForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return timeForm(form);
-        return new ModelAndView("timeForm");
+        Optional<User> curr = userService.getCurrentUser();
+        if (curr.isPresent()){
+            int uid = curr.get().getId();
+            userService.setUserSchedule(uid, form.getSchedule());
+            String redirect = "redirect:/profile/" + uid + "/schedule";
+            return new ModelAndView(redirect);
+        }
+        return new ModelAndView("login");
     }
 }

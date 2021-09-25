@@ -140,15 +140,12 @@ public class HelloWorldController {
                 }
                 mav.addObject("subjects", subjectsGiven);
                 break;
+            case "schedule":
+                mav.addObject("schedule", userService.getUserSchedule(uid));
+                break;
         }
         return mav;
     }
-
-//    @RequestMapping(value = "/profile", method = RequestMethod.POST)
-//    public ModelAndView schedule(@ModelAttribute("scheduleInput") String schedule){
-//        System.out.println(schedule);
-//        return profile("schedule");
-//    }
 
     @RequestMapping(value = "image/${uid}", method = RequestMethod.GET)
     public String getImage(@PathVariable("uid") final int uid) {

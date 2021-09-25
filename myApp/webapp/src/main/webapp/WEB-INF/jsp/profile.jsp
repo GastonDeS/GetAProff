@@ -78,7 +78,7 @@
                                 </a>
                             </c:when>
                             <c:when test="${section eq sections[1]}">
-                                <p>Empty</p>
+                                <p>${schedule}</p>
                                 <a href="${pageContext.request.contextPath}/timeForm" class="btn btn-custom">
                                     <spring:message code="profile.btn.edit.schedule"/>
                                 </a>

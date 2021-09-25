@@ -62,13 +62,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
-        return userDao.getUserSubjectsAndLevels(userId);
-    }
-
-    @Override
-    public List<String> getUserSchedule(int userId) {
-        return userDao.getUserSchedule(userId);
+    public String getUserSchedule(int userId) {
+        User u = userDao.get(userId);
+        return u == null ? null : u.getSchedule();
     }
 
     public List<User> list() {
