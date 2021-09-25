@@ -65,9 +65,10 @@ public class RegisterController {
             return register(form);
         }
         //TODO: validar bien
-        User createdUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
-        if (form.getUserRole() == 1 && createdUser != null) {
-            return new ModelAndView("redirect:/profile/" + createdUser.getId());
+        User user = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
+        if (form.getUserRole() == 1 && user != null) {
+            String redirect = "redirect:/profile/" + user.getId() + "/subjects";
+            return new ModelAndView(redirect);
         }
         return new ModelAndView("index");
     }
@@ -87,6 +88,7 @@ public class RegisterController {
                 subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
             }
             return new ModelAndView("subjectsForm")
+                    .addObject("userid", uid)
                     .addObject("given", subjectsGiven)
                     .addObject("toGive", subjectsNotGiven);
         }
@@ -114,15 +116,15 @@ public class RegisterController {
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "/timeRegister", method = RequestMethod.GET)
-    public ModelAndView timeRegister(@ModelAttribute("timeForm") final TimeForm form) {
+    @RequestMapping(value = "/timeForm", method = RequestMethod.GET)
+    public ModelAndView timeForm(@ModelAttribute("timeForm") final TimeForm form) {
         return new ModelAndView("timeForm");
     }
 
-    @RequestMapping(value = "/timeRegister", method = RequestMethod.POST)
-    public ModelAndView timeRegister(@ModelAttribute("timeForm") @Valid final TimeForm form, final BindingResult errors) {
+    @RequestMapping(value = "/timeForm", method = RequestMethod.POST)
+    public ModelAndView timeForm(@ModelAttribute("timeForm") @Valid final TimeForm form, final BindingResult errors) {
         if (errors.hasErrors())
-            return timeRegister(form);
+            return timeForm(form);
         return new ModelAndView("timeForm");
     }
 }

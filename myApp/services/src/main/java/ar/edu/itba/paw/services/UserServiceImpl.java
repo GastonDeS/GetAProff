@@ -110,4 +110,10 @@ public class UserServiceImpl implements UserService {
         }
         return Optional.empty();
     }
+
+    @Override
+    public String getUserDescription(int userId) {
+        User u = userDao.get(userId);
+        return u == null ? null : u.getDescription();
+    }
 }

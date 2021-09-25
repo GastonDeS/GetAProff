@@ -48,4 +48,5 @@ public interface UserService {
     Optional<User> create(String username, String mail, String password, int userRole);
     Optional<User> findByEmail(String mail);
     Optional<User> getCurrentUser();
+    String getUserDescription(int userId);
 }
