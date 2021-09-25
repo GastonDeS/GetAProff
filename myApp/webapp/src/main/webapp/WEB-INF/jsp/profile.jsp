@@ -23,7 +23,7 @@
         <div class="page-container">
             <div class="profile-container">
                 <div class="info-container">
-                    <img class="img-thumbnail mb-2 mt-2" src="${image}" alt="userImage">
+                    <img class="img-thumbnail mb-2 mt-2" src="<c:url value="/image/${uid}"/>" alt="userImage">
                     <h1><c:out value="${user.name}"/></h1>
                     <p><c:out value="${description}"/></p>
                     <c:choose>

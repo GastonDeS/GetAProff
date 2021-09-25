@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -123,8 +122,7 @@ public class HelloWorldController {
                 .addObject("timetable", userService.getUserSchedule(uid))
                 .addObject("section", section)
                 .addObject("sections", sections)
-                .addObject("description", userService.getUserDescription(uid))
-                .addObject("image",getImage(uid));
+                .addObject("description", userService.getUserDescription(uid));
         if (!curr.isPresent() || curr.get().getUserRole() == 0) {
             mav.addObject("edit", 0);
         } else {
@@ -148,15 +146,12 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "image/${uid}", method = RequestMethod.GET)
-    public String getImage(@PathVariable("uid") final int uid) {
-        Optional<Image> image = imageService.findImageById(uid);
-        if (!image.isPresent()) {
-            return null;
-        }
-        String imgData = DatatypeConverter.printBase64Binary(image.get().getImage());
-        String imgRef = "data:image/png;base64,";
-        return imgRef.concat(imgData);
+
+    @RequestMapping(value = "/image/{uid}", method = RequestMethod.GET, produces = "image/*")
+    public @ResponseBody byte[] getImage(@PathVariable("uid") final int uid) {
+        imageService.findImageById(uid).orElseThrow(NoSuchFieldError::new).getImage();
+        Optional<Image> image =  imageService.findImageById(uid);
+        return image.map(Image::getImage).orElse(null);
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
