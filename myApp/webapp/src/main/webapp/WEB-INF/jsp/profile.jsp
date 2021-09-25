@@ -22,8 +22,8 @@
             <div class="row">
                 <div class="col-md-3 mb-2">
                     <img class="img-thumbnail mb-2 mt-2" style="width: 200px;
-    height: 200px;
-    object-fit: cover;" src="${image}" alt="...">
+                    height: 200px;
+                    object-fit: cover;" src="${image}" alt="...">
                 </div>
                 <div class="col">
                     <h1>${user.name}</h1>
