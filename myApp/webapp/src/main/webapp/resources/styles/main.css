@@ -15,7 +15,6 @@
     justify-content: space-around;
 }
 
-
 .navbarNav {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -336,12 +335,114 @@ input:focus {
     margin-bottom: 8px;
 }
 
-.subjects-table > td {
+.row-info {
     text-align: start;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+}
+
+.row-title {
+    text-align: start;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Roboto Light", sans-serif;
 }
 
 .remove-btn {
     align-items: center;
+}
+
+/* Profile */
+
+.profile-container {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-container {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: hsla(185, 96%, 22%, 0.35);
+    border-radius: 10px;
+    margin: 8px;
+}
+
+.info-container > h1 {
+    font-size: 20px;
+    font-family: "Roboto Light", sans-serif;
+    color: white;
+    font-weight: bold;
+    margin: 8px;
+}
+
+.info-container > p {
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    color: white;
+    margin: 8px;
+}
+
+.profile-section-container {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 8px;
+}
+
+.section-btn-container {
+    display: flex;
+    width: 100%;
+    height: 8%;
+}
+
+.section-btn {
+    width: 50%;
+    height: 100%;
+    font-size: 32px;
+    font-family: "Roboto Light", sans-serif;
+    color: white;
+    font-weight: bold;
+    background-color: rgb(2, 102, 112);
+    text-align: center;
+    text-decoration: none;
+}
+
+.section-btn:hover{
+    color: black;
+}
+
+.section-info {
+    width: 100%;
+    height: 92%;
+    background-color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.section-info > p {
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    color: black;
+    margin: 8px;
+}
+
+.section-info > table {
+    margin: 10px 8px 8px 8px;
+    width: 95%;
 }
 
 /* Button design */
@@ -356,6 +457,7 @@ input:focus {
     font-family: "Roboto Light", sans-serif;
     border-color: transparent;
 }
+
 .btn-custom:hover {
     color: black;
 }

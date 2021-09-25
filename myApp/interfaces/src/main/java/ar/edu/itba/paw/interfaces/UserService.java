@@ -14,15 +14,13 @@ public interface UserService {
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject);
 
-    Map<Integer,List<String>> getUserSubjectsAndLevels(int userId);
-
     /**
      * Retrieves user schedule
      *
      * @param userId The id of the user.
-     * @return A List of strings ordered from monday to sunday with the schedule of each day.
+     * @return A String description of the user's schedule.
      */
-    List<String> getUserSchedule(int userId);
+    String getUserSchedule(int userId);
 
     /**
      * Retrieves all the users registered
@@ -48,5 +46,6 @@ public interface UserService {
     Optional<User> create(String username, String mail, String password, int userRole);
     Optional<User> findByEmail(String mail);
     Optional<User> getCurrentUser();
+    String getUserDescription(int userId);
     int setUserSchedule(int userId, String schedule);
 }

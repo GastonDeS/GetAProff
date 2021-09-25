@@ -12,6 +12,10 @@
         <spring:message code="subjects.form.price" var="pricePlaceholder"/>
         <spring:message code="subjects.form.level.select" var="levelPlaceholder"/>
         <spring:message code="subjects.form.add" var="addBtnPlaceholder"/>
+        <spring:message code="subjects.table.subject" var="tableSubject"/>
+        <spring:message code="subjects.table.price" var="tablePrice"/>
+        <spring:message code="subjects.table.level" var="tableLevel"/>
+        <spring:message code="subjects.table.hour" var="tableHour"/>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
@@ -45,11 +49,16 @@
                     </div>
                     <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
                     <table class="subjects-table">
+                        <tr class="subjects-row" style="width: 100%">
+                            <td class="row-title" style="width: 43%">${tableSubject}</td>
+                            <td class="row-title" style="width: 17%">${tablePrice}</td>
+                            <td class="row-title" style="width: 40%">${tableLevel}</td>
+                        </tr>
                         <c:forEach items="${given}" var="subject">
                             <tr class="subjects-row">
-                                <td style="width: 45%"><c:out value="${subject.name}"/></td>
-                                <td style="width: 10%">$<c:out value="${subject.price}"/></td>
-                                <td style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                <td class="row-info" style="width: 40%"><c:out value="${subject.name}"/></td>
+                                <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                <td class="row-info" style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
                                 <td class="remove-btn">
                                     <a href="/subjectsForm/remove/${subject.id}" class="btn btn-custom">
                                         <spring:message code="subjects.form.remove"/>
@@ -58,8 +67,8 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <a href="${pageContext.request.contextPath}/profile" class="btn btn-custom">
-                        <spring:message code="subjects.form.save"/>
+                    <a href="${pageContext.request.contextPath}/profile/${userid}/subjects" class="btn btn-custom">
+                        <spring:message code="form.btn.save"/>
                     </a>
                 </div>
             </form:form>

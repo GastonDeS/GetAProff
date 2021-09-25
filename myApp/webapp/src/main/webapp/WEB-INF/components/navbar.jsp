@@ -17,7 +17,7 @@
                             </a>
                         </sec:authorize>
                         <sec:authorize access="isAuthenticated()">
-                            <a href="${pageContext.request.contextPath}/profile" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/profile/${param.uid}/subjects" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.profile"/>
                             </a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn nav-link active btn-custom">

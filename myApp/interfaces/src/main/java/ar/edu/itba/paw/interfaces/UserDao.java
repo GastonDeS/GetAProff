@@ -22,9 +22,8 @@ public interface UserDao {
      * @return The created user.
      */
     User create(String username, String mail, String password, int userRole);
-    Optional<User> findByEmail(String mail);
 
-    List<String> getUserSchedule(int userId);
+    Optional<User> findByEmail(String mail);
 
     Map<Integer, List<String>> getUserSubjectsAndLevels(int userId);
 

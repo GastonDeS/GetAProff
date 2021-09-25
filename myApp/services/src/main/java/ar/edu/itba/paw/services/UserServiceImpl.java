@@ -62,13 +62,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
-        return userDao.getUserSubjectsAndLevels(userId);
-    }
-
-    @Override
-    public List<String> getUserSchedule(int userId) {
-        return userDao.getUserSchedule(userId);
+    public String getUserSchedule(int userId) {
+        User u = userDao.get(userId);
+        return u == null ? null : u.getSchedule();
     }
 
     public List<User> list() {
@@ -109,6 +105,12 @@ public class UserServiceImpl implements UserService {
             return userDao.findByEmail(userMail);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String getUserDescription(int userId) {
+        User u = userDao.get(userId);
+        return u == null ? null : u.getDescription();
     }
 
     public int setUserSchedule(int userId, String schedule){

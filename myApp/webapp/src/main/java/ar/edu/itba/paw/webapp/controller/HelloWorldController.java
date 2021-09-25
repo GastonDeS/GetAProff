@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.List;
@@ -37,15 +38,21 @@ public class HelloWorldController {
     @Autowired
     TeachesService teachesService;
 
+    private String[] sections = {"subjects", "schedule"};
+
     @Autowired
     ImageService imageService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
-        final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("materias", subjectService.list());
-        mav.addObject("greeting", userService.findById(1));
-        return mav;
+        Optional<User> curr = userService.getCurrentUser();
+        final ModelAndView mav = new ModelAndView("index")
+                .addObject("materias", subjectService.list())
+                .addObject("greeting", userService.findById(1));
+        if (!curr.isPresent() || curr.get().getUserRole() == 0){
+            return mav;
+        }
+        return mav.addObject("user", curr.get());
     }
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
@@ -86,7 +93,8 @@ public class HelloWorldController {
 
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
-    public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form, final BindingResult errors) {
+    public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
+                                final BindingResult errors) {
         if (errors.hasErrors()) {
             return contactForm(form, uid);
         }
@@ -106,47 +114,37 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping("/profile/{uid}")
-    public ModelAndView profile(@PathVariable("uid") final int uid) {
-        Optional<User> u = userService.getCurrentUser();
-        final ModelAndView mav = new ModelAndView("profile");
-        if (!u.isPresent()) {
+    @RequestMapping("/profile/{uid}/{section}")
+    public ModelAndView profile(@PathVariable("uid") final int uid, @PathVariable("section") final String section) {
+        Optional<User> curr = userService.getCurrentUser();
+        User user = userService.findById(uid);
+        final ModelAndView mav = new ModelAndView("profile")
+                .addObject("user", user)
+                .addObject("timetable", userService.getUserSchedule(uid))
+                .addObject("section", section)
+                .addObject("sections", sections)
+                .addObject("description", userService.getUserDescription(uid));
+        if (!curr.isPresent() || curr.get().getUserRole() == 0) {
             mav.addObject("edit", 0);
         } else {
-            mav.addObject("edit", (u.get().getId() == uid) ? 1 : 0);
+            mav.addObject("edit", 1);
         }
-        mav.addObject("user", userService.findById(uid));
-        mav.addObject("timetable", userService.getUserSchedule(uid));
-        mav.addObject("primaryLevel",userService.getUserSubjectsAndLevels(uid).get(1));
-        mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(uid).get(2));
-        mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(uid).get(3));
-        mav.addObject("noLevel",userService.getUserSubjectsAndLevels(uid).get(0));
-        mav.addObject("image",getImage(uid));
-        return mav;
-    }
-
-    @RequestMapping("/profile")
-    public ModelAndView profile() {
-        Optional<User> u = userService.getCurrentUser();
-        if (!u.isPresent()) {
-            return new ModelAndView("profile").addObject("edit", 0);
+        List<Teaches> teachesList;
+        List<SubjectInfo> subjectsGiven = new ArrayList<>();
+        switch (section) {
+            case "subjects":
+                teachesList = teachesService.getSubjectListByUser(uid);
+                for(Teaches t : teachesList) {
+                    String name = subjectService.findById(t.getSubjectId()).get().getName();
+                    subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
+                }
+                mav.addObject("subjects", subjectsGiven);
+                break;
+            case "schedule":
+                mav.addObject("schedule", userService.getUserSchedule(uid));
+                break;
         }
-        final ModelAndView mav = new ModelAndView("profile");
-        mav.addObject("user", u.get());
-        mav.addObject("timetable", userService.getUserSchedule(u.get().getId()));
-        mav.addObject("primaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(1));
-        mav.addObject("secondaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(2));
-        mav.addObject("tertiaryLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(3));
-        mav.addObject("noLevel",userService.getUserSubjectsAndLevels(u.get().getId()).get(0));
-        mav.addObject("image",getImage(u.get().getId()));
-        mav.addObject("edit", 1);
         return mav;
-    }
-
-    @RequestMapping(value = "/profile", method= RequestMethod.POST)
-    public ModelAndView profile( @ModelAttribute("scheduleInput") String schedule){
-        userService.setUserSchedule(userService.getCurrentUser().get().getId(), schedule);
-        return profile();
     }
 
     @RequestMapping(value = "image/${uid}", method = RequestMethod.GET)

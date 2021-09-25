@@ -9,20 +9,23 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>">
+        <spring:message code="time.form.example" var="timePlaceholder"/>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="page-container">
-            <h1><spring:message code="time.form.description"/></h1>
-            <form action="${pageContext.request.contextPath}/profile" method="post">
-                <div class="schedule-form">
-                    <textarea name="scheduleInput" id="scheduleInput" placeholder="Los lunes estoy libre..." style="height: 40vh; max-height: 45vh; min-height: 38vh; width: 40vw; min-width: 200px">${userSchedule}</textarea>
-                    <button type="submit" class="btn btn-custom align-self-end"><spring:message code="button.saveChanges"/></button>
-                </div>
-            </form>
-
+            <c:url value="/timeForm" var="timeFormURL"/>
+            <form:form modelAttribute="timeForm" action="${timeFormURL}"  method="post">
+                <div class="form-container">
+                    <p class="form-title"><spring:message code="time.form.description"/></p>
+                    <div class="form-input-container">
+                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="schedule" placeholder="${timePlaceholder}"/>
+                        <form:errors path="schedule" element="p" cssClass="form-error"/>
+                    </div>
+                    <input type="submit" class="btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+            </form:form>
         </div>
     </body>
 </html>

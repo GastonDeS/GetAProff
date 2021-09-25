@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +31,7 @@ public class LoginController {
         }
         final User user = maybeUser.get();
         if (user.getUserRole() == 1) {
-            String redirect = "redirect:/profile/" + user.getId();
+            String redirect = "redirect:/profile/" + user.getId() + "/subjects";
             return new ModelAndView(redirect);
         }
         return new ModelAndView("index");
