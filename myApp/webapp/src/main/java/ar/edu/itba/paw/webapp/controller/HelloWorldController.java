@@ -123,7 +123,8 @@ public class HelloWorldController {
                 .addObject("timetable", userService.getUserSchedule(uid))
                 .addObject("section", section)
                 .addObject("sections", sections)
-                .addObject("description", userService.getUserDescription(uid));
+                .addObject("description", userService.getUserDescription(uid))
+                .addObject("image",getImage(uid));
         if (!curr.isPresent() || curr.get().getUserRole() == 0) {
             mav.addObject("edit", 0);
         } else {
@@ -175,7 +176,7 @@ public class HelloWorldController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/profile";
+        return "redirect:/profile/"+u.get().getId()+"/subjects";
     }
 
 
