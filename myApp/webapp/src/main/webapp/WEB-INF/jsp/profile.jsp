@@ -90,7 +90,8 @@
                             </c:when>
                             <c:when test="${section eq sections[1]}">
                                 <jsp:include page="../components/${section}.jsp">
-                                        <jsp:param name="schedule" value="${scheduleText}"/>
+                                    <jsp:param name="schedule" value="${scheduleText}"/>
+                                    <jsp:param name="edit" value="${edit}"/>
                                 </jsp:include>
                             </c:when>
                             <c:otherwise>

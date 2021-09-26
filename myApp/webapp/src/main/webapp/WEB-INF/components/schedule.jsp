@@ -4,8 +4,10 @@
 
 <div class="section-info">
     <p><c:out value="${param.schedule}"/></p>
-    <a href="${pageContext.request.contextPath}/timeForm" class="btn btn-custom">
-        <spring:message code="profile.btn.edit.schedule"/>
-    </a>
+    <c:if test="${param.edit == 1}">
+        <a href="${pageContext.request.contextPath}/timeForm" class="btn btn-custom">
+            <spring:message code="profile.btn.edit.schedule"/>
+        </a>
+    </c:if>
 </div>
 
