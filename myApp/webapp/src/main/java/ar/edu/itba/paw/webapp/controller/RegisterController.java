@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.SubjectService;
-import ar.edu.itba.paw.interfaces.TeachesService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
@@ -28,10 +29,10 @@ import java.util.Optional;
 public class RegisterController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    SubjectService subjectService;
+    private SubjectService subjectService;
 
     @Autowired
     private RegisterFormValidator registerFormValidator;
@@ -40,7 +41,10 @@ public class RegisterController {
     private SubjectsFormValidator subjectsFormValidator;
 
     @Autowired
-    TeachesService teachesService;
+    private TeachesService teachesService;
+
+    @Autowired
+    private UtilsService utilsService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -65,7 +69,8 @@ public class RegisterController {
             return register(form);
         }
         //TODO: validar bien
-        User user = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
+        String name = utilsService.capitalizeFirstLetter(form.getName());
+        User user = userService.create(name, form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
         if (form.getUserRole() == 1 && user != null) {
             String redirect = "redirect:/profile/" + user.getId() + "/subjects";
             return new ModelAndView(redirect);
