@@ -433,16 +433,17 @@ input:focus {
     align-items: center;
 }
 
+.section-info > table {
+    margin: 10px 8px 8px 8px;
+    width: 95%;
+}
+
 .section-info > p {
     font-size: 16px;
     font-family: "Roboto Light", sans-serif;
     color: black;
     margin: 8px;
-}
-
-.section-info > table {
-    margin: 10px 8px 8px 8px;
-    width: 95%;
+    text-align: start;
 }
 
 /* Button design */

@@ -56,38 +56,37 @@
                             </c:choose>
                         </c:forEach>
                     </div>
-                    <div class="section-info">
                         <c:choose>
                             <c:when test="${section eq sections[0]}">
-                                <table>
-                                    <tr class="subjects-row" style="width: 100%">
-                                        <td class="row-title" style="width: 55%">${tableSubject}</td>
-                                        <td class="row-title" style="width: 15%">${tablePrice}</td>
-                                        <td class="row-title" style="width: 30%">${tableLevel}</td>
-                                    </tr>
-                                    <c:forEach items="${subjects}" var="subject">
+                                <div class="section-info">
+                                    <table>
                                         <tr class="subjects-row" style="width: 100%">
-                                            <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
-                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
-                                            <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                            <td class="row-title" style="width: 55%">${tableSubject}</td>
+                                            <td class="row-title" style="width: 15%">${tablePrice}</td>
+                                            <td class="row-title" style="width: 30%">${tableLevel}</td>
                                         </tr>
-                                    </c:forEach>
-                                </table>
-                                <a href="${pageContext.request.contextPath}/subjectsForm" class="btn btn-custom">
-                                    <spring:message code="profile.btn.edit.subjects"/>
-                                </a>
+                                        <c:forEach items="${subjectsList}" var="subject">
+                                            <tr class="subjects-row" style="width: 100%">
+                                                <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
+                                                <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                                <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </table>
+                                    <a href="${pageContext.request.contextPath}/subjectsForm" class="btn btn-custom">
+                                        <spring:message code="profile.btn.edit.subjects"/>
+                                    </a>
+                                </div>
                             </c:when>
                             <c:when test="${section eq sections[1]}">
-                                <p>${schedule}</p>
-                                <a href="${pageContext.request.contextPath}/timeForm" class="btn btn-custom">
-                                    <spring:message code="profile.btn.edit.schedule"/>
-                                </a>
+                                <jsp:include page="../components/${section}.jsp">
+                                        <jsp:param name="schedule" value="${scheduleText}"/>
+                                </jsp:include>
                             </c:when>
                             <c:otherwise>
                                 <p>Empty</p>
                             </c:otherwise>
                         </c:choose>
-                    </div>
                 </div>
             </div>
         </div>
