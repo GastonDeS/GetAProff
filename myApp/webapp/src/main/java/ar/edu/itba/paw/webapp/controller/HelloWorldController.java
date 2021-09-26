@@ -108,6 +108,12 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping("/myClasses")
+    public ModelAndView myClasses() {
+        final ModelAndView mav = new ModelAndView("classes");
+        return mav;
+    }
+
     @RequestMapping("/profile/{uid}/{section}")
     public ModelAndView profile(@PathVariable("uid") final int uid, @PathVariable("section") final String section) {
         Optional<User> curr = userService.getCurrentUser();
