@@ -83,11 +83,9 @@ public class HelloWorldController {
         mav.addObject("user", userService.findById(uid));
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
-            mav.addObject("present", 1);
-        } else {
-            mav.addObject("present", 0);
+            return mav;
         }
-        return mav;
+        return new ModelAndView("redirect:/login");
     }
 
 
@@ -99,11 +97,8 @@ public class HelloWorldController {
         }
         User user = userService.findById(uid);
         Optional<User> u = userService.getCurrentUser();
-        if (u.isPresent()) {
-            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), form.getSubject(), u.get().getMail(), form.getMessage());
-        } else {
-            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", form.getName(), form.getSubject(), form.getEmail(), form.getMessage());
-        }
+        u.ifPresent(value -> emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", value.getName(), form.getSubject(), value.getMail(), form.getMessage()));
+
         return new ModelAndView("redirect:/emailSent");
     }
 
@@ -123,10 +118,10 @@ public class HelloWorldController {
                 .addObject("section", section)
                 .addObject("sections", sections)
                 .addObject("description", userService.getUserDescription(uid));
-        if (!curr.isPresent() || curr.get().getUserRole() == 0) {
-            mav.addObject("edit", 0);
-        } else {
+        if (curr.isPresent() && curr.get().getId() == uid) {
             mav.addObject("edit", 1);
+        } else {
+            mav.addObject("edit", 0);
         }
         List<Teaches> teachesList;
         List<SubjectInfo> subjectsGiven = new ArrayList<>();

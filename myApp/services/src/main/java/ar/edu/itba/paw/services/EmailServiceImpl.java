@@ -6,11 +6,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 
 @Service
+@EnableAsync
 public class EmailServiceImpl implements EmailService {
 
     @Autowired

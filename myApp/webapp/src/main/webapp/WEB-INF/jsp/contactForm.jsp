@@ -24,18 +24,6 @@
     <form:form class="d-flex justify-content-center" modelAttribute="contactForm" action="${contactUrl}" method="post">
         <div class="section-container">
             <div class="input-section">
-                <c:if test="${present == 0}">
-                    <div class="form-input">
-                        <form:label path="name"><spring:message code="contact.form.name"/></form:label>
-                        <form:input type="text" path="name" class="form-control" placeholder="nombre"/>
-                        <form:errors path="name" element="p" cssClass="form-error"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="email"><spring:message code="contact.form.email"/></form:label>
-                        <form:input type="text" path="email" class="form-control" placeHolder="example@gmail.com"/>
-                        <form:errors path="email" element="p" cssClass="form-error"/>
-                    </div>
-                </c:if>
                 <div class="form-input">
                     <form:label path="subject"><spring:message code="contact.form.subject"/></form:label>
                     <form:input type="text" path="subject" class="form-control" placeHolder="matematica 1"/>
