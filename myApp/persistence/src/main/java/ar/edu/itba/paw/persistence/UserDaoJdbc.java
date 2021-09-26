@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Pair;
-import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

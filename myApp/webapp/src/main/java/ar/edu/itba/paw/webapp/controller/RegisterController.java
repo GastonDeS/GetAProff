@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.SubjectService;
-import ar.edu.itba.paw.interfaces.TeachesService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.UtilsService;
+import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;

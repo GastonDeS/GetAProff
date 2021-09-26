@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.UtilsService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import org.springframework.stereotype.Service;
 
 @Service

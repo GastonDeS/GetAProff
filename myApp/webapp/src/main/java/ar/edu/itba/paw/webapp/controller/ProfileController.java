@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.SubjectService;
-import ar.edu.itba.paw.interfaces.TeachesService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.SubjectInfo;
-import ar.edu.itba.paw.models.Teaches;
+import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -41,10 +36,10 @@ public class ProfileController {
                 .addObject("section", section)
                 .addObject("sections", sections)
                 .addObject("description", userService.getUserDescription(uid));
-        if (!curr.isPresent() || curr.get().getUserRole() == 0) {
-            mav.addObject("edit", 0);
-        } else {
+        if (curr.isPresent() && curr.get().getId() == uid) {
             mav.addObject("edit", 1);
+        } else {
+            mav.addObject("edit", 0);
         }
         switch (section) {
             case "subjects":
