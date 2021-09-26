@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,14 +24,21 @@
         <div class="page-container">
             <div class="profile-container">
                 <div class="info-container">
-                    <img class="img-thumbnail mb-2 mt-2" src="${pageContext.request.contextPath}/resources/images/tutor.jpg" alt="userImage">
+                    <img class="img-thumbnail mb-2 mt-2" src="<c:url value="/image/${uid}"/>" alt="userImage">
                     <h1><c:out value="${user.name}"/></h1>
                     <p><c:out value="${description}"/></p>
                     <c:choose>
                         <c:when test="${edit == 0}">
-                            <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom">
-                                <spring:message code="profile.btn.contact"/>
-                            </a>
+                            <sec:authorize access="isAuthenticated()">
+                                <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom">
+                                    <spring:message code="profile.btn.contact"/>
+                                </a>
+                            </sec:authorize>
+                            <sec:authorize access="!isAuthenticated()">
+                                <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
+                                    <spring:message code="profile.btn.contact"/>
+                                </a>
+                            </sec:authorize>
                         </c:when>
                         <c:otherwise>
                             <a href="#" class="btn btn-custom">
@@ -73,9 +81,11 @@
                                             </tr>
                                         </c:forEach>
                                     </table>
-                                    <a href="${pageContext.request.contextPath}/subjectsForm" class="btn btn-custom">
-                                        <spring:message code="profile.btn.edit.subjects"/>
-                                    </a>
+                                    <c:if test="${edit == 1}">
+                                        <a href="${pageContext.request.contextPath}/subjectsForm" class="btn btn-custom">
+                                            <spring:message code="profile.btn.edit.subjects"/>
+                                        </a>
+                                    </c:if>
                                 </div>
                             </c:when>
                             <c:when test="${section eq sections[1]}">
