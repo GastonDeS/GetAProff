@@ -25,9 +25,11 @@
         <div class="section-container">
             <div class="input-section">
                 <div class="form-input">
-                    <form:label path="subject"><spring:message code="contact.form.subject"/></form:label>
-                    <form:input type="text" path="subject" class="form-control" placeHolder="matematica 1"/>
-                    <form:errors path="subject" element="p" cssClass="form-error"/>
+                    <form:select path="subjectId">
+                        <c:forEach var="subject" items="${subjects}">
+                            <form:option value="${subject.id}" label="${subject.name}"/>
+                        </c:forEach>
+                    </form:select>
                 </div>
                 <div class="form-input">
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>

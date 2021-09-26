@@ -79,10 +79,19 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
-        final ModelAndView mav = new ModelAndView("contactForm");
-        mav.addObject("user", userService.findById(uid));
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
+            final ModelAndView mav = new ModelAndView("contactForm");
+            mav.addObject("user", userService.findById(uid));
+
+            List<Teaches> teachesList;
+            List<SubjectInfo> subjectsGiven = new ArrayList<>();
+            teachesList = teachesService.getSubjectListByUser(uid);
+            for(Teaches t : teachesList) {
+                String name = subjectService.findById(t.getSubjectId()).get().getName();
+                subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
+            }
+            mav.addObject("subjects", subjectsGiven);
             return mav;
         }
         return new ModelAndView("redirect:/login");
@@ -97,7 +106,7 @@ public class HelloWorldController {
         }
         User user = userService.findById(uid);
         Optional<User> u = userService.getCurrentUser();
-        u.ifPresent(value -> emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", value.getName(), form.getSubject(), value.getMail(), form.getMessage()));
+        u.ifPresent(value -> emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", value.getName(), subjectService.findById(form.getSubjectId()).get().getName(), value.getMail(), form.getMessage()));
 
         return new ModelAndView("redirect:/emailSent");
     }
