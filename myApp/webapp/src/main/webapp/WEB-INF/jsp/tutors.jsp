@@ -63,7 +63,12 @@
             </form>
             <div class="search-bar">
                 <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get" >
-                    <input type="search" id="query" name="query" class="search-input" value="<%=request.getParameter("query")%>" required/>
+                    <input class="form-control" list="datalistOptions" id="query" name="query"/>
+                    <datalist id="datalistOptions">
+                        <c:forEach var="subject" items="${subjects}">
+                        <option value="${subject.name}">
+                            </c:forEach>
+                    </datalist>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
                     </button>

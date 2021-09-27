@@ -46,7 +46,7 @@ public class HelloWorldController {
     public ModelAndView helloWorld() {
         Optional<User> curr = userService.getCurrentUser();
         final ModelAndView mav = new ModelAndView("index")
-                .addObject("materias", subjectService.list())
+                .addObject("subjects", subjectService.list())
                 .addObject("greeting", userService.findById(1));
         if (!curr.isPresent() || curr.get().getUserRole() == 0){
             return mav;
@@ -59,7 +59,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("tutors");
         List<CardProfile> users = userService.filterUsers(searchQuery);
         mav.addObject("tutors", users);
-        mav.addObject("materias", subjectService.list());
+        mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         return mav;

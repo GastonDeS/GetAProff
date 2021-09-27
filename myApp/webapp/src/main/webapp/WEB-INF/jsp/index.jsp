@@ -19,7 +19,12 @@
         <div class="page-container">
             <div class="search-bar">
                 <form name="Search" action="tutors" method="get" >
-                    <input type="search" id="query" name="query" class="search-input" placeholder="${searchPlaceholder}" required/>
+                    <input class="form-control" list="datalistOptions" id="query" name="query" placeholder=${searchPlaceholder}/>
+                    <datalist id="datalistOptions">
+                        <c:forEach var="subject" items="${subjects}">
+                            <option value="${subject.name}">
+                            </c:forEach>
+                    </datalist>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
                     </button>
