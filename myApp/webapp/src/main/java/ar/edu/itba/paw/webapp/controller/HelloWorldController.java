@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -33,6 +38,9 @@ public class HelloWorldController {
 
     @Autowired
     TeachesService teachesService;
+
+    @Autowired
+    ClassService classService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -71,14 +79,24 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
-        final ModelAndView mav = new ModelAndView("contactForm");
-        mav.addObject("user", userService.findById(uid));
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
+            final ModelAndView mav = new ModelAndView("contactForm");
+            mav.addObject("user", userService.findById(uid));
+
+            List<Teaches> teachesList;
+            List<SubjectInfo> subjectsGiven = new ArrayList<>();
+            teachesList = teachesService.getSubjectListByUser(uid);
+            for(Teaches t : teachesList) {
+                String name = subjectService.findById(t.getSubjectId()).get().getName();
+                subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
+            }
+            mav.addObject("subjects", subjectsGiven);
             return mav;
         }
         return new ModelAndView("redirect:/login");
     }
+
 
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
@@ -89,14 +107,32 @@ public class HelloWorldController {
         }
         User user = userService.findById(uid);
         Optional<User> u = userService.getCurrentUser();
-        u.ifPresent(value -> emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", value.getName(), form.getSubject(), value.getMail(), form.getMessage()));
+        if (u.isPresent()) {
 
+            List<Teaches> teachesList;
+            teachesList = teachesService.getSubjectListByUser(uid);
+            Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
+
+            classService.create(u.get().getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
+            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), subjectService.findById(form.getSubjectId()).get().getName(), u.get().getMail(), form.getMessage());
+        }
         return new ModelAndView("redirect:/emailSent");
     }
 
     @RequestMapping("/emailSent")
     public ModelAndView emailSent() {
         final ModelAndView mav = new ModelAndView("emailSent");
+        return mav;
+    }
+
+    @RequestMapping("/myClasses")
+    public ModelAndView myClasses() {
+        final ModelAndView mav = new ModelAndView("classes");
+        Optional<User> u = userService.getCurrentUser();
+        if (u.isPresent()) {
+            List<Class> classList = classService.findClassesByStudentId(u.get().getId());
+            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+        }
         return mav;
     }
 }

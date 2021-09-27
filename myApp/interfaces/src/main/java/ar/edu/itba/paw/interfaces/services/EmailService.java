@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.services;
 
 public interface EmailService {
     void sendSimpleMessage(String to,String subject, String text);

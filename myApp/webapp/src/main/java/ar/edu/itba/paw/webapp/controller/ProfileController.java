@@ -44,7 +44,7 @@ public class ProfileController {
                 .addObject("section", section)
                 .addObject("sections", sections)
                 .addObject("description", userService.getUserDescription(uid));
-        if (!curr.isPresent() || curr.get().getUserRole() == 0) {
+        if (!curr.isPresent() || curr.get().getId() != uid) {
             mav.addObject("edit", 0);
         } else {
             Optional<Image> userImg = imageService.findImageById(curr.get().getId());

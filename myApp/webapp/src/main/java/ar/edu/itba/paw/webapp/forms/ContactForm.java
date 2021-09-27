@@ -3,12 +3,14 @@ package ar.edu.itba.paw.webapp.forms;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 public class ContactForm {
 
     private String message;
 
-    @NotBlank
-    private String subject;
+    @NotNull
+    private Integer subjectId;
 
     public String getMessage() {
         return message;
@@ -18,11 +20,11 @@ public class ContactForm {
         this.message = message;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setSubjectId(Integer subject) {
+        this.subjectId = subject;
     }
 
-    public String getSubject() {
-        return subject;
+    public Integer getSubjectId() {
+        return subjectId;
     }
 }

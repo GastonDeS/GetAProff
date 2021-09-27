@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.SubjectService;
-import ar.edu.itba.paw.interfaces.TeachesDao;
-import ar.edu.itba.paw.interfaces.TeachesService;
+import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.daos.TeachesDao;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
