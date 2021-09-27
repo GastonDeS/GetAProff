@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,7 +40,7 @@
                             </sec:authorize>
                         </c:when>
                         <c:otherwise>
-                            <a href="#" class="btn btn-custom">
+                            <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
                                 <spring:message code="profile.btn.edit"/>
                             </a>
                         </c:otherwise>

@@ -7,6 +7,8 @@ import java.util.Optional;
 public interface ImageDao {
     Image create(int uid, byte[] image);
 
-    public Optional<Image> findImageById(int id);
+    Optional<Image> findImageById(int id);
+
+    int changeUserImage(int userId, byte[] img);
 
 }
