@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -13,58 +14,153 @@
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
 <div class="main-container">
-    <h1>Mis clases</h1>
-
-    <div class="tabs-container">
-        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link nav-link-custom" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button"
-                        role="tab" aria-controls="pending" aria-selected="false">Pending
-                </button>
-            </li>
-            <li class="nav-item active" role="presentation">
-                <button class="nav-link active nav-link-custom" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button"
-                        role="tab" aria-controls="active" aria-selected="true">Active
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link nav-link-custom" id="finished-tab" data-bs-toggle="tab" data-bs-target="#finished" type="button"
-                        role="tab" aria-controls="finished" aria-selected="false">Finished
-                </button>
-            </li>
-        </ul>
-    </div>
-    <div class="classes-container">
+    <h1><spring:message code="myClasses.mainTitle"/></h1>
+    <div class="classes-separator-container">
+        <div class="main-tab-container">
+            <ul class="nav nav-tabs flex-column" id="myTab1" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link nav-link-custom active" style="width: 100%;" id="home-tab"
+                            data-bs-toggle="tab" data-bs-target="#home" type="button"
+                            role="tab" aria-controls="home" aria-selected="true"><spring:message code="myClasses.requested"/>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link nav-link-custom" style="width: 100%;" id="profile-tab" data-bs-toggle="tab"
+                            data-bs-target="#profile" type="button"
+                            role="tab" aria-controls="profile" aria-selected="false"><spring:message code="myClasses.incoming"/>
+                    </button>
+                </li>
+            </ul>
+        </div>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
-                <div class="card w-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Card Activa</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs nav-fill" id="myTab2" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link nav-link-custom" id="pending-tab2" data-bs-toggle="tab"
+                                    data-bs-target="#pending2" type="button"
+                                    role="tab" aria-controls="pending2" aria-selected="false"><spring:message
+                                    code="myClasses.pending"/>
+                            </button>
+                        </li>
+                        <li class="nav-item active" role="presentation">
+                            <button class="nav-link active nav-link-custom" id="active-tab2" data-bs-toggle="tab"
+                                    data-bs-target="#active2" type="button"
+                                    role="tab" aria-controls="active2" aria-selected="true"><spring:message
+                                    code="myClasses.active"/>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link nav-link-custom" id="finished-tab2" data-bs-toggle="tab"
+                                    data-bs-target="#finished2" type="button"
+                                    role="tab" aria-controls="finished2" aria-selected="false"><spring:message
+                                    code="myClasses.finished"/>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="classes-container">
+                    <div class="tab-content" id="myTabContent2">
+                        <div class="tab-pane fade show active" id="active2" role="tabpanel"
+                             aria-labelledby="active-tab">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Activa</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional
+                                        content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pending2" role="tabpanel" aria-labelledby="pending-tab">
+                            <c:forEach var="pendingClass" items="${pendingClasses}">
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card pending</h5>
+                                        <p class="card-text">With supporting text below as a natural lead-in to
+                                            additional
+                                            content.</p>
+                                        <a href="#" class="btn btn-custom">Cancelar</a>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <div class="tab-pane fade" id="finished2" role="tabpanel" aria-labelledby="finished-tab">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card terminada</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional
+                                        content.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                <c:forEach var="pendingClass" items="${pendingClasses}">
-                    <div class="card w-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Card pending</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-custom">Cancelar</a>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link nav-link-custom" id="pending-tab" data-bs-toggle="tab"
+                                    data-bs-target="#pending" type="button"
+                                    role="tab" aria-controls="pending" aria-selected="false"><spring:message
+                                    code="myClasses.pending"/>
+                            </button>
+                        </li>
+                        <li class="nav-item active" role="presentation">
+                            <button class="nav-link active nav-link-custom" id="active-tab" data-bs-toggle="tab"
+                                    data-bs-target="#active" type="button"
+                                    role="tab" aria-controls="active" aria-selected="true"><spring:message
+                                    code="myClasses.active"/>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link nav-link-custom" id="finished-tab" data-bs-toggle="tab"
+                                    data-bs-target="#finished" type="button"
+                                    role="tab" aria-controls="finished" aria-selected="false"><spring:message
+                                    code="myClasses.finished"/>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="classes-container">
+                    <div class="tab-content" id="myTabContent3">
+                        <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Activa</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional
+                                        content.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </c:forEach>
-            </div>
-            <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
-                <div class="card w-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Card terminada</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                            <c:forEach var="pendingClass" items="${pendingClasses}">
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card pending</h5>
+                                        <p class="card-text">With supporting text below as a natural lead-in to
+                                            additional
+                                            content.</p>
+                                        <a href="#" class="btn btn-custom">Cancelar</a>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card terminada</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional
+                                        content.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 <script>
     var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
