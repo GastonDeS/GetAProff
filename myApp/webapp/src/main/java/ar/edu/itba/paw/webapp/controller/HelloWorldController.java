@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.SubjectService;
-import ar.edu.itba.paw.interfaces.services.TeachesService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +37,9 @@ public class HelloWorldController {
 
     @Autowired
     TeachesService teachesService;
+
+    @Autowired
+    ClassService classService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
@@ -94,6 +97,7 @@ public class HelloWorldController {
     }
 
 
+
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
     public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
                                 final BindingResult errors) {
@@ -102,8 +106,15 @@ public class HelloWorldController {
         }
         User user = userService.findById(uid);
         Optional<User> u = userService.getCurrentUser();
-        u.ifPresent(value -> emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", value.getName(), subjectService.findById(form.getSubjectId()).get().getName(), value.getMail(), form.getMessage()));
+        if (u.isPresent()) {
 
+            List<Teaches> teachesList;
+            teachesList = teachesService.getSubjectListByUser(uid);
+            Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
+
+            classService.create(u.get().getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
+            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), subjectService.findById(form.getSubjectId()).get().getName(), u.get().getMail(), form.getMessage());
+        }
         return new ModelAndView("redirect:/emailSent");
     }
 
