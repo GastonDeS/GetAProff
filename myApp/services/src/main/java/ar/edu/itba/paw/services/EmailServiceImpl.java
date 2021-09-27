@@ -22,7 +22,6 @@ public class EmailServiceImpl implements EmailService {
     private SimpleMailMessage templateMailMessage;
 
     @Override
-    @Async
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -38,6 +37,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendTemplateMessage(String to, String mailSubject, String userFrom, String subject,String mailFrom, String message) {
         String text = String.format(templateMailMessage.getText(), userFrom, subject,mailFrom, message);
         sendSimpleMessage(to,mailSubject, text);
