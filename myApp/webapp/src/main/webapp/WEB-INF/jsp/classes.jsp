@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -13,6 +14,7 @@
 </jsp:include>
 <div class="main-container">
     <h1>Mis clases</h1>
+
     <div class="tabs-container">
         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -43,13 +45,15 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                <div class="card w-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Card pending</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-custom">Cancelar</a>
+                <c:forEach var="pendingClass" items="${pendingClasses}">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Card pending</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a href="#" class="btn btn-custom">Cancelar</a>
+                        </div>
                     </div>
-                </div>
+                </c:forEach>
             </div>
             <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
                 <div class="card w-100">

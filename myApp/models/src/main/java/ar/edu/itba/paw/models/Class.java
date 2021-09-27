@@ -77,4 +77,12 @@ public class Class {
             this.value = value;
         }
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

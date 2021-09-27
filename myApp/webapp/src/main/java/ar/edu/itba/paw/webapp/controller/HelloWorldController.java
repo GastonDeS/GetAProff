@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -127,6 +128,11 @@ public class HelloWorldController {
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
         final ModelAndView mav = new ModelAndView("classes");
+        Optional<User> u = userService.getCurrentUser();
+        if (u.isPresent()) {
+            List<Class> classList = classService.findClassesByStudentId(u.get().getId());
+            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+        }
         return mav;
     }
 }
