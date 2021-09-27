@@ -111,7 +111,13 @@ public class UserServiceImpl implements UserService {
         return u == null ? null : u.getDescription();
     }
 
+    @Override
     public int setUserSchedule(int userId, String schedule){
         return userDao.setUserSchedule(userId, schedule);
+    }
+
+    @Override
+    public int setUserDescription(int userId, String description) {
+        return userDao.setUserDescription(userId, description);
     }
 }

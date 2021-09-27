@@ -18,6 +18,7 @@
             ar.edu.itba.paw.webapp.config.WebConfig,
             ar.edu.itba.paw.webapp.config.EmailConfig,
             ar.edu.itba.paw.webapp.config.WebAuthConfig,
+            ar.edu.itba.paw.webapp.config.FileConfig,
         </param-value>
     </context-param>
 
@@ -35,7 +36,6 @@
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
-        <multipart-config/>
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>

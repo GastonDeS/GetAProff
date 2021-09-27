@@ -15,12 +15,17 @@ public class ImageServiceImpl implements ImageService {
     private ImageDao imageDao;
 
     @Override
-    public Image create(int uid, byte[] image){
-        return imageDao.create(uid, image);
+    public Image create(int userId, byte[] image){
+        return imageDao.create(userId, image);
     }
 
     @Override
-    public Optional<Image> findImageById(int id) {
-        return imageDao.findImageById(id);
+    public Optional<Image> findImageById(int userId) {
+        return imageDao.findImageById(userId);
+    }
+
+    @Override
+    public int changeUserImage(int userId, byte[] img) {
+        return imageDao.changeUserImage(userId, img);
     }
 }

@@ -105,4 +105,9 @@ public class UserDaoJdbc implements UserDao {
     public int setUserSchedule(int userId, String schedule) {
         return jdbcTemplate.update("UPDATE users SET schedule = ? WHERE userid = ?", schedule, userId);
     }
+
+    @Override
+    public int setUserDescription(int userId, String description) {
+        return jdbcTemplate.update("UPDATE users SET description = ? WHERE userid = ?", description, userId);
+    }
 }

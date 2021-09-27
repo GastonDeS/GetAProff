@@ -48,4 +48,5 @@ public interface UserService {
     Optional<User> getCurrentUser();
     String getUserDescription(int userId);
     int setUserSchedule(int userId, String schedule);
+    int setUserDescription(int userId, String description);
 }

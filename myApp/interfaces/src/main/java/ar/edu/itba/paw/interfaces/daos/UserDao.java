@@ -28,4 +28,6 @@ public interface UserDao {
     Map<Integer, List<String>> getUserSubjectsAndLevels(int userId);
 
     int setUserSchedule(int userId, String schedule);
+
+    int setUserDescription(int userId, String description);
 }

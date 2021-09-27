@@ -24,6 +24,7 @@
                         <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="schedule" placeholder="${timePlaceholder}"/>
                         <form:errors path="schedule" element="p" cssClass="form-error"/>
                     </div>
+                    <input type="file" width="200px" height="200px" accept="image" name="file"/>
                     <input type="submit" class="btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
             </form:form>
         </div>

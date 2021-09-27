@@ -41,4 +41,9 @@ public class ImageDaoJdbc implements ImageDao {
         return jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { id }, ROW_MAPPER)
                 .stream().findFirst();
     }
+
+    @Override
+    public int changeUserImage(int userId, byte[] image) {
+        return jdbcTemplate.update("UPDATE images SET image = ? WHERE userId = ?", image, userId);
+    }
 }

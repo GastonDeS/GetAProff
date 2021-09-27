@@ -8,4 +8,6 @@ public interface ImageService {
     Image create(int uid, byte[] image);
 
     Optional<Image> findImageById(int id);
+
+    int changeUserImage(int userId, byte[] img);
 }
