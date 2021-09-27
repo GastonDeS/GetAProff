@@ -8,6 +8,26 @@
     /*box-shadow: -4px 5px 17px -7px rgba(0,0,0,70);*/
 }
 
+.nav-link-custom {
+    color: #2c2525;
+    font-family: "Roboto Light", sans-serif;
+    font-size: 20px;
+}
+
+
+.tabs-container {
+    width: 70.1vw;
+    background: #9eebd6;
+}
+
+.classes-container {
+    width: 70vw;
+    background: white;
+    border-bottom: 10px;
+    height: 60vh;
+    padding: 4px;
+}
+
 .schedule-form {
     height: 55vh;
     display: flex;

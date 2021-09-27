@@ -123,4 +123,10 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("emailSent");
         return mav;
     }
+
+    @RequestMapping("/myClasses")
+    public ModelAndView myClasses() {
+        final ModelAndView mav = new ModelAndView("classes");
+        return mav;
+    }
 }
