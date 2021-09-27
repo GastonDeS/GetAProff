@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.TimeForm;
@@ -32,7 +36,7 @@ public class ProfileController {
     @Autowired
     ImageService imageService;
 
-    private String[] sections = {"subjects", "schedule"};
+    private final String[] sections = {"subjects", "schedule"};
 
     @RequestMapping("/profile/{uid}/{section}")
     public ModelAndView profile(@PathVariable("uid") final int uid, @PathVariable("section") final String section) {

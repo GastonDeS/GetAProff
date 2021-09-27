@@ -130,6 +130,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("classes");
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
+            mav.addObject("user", u.get());
             List<Class> classList = classService.findClassesByStudentId(u.get().getId());
             mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
         }
