@@ -22,7 +22,7 @@
             <jsp:param name="isMainPage" value="${false}"/>
         </jsp:include>
         <div class="page-container">
-            <c:url value="/subjectsForm" var="subjectsURL"/>
+            <c:url value="/editSubjects" var="subjectsURL"/>
             <form:form modelAttribute="subjectsForm" action="${subjectsURL}"  method="post">
                 <div class="form-container">
                     <p class="form-title">${subjectPlaceholder}</p>
@@ -60,14 +60,14 @@
                                 <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
                                 <td class="row-info" style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
                                 <td class="remove-btn">
-                                    <a href="/subjectsForm/remove/${subject.id}" class="btn btn-custom">
+                                    <a href="/editSubjects/remove/${subject.id}" class="btn btn-custom">
                                         <spring:message code="subjects.form.remove"/>
                                     </a>
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
-                    <a href="${pageContext.request.contextPath}/profile/${userid}/subjects" class="btn btn-custom">
+                    <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom">
                         <spring:message code="form.btn.save"/>
                     </a>
                 </div>

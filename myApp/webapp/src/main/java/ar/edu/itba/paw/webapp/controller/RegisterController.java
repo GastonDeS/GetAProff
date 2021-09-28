@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 public class RegisterController {
@@ -49,7 +50,7 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) {
+    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) throws IOException {
         if (errors.hasErrors()) {
             return register(form);
         }
@@ -57,7 +58,7 @@ public class RegisterController {
         String name = utilsService.capitalizeFirstLetter(form.getName());
         User user = userService.create(name, form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
         if (form.getUserRole() == 1 && user != null) {
-            String redirect = "redirect:/profile/" + user.getId() + "/subjects";
+            String redirect = "redirect:/profile/" + user.getId();
             return new ModelAndView(redirect);
         }
         return new ModelAndView("index");

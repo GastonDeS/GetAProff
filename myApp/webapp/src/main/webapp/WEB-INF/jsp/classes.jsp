@@ -169,7 +169,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <script>
     var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))

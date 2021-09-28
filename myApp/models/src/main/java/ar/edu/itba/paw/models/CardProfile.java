@@ -4,7 +4,6 @@ public class CardProfile {
     private final int userId, minPrice, maxPrice;
     private final String name, description;
 
-
     public CardProfile(int userId, String name, int maxPrice, int minPrice, String desc) {
         this.userId = userId;
         this.name = name;
@@ -29,7 +28,6 @@ public class CardProfile {
         return name;
     }
 
-    
     public String getDescription() {
         return description;
     }
