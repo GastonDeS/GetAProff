@@ -20,7 +20,7 @@
                             <a href="${pageContext.request.contextPath}/myClasses" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.classes"/>
                             </a>
-                            <a href="${pageContext.request.contextPath}/profile/${param.uid}/subjects" class="btn nav-link active btn-custom">
+                            <a href="${pageContext.request.contextPath}/profile/${param.uid}" class="btn nav-link active btn-custom">
                                 <spring:message code="nav.button.profile"/>
                             </a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn nav-link active btn-custom">

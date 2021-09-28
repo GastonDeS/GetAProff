@@ -12,7 +12,7 @@
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
-    <jsp:param name="uid" value="${user.id}"/>
+    <jsp:param name="uid" value="${uid}"/>
 </jsp:include>
 <div class="main-container">
     <h1><spring:message code="myClasses.mainTitle"/></h1>
@@ -161,7 +161,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <script>
     var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))

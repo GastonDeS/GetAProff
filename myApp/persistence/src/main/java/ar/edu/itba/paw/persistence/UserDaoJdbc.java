@@ -66,8 +66,8 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public List<CardProfile> filterUsers(String subject, Integer price, Integer level) {
-        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"), rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"));
-
+        RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
+                rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"));
         int minLevel, maxLevel;
         if( level == 0) { minLevel = 1; maxLevel = 3;}
         else

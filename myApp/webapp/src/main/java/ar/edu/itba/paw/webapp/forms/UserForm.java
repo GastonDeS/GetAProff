@@ -3,7 +3,8 @@ package ar.edu.itba.paw.webapp.forms;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserForm {
-    private String description;
+
+    private String description, schedule;
 
     private MultipartFile imageFile;
 
@@ -21,5 +22,13 @@ public class UserForm {
 
     public void setImageFile(MultipartFile imageFile) {
         this.imageFile = imageFile;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
     }
 }

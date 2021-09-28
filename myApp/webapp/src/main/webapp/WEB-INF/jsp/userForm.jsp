@@ -9,6 +9,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
         <spring:message code="user.form.description" var="descriptionPlaceholder"/>
+        <spring:message code="user.form.schedule" var="schedulePlaceholder"/>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
@@ -19,17 +20,27 @@
             <form:form modelAttribute="userForm" action="${editProfileURL}" method="post" enctype="multipart/form-data">
                 <div class="form-container">
                     <p class="form-title"><spring:message code="user.form.title"/></p>
+                    <div class="img-upload">
+                        <c:set var="maybeImg" value="/image/${uid}"/>
+                        <c:choose>
+                            <c:when test="${not empty maybeImg}">
+                                <c:set var="imageURL" value="${maybeImg}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="imageURL" value="/resources/images/user_default_img.jpeg"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <img src="${imageURL}" class="profile-img" alt="teacherImg">
+                        <input type="file" width="200px" height="200px" accept="image" name="file"/>
+                    </div>
                     <div class="form-input-container">
-                        <c:if test="${empty description}">
-                            <c:set var="placeholder" value="${descriptionPlaceholder}"/>
-                        </c:if>
-                        <c:if test="${not empty description}">
-                            <c:set var="placeholder" value="${description}"/>
-                        </c:if>
-                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="description" placeholder="${placeholder}"/>
+                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="description" placeholder="${descriptionPlaceholder}"/>
                         <form:errors path="description" element="p" cssClass="form-error"/>
                     </div>
-                    <input type="file" width="200px" height="200px" accept="image" name="file"/>
+                    <div class="form-input-container">
+                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="schedule" placeholder="${schedulePlaceholder}"/>
+                        <form:errors path="schedule" element="p" cssClass="form-error"/>
+                    </div>
                     <input type="submit" class="btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
                 </div>
             </form:form>
