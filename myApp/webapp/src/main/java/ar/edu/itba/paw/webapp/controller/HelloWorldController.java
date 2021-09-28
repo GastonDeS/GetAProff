@@ -47,7 +47,7 @@ public class HelloWorldController {
     public ModelAndView helloWorld() {
         Optional<User> curr = userService.getCurrentUser();
         final ModelAndView mav = new ModelAndView("index")
-                .addObject("materias", subjectService.list())
+                .addObject("subjects", subjectService.list())
                 .addObject("greeting", userService.findById(1));
         if (!curr.isPresent() || curr.get().getUserRole() == 0){
             return mav;
@@ -61,7 +61,7 @@ public class HelloWorldController {
         addUserId(mav);
         List<CardProfile> users = userService.filterUsers(searchQuery);
         mav.addObject("tutors", users);
-        mav.addObject("materias", subjectService.list());
+        mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         return mav;
@@ -143,6 +143,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("classes");
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
+            mav.addObject("user", u.get());
             List<Class> classList = classService.findClassesByStudentId(u.get().getId());
             mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()))
                     .addObject("uid", u.get().getId());

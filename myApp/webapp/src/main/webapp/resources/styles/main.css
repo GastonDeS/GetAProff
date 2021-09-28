@@ -7,14 +7,32 @@
     word-break: break-all;
 }
 
+.classes-separator-container {
+    display: flex;
+    width: 80vw;
+    justify-content: flex-start;
+}
+
+.main-tab-container {
+    background: #9eebd6;
+    margin-right: 10px;
+    margin-left: -50px;
+}
+
+
 .nav-link-custom {
     color: #2c2525;
     font-family: "Roboto Light", sans-serif;
     font-size: 20px;
 }
 
+.nav-link-custom:hover {
+    color: #ffffff;
+    background: rgba(2 ,102 ,112 , 0.07);
+}
+
 .tabs-container {
-    width: 70.1vw;
+    width: 70.08vw;
     background: #9eebd6;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
@@ -847,4 +865,3 @@ select {
     background-position-x: 100%;
     background-position-y: 5px;
 }
-

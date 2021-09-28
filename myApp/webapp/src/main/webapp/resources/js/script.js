@@ -22,7 +22,7 @@ const showFilterButton = () => {
 
 const elem = document.getElementsByTagName('input');
 for(let i = 0 ; i < elem.length ; i++)
-    if(elem[i].type !== 'search')
+    if(elem[i].id !== 'query')
         elem[i].addEventListener('change', showFilterButton);
 
 

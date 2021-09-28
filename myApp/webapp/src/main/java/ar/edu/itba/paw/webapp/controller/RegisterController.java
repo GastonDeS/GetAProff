@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
@@ -15,11 +14,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 
 @Controller
@@ -36,9 +31,6 @@ public class RegisterController {
 
     @Autowired
     private UtilsService utilsService;
-
-    @Autowired
-    private ImageService imageService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
