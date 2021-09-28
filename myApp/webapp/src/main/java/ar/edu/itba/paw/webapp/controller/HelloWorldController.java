@@ -144,9 +144,19 @@ public class HelloWorldController {
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
             mav.addObject("user", u.get());
+            if (u.get().getUserRole() == 1) {
+                List<Class> teacherClassList = classService.findClassesByTeacherId(u.get().getId());
+                mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+                mav.addObject("teacherActiveClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+                mav.addObject("teacherFinishedClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+                mav.addObject("isTeacher", 1);
+            } else {
+                mav.addObject("isTeacher", 0);
+            }
             List<Class> classList = classService.findClassesByStudentId(u.get().getId());
-            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()))
-                    .addObject("uid", u.get().getId());
+            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+            mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+            mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
         }
         return mav;
     }

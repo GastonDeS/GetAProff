@@ -1,15 +1,16 @@
 package ar.edu.itba.paw.models;
 
 public class Class {
-    private int classId, studentId, teacherId, level, subjectId, price, status;
+    private int classId;
+    private User student, teacher;
+    private SubjectInfo subject;
+    private int status;
 
-    public Class(int classId, int studentId, int teacherId, int level, int subjectId, int price, int status) {
+    public Class(int classId, User student, User teacher, SubjectInfo subject, int status) {
         this.classId = classId;
-        this.studentId = studentId;
-        this.teacherId = teacherId;
-        this.level = level;
-        this.subjectId = subjectId;
-        this.price = price;
+        this.student = student;
+        this.teacher = teacher;
+        this.subject = subject;
         this.status = status;
     }
 
@@ -21,51 +22,36 @@ public class Class {
         this.classId = classId;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public User getStudent() {
+        return student;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setStudent(User student) {
+        this.student = student;
     }
 
-    public int getTeacherId() {
-        return teacherId;
+    public User getTeacher() {
+        return teacher;
     }
 
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
     }
 
-    public int getLevel() {
-        return level;
+    public SubjectInfo getSubject() {
+        return subject;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
+    public void setSubject(SubjectInfo subject) {
+        this.subject = subject;
     }
 
     public enum Status{
         PENDING(0),
         ACCEPTED(1),
         FINISHED(2),
-        CANCELED(3);
+        CANCELED(3),
+        REJECTED(4);
 
         private final int value;
 

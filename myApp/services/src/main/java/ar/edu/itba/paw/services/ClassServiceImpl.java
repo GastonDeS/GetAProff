@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClassServiceImplementation implements ClassService {
+public class ClassServiceImpl implements ClassService {
 
     @Autowired
     private ClassDao classDao;
