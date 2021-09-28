@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.UtilsService;
+import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
@@ -14,7 +15,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 public class RegisterController {
@@ -30,6 +36,9 @@ public class RegisterController {
 
     @Autowired
     private UtilsService utilsService;
+
+    @Autowired
+    private ImageService imageService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -49,7 +58,7 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) {
+    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) throws IOException {
         if (errors.hasErrors()) {
             return register(form);
         }
@@ -57,7 +66,7 @@ public class RegisterController {
         String name = utilsService.capitalizeFirstLetter(form.getName());
         User user = userService.create(name, form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
         if (form.getUserRole() == 1 && user != null) {
-            String redirect = "redirect:/profile/" + user.getId() + "/subjects";
+            String redirect = "redirect:/profile/" + user.getId();
             return new ModelAndView(redirect);
         }
         return new ModelAndView("index");

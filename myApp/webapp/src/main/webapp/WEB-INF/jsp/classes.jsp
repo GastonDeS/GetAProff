@@ -11,10 +11,10 @@
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
+    <jsp:param name="uid" value="${uid}"/>
 </jsp:include>
 <div class="main-container">
     <h1>Mis clases</h1>
-
     <div class="tabs-container">
         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">

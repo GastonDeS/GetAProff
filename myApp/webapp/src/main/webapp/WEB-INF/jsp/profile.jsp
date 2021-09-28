@@ -23,82 +23,111 @@
         <div class="page-container">
             <div class="profile-container">
                 <div class="info-container">
-                    <img class="img-thumbnail mb-2 mt-2" src="<c:url value="/image/${uid}"/>" alt="userImage">
-                    <h1><c:out value="${user.name}"/></h1>
-                    <p><c:out value="${description}"/></p>
+                    <c:set var="maybeImg" value="/image/${uid}"/>
                     <c:choose>
-                        <c:when test="${edit == 0}">
-                            <sec:authorize access="isAuthenticated()">
-                                <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom">
-                                    <spring:message code="profile.btn.contact"/>
-                                </a>
-                            </sec:authorize>
-                            <sec:authorize access="!isAuthenticated()">
-                                <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
-                                    <spring:message code="profile.btn.contact"/>
-                                </a>
-                            </sec:authorize>
+                        <c:when test="${not empty maybeImg}">
+                            <c:set var="imageURL" value="${maybeImg}"/>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
-                                <spring:message code="profile.btn.edit"/>
-                            </a>
+                            <c:set var="imageURL" value="/resources/images/user_default_img.jpeg"/>
                         </c:otherwise>
                     </c:choose>
-                </div>
-                <div class="profile-section-container">
-                    <div class="section-btn-container">
-                        <c:forEach begin="0" end="1" varStatus="loop">
-                            <c:set var="button"><spring:message code="profile.btn.section.${loop.index}"/></c:set>
-                            <c:set var="title">${sections[loop.index]}</c:set>
-                            <c:choose>
-                                <c:when test="${section eq title}">
-                                    <a href="${pageContext.request.contextPath}/profile/${uid}/${title}"
-                                       class="section-btn" style="border-top-right-radius: 8px">${button}</a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/profile/${uid}/${title}"
-                                       class="section-btn" style="background-color: rgba(2, 102, 112, 0.5)">${button}</a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </div>
+                    <img src="${imageURL}" class="profile-img" alt="teacherImg">
+                    <div class="profile-info">
+                        <h1><c:out value="${user.name}"/></h1>
                         <c:choose>
-                            <c:when test="${section eq sections[0]}">
-                                <div class="section-info">
-                                    <table>
-                                        <tr class="subjects-row" style="width: 100%">
-                                            <td class="row-title" style="width: 55%">${tableSubject}</td>
-                                            <td class="row-title" style="width: 15%">${tablePrice}</td>
-                                            <td class="row-title" style="width: 30%">${tableLevel}</td>
-                                        </tr>
-                                        <c:forEach items="${subjectsList}" var="subject">
-                                            <tr class="subjects-row" style="width: 100%">
-                                                <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
-                                                <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
-                                                <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
-                                            </tr>
-                                        </c:forEach>
-                                    </table>
-                                    <c:if test="${edit == 1}">
-                                        <a href="${pageContext.request.contextPath}/subjectsForm" class="btn btn-custom">
-                                            <spring:message code="profile.btn.edit.subjects"/>
-                                        </a>
-                                    </c:if>
-                                </div>
-                            </c:when>
-                            <c:when test="${section eq sections[1]}">
-                                <jsp:include page="../components/${section}.jsp">
-                                    <jsp:param name="schedule" value="${scheduleText}"/>
-                                    <jsp:param name="edit" value="${edit}"/>
-                                </jsp:include>
+                            <c:when test="${edit == 0}">
+                                <sec:authorize access="isAuthenticated()">
+                                    <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom">
+                                        <spring:message code="profile.btn.contact"/>
+                                    </a>
+                                </sec:authorize>
+                                <sec:authorize access="!isAuthenticated()">
+                                    <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
+                                        <spring:message code="profile.btn.contact"/>
+                                    </a>
+                                </sec:authorize>
                             </c:when>
                             <c:otherwise>
-                                <p>Empty</p>
+                                <div class="profile-btn">
+                                    <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
+                                        <spring:message code="profile.btn.edit"/>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
+                                        <spring:message code="profile.btn.edit.subjects"/>
+                                    </a>
+                                </div>
                             </c:otherwise>
                         </c:choose>
+                    </div>
+                </div>
+                <div class="main-container h-100">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                            <li class="nav-item active" role="presentation">
+                                <button class="nav-link nav-link-custom active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button"
+                                        role="tab" aria-controls="personal" aria-selected="false">
+                                    <spring:message code="profile.personal.info"/>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button"
+                                        role="tab" aria-controls="subjects" aria-selected="true">
+                                    <spring:message code="profile.subjects"/>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="classes-container h-100">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                                <div class="section-info">
+                                    <div class="profile-desc-sch">
+                                        <h1><spring:message code="profile.description"/></h1>
+                                        <p><c:out value="${description}"/></p>
+                                    </div>
+                                    <div class="profile-desc-sch">
+                                        <h1><spring:message code="profile.schedule"/></h1>
+                                        <p><c:out value="${schedule}"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="subjects" role="tabpanel" aria-labelledby="subjects-tab">
+                                <table>
+                                    <tr class="subjects-row" style="width: 100%">
+                                        <td class="row-title" style="width: 55%">${tableSubject}</td>
+                                        <td class="row-title" style="width: 15%">${tablePrice}</td>
+                                        <td class="row-title" style="width: 30%">${tableLevel}</td>
+                                    </tr>
+                                    <c:forEach items="${subjectsList}" var="subject">
+                                        <tr class="subjects-row" style="width: 100%">
+                                            <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
+                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                            <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <script>
+            var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
+            triggerTabList.forEach(function (triggerEl) {
+                var tabTrigger = new bootstrap.Tab(triggerEl)
+                triggerEl.addEventListener('click', function (event) {
+                    event.preventDefault()
+                    tabTrigger.show()
+                })
+            })
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+                integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+                integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+                crossorigin="anonymous"></script>
     </body>
 </html>

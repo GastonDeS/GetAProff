@@ -31,7 +31,7 @@ public class LoginController {
         }
         final User user = maybeUser.get();
         if (user.getUserRole() == 1) {
-            String redirect = "redirect:/profile/" + user.getId() + "/subjects";
+            String redirect = "redirect:/profile/" + user.getId();
             return new ModelAndView(redirect);
         }
         return new ModelAndView("index");

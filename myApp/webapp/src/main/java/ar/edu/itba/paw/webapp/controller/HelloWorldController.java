@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.jws.WebParam;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery) {
         final ModelAndView mav = new ModelAndView("tutors");
+        addUserId(mav);
         List<CardProfile> users = userService.filterUsers(searchQuery);
         mav.addObject("tutors", users);
         mav.addObject("materias", subjectService.list());
@@ -69,12 +71,23 @@ public class HelloWorldController {
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String price,
                                @RequestParam(value = "level") @NotNull final String level) {
         final ModelAndView mav = new ModelAndView("tutors");
+        addUserId(mav);
         List<CardProfile> users = userService.filterUsers(searchQuery, price, level);
         mav.addObject("tutors", users);
         mav.addObject("materias", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         return mav;
+    }
+
+    private void addUserId(ModelAndView mav) {
+        Optional<User> u = userService.getCurrentUser();
+        if (u.isPresent()) {
+            User curr = u.get();
+            if (curr.getUserRole() == 1) {
+                mav.addObject("uid", curr.getId());
+            }
+        }
     }
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
@@ -131,7 +144,8 @@ public class HelloWorldController {
         Optional<User> u = userService.getCurrentUser();
         if (u.isPresent()) {
             List<Class> classList = classService.findClassesByStudentId(u.get().getId());
-            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()))
+                    .addObject("uid", u.get().getId());
         }
         return mav;
     }

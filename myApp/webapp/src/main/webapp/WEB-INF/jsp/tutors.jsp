@@ -13,6 +13,7 @@
     <body>
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${true}"/>
+            <jsp:param name="uid" value="${uid}"/>
         </jsp:include>
         <div class="tutors-search">
             <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
