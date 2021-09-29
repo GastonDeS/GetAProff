@@ -5,13 +5,16 @@ public class Class {
     private User student, teacher;
     private SubjectInfo subject;
     private int status;
+    private String messageRequest, messageReply;
 
-    public Class(int classId, User student, User teacher, SubjectInfo subject, int status) {
+    public Class(int classId, User student, User teacher, SubjectInfo subject, int status, String messageRequest, String messageReply) {
         this.classId = classId;
         this.student = student;
         this.teacher = teacher;
         this.subject = subject;
         this.status = status;
+        this.messageRequest = messageRequest;
+        this.messageReply = messageReply;
     }
 
     public int getClassId() {
@@ -44,6 +47,22 @@ public class Class {
 
     public void setSubject(SubjectInfo subject) {
         this.subject = subject;
+    }
+
+    public String getMessageRequest() {
+        return messageRequest;
+    }
+
+    public void setMessageRequest(String messageRequest) {
+        this.messageRequest = messageRequest;
+    }
+
+    public String getMessageReply() {
+        return messageReply;
+    }
+
+    public void setMessageReply(String messageReply) {
+        this.messageReply = messageReply;
     }
 
     public enum Status{

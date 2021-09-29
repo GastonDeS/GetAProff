@@ -38,8 +38,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendTemplateMessage(String to, String mailSubject, String userFrom, String subject,String mailFrom, String message) {
-        String text = String.format(templateMailMessage.getText(), userFrom, subject,mailFrom, message);
+    public void sendContactMessage(String to, String mailSubject, String userFrom, String subject, String message) {
+        String text = String.format(templateMailMessage.getText(), "Hola que tal, desde GetAproff el usuario",userFrom, "pide por tus clases de",subject,"","", message,"Entra a GetAProff para aceptar o rechazar su solicitud!");
+        sendSimpleMessage(to,mailSubject, text);
+    }
+
+    @Override
+    @Async
+    public void sendAcceptMessage(String to, String mailSubject, String userFrom, String subject,String mailFrom, String message) {
+        String text = String.format(templateMailMessage.getText(),userFrom," ha aceptado tu pedido de clases de"," ",subject,"su email es",mailFrom, message,"Contáctate con tu profesor para coordinar horarios y modalidades de la clase!");
         sendSimpleMessage(to,mailSubject, text);
     }
 }

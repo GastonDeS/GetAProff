@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Timetable;
+import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("index")
                 .addObject("subjects", subjectService.list())
                 .addObject("greeting", userService.findById(1));
-        if (!curr.isPresent() || curr.get().getUserRole() == 0){
+        if (!curr.isPresent() || curr.get().getUserRole() == 0) {
             return mav;
         }
         return mav.addObject("user", curr.get());
@@ -100,7 +100,7 @@ public class HelloWorldController {
             List<Teaches> teachesList;
             List<SubjectInfo> subjectsGiven = new ArrayList<>();
             teachesList = teachesService.getSubjectListByUser(uid);
-            for(Teaches t : teachesList) {
+            for (Teaches t : teachesList) {
                 String name = subjectService.findById(t.getSubjectId()).get().getName();
                 subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
             }
@@ -109,7 +109,6 @@ public class HelloWorldController {
         }
         return new ModelAndView("redirect:/login");
     }
-
 
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
@@ -126,10 +125,13 @@ public class HelloWorldController {
             teachesList = teachesService.getSubjectListByUser(uid);
             Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
 
-            classService.create(u.get().getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
-            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), subjectService.findById(form.getSubjectId()).get().getName(), u.get().getMail(), form.getMessage());
+            Optional<Class> newClass = classService.create(u.get().getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
+            if (form.getMessage() != null && newClass.isPresent()) {
+                classService.setRequest(newClass.get().getClassId(), form.getMessage());
+            }
+            emailService.sendContactMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), subjectService.findById(form.getSubjectId()).get().getName(), form.getMessage());
         }
-        return new ModelAndView("redirect:/emailSent");
+        return new ModelAndView("redirect:/myClasses");
     }
 
     @RequestMapping("/emailSent")
@@ -160,4 +162,25 @@ public class HelloWorldController {
         }
         return mav;
     }
+
+    @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
+    public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final int cid) {
+        final ModelAndView mav = new ModelAndView("acceptForm");
+        return mav.addObject("student", classService.findById(cid).getStudent().getName());
+    }
+
+
+    @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
+    public ModelAndView accept(@PathVariable("cid") final int cid, @ModelAttribute("acceptForm") @Valid final AcceptForm form,
+                               final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return acceptForm(form, cid);
+        }
+        Class myClass = classService.findById(cid);
+        classService.setStatus(myClass.getClassId(), Class.Status.ACCEPTED.getValue());
+        emailService.sendAcceptMessage(myClass.getStudent().getMail(), "GetAProff: Tu clase fue aceptada", myClass.getTeacher().getName(), myClass.getSubject().getName(), myClass.getTeacher().getMail(), form.getMessage());
+
+        return new ModelAndView("redirect:/myClasses");
+    }
+
 }

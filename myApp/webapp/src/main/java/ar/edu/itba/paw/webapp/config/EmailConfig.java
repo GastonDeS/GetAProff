@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.MailMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -33,14 +34,14 @@ public class EmailConfig {
     }
 
     @Bean
-    public SimpleMailMessage templateSimpleMessage() {
+    public SimpleMailMessage contactSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setText(
-                "<p>Hola que tal, desde GetAProff el usuario %s pide por tus clases de %s!</p>" +
-                        "<p>Su email es: %s</p>" +
+                "<p>%s %s %s %s!</p>" +
+                        "<p>%s %s</p>" +
                         "<p>Te escribió este mensaje:</p>" +
                         "<p>%s</p>" +
-                        "<p>Contáctalo para coordinar horarios!<p>");
+                        "<p>%s<p>");
         return message;
     }
 }
