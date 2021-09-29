@@ -9,44 +9,58 @@
                 <div class="card-header bg-danger text-white">
                     <c:choose>
                         <c:when test="${param.finished == 3}">
-                            Clase cancelada
+                            <spring:message code="class.card.canceled"/>
                         </c:when>
                         <c:otherwise>
-                            Clase rechazada
+                            <spring:message code="class.card.declined"/>
                         </c:otherwise>
                     </c:choose>
                 </div>
             </c:when>
             <c:otherwise>
                 <div class="card-header bg-success text-white">
-                    Clase Terminada
+                    <spring:message code="class.card.finished"/>
                 </div>
             </c:otherwise>
         </c:choose>
     </c:if>
     <div class="card-body">
-        <h5 class="card-title">Clase de <c:out value="${param.subjectName}"/></h5>
+        <h5 class="card-title"><spring:message code="class.card.subject.intro"/> <c:out value="${param.subjectName}"/></h5>
         <c:choose>
             <c:when test="${param.teacherName != null}">
-                <p class="card-text">Profesor: <c:out value="${param.teacherName}"/></p>
+                <p class="card-text"><spring:message code="class.card.teacher.intro"/> <c:out value="${param.teacherName}"/></p>
             </c:when>
             <c:otherwise>
-                <p class="card-text">Alumno <c:out value="${param.studentName}"/></p>
+                <p class="card-text"><spring:message code="class.card.student.intro"/> <c:out value="${param.studentName}"/></p>
             </c:otherwise>
         </c:choose>
-        <p class="card-text">Precio: $<c:out value="${param.price}"/>/hora</p>
-        <p class="card-text">Nivel: <spring:message code="subjects.form.level.${param.level}"/></p>
+        <p class="card-text"><spring:message code="class.card.price.intro"/> $<c:out value="${param.price}"/>/<spring:message code="class.card.price.outro"/></p>
+        <p class="card-text"><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${param.level}"/></p>
 
         <c:if test="${param.finished == null}">
             <c:choose>
                 <c:when test="${param.request != null}">
                     <c:if test="${param.request !=''}">
-                        <p class="card-text">Mensaje del alumno: ${param.request}</p>
+                        <c:choose>
+                            <c:when test="${param.teacherName == null}">
+                                <p class="card-text"><spring:message code="class.card.student.message"/> ${param.request}</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="card-text"><spring:message code="class.card.your.message"/> ${param.request}</p>
+                            </c:otherwise>
+                        </c:choose>
                     </c:if>
                 </c:when>
                 <c:otherwise>
                     <c:if test="${param.reply !=''}">
-                        <p class="card-text">Mensaje del profesor: ${param.reply}</p>
+                        <c:choose>
+                            <c:when test="${param.teacherName == null}">
+                                <p class="card-text"><spring:message code="class.card.your.message"/> ${param.reply}</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="card-text"><spring:message code="class.card.teacher.message"/> ${param.reply}</p>
+                            </c:otherwise>
+                        </c:choose>
                     </c:if>
                 </c:otherwise>
             </c:choose>
@@ -55,17 +69,17 @@
                 <c:when test="${param.teacherName == null}">
                     <c:choose>
                         <c:when test="${param.active == null}">
-                            <a href="#" class="btn btn-warning">Rechazar</a>
-                            <a href="${pageContext.request.contextPath}/accept/${param.cid}" class="btn btn-custom">Aceptar</a>
+                            <a href="#" class="btn btn-warning"><spring:message code="class.card.decline"/></a>
+                            <a href="${pageContext.request.contextPath}/accept/${param.cid}" class="btn btn-custom"><spring:message code="class.card.accept"/></a>
                         </c:when>
                         <c:otherwise>
-                            <a href="#" class="btn btn-warning">Cancelar</a>
-                            <a href="#" class="btn btn-custom">Terminar</a>
+                            <a href="#" class="btn btn-warning"><spring:message code="class.card.cancel"/></a>
+                            <a href="#" class="btn btn-custom"><spring:message code="class.card.finish"/></a>
                         </c:otherwise>
                     </c:choose>
                 </c:when>
                 <c:otherwise>
-                    <a href="#" class="btn btn-warning">Cancelar</a>
+                    <a href="#" class="btn btn-warning"><spring:message code="class.card.cancel"/></a>
                 </c:otherwise>
             </c:choose>
         </c:if>
