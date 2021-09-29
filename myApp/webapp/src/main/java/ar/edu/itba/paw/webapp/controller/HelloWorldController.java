@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Timetable;
-import ar.edu.itba.paw.webapp.exceptions.UnauthenticatedUserException;
+import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,11 +143,44 @@ public class HelloWorldController {
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
         final ModelAndView mav = new ModelAndView("classes");
-        User u = getCurrUser();
-        mav.addObject("user", u);
-        List<Class> classList = classService.findClassesByStudentId(u.getId());
-        mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()))
-                .addObject("uid", u.getId());
+        Optional<User> u = userService.getCurrentUser();
+        if (u.isPresent()) {
+            mav.addObject("user", u.get());
+            if (u.get().getUserRole() == 1) {
+                List<Class> teacherClassList = classService.findClassesByTeacherId(u.get().getId());
+                mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+                mav.addObject("teacherActiveClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+                mav.addObject("teacherFinishedClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+                mav.addObject("isTeacher", 1);
+            } else {
+                mav.addObject("isTeacher", 0);
+            }
+            List<Class> classList = classService.findClassesByStudentId(u.get().getId());
+            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+            mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+            mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+        }
         return mav;
     }
+
+    @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
+    public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final int cid) {
+        final ModelAndView mav = new ModelAndView("acceptForm");
+        return mav.addObject("student", classService.findById(cid).getStudent().getName());
+    }
+
+
+    @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
+    public ModelAndView accept(@PathVariable("cid") final int cid, @ModelAttribute("acceptForm") @Valid final AcceptForm form,
+                               final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return acceptForm(form, cid);
+        }
+        Class myClass = classService.findById(cid);
+        classService.setStatus(myClass.getClassId(), Class.Status.ACCEPTED.getValue());
+        emailService.sendAcceptMessage(myClass.getStudent().getMail(), "GetAProff: Tu clase fue aceptada", myClass.getTeacher().getName(), myClass.getSubject().getName(), myClass.getTeacher().getMail(), form.getMessage());
+
+        return new ModelAndView("redirect:/myClasses");
+    }
+
 }

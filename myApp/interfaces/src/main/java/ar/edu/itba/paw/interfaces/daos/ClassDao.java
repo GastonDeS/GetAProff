@@ -11,4 +11,6 @@ public interface ClassDao {
     List<Class> findClassesByTeacherId(int id);
     Class create(int studentId, int teacherId, int level, int subjectId, int price, int status);
     int setStatus(int classId, int status);
+    int setRequest(int classId, String message);
+    int setReply(int classId, String message);
 }

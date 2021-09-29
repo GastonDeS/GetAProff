@@ -1,9 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title><spring:message code="myClasses.mainTitle"/></title>
+    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="resources/styles/main.css"/>
@@ -12,27 +14,31 @@
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
-    <jsp:param name="uid" value="${uid}"/>
+    <jsp:param name="uid" value="${user.id}"/>
 </jsp:include>
 <div class="main-container">
-    <h1><spring:message code="myClasses.mainTitle"/></h1>
     <div class="classes-separator-container">
-        <div class="main-tab-container">
-            <ul class="nav nav-tabs flex-column" id="myTab1" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link nav-link-custom active" style="width: 100%;" id="home-tab"
-                            data-bs-toggle="tab" data-bs-target="#home" type="button"
-                            role="tab" aria-controls="home" aria-selected="true"><spring:message code="myClasses.requested"/>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link nav-link-custom" style="width: 100%;" id="profile-tab" data-bs-toggle="tab"
-                            data-bs-target="#profile" type="button"
-                            role="tab" aria-controls="profile" aria-selected="false"><spring:message code="myClasses.incoming"/>
-                    </button>
-                </li>
-            </ul>
-        </div>
+        <c:if test="${isTeacher == 1}">
+            <div class="main-tab-container">
+                <ul class="nav nav-tabs flex-column" id="myTab1" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link nav-link-custom active" style="width: 100%;" id="home-tab"
+                                data-bs-toggle="tab" data-bs-target="#home" type="button"
+                                role="tab" aria-controls="home" aria-selected="true"><spring:message
+                                code="myClasses.requested"/>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link nav-link-custom" style="width: 100%;" id="profile-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#profile" type="button"
+                                role="tab" aria-controls="profile" aria-selected="false"><spring:message
+                                code="myClasses.incoming"/>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </c:if>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="tabs-container">
@@ -64,35 +70,46 @@
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="active2" role="tabpanel"
                              aria-labelledby="active-tab">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Activa</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
+                            <c:if test="${fn:length(activeClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyActiveClasses"/></h3>
+                            </c:if>
+                            <c:forEach var="activeClass" items="${activeClasses}">
+                                <jsp:include page="../components/classCard.jsp">
+                                    <jsp:param name="subjectName" value="${activeClass.subject.name}"/>
+                                    <jsp:param name="teacherName" value="${activeClass.teacher.name}"/>
+                                    <jsp:param name="price" value="${activeClass.subject.price}"/>
+                                    <jsp:param name="level" value="${activeClass.subject.level}"/>
+                                    <jsp:param name="reply" value="${activeClass.messageReply}"/>
+                                </jsp:include>
+                            </c:forEach>
                         </div>
                         <div class="tab-pane fade" id="pending2" role="tabpanel" aria-labelledby="pending-tab">
+                            <c:if test="${fn:length(pendingClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyPendingClasses"/></h3>
+                            </c:if>
                             <c:forEach var="pendingClass" items="${pendingClasses}">
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card pending</h5>
-                                        <p class="card-text">With supporting text below as a natural lead-in to
-                                            additional
-                                            content.</p>
-                                        <a href="#" class="btn btn-custom">Cancelar</a>
-                                    </div>
-                                </div>
+                                <jsp:include page="../components/classCard.jsp">
+                                    <jsp:param name="subjectName" value="${pendingClass.subject.name}"/>
+                                    <jsp:param name="teacherName" value="${pendingClass.teacher.name}"/>
+                                    <jsp:param name="price" value="${pendingClass.subject.price}"/>
+                                    <jsp:param name="level" value="${pendingClass.subject.level}"/>
+                                    <jsp:param name="request" value="${pendingClass.messageRequest}"/>
+                                </jsp:include>
                             </c:forEach>
                         </div>
                         <div class="tab-pane fade" id="finished2" role="tabpanel" aria-labelledby="finished-tab">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card terminada</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
+                            <c:if test="${fn:length(finishedClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyFinishedClasses"/></h3>
+                            </c:if>
+                            <c:forEach var="finishedClass" items="${finishedClasses}">
+                                <jsp:include page="../components/classCard.jsp">
+                                    <jsp:param name="subjectName" value="${finishedClass.subject.name}"/>
+                                    <jsp:param name="teacherName" value="${finishedClass.teacher.name}"/>
+                                    <jsp:param name="price" value="${finishedClass.subject.price}"/>
+                                    <jsp:param name="level" value="${finishedClass.subject.level}"/>
+                                    <jsp:param name="finished" value="${finishedClass.status}"/>
+                                </jsp:include>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
@@ -126,35 +143,116 @@
                 <div class="classes-container">
                     <div class="tab-content" id="myTabContent3">
                         <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Activa</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                            <c:forEach var="pendingClass" items="${pendingClasses}">
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card pending</h5>
-                                        <p class="card-text">With supporting text below as a natural lead-in to
-                                            additional
-                                            content.</p>
-                                        <a href="#" class="btn btn-custom">Cancelar</a>
-                                    </div>
-                                </div>
+                            <c:if test="${fn:length(teacherActiveClasses) == 0}">
+                                <h3 class="empty-classes-title" ><spring:message code="myClasses.emptyActiveClasses"/></h3>
+                            </c:if>
+                            <c:forEach var="teacherActiveClass" items="${teacherActiveClasses}">
+                                <jsp:include page="../components/classCard.jsp">
+                                    <jsp:param name="subjectName" value="${teacherActiveClass.subject.name}"/>
+                                    <jsp:param name="studentName" value="${teacherActiveClass.student.name}"/>
+                                    <jsp:param name="price" value="${teacherActiveClass.subject.price}"/>
+                                    <jsp:param name="level" value="${teacherActiveClass.subject.level}"/>
+                                    <jsp:param name="active" value="1"/>
+                                </jsp:include>
                             </c:forEach>
                         </div>
-                        <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card terminada</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
+                        <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                            <c:if test="${fn:length(teacherPendingClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyPendingClasses"/></h3>
+                            </c:if>
+                            <c:forEach var="teacherPendingClass" items="${teacherPendingClasses}">
+                                <jsp:include page="../components/classCard.jsp">
+                                    <jsp:param name="subjectName" value="${teacherPendingClass.subject.name}"/>
+                                    <jsp:param name="studentName" value="${teacherPendingClass.student.name}"/>
+                                    <jsp:param name="price" value="${teacherPendingClass.subject.price}"/>
+                                    <jsp:param name="level" value="${teacherPendingClass.subject.level}"/>
+                                </jsp:include>
+                            </c:forEach>
+            <c:if test="${isTeacher == 1}">
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link nav-link-custom" id="pending-tab" data-bs-toggle="tab"
+                                        data-bs-target="#pending" type="button"
+                                        role="tab" aria-controls="pending" aria-selected="false"><spring:message
+                                        code="myClasses.pending"/>
+                                </button>
+                            </li>
+                            <li class="nav-item active" role="presentation">
+                                <button class="nav-link active nav-link-custom" id="active-tab" data-bs-toggle="tab"
+                                        data-bs-target="#active" type="button"
+                                        role="tab" aria-controls="active" aria-selected="true"><spring:message
+                                        code="myClasses.active"/>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link nav-link-custom" id="finished-tab" data-bs-toggle="tab"
+                                        data-bs-target="#finished" type="button"
+                                        role="tab" aria-controls="finished" aria-selected="false"><spring:message
+                                        code="myClasses.finished"/>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="classes-container">
+                        <div class="tab-content" id="myTabContent3">
+                            <div class="tab-pane fade show active" id="active" role="tabpanel"
+                                 aria-labelledby="active-tab">
+                                <c:forEach var="teacherActiveClass" items="${teacherActiveClasses}">
+                                    <jsp:include page="../components/classCard.jsp">
+                                        <jsp:param name="subjectName" value="${teacherActiveClass.subject.name}"/>
+                                        <jsp:param name="studentName" value="${teacherActiveClass.student.name}"/>
+                                        <jsp:param name="price" value="${teacherActiveClass.subject.price}"/>
+                                        <jsp:param name="level" value="${teacherActiveClass.subject.level}"/>
+                                        <jsp:param name="active" value="1"/>
+                                        <jsp:param name="reply" value="${teacherActiveClass.messageReply}"/>
+                                    </jsp:include>
+                                </c:forEach>
                             </div>
+                            <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+
+                                <c:forEach var="teacherPendingClass" items="${teacherPendingClasses}">
+                                    <jsp:include page="../components/classCard.jsp">
+                                        <jsp:param name="subjectName" value="${teacherPendingClass.subject.name}"/>
+                                        <jsp:param name="studentName" value="${teacherPendingClass.student.name}"/>
+                                        <jsp:param name="price" value="${teacherPendingClass.subject.price}"/>
+                                        <jsp:param name="level" value="${teacherPendingClass.subject.level}"/>
+                                        <jsp:param name="request" value="${teacherPendingClass.messageRequest}"/>
+                                        <jsp:param name="cid" value="${teacherPendingClass.classId}"/>
+                                    </jsp:include>
+                                </c:forEach>
+
+                            </div>
+                            <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
+                                <c:forEach var="teacherFinishedClass" items="${teacherFinishedClasses}">
+                                    <jsp:include page="../components/classCard.jsp">
+                                        <jsp:param name="subjectName" value="${teacherFinishedClass.subject.name}"/>
+                                        <jsp:param name="studentName" value="${teacherFinishedClass.student.name}"/>
+                                        <jsp:param name="price" value="${teacherFinishedClass.subject.price}"/>
+                                        <jsp:param name="level" value="${teacherFinishedClass.subject.level}"/>
+                                        <jsp:param name="finished" value="${teacherFinishedClass.status}"/>
+                                    </jsp:include>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+                        </div>
+                        <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
+                            <c:if test="${fn:length(teacherFinishedClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyFinishedClasses"/></h3>
+                            </c:if>
+                            <c:forEach var="teacherFinishedClass" items="${teacherFinishedClasses}">
+                                <jsp:include page="../components/classCard.jsp">
+                                    <jsp:param name="subjectName" value="${teacherFinishedClass.subject.name}"/>
+                                    <jsp:param name="studentName" value="${teacherFinishedClass.student.name}"/>
+                                    <jsp:param name="price" value="${teacherFinishedClass.subject.price}"/>
+                                    <jsp:param name="level" value="${teacherFinishedClass.subject.level}"/>
+                                    <jsp:param name="finished" value="${teacherFinishedClass.status}"/>
+                                </jsp:include>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
