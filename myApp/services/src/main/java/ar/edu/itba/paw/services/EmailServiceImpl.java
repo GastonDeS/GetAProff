@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendContactMessage(String to, String mailSubject, String userFrom, String subject, String message) {
-        String text = String.format(templateMailMessage.getText(), "Hola que tal, desde GetAproff el usuario",userFrom, "pide por tus clases de",subject,"","", message,"Entra a GetAProff para aceptar o rechazar su solicitud!");
+        String text = String.format(templateMailMessage.getText(), "Hola, desde GetAproff el usuario",userFrom, "pide por tus clases de",subject,"","", message,"Entra a GetAProff para aceptar o rechazar su solicitud!");
         sendSimpleMessage(to,mailSubject, text);
     }
 
