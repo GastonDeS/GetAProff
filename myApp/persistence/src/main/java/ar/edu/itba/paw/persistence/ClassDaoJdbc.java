@@ -26,8 +26,10 @@ public class ClassDaoJdbc implements ClassDao {
             rs.getInt("classid"),
             new User(rs.getString("studentname"), rs.getString("studentpassword"), rs.getInt("studentid"), rs.getString("studentmail"), rs.getInt("studentrole")),
             new User(rs.getString("teachername"), rs.getString("teacherpassword"), rs.getInt("teacherid"), rs.getString("teachermail"), rs.getInt("teacherrole"), rs.getString("teacherdescription"), rs.getString("teacherschedule")),
-            new SubjectInfo( rs.getInt("subjectid"),rs.getString("subjectname"), rs.getInt("price"), rs.getInt("level")),
-            rs.getInt("status"));
+            new SubjectInfo(rs.getInt("subjectid"), rs.getString("subjectname"), rs.getInt("price"), rs.getInt("level")),
+            rs.getInt("status"),
+            rs.getString("request"),
+            rs.getString("reply"));
 
     @Autowired
     public ClassDaoJdbc(final DataSource ds) {
@@ -40,19 +42,19 @@ public class ClassDaoJdbc implements ClassDao {
 
     @Override
     public Class get(int id) {
-        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE classid = ?", new Object[] { id }, ROW_MAPPER);
+        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE classid = ?", new Object[]{id}, ROW_MAPPER);
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public List<Class> findClassesByStudentId(int id) {
-        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE studentid = ?", new Object[] { id }, ROW_MAPPER);
+        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE studentid = ?", new Object[]{id}, ROW_MAPPER);
         return list;
     }
 
     @Override
     public List<Class> findClassesByTeacherId(int id) {
-        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE teacherid = ?", new Object[] { id }, ROW_MAPPER);
+        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE teacherid = ?", new Object[]{id}, ROW_MAPPER);
         return list;
     }
 
@@ -66,13 +68,23 @@ public class ClassDaoJdbc implements ClassDao {
         args.put("price", price);
         args.put("status", status);
         final Number classId = jdbcInsert.executeAndReturnKey(args);
-        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE classid = ?", new Object[] { classId }, ROW_MAPPER);
+        final List<Class> list = jdbcTemplate.query("SELECT * FROM front_classes WHERE classid = ?", new Object[]{classId}, ROW_MAPPER);
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public int setStatus(int classId, int status) {
         return jdbcTemplate.update("UPDATE classes SET status = ? WHERE classid = ?", status, classId);
+    }
+
+    @Override
+    public int setRequest(int classId, String message) {
+        return jdbcTemplate.update("UPDATE classes SET request = ? WHERE classid = ?", message, classId);
+    }
+
+    @Override
+    public int setReply(int classId, String message) {
+        return jdbcTemplate.update("UPDATE classes SET reply = ? WHERE classid = ?", message, classId);
     }
 
 

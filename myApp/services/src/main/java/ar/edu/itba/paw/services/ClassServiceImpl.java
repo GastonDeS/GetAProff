@@ -40,4 +40,15 @@ public class ClassServiceImpl implements ClassService {
     public int setStatus(int classId, int status) {
         return classDao.setStatus(classId, status);
     }
+
+    @Override
+    public int setRequest(int classId, String message) {
+        return classDao.setRequest(classId, message);
+    }
+
+    @Override
+    public int setReply(int classId, String message) {
+        return classDao.setReply(classId, message);
+    }
+
 }
