@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Timetable;
+import ar.edu.itba.paw.webapp.exceptions.UnauthenticatedUserException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.slf4j.Logger;
@@ -130,7 +131,7 @@ public class HelloWorldController {
         teachesList = teachesService.getSubjectListByUser(uid);
         Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
         classService.create(curr.getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
-        emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", curr.getName(), subjectService.findById(form.getSubjectId()).get().getName(), curr.getMail(), form.getMessage());
+        emailService.sendContactMessage(user.getMail(), "GetAProff: Nueva petición de clase", curr.getName(), subjectService.findById(form.getSubjectId()).get().getName(), form.getMessage());
         return new ModelAndView("redirect:/emailSent");
     }
 
