@@ -31,8 +31,9 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
+    @Override
     public User findById(int id) {
         return this.userDao.get(id);
     }

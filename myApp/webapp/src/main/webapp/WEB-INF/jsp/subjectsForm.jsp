@@ -67,9 +67,14 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom">
-                        <spring:message code="form.btn.save"/>
-                    </a>
+                    <div class="save-btn-container">
+                        <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom submit-btn">
+                            <spring:message code="form.btn.cancel"/>
+                        </a>
+                        <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom submit-btn">
+                            <spring:message code="form.btn.save"/>
+                        </a>
+                    </div>
                 </div>
             </form:form>
         </div>

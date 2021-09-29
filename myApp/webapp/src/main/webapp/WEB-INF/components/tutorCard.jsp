@@ -1,17 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="tutor-card card" style="width: 18rem;" onclick="window.location.href='${pageContext.request.contextPath}/profile/${param.uid}'">
-    <c:set var="maybeImg" value="/image/${param.uid}"/>
+<div class="tutor-card card" style="width: fit-content;" onclick="window.location.href='${pageContext.request.contextPath}/profile/${param.uid}'">
     <c:choose>
-        <c:when test="${not empty maybeImg}">
-            <c:set var="imageURL" value="${maybeImg}"/>
+        <c:when test="${param.image == 0}">
+            <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="tutor-img" alt="teacherImg">
         </c:when>
         <c:otherwise>
-            <c:set var="imageURL" value="/resources/images/user_default_img.jpeg"/>
+            <img src="${pageContext.request.contextPath}/image/${param.uid}" class="tutor-img" alt="teacherImg">
         </c:otherwise>
     </c:choose>
-    <img src="${imageURL}" class="tutor-img" alt="teacherImg">
     <div class="card-body">
         <h5 class="card-title"><c:out value="${param.name}"/></h5>
         <p class="card-text-custom"><c:out value="${param.description}"/></p>

@@ -54,7 +54,7 @@
                         </div>
                     </label>
                 </div>
-                <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
+                <input type="submit" class="btn btn-custom sign-btn" value="<spring:message code="submit.button"/>"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="register.registered"/></p>
                     <a class="account-check-link" href="login">

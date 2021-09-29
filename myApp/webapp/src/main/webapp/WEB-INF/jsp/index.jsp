@@ -14,16 +14,16 @@
     <body>
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${true}"/>
-            <jsp:param name="uid" value="${user.id}"/>
+            <jsp:param name="uid" value="${uid}"/>
         </jsp:include>
         <div class="page-container">
             <div class="search-bar">
                 <form name="Search" action="tutors" method="get" >
-                    <input class="form-control" list="datalistOptions" id="query" name="query" placeholder=${searchPlaceholder}/>
+                    <input list="datalistOptions" id="query" name="query" placeholder=${searchPlaceholder}/>
                     <datalist id="datalistOptions">
                         <c:forEach var="subject" items="${subjects}">
                             <option value="${subject.name}">
-                            </c:forEach>
+                        </c:forEach>
                     </datalist>
                     <button type="submit" class="btn btn-custom">
                         <spring:message code="home.search.buttonText"/>
@@ -48,5 +48,11 @@
         <jsp:include page="../components/footer.jsp">
             <jsp:param name="" value=""/>
         </jsp:include>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+                integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+                integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+                crossorigin="anonymous"></script>
     </body>
 </html>

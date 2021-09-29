@@ -4,18 +4,17 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Timetable;
+import ar.edu.itba.paw.webapp.exceptions.UnauthenticatedUserException;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -43,24 +42,44 @@ public class HelloWorldController {
     @Autowired
     ClassService classService;
 
+    private User getCurrUser() {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new UnauthenticatedUserException("Can't access: unauthenticated user");
+        }
+        return maybeUser.get();
+    }
+
+    private User getCurrUserNoRedirect() {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        return maybeUser.orElse(null);
+    }
+
+    private void addUserId(ModelAndView mav) {
+        User u = getCurrUserNoRedirect();
+        if (u != null && u.getUserRole() == 1) {
+            mav.addObject("uid", u.getId());
+        }
+    }
+
     @RequestMapping("/")
     public ModelAndView helloWorld() {
-        Optional<User> curr = userService.getCurrentUser();
+        User curr = getCurrUserNoRedirect();
         final ModelAndView mav = new ModelAndView("index")
                 .addObject("subjects", subjectService.list())
                 .addObject("greeting", userService.findById(1));
-        if (!curr.isPresent() || curr.get().getUserRole() == 0){
+        if (curr == null || curr.getUserRole() == 0){
             return mav;
         }
-        return mav.addObject("user", curr.get());
+        return mav.addObject("uid", curr.getId());
     }
 
     @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        List<CardProfile> users = userService.filterUsers(searchQuery);
-        mav.addObject("tutors", users);
+        List<CardProfile> tutors = userService.filterUsers(searchQuery);
+        mav.addObject("tutors", tutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
@@ -80,37 +99,24 @@ public class HelloWorldController {
         return mav;
     }
 
-    private void addUserId(ModelAndView mav) {
-        Optional<User> u = userService.getCurrentUser();
-        if (u.isPresent()) {
-            User curr = u.get();
-            if (curr.getUserRole() == 1) {
-                mav.addObject("uid", curr.getId());
-            }
-        }
-    }
-
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
-        Optional<User> u = userService.getCurrentUser();
-        if (u.isPresent()) {
-            final ModelAndView mav = new ModelAndView("contactForm");
-            mav.addObject("user", userService.findById(uid));
+        User u = getCurrUser();
+        final ModelAndView mav = new ModelAndView("contactForm");
+        mav.addObject("user", userService.findById(uid));
 
-            List<Teaches> teachesList;
-            List<SubjectInfo> subjectsGiven = new ArrayList<>();
-            teachesList = teachesService.getSubjectListByUser(uid);
-            for(Teaches t : teachesList) {
-                String name = subjectService.findById(t.getSubjectId()).get().getName();
-                subjectsGiven.add(new SubjectInfo(t.getSubjectId(), name, t.getPrice(), t.getLevel()));
-            }
-            mav.addObject("subjects", subjectsGiven);
-            return mav;
+        List<Teaches> teachesList;
+        List<SubjectInfo> subjectsGiven = new ArrayList<>();
+        teachesList = teachesService.getSubjectListByUser(uid);
+        for(Teaches t : teachesList) {
+            int sid = t.getSubjectId();
+            Optional<Subject> subject =  subjectService.findById(sid);
+            subject.ifPresent(value -> subjectsGiven.add(
+                    new SubjectInfo(sid, value.getName(), t.getPrice(), t.getLevel())));
         }
-        return new ModelAndView("redirect:/login");
+        mav.addObject("subjects", subjectsGiven);
+        return mav;
     }
-
-
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
     public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
@@ -119,16 +125,12 @@ public class HelloWorldController {
             return contactForm(form, uid);
         }
         User user = userService.findById(uid);
-        Optional<User> u = userService.getCurrentUser();
-        if (u.isPresent()) {
-
-            List<Teaches> teachesList;
-            teachesList = teachesService.getSubjectListByUser(uid);
-            Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
-
-            classService.create(u.get().getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
-            emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", u.get().getName(), subjectService.findById(form.getSubjectId()).get().getName(), u.get().getMail(), form.getMessage());
-        }
+        User curr = getCurrUserNoRedirect();
+        List<Teaches> teachesList;
+        teachesList = teachesService.getSubjectListByUser(uid);
+        Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
+        classService.create(curr.getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
+        emailService.sendTemplateMessage(user.getMail(), "GetAProff: Nueva petición de clase", curr.getName(), subjectService.findById(form.getSubjectId()).get().getName(), curr.getMail(), form.getMessage());
         return new ModelAndView("redirect:/emailSent");
     }
 
@@ -141,13 +143,11 @@ public class HelloWorldController {
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
         final ModelAndView mav = new ModelAndView("classes");
-        Optional<User> u = userService.getCurrentUser();
-        if (u.isPresent()) {
-            mav.addObject("user", u.get());
-            List<Class> classList = classService.findClassesByStudentId(u.get().getId());
-            mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()))
-                    .addObject("uid", u.get().getId());
-        }
+        User u = getCurrUser();
+        mav.addObject("user", u);
+        List<Class> classList = classService.findClassesByStudentId(u.getId());
+        mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()))
+                .addObject("uid", u.getId());
         return mav;
     }
 }

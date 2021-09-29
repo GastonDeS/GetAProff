@@ -4,9 +4,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
-import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
-import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,9 +25,6 @@ public class RegisterController {
     private RegisterFormValidator registerFormValidator;
 
     @Autowired
-    private SubjectsFormValidator subjectsFormValidator;
-
-    @Autowired
     private UtilsService utilsService;
 
     @InitBinder
@@ -38,8 +33,6 @@ public class RegisterController {
         if (target != null) {
             if (target.getClass().equals(RegisterForm.class)) {
                 webDataBinder.setValidator(registerFormValidator);
-            } else if (target.getClass().equals(SubjectsForm.class)) {
-                webDataBinder.setValidator(subjectsFormValidator);
             }
         }
     }

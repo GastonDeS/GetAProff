@@ -10,11 +10,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class ImageDaoJdbc implements ImageDao {
+
     private final JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<Image> ROW_MAPPER = (rs, rowNum) ->
@@ -37,13 +38,18 @@ public class ImageDaoJdbc implements ImageDao {
     }
 
     @Override
-    public Optional<Image> findImageById(int id) {
-        return jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { id }, ROW_MAPPER)
-                .stream().findFirst();
+    public Image findImageById(int userId) {
+        List<Image> image = jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { userId }, ROW_MAPPER);
+        return image.isEmpty() ? null : image.get(0);
     }
 
     @Override
     public int changeUserImage(int userId, byte[] image) {
         return jdbcTemplate.update("UPDATE images SET image = ? WHERE userId = ?", image, userId);
+    }
+
+    @Override
+    public int removeUserImage(int userId) {
+        return jdbcTemplate.update("DELETE FROM images WHERE userId = ?", userId);
     }
 }

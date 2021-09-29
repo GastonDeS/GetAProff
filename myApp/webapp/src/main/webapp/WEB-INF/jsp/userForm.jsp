@@ -21,27 +21,38 @@
                 <div class="form-container">
                     <p class="form-title"><spring:message code="user.form.title"/></p>
                     <div class="img-upload">
-                        <c:set var="maybeImg" value="/image/${uid}"/>
                         <c:choose>
-                            <c:when test="${not empty maybeImg}">
-                                <c:set var="imageURL" value="${maybeImg}"/>
+                            <c:when test="${image == 0}">
+                                <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg">
                             </c:when>
                             <c:otherwise>
-                                <c:set var="imageURL" value="/resources/images/user_default_img.jpeg"/>
+                                <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" alt="teacherImg">
                             </c:otherwise>
                         </c:choose>
-                        <img src="${imageURL}" class="profile-img" alt="teacherImg">
-                        <input type="file" width="200px" height="200px" accept="image" name="file"/>
+                        <div class="edit-btn-container">
+                            <label class="btn btn-custom">
+                                <input type="file" accept="image" name="file" style="display: none"/>
+                                <spring:message code="user.form.choose.image"/>
+                            </label>
+                            <a href="${pageContext.request.contextPath}/removeImg" class="btn btn-custom">
+                                <spring:message code="user.form.remove.image"/>
+                            </a>
+                        </div>
                     </div>
                     <div class="form-input-container">
-                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="description" placeholder="${descriptionPlaceholder}"/>
+                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
                         <form:errors path="description" element="p" cssClass="form-error"/>
                     </div>
                     <div class="form-input-container">
-                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 30vh" path="schedule" placeholder="${schedulePlaceholder}"/>
+                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="schedule" placeholder="${schedulePlaceholder}"/>
                         <form:errors path="schedule" element="p" cssClass="form-error"/>
                     </div>
-                    <input type="submit" class="btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+                    <div class="save-btn-container">
+                        <a href="${pageContext.request.contextPath}/profile/${uid}" class="btn btn-custom submit-btn">
+                            <spring:message code="form.btn.cancel"/>
+                        </a>
+                        <input type="submit" class="btn btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+                    </div>
                 </div>
             </form:form>
         </div>

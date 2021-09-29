@@ -26,11 +26,14 @@
                 <div class="form-input-container">
                     <input type="password" class="form-control" name="j_password" placeholder="${passPlaceholder}"/>
                 </div>
+                <c:if test="${param.error != null}">
+                    <p class="form-error"><spring:message code="login.error"/></p>
+                </c:if>
                 <label class="login-checkbox">
                     <input class="checkbox" name="j_rememberme" type="checkbox"/>
                     <spring:message code="remember.me"/>
                 </label>
-                <input type="submit" class="btn-custom submit-btn" value="<spring:message code="submit.button"/>"/>
+                <input type="submit" class="btn btn-custom sign-btn" value="<spring:message code="submit.button"/>"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="login.not.registered"/></p>
                     <a class="account-check-link" href="register">

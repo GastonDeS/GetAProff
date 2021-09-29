@@ -21,11 +21,16 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Optional<Image> findImageById(int userId) {
-        return imageDao.findImageById(userId);
+        return Optional.ofNullable(imageDao.findImageById(userId));
     }
 
     @Override
     public int changeUserImage(int userId, byte[] img) {
         return imageDao.changeUserImage(userId, img);
+    }
+
+    @Override
+    public int removeUserImage(int userId) {
+        return imageDao.removeUserImage(userId);
     }
 }

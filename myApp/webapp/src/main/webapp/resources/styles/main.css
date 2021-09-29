@@ -19,7 +19,6 @@
     margin-left: -50px;
 }
 
-
 .nav-link-custom {
     color: #2c2525;
     font-family: "Roboto Light", sans-serif;
@@ -100,9 +99,9 @@ input:focus {
 .search-bar {
     border-radius: 20px;
     background-color: #9fedd7;
-    padding: 20px;
+    padding: 15px;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     width: 40vw;
     height: 12vh;
@@ -115,6 +114,14 @@ input:focus {
     align-items: center;
 }
 
+#query {
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    height: fit-content;
+    width: 85%;
+    margin-right: 5px;
+}
 
 .main-img-container {
     display: flex;
@@ -405,10 +412,10 @@ input:focus {
 
 .info-container {
     width: 100%;
-    height: 30vh;
+    height: fit-content;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     background: hsla(185, 96%, 22%, 0.35);
     border-radius: 10px;
     margin: 8px;
@@ -508,26 +515,53 @@ input:focus {
 .img-upload {
     width: 80%;
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-    height: 28vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
     margin-bottom: 8px;
+}
+
+.edit-btn-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 65%;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+label:hover {
+    color: white;
 }
 
 .profile-img {
     width: 175px;
     height: 175px;
     object-fit: cover;
-    margin: 0 15px 0 15px;
+    margin: 15px;
     border-radius: 5px;
 }
 
 .tutor-img {
-    width: 100%;
-    height: 18rem;
+    width: 225px;
+    height: 225px;
     object-fit: cover;
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
+}
+
+.save-btn-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: fit-content;
 }
 
 /* Button design */
@@ -558,9 +592,14 @@ input:focus {
 }
 
 .submit-btn {
+    width: fit-content;
+    font-size: 20px;
+    margin: 5px 5px 0 5px;
+}
+
+.sign-btn {
     width: 20%;
     font-size: 20px;
-    margin-top: 5px;
 }
 
 .main-container {
