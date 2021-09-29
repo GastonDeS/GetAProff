@@ -76,7 +76,7 @@
     </form>
     <div class="search-bar">
         <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
-            <input class="form-control" list="datalistOptions" id="query" name="query"/>
+            <input class="form-control" list="datalistOptions" id="query" name="query" value="<%=request.getParameter("query")%>"/>
             <datalist id="datalistOptions">
                 <c:forEach var="subject" items="${subjects}">
                 <option value="${subject.name}">

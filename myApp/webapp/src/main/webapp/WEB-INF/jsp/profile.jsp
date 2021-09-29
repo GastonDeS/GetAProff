@@ -23,7 +23,7 @@
         <div class="page-container">
             <div class="profile-container">
                 <div class="info-container">
-                    <c:set var="maybeImg" value="/image/${uid}"/>
+                    <c:set var="maybeImg" value="${pageContext.request.contextPath}/image/${uid}"/>
                     <c:choose>
                         <c:when test="${not empty maybeImg}">
                             <c:set var="imageURL" value="${maybeImg}"/>

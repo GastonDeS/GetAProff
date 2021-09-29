@@ -1,9 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title><spring:message code="myClasses.mainTitle"/></title>
+    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="resources/styles/main.css"/>
@@ -15,7 +17,6 @@
     <jsp:param name="uid" value="${user.id}"/>
 </jsp:include>
 <div class="main-container">
-    <h1><spring:message code="myClasses.mainTitle"/></h1>
     <div class="classes-separator-container">
         <c:if test="${isTeacher == 1}">
             <div class="main-tab-container">
@@ -69,6 +70,9 @@
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="active2" role="tabpanel"
                              aria-labelledby="active-tab">
+                            <c:if test="${fn:length(activeClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyActiveClasses"/></h3>
+                            </c:if>
                             <c:forEach var="activeClass" items="${activeClasses}">
                                 <jsp:include page="../components/classCard.jsp">
                                     <jsp:param name="subjectName" value="${activeClass.subject.name}"/>
@@ -79,6 +83,9 @@
                             </c:forEach>
                         </div>
                         <div class="tab-pane fade" id="pending2" role="tabpanel" aria-labelledby="pending-tab">
+                            <c:if test="${fn:length(pendingClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyPendingClasses"/></h3>
+                            </c:if>
                             <c:forEach var="pendingClass" items="${pendingClasses}">
                                 <jsp:include page="../components/classCard.jsp">
                                     <jsp:param name="subjectName" value="${pendingClass.subject.name}"/>
@@ -89,6 +96,9 @@
                             </c:forEach>
                         </div>
                         <div class="tab-pane fade" id="finished2" role="tabpanel" aria-labelledby="finished-tab">
+                            <c:if test="${fn:length(finishedClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyFinishedClasses"/></h3>
+                            </c:if>
                             <c:forEach var="finishedClass" items="${finishedClasses}">
                                 <jsp:include page="../components/classCard.jsp">
                                     <jsp:param name="subjectName" value="${finishedClass.subject.name}"/>
@@ -131,6 +141,9 @@
                 <div class="classes-container">
                     <div class="tab-content" id="myTabContent3">
                         <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                            <c:if test="${fn:length(teacherActiveClasses) == 0}">
+                                <h3 class="empty-classes-title" ><spring:message code="myClasses.emptyActiveClasses"/></h3>
+                            </c:if>
                             <c:forEach var="teacherActiveClass" items="${teacherActiveClasses}">
                                 <jsp:include page="../components/classCard.jsp">
                                     <jsp:param name="subjectName" value="${teacherActiveClass.subject.name}"/>
@@ -142,7 +155,9 @@
                             </c:forEach>
                         </div>
                         <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-
+                            <c:if test="${fn:length(teacherPendingClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyPendingClasses"/></h3>
+                            </c:if>
                             <c:forEach var="teacherPendingClass" items="${teacherPendingClasses}">
                                 <jsp:include page="../components/classCard.jsp">
                                     <jsp:param name="subjectName" value="${teacherPendingClass.subject.name}"/>
@@ -154,6 +169,9 @@
 
                         </div>
                         <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
+                            <c:if test="${fn:length(teacherFinishedClasses) == 0}">
+                                <h3 class="empty-classes-title"><spring:message code="myClasses.emptyFinishedClasses"/></h3>
+                            </c:if>
                             <c:forEach var="teacherFinishedClass" items="${teacherFinishedClasses}">
                                 <jsp:include page="../components/classCard.jsp">
                                     <jsp:param name="subjectName" value="${teacherFinishedClass.subject.name}"/>

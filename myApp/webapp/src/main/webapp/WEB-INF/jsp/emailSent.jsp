@@ -17,7 +17,7 @@
         </jsp:include>
     <div class="centered">
             <h1 class="mt-5"><spring:message code="email.sent.title"/></h1>
-            <a class="btn btn-custom bd-highlight centered-horizontal" href="/">
+            <a class="btn btn-custom bd-highlight centered-horizontal" href="${pageContext.request.contextPath}/">
                 <spring:message code="email.sent.back.btn"/>
             </a>
     </div>
