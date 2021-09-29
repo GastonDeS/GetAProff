@@ -132,7 +132,7 @@ public class HelloWorldController {
         Teaches t = teachesList.stream().filter(teaches -> teaches.getSubjectId() == form.getSubjectId()).findFirst().orElse(null);
         classService.create(curr.getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
         emailService.sendContactMessage(user.getMail(), "GetAProff: Nueva petición de clase", curr.getName(), subjectService.findById(form.getSubjectId()).get().getName(), form.getMessage());
-        return new ModelAndView("redirect:/emailSent");
+        return new ModelAndView("redirect:/myClasses");
     }
 
     @RequestMapping("/emailSent")
