@@ -5,12 +5,15 @@
 
 <html lang="en">
 <head>
-    <title>Accept – GetAProff </title>
+    <title> <spring:message code="accept.title"/> - GetAProff </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
     <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
+    <spring:message code="accept.message.placeholder" var="messagePlaceHolder"/>
+    <spring:message code="accept.btn.value" var="acceptValue"/>
+
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -19,7 +22,7 @@
 <div class="main-container">
     <c:url value="/accept/${cid}" var="acceptUrl"/>
     <h1 class="d-flex justify-content-center mt-4">
-        <spring:message code="contact.form.contact.with"/>
+        <spring:message code="accept.form.header"/>
         <c:out value="${student}"/>
     </h1>
     <form:form class="d-flex justify-content-center" modelAttribute="acceptForm" action="${acceptUrl}" method="post">
@@ -29,12 +32,12 @@
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>
                     <form:textarea cssStyle="height: 150px" type="text" path="message"
                                    class="form-control"
-                                   placeHolder="Que tal, acepto tu petición de clase, te gustarís tomarla el proximo Lunes? Cualquier cosa preegunta a mi mail"/>
+                                   placeHolder="${messagePlaceHolder}"/>
                     <form:errors path="message" element="p" cssClass="form-error"/>
                 </div>
                 <div class="btn-container">
                     <input type="submit" class="btn btn-custom bd-highlight"
-                           value="Aceptar"/>
+                           value="${acceptValue}"/>
                 </div>
             </div>
         </div>

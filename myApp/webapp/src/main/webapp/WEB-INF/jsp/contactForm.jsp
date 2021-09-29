@@ -11,6 +11,7 @@
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
     <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
+    <spring:message code="request.message.placeholder" var="messagePlaceHolder"/>
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -25,6 +26,7 @@
         <div class="section-container">
             <div class="input-section">
                 <div class="form-input">
+                    <form:label path="subjectId"><spring:message code="contact.form.subject"/></form:label>
                     <form:select path="subjectId">
                         <c:forEach var="subject" items="${subjects}">
                             <form:option value="${subject.id}" label="${subject.name}"/>
@@ -35,12 +37,12 @@
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>
                     <form:textarea cssStyle="height: 150px" type="text" path="message"
                                    class="form-control"
-                                   placeHolder="Que tal, me gustaría que fueses mi profesor, mis horarios son..."/>
+                                   placeHolder="${messagePlaceHolder}"/>
                     <form:errors path="message" element="p" cssClass="form-error"/>
                 </div>
                 <div class="btn-container">
                     <input type="submit" class="btn btn-custom bd-highlight"
-                           value="<spring:message code="submit.button"/>">
+                           value="<spring:message code="contact.form.request.button"/>">
                 </div>
             </div>
         </div>
