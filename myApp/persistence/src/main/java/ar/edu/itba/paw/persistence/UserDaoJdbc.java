@@ -72,7 +72,7 @@ public class UserDaoJdbc implements UserDao {
         if( level == 0) { minLevel = 1; maxLevel = 3;}
         else
             minLevel = maxLevel = level;
-        String query = "SELECT a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
+        String query = "SELECT distinct a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
                 "FROM ((SELECT uid, name, description, image, max(price) as maxPrice, min(price) as minPrice\n" +
                 "        FROM (SELECT u.userid AS uid, name, description, (CASE WHEN image IS NULL THEN 0 ELSE 1 END) AS image\n" +
                 "        FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
