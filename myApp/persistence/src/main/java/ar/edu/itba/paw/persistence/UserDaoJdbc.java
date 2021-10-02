@@ -19,8 +19,7 @@ public class UserDaoJdbc implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
-            rs.getInt("userid"), rs.getString("mail"), rs.getInt("userRole"), rs.getString("description")
-    ,rs.getString("schedule"));
+            rs.getInt("userid"), rs.getString("mail"), rs.getString("description"),rs.getString("schedule"));
 
     @Autowired
     public UserDaoJdbc (final DataSource ds){
@@ -48,14 +47,13 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(String name, String mail, String password, int userRole) {
+    public User create(String name, String mail, String password) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("password",password);
         args.put("mail",mail);
-        args.put("userRole", userRole);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(name, password, userId.intValue(), mail, userRole);
+        return new User(name, password, userId.intValue(), mail, "", "");
     }
 
     @Override
@@ -78,11 +76,8 @@ public class UserDaoJdbc implements UserDao {
                 "        FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
                 "        GROUP BY uid, name, description, image) AS a2 JOIN teaches t ON a2.uid = t.userid) AS a3\n" +
                 "        JOIN subject s ON a3.subjectid = s.subjectid\n" +
-                "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)";
-//        String query = "SELECT aux.userid, aux.name AS name, max(price) as maxPrice, min(price) as minPrice, description\n" +
-//                "                FROM (SELECT subjectid, u.userid, price, name, level, description FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
-//                "                JOIN subject s ON aux.subjectid = s.subjectid  WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
-//                "                AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0 ) GROUP BY aux.userid, aux.name, aux.description";
+                "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)" +
+                "GROUP BY a3.uid, a3.name, maxPrice, minPrice, description, image";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel }, mapper);
         return list.isEmpty() ? null : list;

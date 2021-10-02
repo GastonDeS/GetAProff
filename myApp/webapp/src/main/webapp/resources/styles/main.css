@@ -700,6 +700,8 @@ div.bg-tutors-card-custom {
     transition: 0.5s ease;
     cursor: pointer;
     border-radius: 10px;
+    width: 225px;
+    height: 350px;
 }
 
 .tutor-card:hover {
@@ -713,12 +715,19 @@ div.bg-tutors-card-custom {
 }
 
 .card-text-custom {
-    font-size: 0.8em;
-    margin-bottom: 0;
+    font-size: 1em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: "Roboto Light", sans-serif;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
 }
 
 .card-price {
     margin-top: 5px;
+    font-size: 0.8em;
+    font-family: "Roboto Light", sans-serif;
 }
 
 .not-found-header {

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="tutor-card card" style="width: fit-content;" onclick="window.location.href='${pageContext.request.contextPath}/profile/${param.uid}'">
+<div class="tutor-card card" onclick="window.location.href='${pageContext.request.contextPath}/profile/${param.uid}'">
     <c:choose>
         <c:when test="${param.image == 0}">
             <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="tutor-img" alt="teacherImg">
@@ -15,10 +15,10 @@
         <p class="card-text-custom"><c:out value="${param.description}"/></p>
         <c:choose>
             <c:when test="${param.minPrice != param.maxPrice}">
-                <p class="card-text-custom card-price">$<c:out value="${param.minPrice}"/> - $<c:out value="${param.maxPrice}"/></p>
+                <p class="card-price">$<c:out value="${param.minPrice}"/> - $<c:out value="${param.maxPrice}"/></p>
             </c:when>
             <c:otherwise>
-                <p class="card-text-custom card-price">$<c:out value="${param.minPrice}"/></p>
+                <p class="card-price">$<c:out value="${param.minPrice}"/></p>
             </c:otherwise>
         </c:choose>
     </div>
