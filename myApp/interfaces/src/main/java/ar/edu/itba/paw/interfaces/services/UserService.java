@@ -14,6 +14,8 @@ public interface UserService {
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject);
 
+    List<CardProfile> getFavourites(int uid);
+
     /**
      * Retrieves user schedule
      *

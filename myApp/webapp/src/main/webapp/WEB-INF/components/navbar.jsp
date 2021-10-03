@@ -20,7 +20,7 @@
                                 <a href="${pageContext.request.contextPath}/myClasses" class="btn nav-link active btn-custom">
                                     <spring:message code="nav.button.classes"/>
                                 </a>
-                                <a href="#" class="btn nav-link active btn-custom">
+                                <a href="${pageContext.request.contextPath}/favourites" class="btn nav-link active btn-custom">
                                     <spring:message code="nav.button.favorites"/>
                                 </a>
                             </div>

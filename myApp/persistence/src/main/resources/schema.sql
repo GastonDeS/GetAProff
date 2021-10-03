@@ -19,6 +19,15 @@ CREATE TABLE IF NOT EXISTS rating
     PRIMARY KEY (teacherId,userId)
 );
 
+CREATE TABLE IF NOT EXISTS favourites
+(
+    teacherId INTEGER,
+    studentId INTEGER NOT NULL,
+    FOREIGN KEY (studentId) REFERENCES users ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (teacherId,studentId)
+);
+
 CREATE TABLE IF NOT EXISTS images
 (
     userId INTEGER,

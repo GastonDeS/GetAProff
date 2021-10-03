@@ -75,6 +75,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<CardProfile> getFavourites(int uid) {
+        return userDao.getFavourites(uid);
+    }
+
+    @Override
     public String getUserSchedule(int userId) {
         User u = userDao.get(userId);
         return u == null ? null : u.getSchedule();
