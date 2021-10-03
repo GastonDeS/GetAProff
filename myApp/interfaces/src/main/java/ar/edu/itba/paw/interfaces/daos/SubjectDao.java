@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubjectDao {
-    Optional<Subject> findById(int id);
+    Subject findById(int id);
 
     Subject save(Subject subject);
 
