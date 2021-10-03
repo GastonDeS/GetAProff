@@ -54,16 +54,14 @@ public class RegisterController {
             return register(form);
         }
         String name = utilsService.capitalizeFirstLetter(form.getName());
-        Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword());
+        Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword(), form.getUserRole());
         if (!maybeUser.isPresent()) {
             throw new RegisterErrorException("Cannot register user");
         }
-        User user = maybeUser.get();
-        user.setUserRoles(roleService.setUserRoles(user.getId(), form.getUserRole()));
         if (form.getUserRole() == 1) {
             return new ModelAndView("redirect:/editProfile");
         }
-        String redirect = "redirect:/profile/" + user.getId();
+        String redirect = "redirect:/profile/" + maybeUser.get().getId();
         return new ModelAndView(redirect);
     }
 }

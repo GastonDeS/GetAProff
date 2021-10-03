@@ -31,6 +31,11 @@ public class RoleServiceImpl implements RoleService {
         return roleDao.findRoleByName(role);
     }
 
+    @Override
+    public List<Role> getUserRoles(int userid) {
+        return roleDao.getUserRoles(userid);
+    }
+
     @Transactional
     @Override
     public List<Role> setUserRoles(int userId, int userRole) {
