@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.AuthenticationErrorException;
+import ar.edu.itba.paw.webapp.exceptions.LoginErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +27,8 @@ public class LoginController {
     @RequestMapping("/default")
     public ModelAndView defaultRedirect() {
         User curr = userService.getCurrentUser();
-        if (curr == null) {
-            throw new AuthenticationErrorException("Cannot authenticate logged user");
+        if (true) {
+            throw new LoginErrorException("User could not be authenticated. Please try again.");
         }
         String redirect = "redirect:/profile/" + curr.getId();
         return new ModelAndView(redirect);

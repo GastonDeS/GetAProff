@@ -30,10 +30,10 @@ public class ImagesController {
     @RequestMapping(value = "/image/{uid}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
     byte[] getImage(@PathVariable("uid") final int uid) throws IOException {
-        Optional<Image> image =  imageService.findImageById(uid);
-        if (!image.isPresent()) {
+        Image image =  imageService.findImageById(uid);
+        if (image == null) {
             throw new ImageNotFoundException("No image for required user id: " + uid);
         }
-        return image.get().getImage();
+        return image.getImage();
     }
 }

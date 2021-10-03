@@ -21,15 +21,15 @@ public class HelloWorldController {
     private SubjectService subjectService;
 
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView index() {
         User curr = userService.getCurrentUser();
         final ModelAndView mav = new ModelAndView("index")
                 .addObject("subjects", subjectService.list())
                 .addObject("greeting", userService.findById(1));
-        if (curr == null){
-            return mav;
+        if (curr != null){
+            mav.addObject("uid", curr.getId());
         }
-        return mav.addObject("uid", curr.getId());
+        return mav;
     }
 
 }
