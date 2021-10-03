@@ -14,4 +14,6 @@ public interface TeachesService {
     int removeSubjectToUser(int userid, int subjectid);
 
     List<SubjectInfo> getSubjectInfoListByUser(int userid);
+
+    Teaches findByUserAndSubject(int userId, int subjectId);
 }

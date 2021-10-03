@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS users
     name        varchar(100),
     password    varchar(100),
     mail        varchar(100),
-    userrole    INTEGER,
     description varchar(256) default '',
     schedule    varchar(256) default ''
 );
@@ -77,10 +76,25 @@ CREATE TABLE IF NOT EXISTS classes
 
 CREATE OR REPLACE VIEW front_classes AS
 (
-SELECT classId, classes.studentId AS studentId,  student.name AS studentName, student.password AS studentPassword, student.mail AS studentMail, student.userrole AS studentRole, classes.teacherId AS teacherId, teacher.name AS teacherName, teacher.mail AS teacherMail, teacher.password AS teacherPassword, teacher.userrole AS teacherRole, teacher.description AS teacherDescription, teacher.schedule AS teacherSchedule, level, classes.subjectId AS subjectID,status, price, subject.name AS subjectName, classes.request AS request, classes.reply AS reply
-FROM classes
-         LEFT JOIN users student ON student.userId = classes.studentId
+SELECT classId,  student.name AS studentName, teacher.name AS teacherName, level, status,
+    price, subject.name AS subjectName, classes.request AS request, classes.reply AS reply
+FROM classes LEFT JOIN users student ON student.userId = classes.studentId
          LEFT JOIN users teacher ON teacher.userid = classes.teacherid
          LEFT JOIN subject on classes.subjectid = subject.subjectid
-    )
+    );
+
+CREATE TABLE IF NOT EXISTS roles
+(
+    roleId SERIAL PRIMARY KEY,
+    role varchar(100)
+    );
+
+CREATE TABLE IF NOT EXISTS userRoles
+(
+    roleId INTEGER NOT NULL,
+    userId INTEGER NOT NULL,
+    PRIMARY KEY (roleId, userId),
+    FOREIGN KEY (roleId) REFERENCES roles ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE
+    );
 

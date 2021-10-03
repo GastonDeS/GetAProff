@@ -31,9 +31,9 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
-    public Optional<Subject> findById(int id) {
-        return jdbcTemplate.query("SELECT * FROM subject WHERE subjectId = ?", new Object[] { id }, ROW_MAPPER)
-                .stream().findFirst();
+    public Subject findById(int id) {
+        List<Subject> list = jdbcTemplate.query("SELECT * FROM subject WHERE subjectId = ?", new Object[] { id }, ROW_MAPPER);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
