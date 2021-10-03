@@ -36,7 +36,6 @@
         </c:choose>
         <p class="card-text"><spring:message code="class.card.price.intro"/> $<c:out value="${param.price}"/>/<spring:message code="class.card.price.outro"/></p>
         <p class="card-text"><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${param.level}"/></p>
-
         <c:if test="${param.finished == null}">
             <c:choose>
                 <c:when test="${param.request != null}">

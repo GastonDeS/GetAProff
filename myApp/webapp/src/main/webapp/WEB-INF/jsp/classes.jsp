@@ -16,7 +16,7 @@
     <jsp:param name="isMainPage" value="${true}"/>
     <jsp:param name="uid" value="${user.id}"/>
 </jsp:include>
-<div class="main-container">
+<div class="page-container">
     <div class="classes-separator-container">
         <c:if test="${isTeacher == 1}">
             <div class="main-tab-container">
@@ -76,11 +76,11 @@
                             </c:if>
                             <c:forEach var="activeClass" items="${activeClasses}">
                                 <jsp:include page="../components/classCard.jsp">
-                                    <jsp:param name="subjectName" value="${activeClass.subject.name}"/>
-                                    <jsp:param name="teacherName" value="${activeClass.teacher.name}"/>
-                                    <jsp:param name="price" value="${activeClass.subject.price}"/>
-                                    <jsp:param name="level" value="${activeClass.subject.level}"/>
-                                    <jsp:param name="reply" value="${activeClass.messageReply}"/>
+                                    <jsp:param name="subjectName" value="${activeClass.subject}"/>
+                                    <jsp:param name="teacherName" value="${activeClass.teacher}"/>
+                                    <jsp:param name="price" value="${activeClass.price}"/>
+                                    <jsp:param name="level" value="${activeClass.level}"/>
+                                    <jsp:param name="reply" value="${activeClass.reply}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>
@@ -91,11 +91,11 @@
                             </c:if>
                             <c:forEach var="pendingClass" items="${pendingClasses}">
                                 <jsp:include page="../components/classCard.jsp">
-                                    <jsp:param name="subjectName" value="${pendingClass.subject.name}"/>
-                                    <jsp:param name="teacherName" value="${pendingClass.teacher.name}"/>
-                                    <jsp:param name="price" value="${pendingClass.subject.price}"/>
-                                    <jsp:param name="level" value="${pendingClass.subject.level}"/>
-                                    <jsp:param name="request" value="${pendingClass.messageRequest}"/>
+                                    <jsp:param name="subjectName" value="${pendingClass.subject}"/>
+                                    <jsp:param name="teacherName" value="${pendingClass.teacher}"/>
+                                    <jsp:param name="price" value="${pendingClass.price}"/>
+                                    <jsp:param name="level" value="${pendingClass.level}"/>
+                                    <jsp:param name="request" value="${pendingClass.request}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>
@@ -106,10 +106,10 @@
                             </c:if>
                             <c:forEach var="finishedClass" items="${finishedClasses}">
                                 <jsp:include page="../components/classCard.jsp">
-                                    <jsp:param name="subjectName" value="${finishedClass.subject.name}"/>
-                                    <jsp:param name="teacherName" value="${finishedClass.teacher.name}"/>
-                                    <jsp:param name="price" value="${finishedClass.subject.price}"/>
-                                    <jsp:param name="level" value="${finishedClass.subject.level}"/>
+                                    <jsp:param name="subjectName" value="${finishedClass.subject}"/>
+                                    <jsp:param name="teacherName" value="${finishedClass.teacher}"/>
+                                    <jsp:param name="price" value="${finishedClass.price}"/>
+                                    <jsp:param name="level" value="${finishedClass.level}"/>
                                     <jsp:param name="finished" value="${finishedClass.status}"/>
                                 </jsp:include>
                             </c:forEach>
@@ -153,10 +153,10 @@
                             </c:if>
                             <c:forEach var="teacherActiveClass" items="${teacherActiveClasses}">
                                 <jsp:include page="../components/classCard.jsp">
-                                    <jsp:param name="subjectName" value="${teacherActiveClass.subject.name}"/>
-                                    <jsp:param name="studentName" value="${teacherActiveClass.student.name}"/>
-                                    <jsp:param name="price" value="${teacherActiveClass.subject.price}"/>
-                                    <jsp:param name="level" value="${teacherActiveClass.subject.level}"/>
+                                    <jsp:param name="subjectName" value="${teacherActiveClass.subject}"/>
+                                    <jsp:param name="studentName" value="${teacherActiveClass.student}"/>
+                                    <jsp:param name="price" value="${teacherActiveClass.price}"/>
+                                    <jsp:param name="level" value="${teacherActiveClass.level}"/>
                                     <jsp:param name="active" value="1"/>
                                 </jsp:include>
                             </c:forEach>
@@ -168,10 +168,10 @@
                             </c:if>
                             <c:forEach var="teacherPendingClass" items="${teacherPendingClasses}">
                                 <jsp:include page="../components/classCard.jsp">
-                                    <jsp:param name="subjectName" value="${teacherPendingClass.subject.name}"/>
-                                    <jsp:param name="studentName" value="${teacherPendingClass.student.name}"/>
-                                    <jsp:param name="price" value="${teacherPendingClass.subject.price}"/>
-                                    <jsp:param name="level" value="${teacherPendingClass.subject.level}"/>
+                                    <jsp:param name="subjectName" value="${teacherPendingClass.subject}"/>
+                                    <jsp:param name="studentName" value="${teacherPendingClass.student}"/>
+                                    <jsp:param name="price" value="${teacherPendingClass.price}"/>
+                                    <jsp:param name="level" value="${teacherPendingClass.level}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>
@@ -182,10 +182,10 @@
                             </c:if>
                             <c:forEach var="teacherFinishedClass" items="${teacherFinishedClasses}">
                                 <jsp:include page="../components/classCard.jsp">
-                                    <jsp:param name="subjectName" value="${teacherFinishedClass.subject.name}"/>
-                                    <jsp:param name="studentName" value="${teacherFinishedClass.student.name}"/>
-                                    <jsp:param name="price" value="${teacherFinishedClass.subject.price}"/>
-                                    <jsp:param name="level" value="${teacherFinishedClass.subject.level}"/>
+                                    <jsp:param name="subjectName" value="${teacherFinishedClass.subject}"/>
+                                    <jsp:param name="studentName" value="${teacherFinishedClass.student}"/>
+                                    <jsp:param name="price" value="${teacherFinishedClass.price}"/>
+                                    <jsp:param name="level" value="${teacherFinishedClass.level}"/>
                                     <jsp:param name="finished" value="${teacherFinishedClass.status}"/>
                                 </jsp:include>
                             </c:forEach>
