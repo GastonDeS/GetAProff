@@ -114,6 +114,7 @@
                                         <jsp:param name="price" value="${finishedClass.price}"/>
                                         <jsp:param name="level" value="${finishedClass.level}"/>
                                         <jsp:param name="finished" value="${finishedClass.status}"/>
+                                        <jsp:param name="cid" value="${finishedClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -162,6 +163,7 @@
                                         <jsp:param name="price" value="${teacherActiveClass.price}"/>
                                         <jsp:param name="level" value="${teacherActiveClass.level}"/>
                                         <jsp:param name="active" value="1"/>
+                                        <jsp:param name="reply" value="${teacherActiveClass.reply}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -177,6 +179,8 @@
                                         <jsp:param name="studentName" value="${teacherPendingClass.student}"/>
                                         <jsp:param name="price" value="${teacherPendingClass.price}"/>
                                         <jsp:param name="level" value="${teacherPendingClass.level}"/>
+                                        <jsp:param name="cid" value="${teacherPendingClass.classId}"/>
+                                        <jsp:param name="request" value="${teacherPendingClass.request}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -220,4 +224,3 @@
             crossorigin="anonymous"></script>
     </body>
 </html>
-
