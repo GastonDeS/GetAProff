@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
+import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,8 +28,6 @@ public class UserServiceImpl implements UserService {
     public static final Integer ANY_LEVEL = 0;
     public static final Integer MAX_LEVEL = 3;
 
-    private User currUser;
-
     @Autowired
     private UserDao userDao;
 
@@ -37,9 +37,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private RoleService roleService;
+
     @Override
     public User findById(int id) {
-        return userDao.get(id);
+        User u = userDao.get(id);
+        if (u != null) {
+            List<Role> roles = roleService.getUserRoles(id);
+            if (roles == null) return null;
+            u.setUserRoles(roles);
+            return u;
+        }
+        return null;
     }
 
     @Override
@@ -71,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> list() {
-        return this.userDao.list();
+        return userDao.list();
     }
 
     @Override
@@ -88,17 +98,30 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password) {
+    public Optional<User> create(String username, String mail, String password, int userole) {
         User u = userDao.create(username, mail, passwordEncoder.encode(password));
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return Optional.of(u);
+        List<Role> roles = roleService.setUserRoles(u.getId(), userole);
+        if (roles != null) {
+            u.setUserRoles(roles);
+            return Optional.of(u);
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<User> findByEmail(String mail) {
-        return userDao.findByEmail(mail);
+        Optional<User> maybe = userDao.findByEmail(mail);
+        if (maybe.isPresent()) {
+            User u = maybe.get();
+            List<Role> roles = roleService.getUserRoles(u.getId());
+            if (roles == null) return Optional.empty();
+            u.setUserRoles(roles);
+            return Optional.of(u);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -106,7 +129,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String userMail = authentication.getName();
-            Optional<User> maybeUser = userDao.findByEmail(userMail);
+            Optional<User> maybeUser = this.findByEmail(userMail);
             if (maybeUser.isPresent()) {
                 return maybeUser.get();
             }

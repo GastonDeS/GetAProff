@@ -21,8 +21,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> findImageById(int userId) {
-        return Optional.ofNullable(imageDao.findImageById(userId));
+    public Image findImageById(int userId) {
+        return imageDao.findImageById(userId);
     }
 
     @Override

@@ -9,4 +9,5 @@ public interface RoleService {
     Role findRoleById(int roleId);
     Role findRoleByName(String role);
     List<Role> setUserRoles(int userId, int userRole);
+    List<Role> getUserRoles(int userid);
 }
