@@ -27,7 +27,7 @@ public class LoginController {
     @RequestMapping("/default")
     public ModelAndView defaultRedirect() {
         User curr = userService.getCurrentUser();
-        if (true) {
+        if (curr == null) {
             throw new LoginErrorException("User could not be authenticated. Please try again.");
         }
         String redirect = "redirect:/profile/" + curr.getId();

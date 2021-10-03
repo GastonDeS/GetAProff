@@ -18,7 +18,7 @@
     <body>
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="isMainPage" value="${true}"/>
-            <jsp:param name="uid" value="${user.id}"/>
+            <jsp:param name="uid" value="${currentUser.id}"/>
         </jsp:include>
         <div class="page-container">
             <div class="profile-container">
@@ -51,29 +51,32 @@
                                     <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
                                         <spring:message code="profile.btn.edit"/>
                                     </a>
-                                    <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
-                                        <spring:message code="profile.btn.edit.subjects"/>
-                                    </a>
+                                    <c:if test="${isTeacher}">
+                                        <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
+                                            <spring:message code="profile.btn.edit.subjects"/>
+                                        </a>
+                                    </c:if>
                                 </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
                 </div>
+                <c:if test="${isTeacher}">
                 <div class="main-container h-100">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-                            <li class="nav-item active" role="presentation">
-                                <button class="nav-link nav-link-custom active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button"
-                                        role="tab" aria-controls="personal" aria-selected="false">
-                                    <spring:message code="profile.personal.info"/>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button"
-                                        role="tab" aria-controls="subjects" aria-selected="true">
-                                    <spring:message code="profile.subjects"/>
-                                </button>
-                            </li>
+                                <li class="nav-item active" role="presentation">
+                                    <button class="nav-link nav-link-custom active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button"
+                                            role="tab" aria-controls="personal" aria-selected="false">
+                                        <spring:message code="profile.personal.info"/>
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button"
+                                            role="tab" aria-controls="subjects" aria-selected="true">
+                                        <spring:message code="profile.subjects"/>
+                                    </button>
+                                </li>
                         </ul>
                     </div>
                     <div class="classes-container h-100">
@@ -109,6 +112,7 @@
                         </div>
                     </div>
                 </div>
+                </c:if>
             </div>
         </div>
         <script>

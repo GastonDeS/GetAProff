@@ -51,4 +51,10 @@ public class RoleDaoJdbc implements RoleDao{
     public int addRoleToUser(int roleId, int userId) {
         return jdbcTemplate.update("INSERT INTO userRoles(roleId, userId) VALUES (?, ?)", roleId, userId);
     }
+
+    @Override
+    public List<Role> getUserRoles(int userid) {
+        return jdbcTemplate.query("SELECT r.roleid as roleid, role FROM roles r JOIN userroles u ON r.roleid = u.roleid WHERE userid = ?",
+                new Object[] {userid}, ROW_MAPPER);
+    }
 }

@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.SubjectService;
-import ar.edu.itba.paw.interfaces.services.TeachesService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
@@ -23,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +37,15 @@ public class ProfileController {
     private ImageService imageService;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private SubjectsFormValidator subjectsFormValidator;
 
     @Autowired
     private UserFormValidator userFormValidator;
+
+
 
     @InitBinder
     public void initSubjectsBinder(WebDataBinder webDataBinder){
@@ -74,7 +74,9 @@ public class ProfileController {
                 .addObject("schedule", userService.getUserSchedule(uid))
                 .addObject("subjectsList", teachesService.getSubjectInfoListByUser(uid))
                 .addObject("image", imageService.findImageById(uid) == null ? 0 : 1)
-                .addObject("edit", curr == null ? 0 : 1);
+                .addObject("currentUser",curr)
+                .addObject("isTeacher",user.isTeacher())
+                .addObject("edit", curr == null ? 0 : (curr.getId() != user.getId())? 0: 1);
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)

@@ -71,14 +71,6 @@ public class UserDaoJdbc implements UserDao {
         if( level == 0) { minLevel = 1; maxLevel = 3;}
         else
             minLevel = maxLevel = level;
-//        String query = "SELECT distinct a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
-//                "FROM ((SELECT uid, name, description, image, max(price) as maxPrice, min(price) as minPrice\n" +
-//                "        FROM (SELECT u.userid AS uid, name, description, (CASE WHEN image IS NULL THEN 0 ELSE 1 END) AS image\n" +
-//                "        FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
-//                "        GROUP BY uid, name, description, image) AS a2 JOIN teaches t ON a2.uid = t.userid) AS a3\n" +
-//                "        JOIN subject s ON a3.subjectid = s.subjectid\n" +
-//                "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)";
-
         String query = "select * from (select a4.userid,name,maxPrice,minPrice,description,image ,sum(coalesce(rate,0))/count(coalesce(rate,0)) as rate\n" +
                         "from (SELECT a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
                         "FROM ((SELECT uid, name, description, image, max(price) as maxPrice, min(price) as minPrice\n" +
@@ -90,10 +82,6 @@ public class UserDaoJdbc implements UserDao {
                         "group by a4.userid, name, maxPrice, minPrice, description, image) as a5\n" +
                         "group by a5.userid, name, maxPrice, minPrice, description, image, rate\n" +
                         "ORDER BY rate DESC";
-//        String query = "SELECT aux.userid, aux.name AS name, max(price) as maxPrice, min(price) as minPrice, description\n" +
-//                "                FROM (SELECT subjectid, u.userid, price, name, level, description FROM teaches t JOIN users u on u.userid = t.userid) AS aux\n" +
-//                "                JOIN subject s ON aux.subjectid = s.subjectid  WHERE lower(s.name) SIMILAR TO '%'||?||'%' " +
-//                "                AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0 ) GROUP BY aux.userid, aux.name, aux.description";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel }, mapper);
         return list.isEmpty() ? null : list;
