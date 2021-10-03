@@ -67,9 +67,6 @@ public class ProfileController {
         if (user == null) {
             throw new ProfileNotFoundException("Profile not found for requested id: " + uid);
         }
-        System.out.println(user.isTeacher());
-        System.out.println(user.getUserRoles().get(0).getRole());
-
         return new ModelAndView("profile")
                 .addObject("user", user)
                 .addObject("timetable", userService.getUserSchedule(uid))
