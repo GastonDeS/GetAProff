@@ -9,6 +9,17 @@ CREATE TABLE IF NOT EXISTS users
     schedule    varchar(256) default ''
 );
 
+CREATE TABLE IF NOT EXISTS rating
+(
+    teacherId INTEGER,
+    userId INTEGER NOT NULL,
+    rate float,
+    review varchar(256),
+    FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (teacherId,userId)
+);
+
 CREATE TABLE IF NOT EXISTS images
 (
     userId INTEGER,
