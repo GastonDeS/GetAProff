@@ -32,8 +32,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Optional<Class> create(int studentId, int teacherId, int level, int subjectId, int price, int status) {
-        Class u = classDao.create(studentId, teacherId, level, subjectId, price, status);
+    public Optional<Class> create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message) {
+        Class u = classDao.create(studentId, teacherId, level, subjectId, price, status, message);
         return Optional.of(u);
     }
 

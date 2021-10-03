@@ -71,7 +71,8 @@ public class ClassesController {
         }
         Class myClass = classService.findById(cid);
         classService.setStatus(myClass.getClassId(), Class.Status.ACCEPTED.getValue());
-        emailService.sendAcceptMessage(myClass.getStudentId(), "GetAProff: Tu clase fue aceptada", myClass.getTeacherId(), myClass.getSubjectid(), form.getMessage());
+        classService.setReply(myClass.getClassId(), form.getMessage());
+        emailService.sendAcceptMessage(myClass.getStudentId(), "GetAProff: Tu clase fue aceptada", myClass.getTeacherId(), 3, form.getMessage());
         return new ModelAndView("redirect:/myClasses");
     }
 }
