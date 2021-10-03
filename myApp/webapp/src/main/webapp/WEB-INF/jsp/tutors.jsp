@@ -107,6 +107,7 @@
                         <jsp:param name="image" value="${tutor.image}"/>
                         <jsp:param name="name" value="${tutor.name}"/>
                         <jsp:param name="uid" value="${tutor.userId}"/>
+                        <jsp:param name="rate" value="${tutor.rate}"/>
                         <jsp:param name="description" value="${tutor.description}"/>
                         <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
                         <jsp:param name="minPrice" value="${tutor.minPrice}"/>
