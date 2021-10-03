@@ -29,6 +29,7 @@
                 <c:if test="${param.error != null}">
                     <p class="form-error"><spring:message code="login.error"/></p>
                 </c:if>
+                <p>${param.exception}</p>
                 <label class="login-checkbox">
                     <input class="checkbox" name="j_rememberme" type="checkbox"/>
                     <spring:message code="remember.me"/>

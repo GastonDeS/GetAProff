@@ -6,17 +6,19 @@ import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.UnauthenticatedUserException;
+import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
+import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.UserForm;
 import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
+import ar.edu.itba.paw.webapp.validators.UserFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -28,67 +30,56 @@ import java.util.Optional;
 public class ProfileController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    SubjectService subjectService;
+    private SubjectService subjectService;
 
     @Autowired
-    TeachesService teachesService;
+    private TeachesService teachesService;
 
     @Autowired
-    ImageService imageService;
+    private ImageService imageService;
 
     @Autowired
     private SubjectsFormValidator subjectsFormValidator;
 
+    @Autowired
+    private UserFormValidator userFormValidator;
+
     @InitBinder
-    public void initBinder(WebDataBinder webDataBinder){
+    public void initSubjectsBinder(WebDataBinder webDataBinder){
         Object target = webDataBinder.getTarget();
         if (target != null) {
             if (target.getClass().equals(SubjectsForm.class)) {
                 webDataBinder.setValidator(subjectsFormValidator);
             }
+            else if (target.getClass().equals(UserForm.class)) {
+                webDataBinder.setValidator(userFormValidator);
+            }
         }
-    }
-
-    private int checkUserImg(int uid) {
-        return imageService.findImageById(uid).isPresent() ? 1 : 0;
-    }
-
-    private User getCurrUser() {
-        Optional<User> maybeUser = userService.getCurrentUser();
-        if (!maybeUser.isPresent()) {
-            throw new UnauthenticatedUserException("Can't access: unauthenticated user");
-        }
-        return maybeUser.get();
-    }
-
-    private User getCurrUserNoRedirect() {
-        Optional<User> maybeUser = userService.getCurrentUser();
-        return maybeUser.orElse(null);
     }
 
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final int uid) {
-        Optional<User> curr = userService.getCurrentUser();
+        User curr = userService.getCurrentUser();
         User user = userService.findById(uid);
-        final ModelAndView mav = new ModelAndView("profile")
+        if (user == null) {
+            throw new ProfileNotFoundException("Profile not found for requested id: " + uid);
+        }
+        return new ModelAndView("profile")
                 .addObject("user", user)
                 .addObject("timetable", userService.getUserSchedule(uid))
                 .addObject("description", userService.getUserDescription(uid))
                 .addObject("schedule", userService.getUserSchedule(uid))
                 .addObject("subjectsList", teachesService.getSubjectInfoListByUser(uid))
-                .addObject("image", checkUserImg(uid));
-        if (!curr.isPresent() || curr.get().getId() != uid) {
-            return mav.addObject("edit", 0);
-        }
-        return mav.addObject("edit", 1);
+                .addObject("image", imageService.findImageById(uid) == null ? 0 : 1)
+                .addObject("edit", curr == null ? 0 : 1);
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        int uid = getCurrUser().getId();
+        int uid = userService.getCurrentUser().getId();
         List<Subject> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
         return new ModelAndView("subjectsForm")
                     .addObject("userid", uid)
@@ -101,52 +92,64 @@ public class ProfileController {
         if (errors.hasErrors()) {
             return subjectsForm(form);
         }
-        int uid = getCurrUserNoRedirect().getId();
-        teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
+        int uid = userService.getCurrentUser().getId();
+        Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
+        if (!maybe.isPresent()) {
+            throw new InvalidOperationException("Cannot add subject " + form.getSubjectid() + "to required user " + uid, "/editSubjects");
+        }
         return subjectsForm(form);
     }
 
     @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.GET)
     public String removeSubject(@PathVariable("sid") final int sid) {
-        int uid = getCurrUser().getId();
-        teachesService.removeSubjectToUser(uid, sid);
+        int uid = userService.getCurrentUser().getId();
+        if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
+            throw new InvalidOperationException("Cannot remove subject " + sid + "to required user " + uid, "/editSubjects");
+        }
         return "redirect:/editSubjects";
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
     public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form) {
-        int uid = getCurrUser().getId();
+        int uid = userService.getCurrentUser().getId();
+        ModelAndView mav = new ModelAndView("userForm").addObject("uid", uid);
         form.setDescription(userService.getUserDescription(uid));
         form.setSchedule(userService.getUserSchedule(uid));
-        return new ModelAndView("userForm")
-                .addObject("uid", uid)
-                .addObject("image", checkUserImg(uid));
+        Image maybeImg = imageService.findImageById(uid);
+//        form.setImageFile();
+        return mav.addObject("image", maybeImg);
+    }
+
+    @RequestMapping(value = "/editProfile?error=true", method = RequestMethod.GET)
+    public ModelAndView userFormError(@ModelAttribute("userForm") final UserForm form) {
+        return userForm(form);
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
-    public ModelAndView userForm(@RequestParam("file") MultipartFile imageFile, @ModelAttribute("userForm") final UserForm form,
+    public ModelAndView userForm(@ModelAttribute("userForm") @Valid final UserForm form,
                                  final BindingResult errors) throws IOException {
         if (errors.hasErrors())
             return userForm(form);
-        int uid = getCurrUserNoRedirect().getId();
-        if (imageFile != null) {
-            if (!imageFile.isEmpty()) {
-                if (!imageService.findImageById(uid).isPresent()) {
-                    imageService.create(uid, null);
-                }
-                imageService.changeUserImage(uid, imageFile.getBytes());
-            }
+        int uid = userService.getCurrentUser().getId();
+        if (imageService.findImageById(uid) == null) {
+            imageService.create(uid, null);
         }
-        userService.setUserDescription(uid, form.getDescription());
-        userService.setUserSchedule(uid, form.getSchedule());
+        imageService.changeUserImage(uid, form.getImageFile().getBytes());
+        int desc = userService.setUserDescription(uid, form.getDescription());
+        int sch = userService.setUserSchedule(uid, form.getSchedule());
+        if (desc == 0 || sch == 0) {
+            throw new InvalidOperationException("Cannot set user information for: " + uid, "/editProfile");
+        }
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);
     }
 
     @RequestMapping(value = "/removeImg", method = RequestMethod.GET)
     public String removeImage() {
-        Optional<User> maybeuser = userService.getCurrentUser();
-        maybeuser.ifPresent(user -> imageService.removeUserImage(user.getId()));
+        int uid = userService.getCurrentUser().getId();
+        if (imageService.removeUserImage(uid) == 0) {
+            throw new InvalidOperationException("Cannot remove user image for: " + uid, "/editProfile");
+        }
         return "redirect:/editProfile";
     }
 }

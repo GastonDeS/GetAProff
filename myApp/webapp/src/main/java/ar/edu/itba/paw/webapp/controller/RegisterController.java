@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 public class RegisterController {
@@ -26,6 +29,9 @@ public class RegisterController {
 
     @Autowired
     private UtilsService utilsService;
+
+    @Autowired
+    private RoleService roleService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -47,13 +53,17 @@ public class RegisterController {
         if (errors.hasErrors()) {
             return register(form);
         }
-        //TODO: validar bien
         String name = utilsService.capitalizeFirstLetter(form.getName());
-        User user = userService.create(name, form.getMail(), form.getPassword(), form.getUserRole()).orElse(null);
-        if (form.getUserRole() == 1 && user != null) {
-            String redirect = "redirect:/profile/" + user.getId();
-            return new ModelAndView(redirect);
+        Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword());
+        if (!maybeUser.isPresent()) {
+            throw new RegisterErrorException("Cannot register user");
         }
-        return new ModelAndView("index");
+        User user = maybeUser.get();
+        user.setUserRoles(roleService.setUserRoles(user.getId(), form.getUserRole()));
+        if (form.getUserRole() == 1) {
+            return new ModelAndView("redirect:/editProfile");
+        }
+        String redirect = "redirect:/profile/" + user.getId();
+        return new ModelAndView(redirect);
     }
 }

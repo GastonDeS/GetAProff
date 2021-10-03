@@ -11,8 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
     public static final Integer ANY_LEVEL = 0;
     public static final Integer MAX_LEVEL = 3;
+
+    private User currUser;
 
     @Autowired
     private UserDao userDao;
@@ -35,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(int id) {
-        return this.userDao.get(id);
+        return userDao.get(id);
     }
 
     @Override
@@ -82,9 +86,10 @@ public class UserServiceImpl implements UserService {
         return 0;
     }
 
+    @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password, int userRole) {
-        User u = userDao.create(username, mail, passwordEncoder.encode(password), userRole);
+    public Optional<User> create(String username, String mail, String password) {
+        User u = userDao.create(username, mail, passwordEncoder.encode(password));
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -97,13 +102,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getCurrentUser() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String userMail = authentication.getName();
-            return userDao.findByEmail(userMail);
+            Optional<User> maybeUser = userDao.findByEmail(userMail);
+            if (maybeUser.isPresent()) {
+                return maybeUser.get();
+            }
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -112,11 +120,13 @@ public class UserServiceImpl implements UserService {
         return u == null ? null : u.getDescription();
     }
 
+    @Transactional
     @Override
     public int setUserSchedule(int userId, String schedule){
         return userDao.setUserSchedule(userId, schedule);
     }
 
+    @Transactional
     @Override
     public int setUserDescription(int userId, String description) {
         return userDao.setUserDescription(userId, description);

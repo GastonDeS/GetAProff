@@ -3,14 +3,20 @@ package ar.edu.itba.paw.models;
 public class CardProfile {
     private final int userId, minPrice, maxPrice, image;
     private final String name, description;
+    private final float rate;
 
-    public CardProfile(int userId, String name, int maxPrice, int minPrice, String desc, int image) {
+    public CardProfile(int userId, String name, int maxPrice, int minPrice, String desc, int image, float rate) {
         this.userId = userId;
         this.name = name;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
         this.description = desc;
         this.image = image;
+        this.rate = rate;
+    }
+
+    public float getRate() {
+        return rate;
     }
 
     public int getUserId() {

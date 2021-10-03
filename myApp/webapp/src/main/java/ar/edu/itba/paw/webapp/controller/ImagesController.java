@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +22,18 @@ import java.util.Optional;
 public class ImagesController {
 
     @Autowired
-    ImageService imageService;
+    private ImageService imageService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping(value = "/image/{uid}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
     byte[] getImage(@PathVariable("uid") final int uid) throws IOException {
-        Optional<Image> image =  imageService.findImageById(uid);
-        return image.map(Image::getImage).orElse(null);
+        Image image =  imageService.findImageById(uid);
+        if (image == null) {
+            throw new ImageNotFoundException("No image for required user id: " + uid);
+        }
+        return image.getImage();
     }
 }

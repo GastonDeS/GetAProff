@@ -43,7 +43,7 @@ public class UserServiceImplTest {
     @Test
     public void findById(){
         //Setup
-        Mockito.when(mockDao.get(eq(USER_ID))).thenReturn(new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,USER_ROLE));
+        Mockito.when(mockDao.get(eq(USER_ID))).thenReturn(new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,"",""));
 
         //Test
         final User possibleUser = userService.findById(USER_ID);

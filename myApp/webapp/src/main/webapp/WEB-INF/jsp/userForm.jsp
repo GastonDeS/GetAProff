@@ -22,7 +22,7 @@
                     <p class="form-title"><spring:message code="user.form.title"/></p>
                     <div class="img-upload">
                         <c:choose>
-                            <c:when test="${image == 0}">
+                            <c:when test="${image == null}">
                                 <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg">
                             </c:when>
                             <c:otherwise>
@@ -31,7 +31,7 @@
                         </c:choose>
                         <div class="edit-btn-container">
                             <label class="btn btn-custom">
-                                <input type="file" accept="image" name="file" style="display: none"/>
+                                <form:input type="file" accept="image" name="file" style="display: none" path="imageFile"/>
                                 <spring:message code="user.form.choose.image"/>
                             </label>
                             <a href="${pageContext.request.contextPath}/removeImg" class="btn btn-custom">
@@ -39,6 +39,7 @@
                             </a>
                         </div>
                     </div>
+                    <form:errors path="imageFile" element="p" cssClass="form-error"/>
                     <div class="form-input-container">
                         <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
                         <form:errors path="description" element="p" cssClass="form-error"/>

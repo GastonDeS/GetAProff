@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,8 +21,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> findImageById(int userId) {
-        return Optional.ofNullable(imageDao.findImageById(userId));
+    public Image findImageById(int userId) {
+        return imageDao.findImageById(userId);
     }
 
     @Override
@@ -29,6 +30,7 @@ public class ImageServiceImpl implements ImageService {
         return imageDao.changeUserImage(userId, img);
     }
 
+    @Transactional
     @Override
     public int removeUserImage(int userId) {
         return imageDao.removeUserImage(userId);

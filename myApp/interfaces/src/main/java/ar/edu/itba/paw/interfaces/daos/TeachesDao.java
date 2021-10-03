@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
+import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface TeachesDao {
 
     int removeSubjectToUser(int userid, int subjectid);
 
-    Teaches findUserSubject(int userId, int subjectId);
+    Teaches findByUserAndSubject(int userId, int subjectId);
+
+    List<SubjectInfo> getSubjectInfoListByUser(int userid);
 }

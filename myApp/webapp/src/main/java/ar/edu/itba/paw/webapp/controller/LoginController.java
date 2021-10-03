@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.LoginErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping("/login")
     public ModelAndView login() {
-        return new ModelAndView("login").addObject("exception", 0);
+        return new ModelAndView("login");
     }
 
     @RequestMapping("/login?error=true")
@@ -25,14 +26,11 @@ public class LoginController {
 
     @RequestMapping("/default")
     public ModelAndView defaultRedirect() {
-        final User user;
-        if (userService.getCurrentUser().isPresent()) {
-            user = userService.getCurrentUser().get();
-            if (user.getUserRole() == 1) {
-                String redirect = "redirect:/profile/" + user.getId();
-                return new ModelAndView(redirect);
-            }
+        User curr = userService.getCurrentUser();
+        if (true) {
+            throw new LoginErrorException("User could not be authenticated. Please try again.");
         }
-        return new ModelAndView("index");
+        String redirect = "redirect:/profile/" + curr.getId();
+        return new ModelAndView(redirect);
     }
 }

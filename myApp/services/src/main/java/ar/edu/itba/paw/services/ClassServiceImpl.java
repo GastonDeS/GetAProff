@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.daos.ClassDao;
 import ar.edu.itba.paw.interfaces.services.ClassService;
 import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.ClassInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,13 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<Class> findClassesByStudentId(int id) {
-        return this.classDao.findClassesByStudentId(id);
+    public List<ClassInfo> findClassesByStudentId(int id) {
+        return classDao.findClassesByStudentId(id);
     }
 
     @Override
-    public List<Class> findClassesByTeacherId(int id) {
-        return this.classDao.findClassesByTeacherId(id);
+    public List<ClassInfo> findClassesByTeacherId(int id) {
+        return classDao.findClassesByTeacherId(id);
     }
 
     @Override

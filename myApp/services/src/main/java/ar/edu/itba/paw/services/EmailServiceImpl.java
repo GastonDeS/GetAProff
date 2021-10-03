@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +24,12 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private SimpleMailMessage templateMailMessage;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     @Override
     public void sendSimpleMessage(String to, String subject, String text) {
@@ -45,8 +55,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendAcceptMessage(String to, String mailSubject, String userFrom, String subject,String mailFrom, String message) {
-        String text = String.format(templateMailMessage.getText(),userFrom," ha aceptado tu pedido de clases de"," ",subject,"su email es",mailFrom, message,"Contáctate con tu profesor para coordinar horarios y modalidades de la clase!");
-        sendSimpleMessage(to,mailSubject, text);
+    public int sendAcceptMessage(int toId, String mailSubject, int fromId, int sid, String message) {
+        User to = userService.findById(toId);
+        User from = userService.findById(fromId);
+        Subject subject = subjectService.findById(sid);
+        if (to == null || from == null || subject == null) {
+            return -1; //TODO: manage exception
+        }
+        String text = String.format(templateMailMessage.getText(), from.getName(), " ha aceptado tu pedido de clases de" ," ", subject.getName(),"su email es",from.getMail(), message,"Contáctate con tu profesor para coordinar horarios y modalidades de la clase!");
+        sendSimpleMessage(to.getMail(),mailSubject, text);
+        return 0;
     }
 }
