@@ -26,12 +26,6 @@ for(let i = 0 ; i < elem.length ; i++)
         elem[i].addEventListener('change', showFilterButton);
 
 
-const updateLevel = (value) => {
-    var names = ["Todos","Primario", "Secundario", "Universitario"];
-    document.getElementById('levelDropdownButton').firstChild.data = 'Nivel: ' + names[parseInt(value)];
-
-}
-
 
 
 const updatePrice  = (price) => {

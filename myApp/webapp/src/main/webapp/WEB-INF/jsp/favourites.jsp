@@ -14,7 +14,7 @@
         <jsp:param name="isMainPage" value="${true}"/>
         <jsp:param name="uid" value="${uid}"/>
     </jsp:include>
-    <h2><spring:message code="nav.button.favorites"/></h2>
+    <h2><spring:message code="nav.button.3"/></h2>
     <div class="container mb-5">
         <div class="row">
             <c:forEach var="tutor" items="${favouritesTutors}" varStatus="loop">
