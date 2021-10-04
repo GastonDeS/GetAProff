@@ -5,7 +5,7 @@
 <div class="card w-100 mt-3">
     <c:if test="${param.finished != null}">
         <c:choose>
-            <c:when test="${param.finished > 2}">
+            <c:when test="${param.finished > 2 && param.finished != 5}">
                 <div class="card-header bg-danger text-white">
                     <c:choose>
                         <c:when test="${param.finished == 3}">
@@ -111,7 +111,7 @@
             </c:when>
             <c:otherwise>
                 <c:if test="${param.teacherName != null && param.finished == 2}">
-                    <a href="#" class="btn btn-warning"><spring:message code="class.card.rate"/></a>
+                    <a href="${pageContext.request.contextPath}/rate/${param.cid}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
                 </c:if>
             </c:otherwise>
         </c:choose>

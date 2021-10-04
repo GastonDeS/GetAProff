@@ -5,46 +5,50 @@
 
 <html lang="en">
 <head>
-    <title> <spring:message code="accept.title"/> - GetAProff </title>
+    <title> <spring:message code="rate.title"/> - GetAProff </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
-    <spring:message code="accept.message.placeholder" var="messagePlaceHolder"/>
-    <spring:message code="accept.btn.value" var="acceptValue"/>
-
+    <spring:message code="rate.form.star" var="star"/>
+    <spring:message code="rate.form.review.placeholder" var="reviewPlaceholder"/>
+    <spring:message code="rate.form.rate" var="rate"/>
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
 <div class="main-container">
-    <c:url value="/accept/${cid}" var="acceptUrl"/>
+    <c:url value="/rate/${cid}" var="rateUrl"/>
     <h1 class="d-flex justify-content-center mt-4">
-        <spring:message code="accept.form.header"/>
-        <c:out value="${student}"/>
+        <spring:message code="rate.form.header"/> ${teacher}
     </h1>
-    <form:form class="d-flex justify-content-center" modelAttribute="acceptForm" action="${acceptUrl}" method="post">
+    <form:form class="d-flex justify-content-center" modelAttribute="rateForm" action="${rateUrl}" method="post">
         <div class="section-container">
             <div class="input-section">
                 <div class="form-input">
-                    <form:label path="message"><spring:message code="contact.form.message"/></form:label>
-                    <form:textarea cssStyle="height: 150px" type="text" path="message"
-                                   class="form-control"
-                                   placeHolder="${messagePlaceHolder}"/>
-                    <form:errors path="message" element="p" cssClass="form-error"/>
+                    <form:label path="rating">Rate</form:label>
+                    <form:select path="rating">
+                        <form:option value="1" label="1 ${star}"/>
+                        <c:forEach var="i" begin="2" end="5">
+                            <form:option value="${i}">
+                                ${i} ${star}s
+                            </form:option>
+                        </c:forEach>
+                    </form:select>
                 </div>
                 <div class="form-input">
-                    <form:label path="message"><spring:message code="contact.form.message"/></form:label>
-                    <form:textarea cssStyle="height: 150px" type="text" path="message"
+                    <form:label path="review"><spring:message code="rate.form.review"/></form:label>
+                    <form:textarea cssStyle="height: 150px" type="text" path="review"
                                    class="form-control"
-                                   placeHolder="${messagePlaceHolder}"/>
-                    <form:errors path="message" element="p" cssClass="form-error"/>
+                                   placeHolder="${reviewPlaceholder}"/>
+                    <form:errors path="review" element="p" cssClass="form-error"/>
                 </div>
                 <div class="btn-container">
                     <input type="submit" class="btn btn-custom bd-highlight"
-                           value="${acceptValue}"/>
+                           value="${rate}"/>
                 </div>
             </div>
         </div>
@@ -59,3 +63,4 @@
         crossorigin="anonymous"></script>
 </body>
 </html>
+
