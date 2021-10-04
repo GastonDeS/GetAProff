@@ -78,23 +78,39 @@
                     <c:when test="${param.teacherName == null}">
                         <c:choose>
                             <c:when test="${param.active == null}">
-                                <a href="#" class="btn btn-warning"><spring:message code="class.card.decline"/></a>
+                                <form action="<c:url value="/myClasses/${param.cid}/REJECTED"/>"
+                                      method="post">
+                                    <input type="submit" class="btn btn-warning"
+                                           value="<spring:message code="class.card.decline"/>">
+                                </form>
                                 <a href="${pageContext.request.contextPath}/accept/${param.cid}" class="btn btn-custom"><spring:message
                                         code="class.card.accept"/></a>
                             </c:when>
                             <c:otherwise>
-                                <a href="#" class="btn btn-warning"><spring:message code="class.card.cancel"/></a>
-                                <a href="#" class="btn btn-custom"><spring:message code="class.card.finish"/></a>
+                                <form action="<c:url value="/myClasses/${param.cid}/CANCELED"/>"
+                                      method="post">
+                                    <input type="submit" class="btn btn-warning"
+                                           value="<spring:message code="class.card.cancel"/>">
+                                </form>
+                                <form action="<c:url value="/myClasses/${param.cid}/FINISHED"/>"
+                                      method="post">
+                                    <input type="submit" class="btn btn-custom"
+                                           value="<spring:message code="class.card.finish"/>">
+                                </form>
                             </c:otherwise>
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                        <a href="#" class="btn btn-warning"><spring:message code="class.card.cancel"/></a>
+                        <form action="<c:url value="/myClasses/${param.cid}/CANCELED"/>"
+                              method="post">
+                            <input type="submit" class="btn btn-warning"
+                                   value="<spring:message code="class.card.cancel"/>">
+                        </form>
                     </c:otherwise>
                 </c:choose>
             </c:when>
             <c:otherwise>
-                <c:if test="${param.teacherName != null}">
+                <c:if test="${param.teacherName != null && param.finished == 2}">
                     <a href="#" class="btn btn-warning"><spring:message code="class.card.rate"/></a>
                 </c:if>
             </c:otherwise>

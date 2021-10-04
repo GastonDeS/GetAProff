@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.ClassInfo;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
+import jdk.net.SocketFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,6 +52,13 @@ public class ClassesController {
         mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
         return mav;
     }
+
+    @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
+    public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
+        classService.setStatus(cid, Class.Status.valueOf(status).getValue());
+        return new ModelAndView("redirect:/myClasses");
+    }
+
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
     public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final int cid) {

@@ -82,6 +82,7 @@
                                         <jsp:param name="price" value="${activeClass.price}"/>
                                         <jsp:param name="level" value="${activeClass.level}"/>
                                         <jsp:param name="reply" value="${activeClass.reply}"/>
+                                        <jsp:param name="cid" value="${activeClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -98,6 +99,7 @@
                                         <jsp:param name="price" value="${pendingClass.price}"/>
                                         <jsp:param name="level" value="${pendingClass.level}"/>
                                         <jsp:param name="request" value="${pendingClass.request}"/>
+                                        <jsp:param name="cid" value="${pendingClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -164,6 +166,7 @@
                                         <jsp:param name="level" value="${teacherActiveClass.level}"/>
                                         <jsp:param name="active" value="1"/>
                                         <jsp:param name="reply" value="${teacherActiveClass.reply}"/>
+                                        <jsp:param name="cid" value="${teacherActiveClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -197,6 +200,7 @@
                                         <jsp:param name="price" value="${teacherFinishedClass.price}"/>
                                         <jsp:param name="level" value="${teacherFinishedClass.level}"/>
                                         <jsp:param name="finished" value="${teacherFinishedClass.status}"/>
+                                        <jsp:param name="cid" value="${teacherFinishedClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
