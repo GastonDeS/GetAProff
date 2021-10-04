@@ -1,4 +1,17 @@
 //Tutors js
+const
+    range = document.getElementById('priceRange'),
+    rangeV = document.getElementById('rangeV'),
+    setValue = ()=>{
+        const
+            newValue = Number( (range.value - range.min) * 100 / (range.max - range.min) ),
+            newPosition = 10 - (newValue * 0.2);
+        rangeV.innerHTML = `<span>$${range.value}</span>`;
+        rangeV.style.left = `calc(${newValue}% + (${newPosition}px))`;
+    };
+document.addEventListener("DOMContentLoaded", setValue);
+range.addEventListener('input', setValue);
+
 
 const resetFilters = () => {
     const urlParams = new URLSearchParams(location.search);
@@ -21,33 +34,42 @@ const showFilterButton = () => {
 }
 
 const elem = document.getElementsByTagName('input');
-for(let i = 0 ; i < elem.length ; i++)
-    if(elem[i].id !== 'query')
-        elem[i].addEventListener('change', showFilterButton);
+for(let item of elem)
+    if(item.id !== 'query')
+        item.addEventListener('change', showFilterButton);
+
+document.getElementsByName('order')[0].addEventListener('change',showFilterButton);
 
 
 
-
-const updatePrice  = (price) => {
-    document.getElementById('priceDisplay').innerHTML = 'Precio: $' + price;
-    document.getElementById('priceDropdownButton').firstChild.data = 'Precio: $' + price;
-}
 
 const checkFilters = () => {
     const urlParams = new URLSearchParams(location.search);
+    if(urlParams.get('order') !== null) {
+        let orderSelectItems = document.getElementsByName('order')[0];
+        for(let item of orderSelectItems)
+            if(item.value === urlParams.get('order'))
+                item.selected = true;
+    }
+
     if(urlParams.get('price') !== null) {
-        updatePrice(urlParams.get('price'),1);
         document.getElementById('priceRange').value = urlParams.get('price');
     }
     if(urlParams.get('level') !== null) {
-        updateLevel(urlParams.get('level'));
-        let levelRadioButtons = document.getElementsByName('level');
-        for(let button of levelRadioButtons)
-            if(button.value === urlParams.get('level'))
-                button.checked = true;
+        let levelRadioItems = document.getElementsByName('level');
+        for(let item of levelRadioItems)
+            if(item.value === urlParams.get('level'))
+                item.checked = true;
+    }
+    if(urlParams.get('rating') !== null) {
+        let ratingRadioItems = document.getElementsByName('rating');
+        for(let item of ratingRadioItems)
+            if(item.value === urlParams.get('rating'))
+                item.checked = true;
     }
     if(urlParams.get('price') !== null || urlParams.get('level') !== null) {
         document.getElementById('clear-filter-button').style.display= "block";
     }
 }
-window.onload = checkFilters;
+
+checkFilters();
