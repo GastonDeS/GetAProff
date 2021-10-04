@@ -23,9 +23,6 @@ public class FavouritesController {
         if (u == null) {
             return new ModelAndView("login");
         }
-//        userService.addFavourite(0,u.getId());
-        System.out.println("AAAAAAAAAAAAA");
-        System.out.println(userService.getFavourites(u.getId()));
         mav.addObject("uid",u.getId());
         mav.addObject("favouritesTutors", userService.getFavourites(u.getId()));
         return mav;
