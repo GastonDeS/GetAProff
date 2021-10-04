@@ -15,6 +15,7 @@
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="isMainPage" value="${true}"/>
         <jsp:param name="uid" value="${user.id}"/>
+        <jsp:param name="section" value="2"/>
     </jsp:include>
     <div class="main-container">
         <div class="classes-separator-container">
