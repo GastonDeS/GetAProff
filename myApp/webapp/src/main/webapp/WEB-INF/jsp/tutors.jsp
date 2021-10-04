@@ -173,16 +173,14 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 0 335px;"> ${fn:length(tutors)} <spring:message
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> ${fn:length(tutors)} <spring:message
                             code="tutors.search.resultTitle"/> <%=request.getParameter("query")%>
                     </h3>
                 </c:otherwise>
             </c:choose>
-            <div class="container mb-5">
-                <div class="row">
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%;">
                     <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                        <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                            <div class="container">
+                        <div style="margin-top: 30px" class="col">
                                 <jsp:include page="../components/tutorCard.jsp">
                                     <jsp:param name="image" value="${tutor.image}"/>
                                     <jsp:param name="name" value="${tutor.name}"/>
@@ -192,10 +190,8 @@
                                     <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
                                     <jsp:param name="minPrice" value="${tutor.minPrice}"/>
                                 </jsp:include>
-                            </div>
                         </div>
                     </c:forEach>
-                </div>
             </div>
         </div>
     </div>

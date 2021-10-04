@@ -115,14 +115,17 @@ input[type="radio"]:checked + label {
     margin-left: 20px;
     min-width: 200px;
     padding-top: 10px;
+    max-width: 280px;
+    min-height: 550px;
+    max-height: 700px;
 }
 
 .search-and-results-container {
     display: flex;
     width: 84%;
     flex-direction: column;
+    align-items: center;
 }
-
 
 .classes-separator-container {
     display: flex;
@@ -817,9 +820,11 @@ label:hover {
 
 .tutors-search {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
+    align-content: center;
+    margin-left: -40px;
 }
 
 .h-divider {
@@ -929,10 +934,8 @@ div.bg-tutors-card-custom {
 }
 
 .not-found-header {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 20px;;
+    align-self: center;
 }
 
 /* search specific*/
