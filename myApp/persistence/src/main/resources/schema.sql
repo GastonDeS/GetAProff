@@ -12,11 +12,20 @@ CREATE TABLE IF NOT EXISTS rating
 (
     teacherId INTEGER,
     userId INTEGER NOT NULL,
-    rate float,
+    rate float check (rate <= 5),
     review varchar(256),
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
     PRIMARY KEY (teacherId,userId)
+);
+
+CREATE TABLE IF NOT EXISTS favourites
+(
+    teacherId INTEGER,
+    studentId INTEGER NOT NULL,
+    FOREIGN KEY (studentId) REFERENCES users ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (teacherId,studentId)
 );
 
 CREATE TABLE IF NOT EXISTS images
@@ -74,15 +83,6 @@ CREATE TABLE IF NOT EXISTS classes
     FOREIGN KEY (subjectId) REFERENCES subject ON DELETE CASCADE
 );
 
-CREATE OR REPLACE VIEW front_classes AS
-(
-SELECT classId,  student.name AS studentName, teacher.name AS teacherName, level, status,
-    price, subject.name AS subjectName, classes.request AS request, classes.reply AS reply
-FROM classes LEFT JOIN users student ON student.userId = classes.studentId
-         LEFT JOIN users teacher ON teacher.userid = classes.teacherid
-         LEFT JOIN subject on classes.subjectid = subject.subjectid
-    );
-
 CREATE TABLE IF NOT EXISTS roles
 (
     roleId SERIAL PRIMARY KEY,
@@ -97,4 +97,3 @@ CREATE TABLE IF NOT EXISTS userRoles
     FOREIGN KEY (roleId) REFERENCES roles ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE
     );
-

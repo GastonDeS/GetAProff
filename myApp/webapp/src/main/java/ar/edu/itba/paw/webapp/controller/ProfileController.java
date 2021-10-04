@@ -64,14 +64,12 @@ public class ProfileController {
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         User curr = userService.getCurrentUser();
         User user = userService.findById(uid);
-        if (user == null) {
+        if (user == null || curr == null) {
             throw new ProfileNotFoundException("Profile not found for requested id: " + uid);
         }
-        System.out.println(user.isTeacher());
-        System.out.println(user.getUserRoles().get(0).getRole());
-
         return new ModelAndView("profile")
                 .addObject("user", user)
+                .addObject("isFaved",userService.isFaved(uid,curr.getId()))
                 .addObject("timetable", userService.getUserSchedule(uid))
                 .addObject("description", userService.getUserDescription(uid))
                 .addObject("schedule", userService.getUserSchedule(uid))
@@ -79,7 +77,7 @@ public class ProfileController {
                 .addObject("image", imageService.findImageById(uid) == null ? 0 : 1)
                 .addObject("currentUser",curr)
                 .addObject("isTeacher",user.isTeacher())
-                .addObject("edit", curr == null ? 0 : (curr.getId() != user.getId())? 0: 1);
+                .addObject("edit", (curr.getId() != user.getId())? 0: 1);
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)

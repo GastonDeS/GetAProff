@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,12 @@ public interface UserDao {
     User save(User user);
     List<CardProfile> findUsersBySubjectId(int subjectId);
     List<CardProfile> filterUsers(String subject, Integer price, Integer level);
+    List<CardProfile> getFavourites(int uid);
+
+    int addFavourite(int teacherId, int studentId);
+    int removeFavourite(int teacherId, int studentId);
+    boolean isFaved(int teacherId, int studentId);
+
 
     /**
      * Create a new user.

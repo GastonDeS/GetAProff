@@ -41,7 +41,7 @@
                     <form:errors path="message" element="p" cssClass="form-error"/>
                 </div>
                 <div class="btn-container">
-                    <input type="submit" class="btn btn-custom bd-highlight"
+                    <input type="submit"  class="btn btn-custom bd-highlight"
                            value="<spring:message code="contact.form.request.button"/>">
                 </div>
             </div>

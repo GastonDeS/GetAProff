@@ -16,105 +16,181 @@
     <jsp:param name="isMainPage" value="${true}"/>
     <jsp:param name="uid" value="${uid}"/>
 </jsp:include>
-<div class="tutors-search">
-    <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
-        <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
-        <div class="dropdown">
-            <button class="filter-item" type="button" id="priceDropdownButton" data-bs-toggle="dropdown"
-                    aria-expanded="true" aria-haspopup="true">
-                <spring:message code="search.dropdown.price.buttonText"/>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="priceDropdownButton" style="width: 18vw;">
-                <div class="d-flex flex-column px-2">
-                    <h4 id="priceDisplay"><spring:message code="search.dropdown.price.buttonText"/></h4>
-                    <div class="d-flex justify-content-center">
-                        <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}"
-                               value="${maxPrice}"
-                               name="price" oninput="updatePrice(this.value)" onfocus="keepPriceButtonFocused()">
-                    </div>
-                    <hr class="dropdown-divider">
-                    <button type="button" class="btn btn-custom align-self-end">Apply</button>
+<div class="page-container">
+    <div class="tutors-container">
+        <div class="filter-container">
+            <h3 style="padding-left: 10px"><spring:message code="tutors.filtersTitle"/></h3>
+            <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
+                <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
+                <ul class="filter-ulist">
+                    <li>
+                        <h4>Order By:</h4>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Open this select menu</option>
+                            <option value="1">Price Ascending</option>
+                            <option value="2">Price Descending</option>
+                            <option value="3">Rating Ascending</option>
+                            <option value="3">Rating Descending</option>
+                        </select>
+                    </li>
+                    <li>
+                        <h4><spring:message code="search.filters.priceTitle"/></h4>
+                        <div class="d-flex flex-column px-2">
+                            <div class="d-flex justify-content-center">
+                                <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}"
+                                       value="${maxPrice}"
+                                       name="price" oninput="updatePrice(this.value)"
+                                       onfocus="keepPriceButtonFocused()">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <h4><spring:message code="search.dropdown.level.buttonText"/></h4>
+                        <ul  class="filter-ulist" >
+                            <li>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio" id="any-level-input"
+                                           autocomplete="off"
+                                           value="0"
+                                           onclick="updateLevel(this.value)" checked>
+                                    <label class="form-check-label" for="any-level-input"><spring:message
+                                            code="search.dropdown.level.any"/></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio"
+                                           id="elementary-level-input"
+                                           autocomplete="off"
+                                           value="1"
+                                           onclick="updateLevel(this.value)">
+                                    <label class="form-check-label" for="elementary-level-input"><spring:message
+                                            code="search.dropdown.level.elementary"/></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio" id="middle-level-input"
+                                           autocomplete="off"
+                                           value="2"
+                                           onclick="updateLevel(this.value)">
+                                    <label class="form-check-label" for="middle-level-input"><spring:message
+                                            code="search.dropdown.level.middle"/></label>
+                                </div>
+                            </li>
+                            <li>
+                                <input name="level" class="form-check-input" type="radio" id="college-level-input"
+                                       autocomplete="off"
+                                       value="3"
+                                       onclick="updateLevel(this.value)">
+                                <label class="form-check-label" for="college-level-input"><spring:message
+                                        code="search.dropdown.level.college"/></label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h4>Rating</h4>
+                        <ul  class="filter-ulist">
+                            <li>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio" id="rating-4+"
+                                           autocomplete="off"
+                                           value="0"
+                                           onclick="updateLevel(this.value)" checked>
+                                    <label class="form-check-label" for="rating-4+">4 <spring:message
+                                            code="search.filter.ratingExtraText"/></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio" id="rating-3+"
+                                           autocomplete="off"
+                                           value="1"
+                                           onclick="updateLevel(this.value)" checked>
+                                    <label class="form-check-label" for="rating-3+">3 <spring:message
+                                            code="search.filter.ratingExtraText"/></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                <input name="level" class="form-check-input" type="radio" id="rating-2+"
+                                       autocomplete="off"
+                                       value="2"
+                                       onclick="updateLevel(this.value)" checked>
+                                <label class="form-check-label" for="rating-2+">2 <spring:message
+                                        code="search.filter.ratingExtraText"/></label>
+                            </div>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio" id="rating-1+"
+                                           autocomplete="off"
+                                           value="3"
+                                           onclick="updateLevel(this.value)" checked>
+                                    <label class="form-check-label" for="rating-1+">1 <spring:message
+                                            code="search.filter.ratingExtraText"/></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr>
+                <button type="submit" id="filter-button" class="btn btn-custom" style="display: none;">Aplicar Filtros
+                </button>
+                <button type="button" id="clear-filter-button" class="btn btn-custom" style="display: none;"
+                        onclick="resetFilters()">
+                    Resetear
+                    Filtros
+                </button>
+            </form>
+        </div>
+        <div class="search-and-results-container">
+            <div class="tutors-search">
+                <div class="search-bar">
+                    <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
+                        <input class="form-control" list="datalistOptions" id="query" name="query"
+                               value="<%=request.getParameter("query")%>"/>
+                        <datalist id="datalistOptions">
+                            <c:forEach var="subject" items="${subjects}">
+                            <option value="${subject.name}">
+                                </c:forEach>
+                        </datalist>
+                        <button type="submit" class="btn btn-custom">
+                            <spring:message code="home.search.buttonText"/>
+                        </button>
+                    </form>
                 </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <button class="filter-item" type="button" id="levelDropdownButton" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                <spring:message code="search.dropdown.level.buttonText"/>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="levelDropdownButton">
-                <li>
-                    <input type="radio" name="level" class="btn-check" id="btn-check4" autocomplete="off" value="0"
-                           onclick="updateLevel(this.value)" checked>
-                    <label class="dropdown-item" for="btn-check4"><spring:message
-                            code="search.dropdown.level.any"/></label>
-                </li>
-                <li>
-                    <input type="radio" name="level" class="btn-check" id="btn-check1" autocomplete="off" value="1"
-                           onclick="updateLevel(this.value)">
-                    <label class="dropdown-item" for="btn-check1"><spring:message
-                            code="search.dropdown.level.elementary"/></label>
-                </li>
-                <li>
-                    <input type="radio" name="level" class="btn-check" id="btn-check2" autocomplete="off" value="2"
-                           onclick="updateLevel(this.value)">
-                    <label class="dropdown-item" for="btn-check2"><spring:message
-                            code="search.dropdown.level.middle"/></label>
-                </li>
-                <li>
-                    <input type="radio" name="level" class="btn-check" id="btn-check3" autocomplete="off" value="3"
-                           onclick="updateLevel(this.value)">
-                    <label class="dropdown-item" for="btn-check3"><spring:message
-                            code="search.dropdown.level.college"/></label>
-                </li>
-            </ul>
-        </div>
-        <button type="submit" id="filter-button" class="btn" style="display: none;">Aplicar Filtros</button>
-        <button type="button" id="clear-filter-button" style="display: none;" onclick="resetFilters()"> Resetear
-            Filtros
-        </button>
-    </form>
-    <div class="search-bar">
-        <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
-            <input class="form-control" list="datalistOptions" id="query" name="query" value="<%=request.getParameter("query")%>"/>
-            <datalist id="datalistOptions">
-                <c:forEach var="subject" items="${subjects}">
-                <option value="${subject.name}">
+            <c:choose>
+                <c:when test="${fn:length(tutors)==0}">
+                    <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
+                </c:when>
+                <c:otherwise>
+                    <h3 style="margin: 20px 0 0 335px;"> ${fn:length(tutors)} <spring:message
+                            code="tutors.search.resultTitle"/> <%=request.getParameter("query")%>
+                    </h3>
+                </c:otherwise>
+            </c:choose>
+            <div class="container mb-5">
+                <div class="row">
+                    <c:forEach var="tutor" items="${tutors}" varStatus="loop">
+                        <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div class="container">
+                                <jsp:include page="../components/tutorCard.jsp">
+                                    <jsp:param name="image" value="${tutor.image}"/>
+                                    <jsp:param name="name" value="${tutor.name}"/>
+                                    <jsp:param name="uid" value="${tutor.userId}"/>
+                                    <jsp:param name="rate" value="${tutor.rate}"/>
+                                    <jsp:param name="description" value="${tutor.description}"/>
+                                    <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
+                                    <jsp:param name="minPrice" value="${tutor.minPrice}"/>
+                                </jsp:include>
+                            </div>
+                        </div>
                     </c:forEach>
-            </datalist>
-            <button type="submit" class="btn btn-custom">
-                <spring:message code="home.search.buttonText"/>
-            </button>
-        </form>
-    </div>
-</div>
-<c:choose>
-    <c:when test="${fn:length(tutors)==0}">
-        <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
-    </c:when>
-    <c:otherwise>
-        <h3 style="margin: 20px 0 0 335px;"> ${fn:length(tutors)} <spring:message
-                code="tutors.search.resultTitle"/> <%=request.getParameter("query")%>
-        </h3>
-    </c:otherwise>
-</c:choose>
-<div class="container mb-5">
-    <div class="row">
-        <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-            <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                <div class="container">
-                    <jsp:include page="../components/tutorCard.jsp">
-                        <jsp:param name="image" value="${tutor.image}"/>
-                        <jsp:param name="name" value="${tutor.name}"/>
-                        <jsp:param name="uid" value="${tutor.userId}"/>
-                        <jsp:param name="rate" value="${tutor.rate}"/>
-                        <jsp:param name="description" value="${tutor.description}"/>
-                        <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
-                        <jsp:param name="minPrice" value="${tutor.minPrice}"/>
-                    </jsp:include>
                 </div>
             </div>
-        </c:forEach>
+        </div>
     </div>
 </div>
 

@@ -59,7 +59,7 @@ public class ContactHandlingController {
         if (t == null) {
             throw new NotFoundException("Subject " + form.getSubjectId() + " not taught by user " + uid);
         }
-        classService.create(curr.getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue());
+        classService.create(curr.getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
         Subject subject = subjectService.findById(form.getSubjectId());
         if (subject == null) {
             throw new NotFoundException("Cannot find subject for required id: " + form.getSubjectId());

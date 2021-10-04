@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
@@ -14,12 +12,16 @@ public interface UserService {
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject);
 
+    List<CardProfile> getFavourites(int uid);
+    int addFavourite(int teacherId, int studentId);
+    int removeFavourite(int teacherId, int studentId);
+    boolean isFaved(int teacherId, int studentId);
     /**
-     * Retrieves user schedule
-     *
-     * @param userId The id of the user.
-     * @return A String description of the user's schedule.
-     */
+         * Retrieves user schedule
+         *
+         * @param userId The id of the user.
+         * @return A String description of the user's schedule.
+         */
     String getUserSchedule(int userId);
 
     /**

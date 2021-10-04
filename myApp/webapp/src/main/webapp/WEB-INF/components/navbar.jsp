@@ -30,7 +30,7 @@
                             <c:set var="url" value="${pageContext.request.contextPath}/myClasses"/>
                          </c:if>
                          <c:if test="${loop.index == 3}">
-                             <c:set var="url" value="#"/>
+                             <c:set var="url" value="${pageContext.request.contextPath}/favourites"/>
                          </c:if>
                          <li class="nav-item">
                             <c:if test="${param.section == loop.index}">
