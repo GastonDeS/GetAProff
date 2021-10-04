@@ -29,11 +29,10 @@ public class ImageDaoJdbc implements ImageDao {
     }
 
     @Override
-    public Image create(int uid, byte[] image) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("userid", uid);
-        args.put("image", image);
-        jdbcInsert.execute(args);
+    public Image createOrUpdate(int uid, byte[] image) {
+        jdbcTemplate.update("insert into images values (?,?)\n" +
+                " on conflict on constraint images_pkey\n" +
+                "     do update set image = excluded.image;",uid, image);
         return new Image(uid, image);
     }
 
@@ -41,11 +40,6 @@ public class ImageDaoJdbc implements ImageDao {
     public Image findImageById(int userId) {
         List<Image> image = jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { userId }, ROW_MAPPER);
         return image.isEmpty() ? null : image.get(0);
-    }
-
-    @Override
-    public int changeUserImage(int userId, byte[] image) {
-        return jdbcTemplate.update("UPDATE images SET image = ? WHERE userId = ?", image, userId);
     }
 
     @Override
