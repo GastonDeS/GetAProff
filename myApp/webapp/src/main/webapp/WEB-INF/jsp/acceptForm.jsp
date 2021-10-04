@@ -26,7 +26,7 @@
         <c:out value="${student}"/>
     </h1>
     <form:form class="d-flex justify-content-center" modelAttribute="acceptForm" action="${acceptUrl}" method="post">
-        <div class="section-container">
+        <div class="form-container">
             <div class="input-section">
                 <div class="form-input">
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>
