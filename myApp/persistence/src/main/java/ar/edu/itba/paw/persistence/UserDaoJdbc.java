@@ -47,13 +47,15 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(String name, String mail, String password) {
+    public User create(String username, String mail, String password, String description, String schedule) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
+        args.put("name", username);
         args.put("password",password);
         args.put("mail",mail);
+        args.put("description", description);
+        args.put("schedule", schedule);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(name, password, userId.intValue(), mail, "", "");
+        return new User(username, password, userId.intValue(), mail, description, schedule);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.forms;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class RegisterForm {
 
     private String mail;
@@ -11,6 +13,34 @@ public class RegisterForm {
     private String confirmPass;
 
     private int userRole;
+
+    private String description, schedule;
+
+    private MultipartFile imageFile;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
 
     public String getMail() {
         return mail;
