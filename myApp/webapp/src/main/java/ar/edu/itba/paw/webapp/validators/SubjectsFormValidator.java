@@ -18,7 +18,7 @@ public class SubjectsFormValidator implements Validator {
         SubjectsForm sf = (SubjectsForm) o;
         int price = sf.getPrice();
 
-        if (price <= 0 || price > 2400) {
+        if (price <= 0 ) {
             errors.rejectValue("price", "form.price.invalid");
         }
     }

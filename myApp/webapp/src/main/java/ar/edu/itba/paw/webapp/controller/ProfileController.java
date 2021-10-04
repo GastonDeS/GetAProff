@@ -119,7 +119,7 @@ public class ProfileController {
         form.setDescription(userService.getUserDescription(uid));
         form.setSchedule(userService.getUserSchedule(uid));
         Image maybeImg = imageService.findImageById(uid);
-//        form.setImageFile();
+        form.setHasImage(maybeImg != null && maybeImg.getImage().length > 0);
         return mav.addObject("image", maybeImg);
     }
 
@@ -134,10 +134,9 @@ public class ProfileController {
         if (errors.hasErrors())
             return userForm(form);
         int uid = userService.getCurrentUser().getId();
-        if (imageService.findImageById(uid) == null) {
-            imageService.create(uid, null);
+        if ( form.getImageFile().getSize() > 0) {
+            imageService.createOrUpdate(uid, form.getImageFile().getBytes());
         }
-        imageService.changeUserImage(uid, form.getImageFile().getBytes());
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         if (desc == 0 || sch == 0) {
