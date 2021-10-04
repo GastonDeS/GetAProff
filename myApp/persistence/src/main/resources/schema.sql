@@ -12,11 +12,20 @@ CREATE TABLE IF NOT EXISTS rating
 (
     teacherId INTEGER,
     userId INTEGER NOT NULL,
-    rate float,
+    rate float check (rate <= 5),
     review varchar(256),
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
     PRIMARY KEY (teacherId,userId)
+);
+
+CREATE TABLE IF NOT EXISTS favourites
+(
+    teacherId INTEGER,
+    studentId INTEGER NOT NULL,
+    FOREIGN KEY (studentId) REFERENCES users ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (teacherId,studentId)
 );
 
 CREATE TABLE IF NOT EXISTS images

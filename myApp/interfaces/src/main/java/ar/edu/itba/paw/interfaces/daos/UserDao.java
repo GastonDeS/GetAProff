@@ -13,6 +13,7 @@ public interface UserDao {
     User save(User user);
     List<CardProfile> findUsersBySubjectId(int subjectId);
     List<CardProfile> filterUsers(String subject, Integer price, Integer level);
+    List<CardProfile> getFavourites(int uid);
 
     /**
      * Create a new user.
