@@ -109,7 +109,8 @@ public class Class {
         ACCEPTED(1),
         FINISHED(2),
         CANCELED(3),
-        REJECTED(4);
+        REJECTED(4),
+        RATED(5);
 
         private final int value;
 

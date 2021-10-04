@@ -63,7 +63,7 @@ public class ClassDaoJdbc implements ClassDao {
     }
 
     @Override
-    public Class create(int studentId, int teacherId, int level, int subjectId, int price, int status) {
+    public Class create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message) {
         final Map<String, Object> args = new HashMap<>();
         args.put("studentid", studentId);
         args.put("teacherid", teacherId);
@@ -71,6 +71,7 @@ public class ClassDaoJdbc implements ClassDao {
         args.put("subjectid", subjectId);
         args.put("price", price);
         args.put("status", status);
+        args.put("request", message);
         final Number classId = jdbcInsert.executeAndReturnKey(args);
         return new Class(classId.intValue(), studentId, teacherId, level, subjectId, price, status, "", "");
     }

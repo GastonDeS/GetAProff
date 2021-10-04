@@ -88,6 +88,28 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
+    public List<CardProfile> getFavourites(int uid) {
+        RowMapper<CardProfile> mapper = (rs,rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
+                rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
+                rs.getInt("image"), rs.getFloat("rate"));
+        String query = "select teacherid as userId, name,description, maxprice, minprice, image, rate from\n" +
+                "    (select rating.teacherid as teacherid, name,description,maxprice, minprice, image, sum(coalesce(rate,0))/count(coalesce(rate,0)) as rate from\n" +
+                "  (select teacherid,name,description,maxprice, minprice,(CASE WHEN image IS NULL THEN 0 ELSE 1 END) AS image\n" +
+                "    from (select teacherid, name, description, max(price) as maxprice, min(price) as minprice from\n" +
+                "      (select teacherid,price from\n" +
+                "     (select teacherid from favourites where studentid = ?) as a1\n" +
+                "         join teaches t on t.userid = a1.teacherid) as a2 join users u on teacherid = userid\n" +
+                "        group by teacherid, name,description) as a3 left outer join images on a3.teacherid = images.userid)\n" +
+                "        as a4 join rating on a4.teacherid = rating.teacherid\n" +
+                "        group by rating.teacherid, name, description, maxprice, minprice, image) as a5\n" +
+                "group by teacherid, name,description, maxprice, minprice, image, rate\n" +
+                "order by rate DESC";
+        List<CardProfile> list = jdbcTemplate.query(
+                query, new Object[] {uid}, mapper);
+        return list().isEmpty()? null : list;
+    }
+
+    @Override
     public Optional<User> findByEmail(String mail) {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[] {mail}, ROW_MAPPER)
                 .stream().findFirst();
@@ -114,5 +136,27 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public int setUserDescription(int userId, String description) {
         return jdbcTemplate.update("UPDATE users SET description = ? WHERE userid = ?", description, userId);
+    }
+
+    @Override
+    public boolean isFaved(int teacherId, int studentId) {
+        RowMapper<String> pairRowMapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
+        return jdbcTemplate.query("select count(*) as count\n" +
+                "from favourites\n" +
+                "where teacherid = ?\n" +
+                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper).get(0).equals("1");
+    }
+
+    @Override
+    public int addFavourite(int teacherId, int studentId) {
+        return jdbcTemplate.update("insert into favourites\n" +
+                "values (?,?)\n" +
+                "on conflict do nothing;",teacherId,studentId);
+    }
+
+    @Override
+    public int removeFavourite(int teacherId, int studentId) {
+        return jdbcTemplate.update("delete from favourites\n" +
+                "where teacherid = ? AND studentid = ?;",teacherId,studentId);
     }
 }

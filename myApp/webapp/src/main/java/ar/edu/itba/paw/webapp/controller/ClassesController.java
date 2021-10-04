@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.ClassInfo;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
+import ar.edu.itba.paw.webapp.forms.RateForm;
+import jdk.net.SocketFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,6 +54,13 @@ public class ClassesController {
         return mav;
     }
 
+    @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
+    public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
+        classService.setStatus(cid, Class.Status.valueOf(status).getValue());
+        return new ModelAndView("redirect:/myClasses");
+    }
+
+
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
     public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final int cid) {
         final ModelAndView mav = new ModelAndView("acceptForm");
@@ -71,7 +80,27 @@ public class ClassesController {
         }
         Class myClass = classService.findById(cid);
         classService.setStatus(myClass.getClassId(), Class.Status.ACCEPTED.getValue());
-        emailService.sendAcceptMessage(myClass.getStudentId(), "GetAProff: Tu clase fue aceptada", myClass.getTeacherId(), myClass.getSubjectid(), form.getMessage());
+        classService.setReply(myClass.getClassId(), form.getMessage());
+        emailService.sendAcceptMessage(myClass.getStudentId(), "GetAProff: Tu clase fue aceptada", myClass.getTeacherId(), 3, form.getMessage());
+        return new ModelAndView("redirect:/myClasses");
+    }
+    @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
+    public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final int cid) {
+        final ModelAndView mav = new ModelAndView("rateForm");
+        String teacher = userService.findById(classService.findById(cid).getTeacherId()).getName();
+        return mav.addObject("teacher", teacher);
+    }
+
+    @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
+    public ModelAndView rate(@PathVariable("cid") final int cid, @ModelAttribute("rateForm") @Valid final RateForm form,
+                               final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("HAY ERRORREESSS");
+            return rateForm(form, cid);
+        }
+        int teacherId = classService.findById(cid).getTeacherId();
+        int userId = classService.findById(cid).getStudentId();
+        classService.setStatus(cid, Class.Status.RATED.getValue());
         return new ModelAndView("redirect:/myClasses");
     }
 }

@@ -39,12 +39,26 @@
                                     <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom">
                                         <spring:message code="profile.btn.contact"/>
                                     </a>
+                                    <c:choose>
+                                        <c:when test="${!isFaved}">
+                                            <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
+                                                <input type="submit" class="btn btn-custom" value="like"/>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <form action="<c:url value="/removeFavourite/${user.id}"/>" method="post">
+                                                <input type="submit" class="btn btn-custom" value="dislike"/>
+                                            </form>
+                                        </c:otherwise>
+                                    </c:choose>
+
                                 </sec:authorize>
                                 <sec:authorize access="!isAuthenticated()">
                                     <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
                                         <spring:message code="profile.btn.contact"/>
                                     </a>
                                 </sec:authorize>
+
                             </c:when>
                             <c:otherwise>
                                 <div class="profile-btn">

@@ -55,15 +55,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public int sendAcceptMessage(int toId, String mailSubject, int fromId, int sid, String message) {
+    public void sendAcceptMessage(int toId, String mailSubject, int fromId, int sid, String message) {
         User to = userService.findById(toId);
         User from = userService.findById(fromId);
         Subject subject = subjectService.findById(sid);
         if (to == null || from == null || subject == null) {
-            return -1; //TODO: manage exception
+            return; //TODO: manage exception
         }
         String text = String.format(templateMailMessage.getText(), from.getName(), " ha aceptado tu pedido de clases de" ," ", subject.getName(),"su email es",from.getMail(), message,"Contáctate con tu profesor para coordinar horarios y modalidades de la clase!");
         sendSimpleMessage(to.getMail(),mailSubject, text);
-        return 0;
+        return;
     }
 }
