@@ -32,6 +32,7 @@
                         <div class="edit-btn-container">
                             <label class="btn btn-custom">
                                 <form:input type="file" accept="image" name="file" style="display: none" path="imageFile"/>
+                                <form:input name="hasImage" path="hasImage" style="display:none" />
                                 <spring:message code="user.form.choose.image"/>
                             </label>
                             <a href="${pageContext.request.contextPath}/removeImg" class="btn btn-custom">
