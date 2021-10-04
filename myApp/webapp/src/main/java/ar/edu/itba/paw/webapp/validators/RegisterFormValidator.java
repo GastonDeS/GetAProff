@@ -33,7 +33,7 @@ public class RegisterFormValidator implements Validator {
             errors.rejectValue("mail", "form.unique.user");
         }
 
-        if (!mail.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$") && !mail.isEmpty()) {
+        if (!mail.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$") && !mail.isEmpty()) {
             errors.rejectValue("mail", "form.mail.pattern");
         }
 

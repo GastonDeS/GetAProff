@@ -137,4 +137,26 @@ public class UserDaoJdbc implements UserDao {
     public int setUserDescription(int userId, String description) {
         return jdbcTemplate.update("UPDATE users SET description = ? WHERE userid = ?", description, userId);
     }
+
+    @Override
+    public boolean isFaved(int teacherId, int studentId) {
+        RowMapper<String> pairRowMapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
+        return jdbcTemplate.query("select count(*) as count\n" +
+                "from favourites\n" +
+                "where teacherid = ?\n" +
+                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper).get(0).equals("1");
+    }
+
+    @Override
+    public int addFavourite(int teacherId, int studentId) {
+        return jdbcTemplate.update("insert into favourites\n" +
+                "values (?,?)\n" +
+                "on conflict do nothing;",teacherId,studentId);
+    }
+
+    @Override
+    public int removeFavourite(int teacherId, int studentId) {
+        return jdbcTemplate.update("delete from favourites\n" +
+                "where teacherid = ? AND studentid = ?;",teacherId,studentId);
+    }
 }

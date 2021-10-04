@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,5 +157,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public int setUserDescription(int userId, String description) {
         return userDao.setUserDescription(userId, description);
+    }
+
+    @Transactional
+    @Override
+    public int addFavourite(int teacherId, int studentId) {
+        return userDao.addFavourite(teacherId, studentId);
+    }
+
+    @Override
+    public boolean isFaved(int teachedId, int studentId) {
+        return userDao.isFaved(teachedId, studentId);
+    }
+
+    @Transactional
+    @Override
+    public int removeFavourite(int teacherId, int studentId) {
+        return userDao.removeFavourite(teacherId, studentId);
     }
 }
