@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title><spring:message code="tutors.title"/> – GetAProff</title>
     <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
@@ -39,20 +39,20 @@
                             <div class="d-flex justify-content-center">
                                 <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}"
                                        value="${maxPrice}"
-                                       name="price" oninput="updatePrice(this.value)"
-                                       onfocus="keepPriceButtonFocused()">
+                                       name="price"
+                                >
                             </div>
                         </div>
                     </li>
                     <li>
                         <h4><spring:message code="search.dropdown.level.buttonText"/></h4>
-                        <ul  class="filter-ulist" >
+                        <ul class="filter-ulist">
                             <li>
                                 <div class="form-check">
                                     <input name="level" class="form-check-input" type="radio" id="any-level-input"
                                            autocomplete="off"
                                            value="0"
-                                           onclick="updateLevel(this.value)" checked>
+                                           checked>
                                     <label class="form-check-label" for="any-level-input"><spring:message
                                             code="search.dropdown.level.any"/></label>
                                 </div>
@@ -62,8 +62,7 @@
                                     <input name="level" class="form-check-input" type="radio"
                                            id="elementary-level-input"
                                            autocomplete="off"
-                                           value="1"
-                                           onclick="updateLevel(this.value)">
+                                           value="1">
                                     <label class="form-check-label" for="elementary-level-input"><spring:message
                                             code="search.dropdown.level.elementary"/></label>
                                 </div>
@@ -72,70 +71,74 @@
                                 <div class="form-check">
                                     <input name="level" class="form-check-input" type="radio" id="middle-level-input"
                                            autocomplete="off"
-                                           value="2"
-                                           onclick="updateLevel(this.value)">
+                                           value="2">
                                     <label class="form-check-label" for="middle-level-input"><spring:message
                                             code="search.dropdown.level.middle"/></label>
                                 </div>
                             </li>
                             <li>
-                                <input name="level" class="form-check-input" type="radio" id="college-level-input"
-                                       autocomplete="off"
-                                       value="3"
-                                       onclick="updateLevel(this.value)">
-                                <label class="form-check-label" for="college-level-input"><spring:message
-                                        code="search.dropdown.level.college"/></label>
+                                <div class="form-check">
+                                    <input name="level" class="form-check-input" type="radio" id="college-level-input"
+                                           autocomplete="off"
+                                           value="3">
+                                    <label class="form-check-label" for="college-level-input"><spring:message
+                                            code="search.dropdown.level.college"/></label>
+                                </div>
                             </li>
                         </ul>
                     </li>
                     <li>
                         <h4>Rating</h4>
-                        <ul  class="filter-ulist">
+                        <ul class="filter-ulist">
                             <li>
-                                <div class="form-check">
-                                    <input name="level" class="form-check-input" type="radio" id="rating-4+"
-                                           autocomplete="off"
-                                           value="0"
-                                           onclick="updateLevel(this.value)" checked>
-                                    <label class="form-check-label" for="rating-4+">4 <spring:message
+                                <input name="rating" type="radio" class="rating-radio" id="rating-4+"
+                                       value="4"
+                                       checked>
+                                <label class="form-check-label" for="rating-4+">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rating" value="4"/>
+                                    </jsp:include>
+                                    <spring:message
                                             code="search.filter.ratingExtraText"/></label>
-                                </div>
                             </li>
                             <li>
-                                <div class="form-check">
-                                    <input name="level" class="form-check-input" type="radio" id="rating-3+"
-                                           autocomplete="off"
-                                           value="1"
-                                           onclick="updateLevel(this.value)" checked>
-                                    <label class="form-check-label" for="rating-3+">3 <spring:message
+                                <input name="rating" type="radio" class="rating-radio" id="rating-3+"
+                                       value="3">
+                                <label class="form-check-label" for="rating-3+">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rating" value="3"/>
+                                    </jsp:include>
+                                    <spring:message
                                             code="search.filter.ratingExtraText"/></label>
-                                </div>
                             </li>
                             <li>
-                                <div class="form-check">
-                                <input name="level" class="form-check-input" type="radio" id="rating-2+"
-                                       autocomplete="off"
-                                       value="2"
-                                       onclick="updateLevel(this.value)" checked>
-                                <label class="form-check-label" for="rating-2+">2 <spring:message
-                                        code="search.filter.ratingExtraText"/></label>
-                            </div>
+                                <input name="rating" type="radio" class="rating-radio" id="rating-2+"
+                                       value="2">
+                                <label class="form-check-label" for="rating-2+">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rating" value="2"/>
+                                    </jsp:include>
+                                    <spring:message
+                                            code="search.filter.ratingExtraText"/></label>
                             </li>
                             <li>
-                                <div class="form-check">
-                                    <input name="level" class="form-check-input" type="radio" id="rating-1+"
-                                           autocomplete="off"
-                                           value="3"
-                                           onclick="updateLevel(this.value)" checked>
-                                    <label class="form-check-label" for="rating-1+">1 <spring:message
+                                <input name="rating" type="radio" class="rating-radio" id="rating-1+"
+                                       value="1">
+                                <label class="form-check-label" for="rating-1+">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rating" value="1"/>
+                                    </jsp:include>
+                                    <spring:message
                                             code="search.filter.ratingExtraText"/></label>
-                                </div>
+
                             </li>
                         </ul>
                     </li>
                 </ul>
                 <hr>
-                <button type="submit" id="filter-button" class="btn btn-custom" style="display: none;">Aplicar Filtros
+                <button type="submit" id="filter-button" class="btn btn-custom"
+                        style="display: none; width: 100%; padding: 0 10px 0 10px;">
+                    Aplicar Filtros
                 </button>
                 <button type="button" id="clear-filter-button" class="btn btn-custom" style="display: none;"
                         onclick="resetFilters()">
