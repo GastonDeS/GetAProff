@@ -13,4 +13,6 @@ public interface EmailService {
 
     void sendRatedMessage(Class myClass, int rating, String review);
 
+    void sendSubjectRequest(int uid, String Subject, String message);
+
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.User;
@@ -23,6 +24,9 @@ public class SubjectController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmailService emailService;
+
     @RequestMapping(value = "/newSubjectForm/{uid}", method = RequestMethod.GET)
     public ModelAndView newSubjectForm(@ModelAttribute("newSubjectForm") final NewSubjectForm form, @PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("newSubjectForm");
@@ -35,6 +39,7 @@ public class SubjectController {
         if (errors.hasErrors()) {
             return newSubjectForm(form, uid);
         }
+        emailService.sendSubjectRequest(uid, form.getSubject(), form.getMessage());
         return new ModelAndView("redirect:/profile/" + String.valueOf(uid));
     }
 }
