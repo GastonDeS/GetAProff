@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
+import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,10 +52,10 @@ public class RegisterController {
         String name = utilsService.capitalizeFirstLetter(form.getName());
         Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
         if (!maybeUser.isPresent()) {
-            throw new RegisterErrorException("Cannot register user");
+            throw new RegisterErrorException("exception.register");
         }
         if (form.getUserRole() == 1) {
-            return new ModelAndView("redirect:/editSubjects");
+            return new ModelAndView("subjectsForm").addObject("subjectsForm", new SubjectsForm());
         }
         String redirect = "redirect:/profile/" + maybeUser.get().getId();
         return new ModelAndView(redirect);

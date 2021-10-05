@@ -16,6 +16,7 @@
         <jsp:param name="isMainPage" value="${false}"/>
     </jsp:include>
     <div class="page-container">
+        <h1 class="error-view">${exception}</h1>
         <c:url value="/login" var="loginURL"/>
         <form method="post" action="${loginURL}">
             <div class="form-container">
