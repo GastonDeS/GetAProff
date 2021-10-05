@@ -12,10 +12,14 @@ public interface UserService {
 
     Optional<List<CardProfile>> filterUsers(String subject, String price, String level);
 
+    Optional<List<CardProfile>> filterUsers(String subject, String order, String price, String level, String rating, String offset);
+
     Optional<List<CardProfile>> filterUsers(String subject);
 
-    Optional<List<CardProfile>> getFavourites(int uid);
+    Optional<List<CardProfile>> filterUsers(String subject, String offset);
 
+
+    Optional<List<CardProfile>> getFavourites(int uid);
     int addFavourite(int teacherId, int studentId);
 
     int removeFavourite(int teacherId, int studentId);

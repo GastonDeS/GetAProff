@@ -43,6 +43,11 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public int setDeleted(int classId, int deleted) {
+        return classDao.setDeleted(classId, deleted);
+    }
+
+    @Override
     public int setRequest(int classId, String message) {
         return classDao.setRequest(classId, message);
     }

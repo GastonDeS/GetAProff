@@ -19,7 +19,14 @@
             </c:when>
             <c:otherwise>
                 <div class="card-header bg-success text-white">
-                    <spring:message code="class.card.finished"/>
+                    <c:choose>
+                        <c:when test="${param.finished == 2}">
+                            <spring:message code="class.card.finished"/>
+                        </c:when>
+                        <c:otherwise>
+                            <spring:message code="class.card.rated"/>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </c:otherwise>
         </c:choose>
@@ -110,9 +117,29 @@
                 </c:choose>
             </c:when>
             <c:otherwise>
-                <c:if test="${param.teacherName != null && param.finished == 2}">
-                    <a href="${pageContext.request.contextPath}/rate/${param.cid}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
-                </c:if>
+                <c:choose>
+                    <c:when test="${param.teacherName != null}">
+                        <c:choose>
+                            <c:when test="${param.finished == 2}">
+                                <a href="${pageContext.request.contextPath}/rate/${param.cid}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
+                            </c:when>
+                            <c:otherwise>
+                                <form action="<c:url value="/myClasses/${param.cid}/STUDENT"/>"
+                                      method="post">
+                                    <input type="submit" class="btn btn-warning"
+                                           value="<spring:message code="class.card.delete"/>">
+                                </form>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                    <c:otherwise>
+                        <form action="<c:url value="/myClasses/${param.cid}/TEACHER"/>"
+                              method="post">
+                            <input type="submit" class="btn btn-warning"
+                                   value="<spring:message code="class.card.delete"/>">
+                        </form>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
     </div>

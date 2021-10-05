@@ -14,9 +14,9 @@ public interface UserDao {
 
     User save(User user);
 
-    Optional<List<CardProfile>> filterUsers(String subject, Integer price, Integer level);
+    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
 
-    Optional<List<CardProfile>> getFavourites(int uid);
+    List<CardProfile> getFavourites(int uid);
 
     int addFavourite(int teacherId, int studentId);
 

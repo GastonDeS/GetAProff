@@ -29,8 +29,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final Integer ANY_LEVEL = 0;
-    public static final Integer MAX_LEVEL = 3;
+    public static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0;
 
     @Autowired
     private UserDao userDao;
@@ -63,6 +62,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<List<CardProfile>> filterUsers(String subject, String order, String price, String level, String rating, String offset) {
+        int lvl = Integer.parseInt(level);
+        if(lvl < 0 || lvl > MAX_LEVEL)
+            lvl = ANY_LEVEL;
+        int maxPrice = mostExpensiveUserFee(subject);
+        int intPrice = Integer.parseInt(price);
+        if (intPrice > maxPrice)
+            intPrice = maxPrice;
+        return userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
+    }
+
+    @Override
     public Optional<List<CardProfile>> filterUsers(String subject, String price, String level) {
         int lvl = Integer.parseInt(level);
         if(lvl < 0 || lvl > MAX_LEVEL)
@@ -71,12 +82,17 @@ public class UserServiceImpl implements UserService {
         int intPrice = Integer.parseInt(price);
             if (intPrice > maxPrice)
                 intPrice = maxPrice;
-        return userDao.filterUsers(subject, intPrice,lvl);
+        return userDao.filterUsers(subject,RAND_ORDER,intPrice,lvl,ANY_RATING,GET_ALL);
     }
 
     @Override
     public Optional<List<CardProfile>> filterUsers(String subject) {
-        return userDao.filterUsers(subject,Integer.MAX_VALUE,ANY_LEVEL);
+        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, GET_ALL);
+    }
+
+    @Override
+    public Optional<List<CardProfile>> filterUsers(String subject, String offset) {
+        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
     }
 
     @Override

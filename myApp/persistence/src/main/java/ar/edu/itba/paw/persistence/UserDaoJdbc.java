@@ -20,6 +20,7 @@ public class UserDaoJdbc implements UserDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
             rs.getInt("userid"), rs.getString("mail"), rs.getString("description"),rs.getString("schedule"));
+    private final static Integer PAGE_SIZE = 9, GET_ALL = 0;
 
     @Autowired
     public UserDaoJdbc (final DataSource ds){
@@ -63,12 +64,13 @@ public class UserDaoJdbc implements UserDao {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
+        List<CardProfile> list;
         int minLevel, maxLevel;
         if( level == 0) { minLevel = 1; maxLevel = 3;}
         else
             minLevel = maxLevel = level;
         String query = "select * from (select a4.userid,name,maxPrice,minPrice,description,image ,sum(coalesce(rate,0))/count(coalesce(rate,0)) as rate\n" +
-                        "from (SELECT a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
+                        "FROM (SELECT a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
                         "FROM ((SELECT uid, name, description, image, max(price) as maxPrice, min(price) as minPrice\n" +
                         "FROM (SELECT u.userid AS uid, name, description, (CASE WHEN image IS NULL THEN 0 ELSE 1 END) AS image\n" +
                         "FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
@@ -76,11 +78,41 @@ public class UserDaoJdbc implements UserDao {
                         "JOIN subject s ON a3.subjectid = s.subjectid\n" +
                         "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)) as a4 LEFT OUTER JOIN rating r ON a4.userid = teacherid\n" +
                         "group by a4.userid, name, maxPrice, minPrice, description, image) as a5\n" +
-                        "group by a5.userid, name, maxPrice, minPrice, description, image, rate\n" +
-                        "ORDER BY rate DESC";
-        List<CardProfile> list = jdbcTemplate.query(
-                query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel }, mapper);
+                        "group by a5.userid, name, maxPrice, minPrice, description, image, rate HAVING sum(coalesce(rate,0))/count(coalesce(rate,0)) >= ? ";
+
+        query += checkOrdering(order);
+        query += "LIMIT " + PAGE_SIZE + " ";
+        if(offset > 0) {
+            query += "OFFSET " + PAGE_SIZE + "* ? ";
+            list = jdbcTemplate.query(
+                    query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating, offset - 1}, mapper);
+        }
+        else
+         list = jdbcTemplate.query(
+                query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating}, mapper);
+
         return Optional.ofNullable(list);
+    }
+
+    private String checkOrdering(int order){
+        String orderBy;
+        switch (order) {
+            case 1:
+                orderBy= "ORDER BY maxprice ASC ";
+                break;
+            case 2:
+                orderBy= "ORDER BY maxprice DESC ";
+                break;
+            case 3:
+                orderBy= "ORDER BY rate ASC ";
+                break;
+            case 4:
+                orderBy= "ORDER BY rate DESC ";
+                break;
+            default:
+                orderBy = " ";
+        }
+        return orderBy;
     }
 
     @Override
