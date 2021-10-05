@@ -648,7 +648,7 @@ input:focus {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    width: 58%;
+    width: fit-content;
 }
 
 .info-container > p {

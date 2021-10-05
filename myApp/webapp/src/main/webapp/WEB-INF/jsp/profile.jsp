@@ -51,18 +51,16 @@
                                             </form>
                                         </c:otherwise>
                                     </c:choose>
-
                                 </sec:authorize>
                                 <sec:authorize access="!isAuthenticated()">
                                     <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
                                         <spring:message code="profile.btn.contact"/>
                                     </a>
                                 </sec:authorize>
-
                             </c:when>
                             <c:otherwise>
                                 <div class="profile-btn">
-                                    <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
+                                    <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
                                         <spring:message code="profile.btn.edit"/>
                                     </a>
                                     <c:if test="${isTeacher}">
