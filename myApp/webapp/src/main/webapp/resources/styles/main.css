@@ -1,10 +1,86 @@
-.user-schedule-display{
+.user-schedule-display {
     height: fit-content;
     margin-top: 1px;
     width: auto;
     background: white;
     padding: 16px 10px 16px 10px;
     word-break: break-all;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    margin: 20px 0;
+    width: 100%;
+}
+input[type=range]:focus {
+    outline: none;
+}
+
+.form-check-input:checked {
+    background-color: #026670;
+}
+
+.filter-btn-container{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    animate: 0.2s;
+    background: #026670;
+    border-radius: 25px;
+}
+input[type=range]::-webkit-slider-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 4px 0 rgba(0,0,0, 1);
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -8px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #026670;
+}
+.range-wrap{
+    margin-top: 20px;
+    position: relative;
+}
+.range-value{
+    position: absolute;
+    top: -50%;
+}
+.range-value span {
+    width: 44px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background: #026670;
+    color: #fff;
+    font-size: 14px;
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 6px;
+}
+.range-value span:before{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 10px solid #026670;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    margin-top: -1px;
 }
 
 #student-pending-tab {
@@ -18,11 +94,19 @@
     height: 100vh;
     justify-content: flex-start;
 }
-.filter-ulist{
+
+.rating-radio { display:none; }
+
+input[type="radio"]:checked + label {
+    font-weight: bold;
+}
+
+.filter-ulist {
     list-style-type: none;
     margin: 0;
     padding: 0 10px 0 10px;
 }
+
 .filter-container {
     background: #9fedd7;
     border-radius: 8px;
@@ -31,14 +115,17 @@
     margin-left: 20px;
     min-width: 200px;
     padding-top: 10px;
+    max-width: 280px;
+    min-height: 550px;
+    max-height: 700px;
 }
 
 .search-and-results-container {
     display: flex;
     width: 84%;
     flex-direction: column;
+    align-items: center;
 }
-
 
 .classes-separator-container {
     display: flex;
@@ -47,7 +134,7 @@
     margin-top: 50px;
 }
 
-.empty-classes-title{
+.empty-classes-title {
     text-align: center;
     margin-top: 50px;
 }
@@ -66,7 +153,7 @@
 
 .nav-link-custom:hover {
     color: #ffffff;
-    background: rgba(2 ,102 ,112 , 0.07);
+    background: rgba(2, 102, 112, 0.07);
 }
 
 .tabs-container {
@@ -185,8 +272,8 @@
 
 body {
     background-color: #edeae5;
-    position:relative;
-    width:100vw;
+    position: relative;
+    width: 100vw;
     height: fit-content;
 }
 
@@ -413,7 +500,7 @@ input:focus {
     transition: .3s;
 }
 
-.rad-input:checked+.rad-design::before {
+.rad-input:checked + .rad-design::before {
     transform: scale(0);
 }
 
@@ -428,7 +515,7 @@ input:focus {
     transition: .3s;
 }
 
-.rad-input:checked~.rad-text {
+.rad-input:checked ~ .rad-text {
     color: hsl(0, 0%, 40%);
 }
 
@@ -455,7 +542,7 @@ input:focus {
     height: fit-content;
     padding: 5px;
     width: 65%;
-    -moz-appearance:textfield;
+    -moz-appearance: textfield;
 }
 
 .price-level-container {
@@ -490,7 +577,7 @@ input:focus {
 
 .subjects-row {
     background: hsla(185, 96%, 22%, 0.35);
-    box-shadow: 0 0 9px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -733,9 +820,11 @@ label:hover {
 
 .tutors-search {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
+    align-content: center;
+    margin-left: -40px;
 }
 
 .h-divider {
@@ -764,14 +853,16 @@ label:hover {
     align-items: center;
 }
 
-.centered-horizontal { margin: auto;}
+.centered-horizontal {
+    margin: auto;
+}
 
 .align-vertically-center {
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin:auto;
+    margin: auto;
 }
 
 /*tutors page*/
@@ -799,9 +890,11 @@ div.bg-tutors-card-custom {
     margin-left: 10px;
     padding: 0 10px 0 10px;
 }
+
 .filter-item:hover {
     background-color: #f49f0a80;
 }
+
 .filter-item:focus {
     background-color: #f49f0a;
 }
@@ -816,7 +909,7 @@ div.bg-tutors-card-custom {
 
 .tutor-card:hover {
     transform: scale(1.1);
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
 }
 
 .card-img-top {
@@ -841,10 +934,8 @@ div.bg-tutors-card-custom {
 }
 
 .not-found-header {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 20px;;
+    align-self: center;
 }
 
 /* search specific*/
@@ -904,7 +995,7 @@ div.bg-tutors-card-custom {
     font-weight: bold;
     word-wrap: break-word;
     width: 50%;
-    text-align:center;
+    text-align: center;
 }
 
 .subject-box {
@@ -947,7 +1038,7 @@ div.bg-tutors-card-custom {
 }
 
 .footer {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -986,7 +1077,7 @@ div.bg-tutors-card-custom {
     cursor: pointer;
 }
 
-.time-range{
+.time-range {
     text-align: center;
     justify-content: center;
     width: 100%;
@@ -1022,14 +1113,14 @@ select {
     border-radius: 10px;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none;       /* Remove default arrow */
+    appearance: none; /* Remove default arrow */
     border: none;
     background-color: white;
     height: 36px;
     padding-left: 5px;
     margin: 8px 0 8px 0;
     width: 100%;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") ;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
     background-position-x: 100%;
     background-position-y: 5px;

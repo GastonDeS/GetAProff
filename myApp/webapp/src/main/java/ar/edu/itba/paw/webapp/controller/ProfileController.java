@@ -64,12 +64,12 @@ public class ProfileController {
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         User curr = userService.getCurrentUser();
         User user = userService.findById(uid);
-        if (user == null || curr == null) {
+        if (user == null) {
             throw new ProfileNotFoundException("Profile not found for requested id: " + uid);
         }
         return new ModelAndView("profile")
                 .addObject("user", user)
-                .addObject("isFaved",userService.isFaved(uid,curr.getId()))
+                .addObject("isFaved", curr != null && userService.isFaved(uid, curr.getId()))
                 .addObject("timetable", userService.getUserSchedule(uid))
                 .addObject("description", userService.getUserDescription(uid))
                 .addObject("schedule", userService.getUserSchedule(uid))
@@ -77,7 +77,7 @@ public class ProfileController {
                 .addObject("image", imageService.findImageById(uid) == null ? 0 : 1)
                 .addObject("currentUser",curr)
                 .addObject("isTeacher",user.isTeacher())
-                .addObject("edit", (curr.getId() != user.getId())? 0: 1);
+                .addObject("edit", (curr != null && curr.getId() == user.getId())? 1: 0);
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
@@ -119,7 +119,7 @@ public class ProfileController {
         form.setDescription(userService.getUserDescription(uid));
         form.setSchedule(userService.getUserSchedule(uid));
         Image maybeImg = imageService.findImageById(uid);
-//        form.setImageFile();
+        form.setHasImage(maybeImg != null && maybeImg.getImage().length > 0);
         return mav.addObject("image", maybeImg);
     }
 
@@ -134,10 +134,9 @@ public class ProfileController {
         if (errors.hasErrors())
             return userForm(form);
         int uid = userService.getCurrentUser().getId();
-        if (imageService.findImageById(uid) == null) {
-            imageService.create(uid, null);
+        if ( form.getImageFile().getSize() > 0) {
+            imageService.createOrUpdate(uid, form.getImageFile().getBytes());
         }
-        imageService.changeUserImage(uid, form.getImageFile().getBytes());
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         if (desc == 0 || sch == 0) {

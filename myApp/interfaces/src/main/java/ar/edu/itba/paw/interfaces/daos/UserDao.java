@@ -26,7 +26,7 @@ public interface UserDao {
      * @param mail The mail of the user.
      * @return The created user.
      */
-    User create(String username, String mail, String password);
+    User create(String username, String mail, String password, String description, String schedule);
 
     Optional<User> findByEmail(String mail);
 

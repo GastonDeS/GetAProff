@@ -102,8 +102,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password, int userole) {
-        User u = userDao.create(username, mail, passwordEncoder.encode(password));
+    public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
+        User u = userDao.create(username, mail, passwordEncoder.encode(password), description, schedule);
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);

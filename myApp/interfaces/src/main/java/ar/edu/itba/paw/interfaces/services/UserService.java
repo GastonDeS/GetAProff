@@ -45,7 +45,7 @@ public interface UserService {
      * @param mail The mail of the user.
      * @return The created user.
      */
-    Optional<User> create(String username, String mail, String password, int userole);
+    Optional<User> create(String username, String mail, String password, String description, String schedule, int userole);
     Optional<User> findByEmail(String mail);
     User getCurrentUser();
     String getUserDescription(int userId);
