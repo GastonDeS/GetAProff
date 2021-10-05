@@ -17,7 +17,7 @@
         <jsp:param name="uid" value="${user.id}"/>
         <jsp:param name="section" value="2"/>
     </jsp:include>
-    <div class="main-container">
+    <div class="page-container">
         <div class="classes-separator-container">
             <c:if test="${isTeacher == 1}">
                 <div class="main-tab-container">

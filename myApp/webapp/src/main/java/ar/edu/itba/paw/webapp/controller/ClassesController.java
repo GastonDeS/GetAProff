@@ -95,6 +95,7 @@ public class ClassesController {
         emailService.sendAcceptMessage(myClass.getStudentId(), myClass.getTeacherId(), 3, form.getMessage());
         return new ModelAndView("redirect:/myClasses");
     }
+
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final int cid) {
         final ModelAndView mav = new ModelAndView("rateForm");
