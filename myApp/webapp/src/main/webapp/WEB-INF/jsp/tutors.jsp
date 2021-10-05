@@ -6,10 +6,10 @@
 <html>
 <head>
     <title><spring:message code="tutors.title"/> – GetAProff</title>
-    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
+    <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -20,7 +20,7 @@
     <div class="tutors-container">
         <div class="filter-container">
             <h3 style="padding-left: 10px"><spring:message code="tutors.filtersTitle"/></h3>
-            <form action="${pageContext.request.contextPath}/tutors" class="search-filters" method="get">
+            <form action="${pageContext.request.contextPath}/tutors/1" class="search-filters" method="get">
                 <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
                 <ul class="filter-ulist">
                     <li>
@@ -54,6 +54,7 @@
                                     <input name="level" class="form-check-input" type="radio" id="any-level-input"
                                            autocomplete="off"
                                            value="0"
+                                           checked
                                     >
                                     <label class="form-check-label" for="any-level-input"><spring:message
                                             code="search.dropdown.level.any"/></label>
@@ -95,6 +96,7 @@
                             <li>
                                 <input name="rating" type="radio" class="rating-radio" id="rating-4+"
                                        value="4"
+                                       checked
                                 >
                                 <label class="form-check-label" for="rating-4+">
                                     <jsp:include page="../components/ratingStars.jsp">
@@ -178,7 +180,7 @@
                     </h3>
                 </c:otherwise>
             </c:choose>
-            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%;">
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%; height: fit-content">
                     <c:forEach var="tutor" items="${tutors}" varStatus="loop">
                         <div style="margin-top: 30px" class="col">
                                 <jsp:include page="../components/tutorCard.jsp">
@@ -195,10 +197,27 @@
             </div>
         </div>
     </div>
+    <div class="nav-container">
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+    </div>
 </div>
+<jsp:include page="../components/footer.jsp">
+    <jsp:param name="" value=""/>
+</jsp:include>
 
-
-<script type="text/javascript" src="resources/js/script.js"></script>
+<script type="text/javascript" src="/resources/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
         integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
         crossorigin="anonymous"></script>

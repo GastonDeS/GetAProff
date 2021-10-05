@@ -45,7 +45,7 @@
             <div class="form-container">
                 <p class="form-title"><spring:message code="user.form.title"/></p>
                 <div class="img-upload">
-                    <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg" id="img-preview">
+                    <img src="${pageContext.request.contextPath}/resources/images/add_img.png" class="profile-img" alt="teacherImg" id="img-preview">
                     <div class="edit-btn-container">
                         <label class="btn btn-custom">
                             <form:input type="file" accept="image" name="file" style="display: none" path="imageFile" id="photo"/>

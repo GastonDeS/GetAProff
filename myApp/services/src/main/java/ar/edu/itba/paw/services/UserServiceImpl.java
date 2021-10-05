@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.Role;
@@ -25,8 +26,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final Integer ANY_LEVEL = 0;
-    public static final Integer MAX_LEVEL = 3;
+    public static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0;
 
     @Autowired
     private UserDao userDao;
@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private UtilsService utilsService;
 
     @Override
     public User findById(int id) {
@@ -58,6 +61,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset) {
+        int lvl = Integer.parseInt(level);
+        if(lvl < 0 || lvl > MAX_LEVEL)
+            lvl = ANY_LEVEL;
+        int maxPrice = mostExpensiveUserFee(subject);
+        int intPrice = Integer.parseInt(price);
+        if (intPrice > maxPrice)
+            intPrice = maxPrice;
+        return userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
+    }
+
+    @Override
     public List<CardProfile> filterUsers(String subject, String price, String level) {
         int lvl = Integer.parseInt(level);
         if(lvl < 0 || lvl > MAX_LEVEL)
@@ -66,12 +81,17 @@ public class UserServiceImpl implements UserService {
         int intPrice = Integer.parseInt(price);
             if (intPrice > maxPrice)
                 intPrice = maxPrice;
-        return userDao.filterUsers(subject, intPrice,lvl);
+        return userDao.filterUsers(subject,RAND_ORDER,intPrice,lvl,ANY_RATING,GET_ALL);
     }
 
     @Override
     public List<CardProfile> filterUsers(String subject) {
-        return userDao.filterUsers(subject,Integer.MAX_VALUE,ANY_LEVEL);
+        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, GET_ALL);
+    }
+
+    @Override
+    public List<CardProfile> filterUsers(String subject, String offset) {
+        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
     }
 
     @Override
@@ -104,7 +124,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
-        User u = userDao.create(username, mail, passwordEncoder.encode(password), description, schedule);
+        User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
