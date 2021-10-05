@@ -3,10 +3,10 @@ package ar.edu.itba.paw.models;
 public class ClassInfo {
 
     private String teacher, student, subject, reply, request;
-    private int price, level, status, classId;
+    private int price, level, status, classId, deleted;
 
     public ClassInfo(String teacher, String student, String subject, String reply,
-                     String request, int price, int level, int status, int classId) {
+                     String request, int price, int level, int status, int classId, int deleted) {
         this.teacher = teacher;
         this.student = student;
         this.subject = subject;
@@ -16,6 +16,15 @@ public class ClassInfo {
         this.level = level;
         this.status = status;
         this.classId = classId;
+        this.deleted = deleted;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
     }
 
     public int getClassId() {

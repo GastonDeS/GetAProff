@@ -12,6 +12,7 @@ public interface ClassService {
     List<ClassInfo> findClassesByTeacherId(int id);
     Optional<Class> create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message);
     int setStatus(int classId, int status);
+    int setDeleted(int classId, int deleted);
     int setRequest(int classId, String message);
     int setReply(int classId, String message);
 }
