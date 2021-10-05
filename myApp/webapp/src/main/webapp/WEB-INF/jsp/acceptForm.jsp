@@ -26,15 +26,8 @@
         <c:out value="${student}"/>
     </h1>
     <form:form class="d-flex justify-content-center" modelAttribute="acceptForm" action="${acceptUrl}" method="post">
-        <div class="section-container">
+        <div class="form-container">
             <div class="input-section">
-                <div class="form-input">
-                    <form:label path="message"><spring:message code="contact.form.message"/></form:label>
-                    <form:textarea cssStyle="height: 150px" type="text" path="message"
-                                   class="form-control"
-                                   placeHolder="${messagePlaceHolder}"/>
-                    <form:errors path="message" element="p" cssClass="form-error"/>
-                </div>
                 <div class="form-input">
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>
                     <form:textarea cssStyle="height: 150px" type="text" path="message"

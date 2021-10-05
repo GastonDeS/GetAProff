@@ -103,7 +103,7 @@ public class ProfileController {
         return subjectsForm(form);
     }
 
-    @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.POST)
     public String removeSubject(@PathVariable("sid") final int sid) {
         int uid = userService.getCurrentUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {

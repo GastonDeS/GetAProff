@@ -108,9 +108,10 @@ public class Class {
         PENDING(0),
         ACCEPTED(1),
         FINISHED(2),
-        CANCELED(3),
-        REJECTED(4),
-        RATED(5);
+        CANCELEDS(3),
+        CANCELEDT(4),
+        REJECTED(5),
+        RATED(6);
 
         private final int value;
 

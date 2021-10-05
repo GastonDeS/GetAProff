@@ -24,23 +24,25 @@
                 <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
                 <ul class="filter-ulist">
                     <li>
-                        <h4>Order By:</h4>
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected>Open this select menu</option>
-                            <option value="1">Price Ascending</option>
-                            <option value="2">Price Descending</option>
-                            <option value="3">Rating Ascending</option>
-                            <option value="3">Rating Descending</option>
+                        <h4><spring:message code="tutors.filters.orderTitle"/></h4>
+                        <select name="order" class="form-select" aria-label="Default select example">
+                            <option value="0" selected><spring:message code="tutors.orderby.default"/></
+                            <option>
+                            <option value="1"><spring:message code="tutors.orderby.priceA"/></option>
+                            <option value="2"><spring:message code="tutors.orderby.priceD"/></option>
+                            <option value="3"><spring:message code="tutors.orderby.ratingA"/></option>
+                            <option value="4"><spring:message code="tutors.orderby.ratingD"/></option>
+
                         </select>
                     </li>
                     <li>
                         <h4><spring:message code="search.filters.priceTitle"/></h4>
                         <div class="d-flex flex-column px-2">
-                            <div class="d-flex justify-content-center">
-                                <input type="range" id="priceRange" class="form-range" min="1" max="${maxPrice}"
+                            <div class="range-wrap">
+                                <div class="range-value" id="rangeV"></div>
+                                <input type="range" id="priceRange" min="1" max="${maxPrice}"
                                        value="${maxPrice}"
-                                       name="price"
-                                >
+                                       name="price">
                             </div>
                         </div>
                     </li>
@@ -52,7 +54,7 @@
                                     <input name="level" class="form-check-input" type="radio" id="any-level-input"
                                            autocomplete="off"
                                            value="0"
-                                           checked>
+                                    >
                                     <label class="form-check-label" for="any-level-input"><spring:message
                                             code="search.dropdown.level.any"/></label>
                                 </div>
@@ -93,7 +95,7 @@
                             <li>
                                 <input name="rating" type="radio" class="rating-radio" id="rating-4+"
                                        value="4"
-                                       checked>
+                                >
                                 <label class="form-check-label" for="rating-4+">
                                     <jsp:include page="../components/ratingStars.jsp">
                                         <jsp:param name="rating" value="4"/>
@@ -136,15 +138,17 @@
                     </li>
                 </ul>
                 <hr>
-                <button type="submit" id="filter-button" class="btn btn-custom"
-                        style="display: none; width: 100%; padding: 0 10px 0 10px;">
-                    Aplicar Filtros
-                </button>
-                <button type="button" id="clear-filter-button" class="btn btn-custom" style="display: none;"
-                        onclick="resetFilters()">
-                    Resetear
-                    Filtros
-                </button>
+                <div class="filter-btn-container">
+                    <button type="submit" id="filter-button" class="btn btn-custom"
+                            style="display: none; width: 100%; margin: 5px 0;">
+                        <spring:message code="tutors.filters.applyBtn"/>
+                    </button>
+                    <button type="button" id="clear-filter-button" class="btn btn-custom"
+                            style="display: none; width: 100%; margin: 5px 0;"
+                            onclick="resetFilters()">
+                        <spring:message code ="tutors.filters.resetBtn"/>
+                    </button>
+                </div>
             </form>
         </div>
         <div class="search-and-results-container">
@@ -169,16 +173,14 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 0 335px;"> ${fn:length(tutors)} <spring:message
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> ${fn:length(tutors)} <spring:message
                             code="tutors.search.resultTitle"/> <%=request.getParameter("query")%>
                     </h3>
                 </c:otherwise>
             </c:choose>
-            <div class="container mb-5">
-                <div class="row">
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%;">
                     <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                        <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                            <div class="container">
+                        <div style="margin-top: 30px" class="col">
                                 <jsp:include page="../components/tutorCard.jsp">
                                     <jsp:param name="image" value="${tutor.image}"/>
                                     <jsp:param name="name" value="${tutor.name}"/>
@@ -188,10 +190,8 @@
                                     <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
                                     <jsp:param name="minPrice" value="${tutor.minPrice}"/>
                                 </jsp:include>
-                            </div>
                         </div>
                     </c:forEach>
-                </div>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@ public class ExceptionHandlingController {
     private MessageSource messageSource;
 
     @ExceptionHandler(LoginErrorException.class)
-    ModelAndView loginErrorException(LoginErrorException e) {
+    public ModelAndView loginErrorException(LoginErrorException e) {
         ModelAndView mav = new ModelAndView("login");
         return mav.addObject("exception", messageSource.getMessage(e.getMessage(), null, Locale.getDefault()));
     }

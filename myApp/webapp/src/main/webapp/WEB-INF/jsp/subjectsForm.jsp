@@ -9,6 +9,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>">
         <spring:message code="subjects.form.enter" var="subjectPlaceholder"/>
+        <spring:message code="subjects.form.your.subjects" var="yourSubjectPlaceholder"/>
         <spring:message code="subjects.form.price" var="pricePlaceholder"/>
         <spring:message code="subjects.form.level.select" var="levelPlaceholder"/>
         <spring:message code="subjects.form.add" var="addBtnPlaceholder"/>
@@ -48,6 +49,10 @@
                         </div>
                     </div>
                     <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
+                </div>
+            </form:form>
+                <div class="form-container">
+                    <p class="form-title">${yourSubjectPlaceholder}</p>
                     <table class="subjects-table">
                         <tr class="subjects-row" style="width: 100%">
                             <td class="row-title" style="width: 43%">${tableSubject}</td>
@@ -59,24 +64,24 @@
                                 <td class="row-info" style="width: 40%"><c:out value="${subject.name}"/></td>
                                 <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
                                 <td class="row-info" style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                <form action="<c:url value="/editSubjects/remove/${subject.id}"/>" method="post">
                                 <td class="remove-btn">
-                                    <a href="/editSubjects/remove/${subject.id}" class="btn btn-custom">
-                                        <spring:message code="subjects.form.remove"/>
-                                    </a>
+                                        <input type="submit" class="btn btn-custom" value="<spring:message code="subjects.form.remove"/>">
                                 </td>
+                                </form>
                             </tr>
                         </c:forEach>
                     </table>
-                    <div class="save-btn-container">
-                        <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom submit-btn">
-                            <spring:message code="form.btn.cancel"/>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom submit-btn">
-                            <spring:message code="form.btn.save"/>
-                        </a>
-                    </div>
+                    <a href="${pageContext.request.contextPath}/profile/${userid}" class="btn btn-custom submit-btn">
+                        <spring:message code="form.btn.save"/>
+                    </a>
                 </div>
-            </form:form>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+                integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+                integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+                crossorigin="anonymous"></script>
     </body>
 </html>
