@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.Role;
@@ -39,6 +40,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private UtilsService utilsService;
 
     @Override
     public User findById(int id) {
@@ -104,7 +108,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
-        User u = userDao.create(username, mail, passwordEncoder.encode(password), description, schedule);
+        User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);

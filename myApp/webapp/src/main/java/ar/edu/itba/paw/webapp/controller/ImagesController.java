@@ -24,15 +24,12 @@ public class ImagesController {
     @Autowired
     private ImageService imageService;
 
-    @Autowired
-    private UserService userService;
-
     @RequestMapping(value = "/image/{uid}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
-    byte[] getImage(@PathVariable("uid") final int uid) throws IOException {
+    byte[] getImage(@PathVariable("uid") final int uid) {
         Image image =  imageService.findImageById(uid);
         if (image == null) {
-            throw new ImageNotFoundException("No image for required user id: " + uid);
+            throw new ImageNotFoundException("");
         }
         return image.getImage();
     }

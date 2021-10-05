@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
-import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,9 +23,6 @@ public class RegisterController {
 
     @Autowired
     private RegisterFormValidator registerFormValidator;
-
-    @Autowired
-    private UtilsService utilsService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -49,8 +44,7 @@ public class RegisterController {
         if (errors.hasErrors()) {
             return new ModelAndView("register");
         }
-        String name = utilsService.capitalizeFirstLetter(form.getName());
-        Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
+        Optional<User> maybeUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
         if (!maybeUser.isPresent()) {
             throw new RegisterErrorException("exception.register");
         }
