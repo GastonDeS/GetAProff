@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.models;
+package ar.edu.itba.paw.models.utils;
 
 public class Pair<K, T> {
     private final K value1;

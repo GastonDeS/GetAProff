@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Pair;
+import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,9 +30,9 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User get(int id) {
+    public Optional<User> get(int id) {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[] { id }, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return Optional.ofNullable(list.get(0));
     }
 
     @Override
@@ -59,13 +59,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<CardProfile> findUsersBySubjectId(int subjectId) {
-        List<String> subjectName = jdbcTemplate.queryForList("SELECT name FROM subject WHERE subjectId = ?", new Object[] {subjectId}, String.class);
-        return subjectName.isEmpty() ? null : filterUsers(subjectName.get(0),Integer.MAX_VALUE,0);
-    }
-
-    @Override
-    public List<CardProfile> filterUsers(String subject, Integer price, Integer level) {
+    public Optional<List<CardProfile>> filterUsers(String subject, Integer price, Integer level) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -86,11 +80,11 @@ public class UserDaoJdbc implements UserDao {
                         "ORDER BY rate DESC";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel }, mapper);
-        return list.isEmpty() ? null : list;
+        return Optional.ofNullable(list);
     }
 
     @Override
-    public List<CardProfile> getFavourites(int uid) {
+    public Optional<List<CardProfile>> getFavourites(int uid) {
         RowMapper<CardProfile> mapper = (rs,rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -108,7 +102,7 @@ public class UserDaoJdbc implements UserDao {
                 "                order by rate DESC";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {uid}, mapper);
-        return list().isEmpty()? null : list;
+        return Optional.ofNullable(list);
     }
 
     @Override
@@ -141,12 +135,13 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public boolean isFaved(int teacherId, int studentId) {
+    public Optional<String> isFaved(int teacherId, int studentId) {
         RowMapper<String> pairRowMapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
-        return jdbcTemplate.query("select count(*) as count\n" +
+        List<String> list = jdbcTemplate.query("select count(*) as count\n" +
                 "from favourites\n" +
                 "where teacherid = ?\n" +
-                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper).get(0).equals("1");
+                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper);
+        return Optional.ofNullable(list.get(0));
     }
 
     @Override
