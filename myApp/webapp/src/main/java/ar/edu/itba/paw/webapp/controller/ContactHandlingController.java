@@ -64,7 +64,7 @@ public class ContactHandlingController {
         if (subject == null) {
             throw new NotFoundException("Cannot find subject for required id: " + form.getSubjectId());
         }
-        emailService.sendContactMessage(user.getMail(), "GetAProff: Nueva petición de clase", curr.getName(), subject.getName(), form.getMessage());
+        emailService.sendContactMessage(user.getMail(), curr.getName(), subject.getName(), form.getMessage());
         return new ModelAndView("redirect:/emailSent");
     }
 

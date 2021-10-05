@@ -57,6 +57,7 @@ public class ClassesController {
     @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
     public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
         classService.setStatus(cid, Class.Status.valueOf(status).getValue());
+        emailService.sendStatusChangeMessage(classService.findById(cid));
         return new ModelAndView("redirect:/myClasses");
     }
 
@@ -81,7 +82,7 @@ public class ClassesController {
         Class myClass = classService.findById(cid);
         classService.setStatus(myClass.getClassId(), Class.Status.ACCEPTED.getValue());
         classService.setReply(myClass.getClassId(), form.getMessage());
-        emailService.sendAcceptMessage(myClass.getStudentId(), "GetAProff: Tu clase fue aceptada", myClass.getTeacherId(), 3, form.getMessage());
+        emailService.sendAcceptMessage(myClass.getStudentId(), myClass.getTeacherId(), 3, form.getMessage());
         return new ModelAndView("redirect:/myClasses");
     }
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
@@ -95,12 +96,10 @@ public class ClassesController {
     public ModelAndView rate(@PathVariable("cid") final int cid, @ModelAttribute("rateForm") @Valid final RateForm form,
                                final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("HAY ERRORREESSS");
             return rateForm(form, cid);
         }
-        int teacherId = classService.findById(cid).getTeacherId();
-        int userId = classService.findById(cid).getStudentId();
         classService.setStatus(cid, Class.Status.RATED.getValue());
+        emailService.sendRatedMessage(classService.findById(cid), form.getRating(), form.getReview());
         return new ModelAndView("redirect:/myClasses");
     }
 }

@@ -5,10 +5,10 @@
 <div class="card w-100 mt-3">
     <c:if test="${param.finished != null}">
         <c:choose>
-            <c:when test="${param.finished > 2 && param.finished != 5}">
+            <c:when test="${param.finished > 2 && param.finished != 6}">
                 <div class="card-header bg-danger text-white">
                     <c:choose>
-                        <c:when test="${param.finished == 3}">
+                        <c:when test="${param.finished == 3 || param.finished == 4}">
                             <spring:message code="class.card.canceled"/>
                         </c:when>
                         <c:otherwise>
@@ -87,7 +87,7 @@
                                         code="class.card.accept"/></a>
                             </c:when>
                             <c:otherwise>
-                                <form action="<c:url value="/myClasses/${param.cid}/CANCELED"/>"
+                                <form action="<c:url value="/myClasses/${param.cid}/CANCELEDT"/>"
                                       method="post">
                                     <input type="submit" class="btn btn-warning"
                                            value="<spring:message code="class.card.cancel"/>">
@@ -101,7 +101,7 @@
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                        <form action="<c:url value="/myClasses/${param.cid}/CANCELED"/>"
+                        <form action="<c:url value="/myClasses/${param.cid}/CANCELEDS"/>"
                               method="post">
                             <input type="submit" class="btn btn-warning"
                                    value="<spring:message code="class.card.cancel"/>">
