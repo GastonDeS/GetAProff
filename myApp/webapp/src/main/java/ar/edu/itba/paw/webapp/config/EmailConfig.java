@@ -34,14 +34,11 @@ public class EmailConfig {
     }
 
     @Bean
-    public SimpleMailMessage contactSimpleMessage() {
+    public SimpleMailMessage simpleMailMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setText(
-                "<p>%s %s %s %s!</p>" +
-                        "<p>%s %s</p>" +
-                        "<p>Te escribió este mensaje:</p>" +
-                        "<p>%s</p>" +
-                        "<p>%s<p>");
+                "<p>%s</p>" +
+                        "<a href=\"%s\">%s</a>");
         return message;
     }
 }
