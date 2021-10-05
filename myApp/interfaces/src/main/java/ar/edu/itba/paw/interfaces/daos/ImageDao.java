@@ -8,6 +8,4 @@ public interface ImageDao {
     Image createOrUpdate(int uid, byte[] image);
 
     Image findImageById(int userId);
-
-    int removeUserImage(int userId);
 }

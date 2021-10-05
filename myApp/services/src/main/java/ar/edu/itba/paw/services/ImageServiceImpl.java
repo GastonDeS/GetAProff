@@ -24,10 +24,4 @@ public class ImageServiceImpl implements ImageService {
     public Image findImageById(int userId) {
         return imageDao.findImageById(userId);
     }
-
-    @Transactional
-    @Override
-    public int removeUserImage(int userId) {
-        return imageDao.removeUserImage(userId);
-    }
 }

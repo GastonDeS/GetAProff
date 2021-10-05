@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.User;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,9 @@ public interface UserDao {
     int removeFavourite(int teacherId, int studentId);
     boolean isFaved(int teacherId, int studentId);
 
+    int addRating(int teacherId, int studentId, float rate, String review);
+    Pair<Float, Integer> getRatingById(int teacherId);
+
 
     /**
      * Create a new user.
@@ -26,7 +30,7 @@ public interface UserDao {
      * @param mail The mail of the user.
      * @return The created user.
      */
-    User create(String username, String mail, String password);
+    User create(String username, String mail, String password, String description, String schedule);
 
     Optional<User> findByEmail(String mail);
 

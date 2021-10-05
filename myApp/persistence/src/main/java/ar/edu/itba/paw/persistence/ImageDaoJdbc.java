@@ -42,8 +42,5 @@ public class ImageDaoJdbc implements ImageDao {
         return image.isEmpty() ? null : image.get(0);
     }
 
-    @Override
-    public int removeUserImage(int userId) {
-        return jdbcTemplate.update("DELETE FROM images WHERE userId = ?", userId);
-    }
+
 }

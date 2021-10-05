@@ -20,13 +20,13 @@
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
-<div class="main-container">
+<div class="page-container">
     <c:url value="/rate/${cid}" var="rateUrl"/>
     <h1 class="d-flex justify-content-center mt-4">
         <spring:message code="rate.form.header"/> ${teacher}
     </h1>
     <form:form class="d-flex justify-content-center" modelAttribute="rateForm" action="${rateUrl}" method="post">
-        <div class="section-container">
+        <div class="form-container">
             <div class="input-section">
                 <div class="form-input">
                     <form:label path="rating">Rate</form:label>

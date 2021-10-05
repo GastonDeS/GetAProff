@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,8 +114,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password, int userole) {
-        User u = userDao.create(username, mail, passwordEncoder.encode(password));
+    public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
+        User u = userDao.create(username, mail, passwordEncoder.encode(password), description, schedule);
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -179,6 +180,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isFaved(int teachedId, int studentId) {
         return userDao.isFaved(teachedId, studentId);
+    }
+
+    @Override
+    public int addRating(int teacherId, int studentId, float rate, String review) {
+        return userDao.addRating(teacherId, studentId, rate, review);
+    }
+
+    @Override
+    public Pair<Float, Integer> getRatingById(int teacherId) {
+        return userDao.getRatingById(teacherId);
     }
 
     @Transactional

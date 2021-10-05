@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,15 +36,10 @@ public class ProfileController {
     private ImageService imageService;
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private SubjectsFormValidator subjectsFormValidator;
 
     @Autowired
     private UserFormValidator userFormValidator;
-
-
 
     @InitBinder
     public void initSubjectsBinder(WebDataBinder webDataBinder){
@@ -103,13 +97,13 @@ public class ProfileController {
         return subjectsForm(form);
     }
 
-    @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.GET)
-    public String removeSubject(@PathVariable("sid") final int sid) {
+    @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.POST)
+    public ModelAndView removeSubject(@PathVariable("sid") final int sid) {
         int uid = userService.getCurrentUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
             throw new InvalidOperationException("Cannot remove subject " + sid + "to required user " + uid, "/editSubjects");
         }
-        return "redirect:/editSubjects";
+        return new ModelAndView("redirect:/editSubjects");
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
@@ -120,13 +114,13 @@ public class ProfileController {
         form.setSchedule(userService.getUserSchedule(uid));
         Image maybeImg = imageService.findImageById(uid);
         form.setHasImage(maybeImg != null && maybeImg.getImage().length > 0);
-        return mav.addObject("image", maybeImg);
+        return mav.addObject("image", maybeImg != null);
     }
 
-    @RequestMapping(value = "/editProfile?error=true", method = RequestMethod.GET)
-    public ModelAndView userFormError(@ModelAttribute("userForm") final UserForm form) {
-        return userForm(form);
-    }
+//    @RequestMapping(value = "/editProfile?error=true", method = RequestMethod.GET)
+//    public ModelAndView userFormError(@ModelAttribute("userForm") final UserForm form) {
+//        return userForm(form);
+//    }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
     public ModelAndView userForm(@ModelAttribute("userForm") @Valid final UserForm form,
@@ -144,14 +138,5 @@ public class ProfileController {
         }
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);
-    }
-
-    @RequestMapping(value = "/removeImg", method = RequestMethod.GET)
-    public String removeImage() {
-        int uid = userService.getCurrentUser().getId();
-        if (imageService.removeUserImage(uid) == 0) {
-            throw new InvalidOperationException("Cannot remove user image for: " + uid, "/editProfile");
-        }
-        return "redirect:/editProfile";
     }
 }

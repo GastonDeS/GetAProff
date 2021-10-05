@@ -14,6 +14,8 @@
         <spring:message code="subjects.table.price" var="tablePrice"/>
         <spring:message code="subjects.table.level" var="tableLevel"/>
         <spring:message code="subjects.table.hour" var="tableHour"/>
+        <spring:message code="profile.add.favorites" var="addFav"/>
+        <spring:message code="profile.remove.favorites" var="removeFav"/>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp">
@@ -32,37 +34,11 @@
                         </c:otherwise>
                     </c:choose>
                     <div class="profile-info">
-                        <h1><c:out value="${user.name}"/></h1>
-                        <c:choose>
-                            <c:when test="${edit == 0}">
-                                <sec:authorize access="isAuthenticated()">
-                                    <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom">
-                                        <spring:message code="profile.btn.contact"/>
-                                    </a>
-                                    <c:choose>
-                                        <c:when test="${!isFaved}">
-                                            <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
-                                                <input type="submit" class="btn btn-custom" value="like"/>
-                                            </form>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <form action="<c:url value="/removeFavourite/${user.id}"/>" method="post">
-                                                <input type="submit" class="btn btn-custom" value="dislike"/>
-                                            </form>
-                                        </c:otherwise>
-                                    </c:choose>
-
-                                </sec:authorize>
-                                <sec:authorize access="!isAuthenticated()">
-                                    <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
-                                        <spring:message code="profile.btn.contact"/>
-                                    </a>
-                                </sec:authorize>
-
-                            </c:when>
-                            <c:otherwise>
+                        <div class="profile-name">
+                            <h1><c:out value="${user.name}"/></h1>
+                            <c:if test="${edit == 1}">
                                 <div class="profile-btn">
-                                    <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
+                                    <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
                                         <spring:message code="profile.btn.edit"/>
                                     </a>
                                     <c:if test="${isTeacher}">
@@ -71,8 +47,36 @@
                                         </a>
                                     </c:if>
                                 </div>
-                            </c:otherwise>
-                        </c:choose>
+                            </c:if>
+                        </div>
+                        <div class="profile-info-btn">
+                            <c:if test="${edit == 0}">
+                                <sec:authorize access="isAuthenticated()">
+                                    <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom" style="margin-right: 10px">
+                                        <spring:message code="profile.btn.contact"/>
+                                    </a>
+                                </sec:authorize>
+                                <sec:authorize access="!isAuthenticated()">
+                                    <a href="${pageContext.request.contextPath}/login" class="btn btn-custom" style="margin-right: 10px">
+                                        <spring:message code="profile.btn.contact"/>
+                                    </a>
+                                </sec:authorize>
+                                <sec:authorize access="isAuthenticated()">
+                                    <c:choose>
+                                        <c:when test="${!isFaved}">
+                                            <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
+                                                <input type="submit" class="btn btn-custom" value="${addFav}"/>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <form action="<c:url value="/removeFavourite/${user.id}"/>" method="post">
+                                                <input type="submit" class="btn btn-custom" value="${removeFav}"/>
+                                            </form>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </sec:authorize>
+                            </c:if>
+                        </div>
                     </div>
                 </div>
                 <c:if test="${isTeacher}">

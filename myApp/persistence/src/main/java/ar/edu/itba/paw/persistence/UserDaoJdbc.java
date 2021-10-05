@@ -48,13 +48,15 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(String name, String mail, String password) {
+    public User create(String username, String mail, String password, String description, String schedule) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
+        args.put("name", username);
         args.put("password",password);
         args.put("mail",mail);
+        args.put("description", description);
+        args.put("schedule", schedule);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(name, password, userId.intValue(), mail, "", "");
+        return new User(username, password, userId.intValue(), mail, description, schedule);
     }
 
     @Override
@@ -177,6 +179,20 @@ public class UserDaoJdbc implements UserDao {
                 "from favourites\n" +
                 "where teacherid = ?\n" +
                 "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper).get(0).equals("1");
+    }
+
+    @Override
+    public int addRating(int teacherId, int studentId, float rate, String review) {
+        return jdbcTemplate.update("insert into rating values (?,?,?,?)\n" +
+                "on conflict on constraint rating_pkey\n" +
+                "do update set (rate,review) = (excluded.rate,excluded.review)", teacherId, studentId, rate, review);
+    }
+
+    @Override
+    public Pair<Float,Integer> getRatingById(int teacherId) {
+        RowMapper<Pair<Float,Integer>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getFloat("rate"), rs.getInt("rateCount"));
+        return jdbcTemplate.query("select sum(rate) / count(rate) as rate, count(rate) as rateCount from rating\n" +
+                "where teacherid = ?;", new Object[]{teacherId}, pairRowMapper).get(0);
     }
 
     @Override

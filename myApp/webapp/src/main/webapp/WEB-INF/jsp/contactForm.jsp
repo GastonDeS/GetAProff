@@ -23,7 +23,7 @@
         <spring:message code="contact.form.contact.with"/>
         <c:out value="${user.name}"/></h1>
     <form:form class="d-flex justify-content-center" modelAttribute="contactForm" action="${contactUrl}" method="post">
-        <div class="section-container">
+        <div class="form-container">
             <div class="input-section">
                 <div class="form-input">
                     <form:label path="subjectId"><spring:message code="contact.form.subject"/></form:label>

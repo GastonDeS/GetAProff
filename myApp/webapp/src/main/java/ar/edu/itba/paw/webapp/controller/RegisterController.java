@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
+import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -29,9 +28,6 @@ public class RegisterController {
 
     @Autowired
     private UtilsService utilsService;
-
-    @Autowired
-    private RoleService roleService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -49,17 +45,17 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) throws IOException {
+    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return register(form);
+            return new ModelAndView("register");
         }
         String name = utilsService.capitalizeFirstLetter(form.getName());
-        Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword(), form.getUserRole());
+        Optional<User> maybeUser = userService.create(name, form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
         if (!maybeUser.isPresent()) {
-            throw new RegisterErrorException("Cannot register user");
+            throw new RegisterErrorException("exception.register");
         }
         if (form.getUserRole() == 1) {
-            return new ModelAndView("redirect:/editProfile");
+            return new ModelAndView("redirect:/editSubjects");
         }
         String redirect = "redirect:/profile/" + maybeUser.get().getId();
         return new ModelAndView(redirect);
