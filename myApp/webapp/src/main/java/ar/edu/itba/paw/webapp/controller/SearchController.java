@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +32,7 @@ public class SearchController {
         }
     }
 
-    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = "query")
+    @RequestMapping(value = "/tutors/1", method = RequestMethod.GET, params = "query")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
@@ -43,12 +44,13 @@ public class SearchController {
         return mav;
     }
 
-    @RequestMapping(value = "/tutors", method = RequestMethod.GET, params = {"query", "price", "level"})
-    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "price") @NotNull final String price,
-                               @RequestParam(value = "level") @NotNull final String level) {
+    @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = {"query", "order","price","level","rating"})
+    public ModelAndView tutors(@PathVariable (value = "offset") final String offset, @RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "order") @NotNull final String order,
+                               @RequestParam(value = "price") @NotNull final String price, @RequestParam(value = "level") @NotNull final String level,
+                               @RequestParam(value = "rating") @NotNull final String rating) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        List<CardProfile> users = userService.filterUsers(searchQuery, price, level);
+        List<CardProfile> users = userService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", users);
         mav.addObject("materias", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
