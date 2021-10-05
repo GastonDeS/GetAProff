@@ -114,7 +114,7 @@ public class ProfileController {
         form.setSchedule(userService.getUserSchedule(uid));
         Image maybeImg = imageService.findImageById(uid);
         form.setHasImage(maybeImg != null && maybeImg.getImage().length > 0);
-        return mav.addObject("image", maybeImg);
+        return mav.addObject("image", maybeImg != null);
     }
 
 //    @RequestMapping(value = "/editProfile?error=true", method = RequestMethod.GET)
@@ -138,14 +138,5 @@ public class ProfileController {
         }
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);
-    }
-
-    @RequestMapping(value = "/removeImg", method = RequestMethod.GET)
-    public ModelAndView removeImage() {
-        int uid = userService.getCurrentUser().getId();
-        if (imageService.removeUserImage(uid) == 0) {
-            throw new InvalidOperationException("Cannot remove user image for: " + uid, "/editProfile");
-        }
-        return new ModelAndView("userForm").addObject("userForm", new UserForm());
     }
 }

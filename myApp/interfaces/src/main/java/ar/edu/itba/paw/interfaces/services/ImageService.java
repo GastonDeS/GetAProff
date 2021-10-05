@@ -9,5 +9,4 @@ public interface ImageService {
 
     Image findImageById(int userId);
 
-    int removeUserImage(int userId);
 }
