@@ -15,6 +15,11 @@
     word-break: break-all;
 }
 
+
+.nav-container {
+    margin-top: 50px;
+}
+
 input[type=range] {
     -webkit-appearance: none;
     margin: 20px 0;
@@ -99,7 +104,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     display: flex;
     flex-direction: row;
     width: 100vw;
-    height: 100vh;
     justify-content: flex-start;
 }
 
@@ -119,12 +123,12 @@ input[type="radio"]:checked + label {
     background: #9fedd7;
     border-radius: 8px;
     width: 16%;
-    height: 100%;
+    height: fit-content;
     margin-left: 20px;
     min-width: 200px;
     padding-top: 10px;
     max-width: 280px;
-    min-height: 550px;
+    min-height: 620px;
     max-height: 700px;
 }
 
@@ -301,7 +305,7 @@ input:focus {
     justify-content: flex-start;
     align-items: center;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     padding: 2em;
     min-width: 600px;
 }

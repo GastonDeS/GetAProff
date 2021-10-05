@@ -84,18 +84,18 @@ public class UserDaoJdbc implements UserDao {
                         "JOIN subject s ON a3.subjectid = s.subjectid\n" +
                         "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)) as a4 LEFT OUTER JOIN rating r ON a4.userid = teacherid\n" +
                         "group by a4.userid, name, maxPrice, minPrice, description, image) as a5\n" +
-                        "group by a5.userid, name, maxPrice, minPrice, description, image, rate";
+                        "group by a5.userid, name, maxPrice, minPrice, description, image, rate HAVING sum(coalesce(rate,0))/count(coalesce(rate,0)) >= ? ";
 
         query += checkOrdering(order);
-        query += "LIMIT " + PAGE_SIZE;
+        query += "LIMIT " + PAGE_SIZE + " ";
         if(offset > 0) {
-            query += "OFFSET " + PAGE_SIZE + "* ?";
+            query += "OFFSET " + PAGE_SIZE + "* ? ";
             list = jdbcTemplate.query(
-                    query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, offset - 1 }, mapper);
+                    query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating, offset - 1}, mapper);
         }
         else
          list = jdbcTemplate.query(
-                query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel}, mapper);
+                query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating}, mapper);
 
         return list.isEmpty() ? null : list;
     }
@@ -104,16 +104,16 @@ public class UserDaoJdbc implements UserDao {
         String orderBy;
         switch (order) {
             case 1:
-                orderBy= "ORDER BY price ASC ";
+                orderBy= "ORDER BY maxprice ASC ";
                 break;
             case 2:
-                orderBy= "ORDER BY price DESC ";
+                orderBy= "ORDER BY maxprice DESC ";
                 break;
             case 3:
-                orderBy= "ORDER BY rating ASC ";
+                orderBy= "ORDER BY rate ASC ";
                 break;
             case 4:
-                orderBy= "ORDER BY rating DESC ";
+                orderBy= "ORDER BY rate DESC ";
                 break;
             default:
                 orderBy = " ";

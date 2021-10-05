@@ -25,7 +25,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final Integer ANY_LEVEL = 0, ANY_RATING = 1, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0;
+    public static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0;
 
     @Autowired
     private UserDao userDao;
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         int intPrice = Integer.parseInt(price);
         if (intPrice > maxPrice)
             intPrice = maxPrice;
-        return userDao.filterUsers(subject,RAND_ORDER,intPrice,lvl,ANY_RATING,Integer.parseInt(offset));
+        return userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
     }
 
     @Override
@@ -83,6 +83,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<CardProfile> filterUsers(String subject) {
         return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, GET_ALL);
+    }
+
+    @Override
+    public List<CardProfile> filterUsers(String subject, String offset) {
+        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
     }
 
     @Override

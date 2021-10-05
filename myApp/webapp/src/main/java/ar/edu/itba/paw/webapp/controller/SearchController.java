@@ -32,11 +32,11 @@ public class SearchController {
         }
     }
 
-    @RequestMapping(value = "/tutors/1", method = RequestMethod.GET, params = "query")
-    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery) {
+    @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = "query")
+    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        List<CardProfile> tutors = userService.filterUsers(searchQuery);
+        List<CardProfile> tutors = userService.filterUsers(searchQuery, offset);
         mav.addObject("tutors", tutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
@@ -44,15 +44,15 @@ public class SearchController {
         return mav;
     }
 
-    @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = {"query", "order","price","level","rating"})
-    public ModelAndView tutors(@PathVariable (value = "offset") final String offset, @RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "order") @NotNull final String order,
+    @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = {"query","order","price","level","rating"})
+    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "order") @NotNull final String order,
                                @RequestParam(value = "price") @NotNull final String price, @RequestParam(value = "level") @NotNull final String level,
-                               @RequestParam(value = "rating") @NotNull final String rating) {
+                               @RequestParam(value = "rating") @NotNull final String rating, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
         List<CardProfile> users = userService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", users);
-        mav.addObject("materias", subjectService.list());
+        mav.addObject("subject", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         return mav;

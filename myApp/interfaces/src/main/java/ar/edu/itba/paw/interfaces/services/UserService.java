@@ -13,6 +13,8 @@ public interface UserService {
     List<CardProfile> filterUsers(String subject, String price, String level);
     List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
     List<CardProfile> filterUsers(String subject);
+    List<CardProfile> filterUsers(String subject, String offset);
+
 
     List<CardProfile> getFavourites(int uid);
     int addFavourite(int teacherId, int studentId);

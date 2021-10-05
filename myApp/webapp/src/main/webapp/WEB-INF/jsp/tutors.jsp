@@ -180,7 +180,7 @@
                     </h3>
                 </c:otherwise>
             </c:choose>
-            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%;">
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%; height: fit-content">
                     <c:forEach var="tutor" items="${tutors}" varStatus="loop">
                         <div style="margin-top: 30px" class="col">
                                 <jsp:include page="../components/tutorCard.jsp">
@@ -197,21 +197,25 @@
             </div>
         </div>
     </div>
+    <div class="nav-container">
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+    </div>
 </div>
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-        </li>
-    </ul>
-</nav>
-
+<jsp:include page="../components/footer.jsp">
+    <jsp:param name="" value=""/>
+</jsp:include>
 
 <script type="text/javascript" src="/resources/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
