@@ -16,6 +16,7 @@
     <spring:message code="user.form.schedule" var="schedulePlaceholder"/>
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="isMainPage" value="${false}"/>
     </jsp:include>
@@ -44,15 +45,12 @@
             <div class="form-container">
                 <p class="form-title"><spring:message code="user.form.title"/></p>
                 <div class="img-upload">
-                    <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg">
+                    <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg" id="img-preview">
                     <div class="edit-btn-container">
                         <label class="btn btn-custom">
-                            <form:input type="file" accept="image" name="file" style="display: none" path="imageFile"/>
+                            <form:input type="file" accept="image" name="file" style="display: none" path="imageFile" id="photo"/>
                             <spring:message code="user.form.choose.image"/>
                         </label>
-                        <a id="remove-img" href="${pageContext.request.contextPath}/removeImg" class="btn btn-custom">
-                            <spring:message code="user.form.remove.image"/>
-                        </a>
                     </div>
                 </div>
                 <form:errors path="imageFile" element="p" cssClass="form-error"/>
@@ -92,7 +90,6 @@
     </div>
     <script>
         function change(id) {
-            document.getElementById("remove-img").style.display = id === "r1" ? 'none' : 'block';
             document.getElementById("description").style.display = id === "r1" ? 'block' : 'none';
             document.getElementById("schedule").style.display = id === "r1" ? 'block' : 'none';
         }
@@ -105,6 +102,21 @@
         function updateForm(control) {
             change(control.id);
         }
+    </script>
+    <script>
+        $(document).ready(() => {
+            $("#photo").change(function () {
+                const file = this.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        $("#img-preview")
+                            .attr("src", event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
     </script>
 </body>
 </html>

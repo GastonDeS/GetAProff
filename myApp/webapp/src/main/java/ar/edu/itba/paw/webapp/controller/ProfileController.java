@@ -103,7 +103,7 @@ public class ProfileController {
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
             throw new InvalidOperationException("Cannot remove subject " + sid + "to required user " + uid, "/editSubjects");
         }
-        return new ModelAndView("subjectsForm").addObject("subjectsForm", new SubjectsForm());
+        return new ModelAndView("redirect:/editSubjects");
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)

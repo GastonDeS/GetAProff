@@ -55,7 +55,7 @@ public class RegisterController {
             throw new RegisterErrorException("exception.register");
         }
         if (form.getUserRole() == 1) {
-            return new ModelAndView("subjectsForm").addObject("subjectsForm", new SubjectsForm());
+            return new ModelAndView("redirect:/editSubjects");
         }
         String redirect = "redirect:/profile/" + maybeUser.get().getId();
         return new ModelAndView(redirect);
