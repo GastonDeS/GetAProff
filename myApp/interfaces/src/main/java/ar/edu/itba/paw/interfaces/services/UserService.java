@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Pair;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public interface UserService {
     int addFavourite(int teacherId, int studentId);
     int removeFavourite(int teacherId, int studentId);
     boolean isFaved(int teacherId, int studentId);
+
+    int addRating(int teacherId, int studentId, float rate, String review);
+    Pair<Float, Integer> getRatingById(int teacherId);
+
     /**
          * Retrieves user schedule
          *

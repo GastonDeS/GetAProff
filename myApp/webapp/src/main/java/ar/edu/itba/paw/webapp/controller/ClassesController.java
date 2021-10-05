@@ -98,8 +98,10 @@ public class ClassesController {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
+        Class myClass = classService.findById(cid);
         classService.setStatus(cid, Class.Status.RATED.getValue());
-        emailService.sendRatedMessage(classService.findById(cid), form.getRating(), form.getReview());
+        userService.addRating(myClass.getTeacherId(),myClass.getStudentId(), form.getRating(), form.getReview());
+        emailService.sendRatedMessage(myClass, form.getRating(), form.getReview());
         return new ModelAndView("redirect:/myClasses");
     }
 }
