@@ -22,7 +22,7 @@ public interface UserDao {
 
     int removeFavourite(int teacherId, int studentId);
 
-    Optional<String> isFaved(int teacherId, int studentId);
+    Optional<Boolean> isFaved(int teacherId, int studentId);
 
     int addRating(int teacherId, int studentId, float rate, String review);
 

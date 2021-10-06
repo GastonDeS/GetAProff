@@ -16,7 +16,7 @@
     <servlet-api.version>2.5</servlet-api.version>
     <jstl.version>1.2</jstl.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
-    <org.hsqldb.version>2.5.2</org.hsqldb.version>
+    <org.hsqldb.version>2.3.1</org.hsqldb.version>
     <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
     <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
     <spring-security.version>4.0.4.RELEASE</spring-security.version>
