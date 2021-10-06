@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,12 +18,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("classpath:key.txt")
+    Resource resource;
 
     @Autowired
     private PawUserDetailsService userDetailsService;
@@ -60,7 +67,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().rememberMe()
                     .rememberMeParameter("j_rememberme")
                     .userDetailsService(userDetailsService)
-                    .key("mysupersecretketthatnobodyknowsabout")  //no hacer esto, crear una aleatoria segura suficiente mente grande y colocarla bajo src/main/resources
+                    .key(FileUtils.readFileToString(resource.getFile(), String.valueOf(StandardCharsets.UTF_8)))
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()
                     .logoutUrl("/logout")
