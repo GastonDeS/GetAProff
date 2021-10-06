@@ -36,7 +36,7 @@
                 </form:select>
                 <div class="price-level-container">
                     <p>${pricePlaceholder}</p>
-                    <form:input cssClass="price-form-control" type="number" max="99999" min="1" path="price"/>
+                    <form:input cssClass="price-form-control" type="number" max="999999999" min="1" path="price"/>
                 </div>
                 <form:errors path="price" element="p" cssClass="form-error"/>
                 <div class="price-level-container">
