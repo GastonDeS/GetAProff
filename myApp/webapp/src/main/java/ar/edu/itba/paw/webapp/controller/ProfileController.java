@@ -60,17 +60,18 @@ public class ProfileController {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
         if (!user.isPresent()) {
-            LOGGER.debug("No profile found for if: " + uid);
+            LOGGER.debug("No profile found for id: {}", uid);
             throw new ProfileNotFoundException("exception.profile");
         }
         ModelAndView mav = new ModelAndView("profile");
         if (curr.isPresent()) {
             if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
-                LOGGER.debug("Cannot access profile for id: " + uid);
+                LOGGER.debug("Cannot access profile for id: {}", uid);
                 throw new ProfileNotFoundException("exception.profile");
             }
             mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
         }
+        LOGGER.debug("Accessing profile for id: {}", uid);
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
@@ -115,6 +116,7 @@ public class ProfileController {
         if (desc == 0 || sch == 0 || name == 0) {
             throw new OperationFailedException("exception.edit.profile");
         }
+        LOGGER.debug("Profile edited for user: {}", uid);
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);
     }

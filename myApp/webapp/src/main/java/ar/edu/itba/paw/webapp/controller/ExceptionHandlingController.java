@@ -19,6 +19,8 @@ import java.util.Optional;
 @ControllerAdvice
 public class ExceptionHandlingController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);
+
     @Autowired
     private MessageSource messageSource;
 
@@ -28,12 +30,14 @@ public class ExceptionHandlingController {
     @ExceptionHandler({LoginErrorException.class,
             NoUserLoggedException.class})
     public ModelAndView loginErrorException(RuntimeException exception) {
+        LOGGER.debug("Authentication failed");
         ModelAndView mav = new ModelAndView("login");
         return mav.addObject("exception", messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
     }
 
     @ExceptionHandler(RegisterErrorException.class)
     public ModelAndView registerErrorException(RegisterErrorException exception) {
+        LOGGER.debug("Registration failed");
         ModelAndView mav = new ModelAndView("register");
         mav.addObject("exception", messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
         return mav.addObject("register", new RegisterForm());
@@ -51,6 +55,7 @@ public class ExceptionHandlingController {
 
     @ExceptionHandler(ClassNotFoundException.class)
     public ModelAndView classNotFoundException(ClassNotFoundException exception) {
+        LOGGER.debug(exception.getMessage());
         return new ModelAndView("redirect:/myClasses?error=true");
     }
 }

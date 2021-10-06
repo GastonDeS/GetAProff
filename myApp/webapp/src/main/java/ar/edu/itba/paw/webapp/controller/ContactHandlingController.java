@@ -10,6 +10,8 @@ import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,8 @@ import java.util.Optional;
 
 @Controller
 public class ContactHandlingController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContactHandlingController.class);
 
     @Autowired
     private UserService userService;
@@ -52,6 +56,7 @@ public class ContactHandlingController {
         if (!maybeUser.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
+        LOGGER.debug("User {} contacting teacher {}", curr.get().getId(), uid);
         mav.addObject("user", maybeUser.get());
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         mav.addObject("subjects", subjectsGiven);
@@ -82,6 +87,7 @@ public class ContactHandlingController {
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
+        LOGGER.debug("User {} contacted teacher {}", curr.get().getId(), uid);
         return new ModelAndView("redirect:/myClasses");
     }
 

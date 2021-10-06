@@ -11,6 +11,8 @@ import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 @Controller
 public class ClassesController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassesController.class);
+
     @Autowired
     private UserService userService;
 
@@ -44,6 +48,7 @@ public class ClassesController {
         if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
+        LOGGER.debug("Accessing classes of user with id: "+ user.get().getId());
         mav.addObject("user", user.get());
         List<ClassInfo> teacherClassList = classService.findClassesByTeacherId(user.get().getId());
         List<ClassInfo> classList = classService.findClassesByStudentId(user.get().getId());
@@ -84,6 +89,7 @@ public class ClassesController {
                 throw new OperationFailedException("exception.failed");
             }
         }
+        LOGGER.debug("Class " + cid + "changed to status " + status);
         return new ModelAndView("redirect:/myClasses");
     }
 
@@ -119,6 +125,7 @@ public class ClassesController {
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
+        LOGGER.debug("Class accepted by teacher " + myClass.get().getTeacherId() + " for stutent " + myClass.get().getStudentId());
         return new ModelAndView("redirect:/myClasses");
     }
 
@@ -154,6 +161,7 @@ public class ClassesController {
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
+        LOGGER.debug("Class rated by student " + myClass.get().getStudentId() + " for teacher " + myClass.get().getTeacherId());
         return new ModelAndView("redirect:/myClasses");
     }
 }

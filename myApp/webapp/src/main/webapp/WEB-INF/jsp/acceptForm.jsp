@@ -13,7 +13,6 @@
     <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
     <spring:message code="accept.message.placeholder" var="messagePlaceHolder"/>
     <spring:message code="accept.btn.value" var="acceptValue"/>
-
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">

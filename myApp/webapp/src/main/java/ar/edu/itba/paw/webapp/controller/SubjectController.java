@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
@@ -12,6 +13,8 @@ import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.NewSubjectForm;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,6 +28,8 @@ import java.util.Optional;
 
 @Controller
 public class SubjectController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubjectController.class);
 
     @Autowired
     private SubjectService subjectService;
@@ -75,6 +80,7 @@ public class SubjectController {
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception.failed");
         }
+        LOGGER.debug("Subject request sent for {}", uid);
         return new ModelAndView("redirect:/newSubjectFormSent/" + uid);
     }
 
@@ -105,6 +111,7 @@ public class SubjectController {
         if (!maybe.isPresent()) {
             throw new OperationFailedException("exception.failed");
         }
+        LOGGER.debug("Subject added for user {}", uid);
         return subjectsForm(form);
     }
 
@@ -114,6 +121,7 @@ public class SubjectController {
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
             throw new OperationFailedException("exception.failed");
         }
+        LOGGER.debug("Subject removed for user {}",uid);
         return new ModelAndView("redirect:/editSubjects");
     }
 }

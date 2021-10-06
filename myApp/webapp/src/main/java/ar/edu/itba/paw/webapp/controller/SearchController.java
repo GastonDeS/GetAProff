@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -20,6 +22,8 @@ import java.util.Optional;
 
 @Controller
 public class SearchController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
 
     @Autowired
     private UserService userService;
@@ -43,6 +47,7 @@ public class SearchController {
         if (Integer.parseInt(offset) > pageQty) {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
+        LOGGER.debug("Teachers found for {}", searchQuery);
         List<CardProfile> maybeTutors = userService.filterUsers(searchQuery, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
@@ -61,6 +66,7 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("tutors");
         String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
         addUserId(mav);
+        LOGGER.debug("Teachers found for {}", urlParams);
         List<CardProfile> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
