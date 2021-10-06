@@ -25,14 +25,6 @@
         <div class="page-container">
             <div class="profile-container">
                 <div class="info-container">
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${image == 0}">--%>
-<%--                            <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg">--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" alt="teacherImg">--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
                     <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" alt="teacherImg">
                     <div class="profile-info">
                         <div class="profile-name">

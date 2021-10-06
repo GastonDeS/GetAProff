@@ -26,7 +26,6 @@
                         <div class="edit-btn-container">
                             <label class="btn btn-custom">
                                 <form:input type="file" accept="image" name="file" style="display: none" id="photo" path="imageFile"/>
-                                <form:input name="hasImage" path="hasImage" style="display:none" />
                                 <spring:message code="user.form.choose.image"/>
                             </label>
                         </div>
@@ -62,11 +61,6 @@
                         reader.readAsDataURL(file);
                     }
                 });
-            });
-            $(document).ready(() => {
-                if ("${image}" ==="false") {
-                    $("#img-preview").attr("src",  "${pageContext.request.contextPath}/resources/images/user_default_img.jpeg");
-                }
             });
         </script>
     </body>

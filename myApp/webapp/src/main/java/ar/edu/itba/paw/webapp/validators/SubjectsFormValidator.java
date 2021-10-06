@@ -33,7 +33,7 @@ public class SubjectsFormValidator implements Validator {
 
         Optional<User> current = userService.getCurrentUser();
         if (!current.isPresent()) {
-            throw new NoUserLoggedException("Exception");
+            throw new NoUserLoggedException("exception.not.logger.user");
         }
 
         if (teachesService.findByUserAndSubjectAndLevel(current.get().getId(), subjectsForm.getSubjectid(), subjectsForm.getLevel()).isPresent()) {
