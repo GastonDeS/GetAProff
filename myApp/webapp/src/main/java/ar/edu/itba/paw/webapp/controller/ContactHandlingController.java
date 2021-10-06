@@ -60,7 +60,7 @@ public class ContactHandlingController {
         mav.addObject("user", maybeUser.get());
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         mav.addObject("subjects", subjectsGiven);
-        mav.addObject("uid", curr.get().getId());
+        mav.addObject("currentUid", curr.get().getId());
         return mav;
     }
 
