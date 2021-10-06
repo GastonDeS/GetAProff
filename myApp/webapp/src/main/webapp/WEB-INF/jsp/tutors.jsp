@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
+    <spring:message code="home.search.placeholder" var="searchPlaceholder"/>
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -21,7 +22,7 @@
         <div class="filter-container">
             <h3 style="padding-left: 10px"><spring:message code="tutors.filtersTitle"/></h3>
             <form action="${pageContext.request.contextPath}/tutors/1" class="search-filters" method="get">
-                <input type="hidden" name="query" value="<%=request.getParameter("query")%>">
+                <input type="hidden" name="query" value="${searchQuery}">
                 <ul class="filter-ulist">
                     <li>
                         <h4><spring:message code="tutors.filters.orderTitle"/></h4>
@@ -148,10 +149,9 @@
                         </ul>
                     </li>
                 </ul>
-                <hr>
                 <div class="filter-btn-container">
                     <button type="submit" id="filter-button" class="btn btn-custom"
-                            style="display: none; width: 100%; margin: 5px 0;">
+                            style="width: 100%; margin: 5px 0;">
                         <spring:message code="tutors.filters.applyBtn"/>
                     </button>
                     <button type="button" id="clear-filter-button" class="btn btn-custom"
@@ -167,7 +167,7 @@
                 <div class="search-bar">
                     <form name="Search" action="${pageContext.request.contextPath}/tutors/1" method="get">
                         <input class="form-control" list="datalistOptions" id="query" name="query"
-                               value="<%=request.getParameter("query")%>"/>
+                               placeholder="${searchPlaceholder}"/>
                         <datalist id="datalistOptions">
                             <c:forEach var="subject" items="${subjects}">
                             <option value="${subject.name}">
@@ -184,8 +184,8 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> ${fn:length(tutors)} <spring:message
-                            code="tutors.search.resultTitle"/> <%=request.getParameter("query")%>
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> <spring:message
+                            code="tutors.search.resultTitle"/> ${searchQuery} :
                     </h3>
                 </c:otherwise>
             </c:choose>

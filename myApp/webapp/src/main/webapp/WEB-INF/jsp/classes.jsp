@@ -214,6 +214,9 @@
             </div>
         </div>
     </div>
+    <jsp:include page="../components/footer.jsp">
+        <jsp:param name="" value=""/>
+    </jsp:include>
     <script>
         var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
         triggerTabList.forEach(function (triggerEl) {

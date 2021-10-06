@@ -58,6 +58,9 @@
                 </div>
             </form:form>
         </div>
+    <jsp:include page="../components/footer.jsp">
+        <jsp:param name="" value=""/>
+    </jsp:include>
         <script>
             $(document).ready(() => {
                 $("#photo").change(function () {
