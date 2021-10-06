@@ -119,6 +119,15 @@ input[type="radio"]:checked + label {
     padding: 0 10px 0 10px;
 }
 
+.custom-active {
+    background: #026670;
+    color: white;
+}
+.custom-active:hover {
+    background: rgb(49, 133, 140);
+    color: white;
+}
+
 .filter-container {
     background: #9fedd7;
     border-radius: 8px;

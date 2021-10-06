@@ -96,7 +96,6 @@
                             <li>
                                 <input name="rating" type="radio" class="rating-radio" id="rating-4+"
                                        value="4"
-                                       checked
                                 >
                                 <label class="form-check-label" for="rating-4+">
                                     <jsp:include page="../components/ratingStars.jsp">
@@ -131,6 +130,17 @@
                                 <label class="form-check-label" for="rating-1+">
                                     <jsp:include page="../components/ratingStars.jsp">
                                         <jsp:param name="rating" value="1"/>
+                                    </jsp:include>
+                                    <spring:message
+                                            code="search.filter.ratingExtraText"/></label>
+
+                            </li>
+                            <li>
+                                <input name="rating" type="radio" class="rating-radio" id="rating-0+"
+                                       value="0" checked>
+                                <label class="form-check-label" for="rating-1+">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rating" value="0"/>
                                     </jsp:include>
                                     <spring:message
                                             code="search.filter.ratingExtraText"/></label>
@@ -210,7 +220,7 @@
                 <c:otherwise>
                     <li class="page-item">
                         <a class="page-link" href="${pageContext.request.contextPath}/tutors/${offset-1}${urlParams}"
-                           tabindex="-1" aria-disabled="true">Previous</a>
+                           tabindex="-1" aria-disabled="true" style="color: #026670;">Previous</a>
                     </li>
                 </c:otherwise>
             </c:choose>
@@ -218,27 +228,31 @@
                 <c:choose>
                     <c:when test="${offset < 3}">
                         <c:set var="show" value=""/>
+                        <c:set var="textColor" value="color: #026670;"/>
                         <c:if test="${idx + 1 == offset}">
-                            <c:set var="show" value="active"/>
+                            <c:set var="show" value="custom-active"/>
+                            <c:set var="textColor" value=""/>
                         </c:if>
                         <c:set var="display" value="disabled"/>
                         <c:if test="${idx + 1 <= pageQty}">
                             <c:set var="display" value=""/>
                         </c:if>
-                        <li class="page-item ${show} ${display}"><a class="page-link"
-                                                         href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                        <li class="page-item ${display}"><a class="page-link ${show} " style=" ${textColor}"
+                                                            href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
                         </li>
                     </c:when>
                     <c:otherwise>
                         <c:set var="show" value=""/>
+                        <c:set var="textColor" value="color: #026670;"/>
                         <c:if test="${offset + idx - 1  == offset}">
-                            <c:set var="show" value="active"/>
+                            <c:set var="show" value="custom-active"/>
+                            <c:set var="textColor" value=""/>
                         </c:if>
                         <c:set var="display" value="disabled"/>
                         <c:if test="${offset + idx - 1 <= pageQty}">
                             <c:set var="display" value=""/>
                         </c:if>
-                        <li class="page-item ${show} ${display}"><a class="page-link"
+                        <li class="page-item ${display}"><a class="page-link ${show} " style="${textColor}"
                                                  href="${pageContext.request.contextPath}/tutors/${offset + idx - 1}${urlParams}">${offset + idx - 1}</a>
                         </li>
                     </c:otherwise>
@@ -249,7 +263,7 @@
                 <c:set var="display" value=""/>
             </c:if>
             <li class="page-item ${display}">
-                <a class="page-link " href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
+                <a class="page-link" style="color: #026670;" href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
             </li>
 
         </ul>
@@ -259,7 +273,7 @@
     <jsp:param name="" value=""/>
 </jsp:include>
 
-<script type="text/javascript" src="/resources/js/script.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
         integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
         crossorigin="anonymous"></script>
