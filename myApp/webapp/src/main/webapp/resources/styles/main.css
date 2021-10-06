@@ -628,7 +628,7 @@ input:focus {
 
 .info-container {
     width: 100%;
-    height: 30%;
+    height: 28vh;
     display: flex;
     justify-content: center;
     align-items: center;
