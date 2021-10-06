@@ -9,10 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class SubjectDaoJdbc implements SubjectDao {
@@ -43,11 +40,6 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
-    public Subject save(Subject subject) {
-        return null;
-    }
-
-    @Override
     public Subject create (String subject) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", subject);
@@ -56,17 +48,8 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
-    public Optional<List<Subject>> listSubjects() {
+    public List<Subject> listSubjects() {
         final List<Subject> list = jdbcTemplate.query("SELECT * FROM subject", ROW_MAPPER);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
-
-    @Override
-    public Optional<List<Subject>> subjectsNotGiven(int userId) {
-        final List<Subject> list = jdbcTemplate.query(
-                "SELECT * FROM subject WHERE subjectid NOT IN " +
-                        "(SELECT subjectid FROM teaches WHERE userid = ?) ",
-                new Object[] {userId}, ROW_MAPPER);
-        return Optional.ofNullable(list);
-     }
 }

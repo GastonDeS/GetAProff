@@ -15,5 +15,5 @@ public interface RoleDao {
 
     int addRoleToUser(int roleId, int userId);
 
-    Optional<List<Role>> getUserRoles(int userid);
+    List<Role> getUserRoles(int userid);
 }

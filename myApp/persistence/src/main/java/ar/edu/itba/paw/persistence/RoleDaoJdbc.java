@@ -9,10 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class RoleDaoJdbc implements RoleDao{
@@ -54,9 +51,9 @@ public class RoleDaoJdbc implements RoleDao{
     }
 
     @Override
-    public Optional<List<Role>> getUserRoles(int userid) {
+    public List<Role> getUserRoles(int userid) {
         final List<Role> list = jdbcTemplate.query("SELECT r.roleid as roleid, role FROM roles r JOIN userroles u ON r.roleid = u.roleid WHERE userid = ?",
                 new Object[] {userid}, ROW_MAPPER);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 }

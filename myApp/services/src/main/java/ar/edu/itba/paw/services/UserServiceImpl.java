@@ -5,10 +5,12 @@ import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.exceptions.InsertException;
 import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +39,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UtilsService utilsService;
 
+    void setUtilsService(UtilsService utilsService) {
+        this.utilsService = utilsService;
+    }
+
     void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -54,18 +60,18 @@ public class UserServiceImpl implements UserService {
         Optional<User> maybeUser = userDao.get(id);
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-            Optional<List<Role>> roles = roleService.getUserRoles(id);
-            if (!roles.isPresent()) {
+            List<Role> roles = roleService.getUserRoles(id);
+            if (roles.isEmpty()) {
                 return Optional.empty();
             }
-            user.setUserRoles(roles.get());
+            user.setUserRoles(roles);
             return Optional.of(user);
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject, String order, String price, String level, String rating, String offset) {
+    public List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset) {
         int lvl = Integer.parseInt(level);
         if(lvl < 0 || lvl > MAX_LEVEL)
             lvl = ANY_LEVEL;
@@ -77,7 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject, String price, String level) {
+    public List<CardProfile> filterUsers(String subject, String price, String level) {
         int lvl = Integer.parseInt(level);
         if(lvl < 0 || lvl > MAX_LEVEL)
             lvl = ANY_LEVEL;
@@ -89,12 +95,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject) {
+    public List<CardProfile> filterUsers(String subject) {
         return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, GET_ALL);
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject, String offset) {
+    public List<CardProfile> filterUsers(String subject, String offset) {
         return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
     }
 
@@ -109,28 +115,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CardProfile>> getFavourites(int uid) {
+    public List<CardProfile> getFavourites(int uid) {
         return userDao.getFavourites(uid);
-    }
-
-    @Override
-    public Optional<String> getUserSchedule(int userId) {
-        Optional<User> u = userDao.get(userId);
-        return u.map(User::getSchedule);
-    }
-
-    public List<User> list() {
-        return userDao.list();
     }
 
     @Override
     public Integer mostExpensiveUserFee(String subject) {
         Optional<CardProfile> mostExpensiveUser;
-        Optional<List<CardProfile>> users = filterUsers(subject);
-        if(!users.isPresent()) {
+        List<CardProfile> users = filterUsers(subject);
+        if(users.isEmpty()) {
             return 1;
         }
-        mostExpensiveUser = users.get().stream().max(Comparator.comparing(CardProfile::getMaxPrice));
+        mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getMaxPrice));
         return mostExpensiveUser.map(CardProfile::getMaxPrice).orElse(1);
     }
 
@@ -138,11 +134,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
         User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
-        Optional<List<Role>> roles = roleService.setUserRoles(u.getId(), userole);
-        if (!roles.isPresent()) {
+        List<Role> roles = roleService.setUserRoles(u.getId(), userole);
+        if (roles.isEmpty()) {
             return Optional.empty();
         }
-        u.setUserRoles(roles.get());
+        u.setUserRoles(roles);
         return Optional.of(u);
     }
 
@@ -151,11 +147,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> maybe = userDao.findByEmail(mail);
         if (maybe.isPresent()) {
             User u = maybe.get();
-            Optional<List<Role>> roles = roleService.getUserRoles(u.getId());
-            if (!roles.isPresent()) {
+            List<Role> roles = roleService.getUserRoles(u.getId());
+            if (roles.isEmpty()) {
                 return Optional.empty();
             }
-            u.setUserRoles(roles.get());
+            u.setUserRoles(roles);
             return Optional.of(u);
         }
         return Optional.empty();
@@ -164,17 +160,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             String userMail = authentication.getName();
             return this.findByEmail(userMail);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getUserDescription(int userId) {
-        Optional<User> u = userDao.get(userId);
-        return u.map(User::getDescription);
     }
 
     @Transactional
@@ -192,21 +182,32 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public int addFavourite(int teacherId, int studentId) {
-        return userDao.addFavourite(teacherId, studentId);
+        int modified;
+        try {
+            modified = userDao.addFavourite(teacherId, studentId);
+        } catch (DuplicateKeyException exception) {
+            throw new InsertException("Unable to insert");
+        }
+        return modified;
     }
 
     @Override
     public boolean isFaved(int teacherId, int studentId) {
-        Optional<String> count = userDao.isFaved(teacherId, studentId);
-        return count.map(s -> s.equals("1")).orElse(false);
+        Optional<Boolean> count = userDao.isFaved(teacherId, studentId);
+        return count.map(s -> s.equals(true)).orElse(false);
     }
 
     @Override
     public int addRating(int teacherId, int studentId, float rate, String review) {
-        return userDao.addRating(teacherId, studentId, rate, review);
+        int modified;
+        try {
+            modified = userDao.addRating(teacherId, studentId, rate, review);
+        } catch (DuplicateKeyException exception) {
+            throw new InsertException("Unable to insert");
+        }
+        return modified;
     }
 
-    //Donde se usa?
     @Override
     public Pair<Float, Integer> getRatingById(int teacherId) {
         return userDao.getRatingById(teacherId);

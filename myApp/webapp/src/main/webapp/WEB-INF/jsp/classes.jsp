@@ -18,6 +18,9 @@
         <jsp:param name="section" value="2"/>
     </jsp:include>
     <div class="page-container">
+        <c:if test="${param.error != null}">
+            <p class="form-error"><spring:message code="exception.class"/></p>
+        </c:if>
         <div class="classes-separator-container">
             <c:if test="${isTeacher == 1}">
                 <div class="main-tab-container">

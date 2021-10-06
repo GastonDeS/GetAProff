@@ -19,8 +19,6 @@ public class TestConfig {
 
     @Value("classpath:hsqldb.sql")
     private Resource hsqldb;
-    @Value("classpath:schema.sql")
-    private Resource schema;
 
     @Bean
     public DataSource dataSource() {
@@ -34,7 +32,7 @@ public class TestConfig {
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
+    public DataSourceInitializer dataSourceInitializerTest(final DataSource ds){
         final DataSourceInitializer dsi = new DataSourceInitializer();
         dsi.setDataSource(ds);
         dsi.setDatabasePopulator(databasePopulator());
@@ -45,7 +43,6 @@ public class TestConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dp = new ResourceDatabasePopulator();
         dp.addScript(hsqldb);
-        dp.addScript(schema);
         return dp;
     }
 }

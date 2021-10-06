@@ -3,10 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,21 +32,13 @@ public class SearchController {
         u.ifPresent(user -> mav.addObject("uid", user.getId()));
     }
 
-    private List<Subject> getSubjects() {
-        Optional<List<Subject>> subjects = subjectService.list();
-        if (!subjects.isPresent()) {
-            throw new ListNotFoundException("exception.list");
-        }
-        return subjects.get();
-    }
-
     @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = "query")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        Optional<List<CardProfile>> maybeTutors = userService.filterUsers(searchQuery, offset);
-        mav.addObject("tutors", maybeTutors.isPresent() ? maybeTutors.get() : new ArrayList<>());
-        mav.addObject("subjects", getSubjects());
+        List<CardProfile> maybeTutors = userService.filterUsers(searchQuery, offset);
+        mav.addObject("tutors", maybeTutors);
+        mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         mav.addObject("urlParams", "?query=" + searchQuery);
@@ -64,9 +54,9 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("tutors");
         String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
         addUserId(mav);
-        Optional<List<CardProfile>> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
-        mav.addObject("tutors", maybeTutors.isPresent() ? maybeTutors.get() : new ArrayList<>());
-        mav.addObject("subject", getSubjects());
+        List<CardProfile> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
+        mav.addObject("tutors", maybeTutors);
+        mav.addObject("subject", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         mav.addObject("urlParams", urlParams);

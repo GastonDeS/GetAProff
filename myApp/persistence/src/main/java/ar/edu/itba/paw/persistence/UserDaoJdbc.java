@@ -49,12 +49,6 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<User> list() {
-        final List<User> list = jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
-        return list.isEmpty() ? null : list;
-    }
-
-    @Override
     public User create(String username, String mail, String password, String description, String schedule) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", username);
@@ -67,7 +61,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
+    public List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -88,7 +82,7 @@ public class UserDaoJdbc implements UserDao {
          list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating}, mapper);
 
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
     private String checkOrdering(int order){
@@ -113,7 +107,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<List<CardProfile>> getFavourites(int uid) {
+    public List<CardProfile> getFavourites(int uid) {
         RowMapper<CardProfile> mapper = (rs,rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -131,7 +125,7 @@ public class UserDaoJdbc implements UserDao {
                 "                order by rate DESC";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {uid}, mapper);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
     @Override
@@ -150,18 +144,18 @@ public class UserDaoJdbc implements UserDao {
                 .stream().findFirst();
     }
 
-    @Override
-    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
-        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
-        List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
-                new Object[] { userId}, pairRowMapper);
-        Map<Integer,List<String>> map = new HashMap<>();
-        for(Pair<Integer,String> p : rSet){
-            map.computeIfAbsent(p.getValue1(), k -> new ArrayList<>());
-            map.get(p.getValue1()).add(p.getValue2());
-        }
-        return map;
-    }
+//    @Override
+//    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
+//        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
+//        List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
+//                new Object[] { userId}, pairRowMapper);
+//        Map<Integer,List<String>> map = new HashMap<>();
+//        for(Pair<Integer,String> p : rSet){
+//            map.computeIfAbsent(p.getValue1(), k -> new ArrayList<>());
+//            map.get(p.getValue1()).add(p.getValue2());
+//        }
+//        return map;
+//    }
 
     @Override
     public int setUserSchedule(int userId, String schedule) {
@@ -174,13 +168,14 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<String> isFaved(int teacherId, int studentId) {
-        RowMapper<String> pairRowMapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
-        List<String> list = jdbcTemplate.query("select count(*) as count\n" +
+    public Optional<Boolean> isFaved(int teacherId, int studentId) {
+        RowMapper<String> mapper = (rs, rowNum) -> (String.valueOf(rs.getInt("faved")));
+        List<String> list = jdbcTemplate.query("select count(*) as faved\n" +
                 "from favourites\n" +
                 "where teacherid = ?\n" +
-                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+                "  and  studentid = ?;", new Object[]{teacherId,studentId},mapper);
+        list.forEach(System.out::println);
+        return list.isEmpty() ? Optional.empty() : Optional.of(Integer.parseInt(list.get(0)) > 0);
     }
 
     @Override

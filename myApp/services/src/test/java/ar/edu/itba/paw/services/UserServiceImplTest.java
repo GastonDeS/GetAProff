@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.RoleService;
+import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
@@ -49,55 +50,39 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private RoleService roleService;
+    @Mock
+    private UtilsService utilsService;
 
     private User user = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);;
 
+    @Test
+    public void testCreate(){
+//        1 setup - precondiciones
+        when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenReturn(user);
+        when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
+        List<Role> roles = new ArrayList<>();
+        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
+        when(roleService.setUserRoles(USER_ID,USER_ROLE)).thenReturn(roles);
+        when(utilsService.capitalizeString(eq(USERNAME))).thenReturn(USERNAME); //este username ya esta capitalizado
 
-//    @Before
-//    public void setUp() {
-//        mockDao = Mockito.mock(UserDao.class);
-//        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-//        roleService = Mockito.mock(RoleService.class);
-//        userDetailsService = Mockito.mock(UserDetailsService.class);
-//        u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
-//        userService.setUserDao(mockDao);
-//        userService.setPasswordEncoder(passwordEncoder);
-//        userService.setRoleService(roleService);
-//        userService.setUserDetailsService(userDetailsService);
-//    }
+//        2 ejercito la class under test una unica linea
 
-//    @Test
-//    public void testCreate(){
-////        1 setup - precondiciones
-//        when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenReturn(u);
-//        when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
-//        List<Role> roles = new ArrayList<>();
-//        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
-//        when(roleService.setUserRoles(USER_ID,USER_ROLE)).thenReturn(roles);
-//
-//        UserDetails userD = Mockito.mock(UserDetails.class);
-//
-//        when(userDetailsService.loadUserByUsername(eq(USER_MAIL))).thenReturn(userD);
-//
-////        2 ejercito la class under test una unica linea
-//
-//        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);
-//
-////        3 Asserts - postcondiciones
-//
-//        Assert.assertTrue(user.isPresent());
-//        Assert.assertEquals(user.get().getMail(),USER_MAIL);
-//    }
+        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);
+
+//        3 Asserts - postcondiciones
+
+        Assert.assertTrue(user.isPresent());
+        Assert.assertEquals(user.get().getMail(),USER_MAIL);
+    }
 
     @Test(expected = RuntimeException.class) //TODO
     public void testCreateDuplicateUser(){
 //        1 setup - precondiciones
+
         User u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
-//        when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenThrow(RuntimeException.class);
-//        when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
         List<Role> roles = new ArrayList<>();
         roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
-//        when(roleService.setUserRoles(USER_ID,USER_ROLE)).thenReturn(roles);
+
 //        2 ejercito la class under test una unica linea
 
         final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);
@@ -108,20 +93,10 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGetUserDescription() {
-        when(mockDao.get(eq(USER_ID))).thenReturn(Optional.ofNullable(user));
-
-        Optional<String> description = userService.getUserDescription(USER_ID);
-
-        Assert.assertTrue(description.isPresent());
-        Assert.assertEquals(DESCRIPTION,description.get());
-    }
-
-    @Test
     public void testMostExpensiveUserFee() {
         List<CardProfile> cards = new ArrayList<>();
         cards.add(new CardProfile(USER_ID,USERNAME,MAXPRICE,MINPRICE,DESCRIPTION,0,RATE));
-        when(mockDao.filterUsers(eq(SUBJECT),eq(0),eq(Integer.MAX_VALUE),eq(0)/* any_level */,eq(0),eq(0))).thenReturn(Optional.of(cards));
+        when(mockDao.filterUsers(eq(SUBJECT),eq(0),eq(Integer.MAX_VALUE),eq(0)/* any_level */,eq(0),eq(0))).thenReturn(cards);
 
         Integer max = userService.mostExpensiveUserFee(SUBJECT);
 

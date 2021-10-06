@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,9 @@ public class FavouritesController {
         if (!u.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login
         }
-        Optional<List<CardProfile>> favouritesTutors = userService.getFavourites(u.get().getId());
+        List<CardProfile> favouritesTutors = userService.getFavourites(u.get().getId());
         mav.addObject("uid", u.get().getId());
-        mav.addObject("favouritesTutors", favouritesTutors.isPresent() ? favouritesTutors.get() : new ArrayList<>());
+        mav.addObject("favouritesTutors", favouritesTutors);
         return mav;
     }
 

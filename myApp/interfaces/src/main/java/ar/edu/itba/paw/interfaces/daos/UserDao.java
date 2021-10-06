@@ -10,16 +10,17 @@ import java.util.Optional;
 public interface UserDao {
     Optional<User> get(int id);
 
-    List<User> list();
-    Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
-    Optional<List<CardProfile>> getFavourites(int uid);
+    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
+
+    List<CardProfile> getFavourites(int uid);
+
     Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
 
     int addFavourite(int teacherId, int studentId);
 
     int removeFavourite(int teacherId, int studentId);
 
-    Optional<String> isFaved(int teacherId, int studentId);
+    Optional<Boolean> isFaved(int teacherId, int studentId);
 
     int addRating(int teacherId, int studentId, float rate, String review);
 
@@ -35,8 +36,6 @@ public interface UserDao {
     User create(String username, String mail, String password, String description, String schedule);
 
     Optional<User> findByEmail(String mail);
-
-    Map<Integer, List<String>> getUserSubjectsAndLevels(int userId);
 
     int setUserSchedule(int userId, String schedule);
 

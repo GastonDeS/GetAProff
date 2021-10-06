@@ -11,9 +11,9 @@ public interface ClassDao {
 
     Optional<Class> get(int id);
 
-    Optional<List<ClassInfo>> findClassesByStudentId(int id);
+    List<ClassInfo> findClassesByStudentId(int id);
 
-    Optional<List<ClassInfo>> findClassesByTeacherId(int id);
+    List<ClassInfo> findClassesByTeacherId(int id);
 
     Class create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message);
 

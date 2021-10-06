@@ -11,8 +11,6 @@ public interface SubjectService {
 
     Subject create(String subject);
 
-    Optional<List<Subject>> list();
-
-    Optional<List<Subject>> subjectsNotGiven(int userId);
+    List<Subject> list();
 
 }

@@ -40,20 +40,6 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public List<Teaches> findUserBySubject(int subjectId) {
-        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE subjectId = ?",
-                new Object[] { subjectId }, ROW_MAPPER);
-        return list.isEmpty() ? null : list ;
-    }
-
-    @Override
-    public Optional<List<Teaches>> findSubjectByUser(int userId) {
-        final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE userId = ?",
-                new Object[] { userId }, ROW_MAPPER);
-        return Optional.ofNullable(list);
-    }
-
-    @Override
     public Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level) {
         final List<Teaches> list = jdbcTemplate.query(
                 "SELECT * FROM teaches WHERE userId = ? AND subjectId = ? AND level  = ?", new Object[] {userId, subjectId, level}, ROW_MAPPER);
@@ -66,7 +52,7 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid) {
+    public List<SubjectInfo> getSubjectInfoListByUser(int userid) {
         RowMapper<SubjectInfo> subjectInfoRowMapper = (rs, rowNum) ->
                 new SubjectInfo(rs.getInt("id"), rs.getString("name"),
                         rs.getInt("price"), rs.getInt("level"));
@@ -74,7 +60,7 @@ public class TeachesDaoJdbc implements TeachesDao {
                 "SELECT s.subjectid as id, s.name as name, price, level\n" +
                         "FROM teaches t JOIN subject s ON t.subjectid = s.subjectid WHERE userId = ?",
                 new Object[] {userid}, subjectInfoRowMapper);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
 }
