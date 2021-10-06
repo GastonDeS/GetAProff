@@ -20,16 +20,16 @@
         <form method="post" action="${loginURL}">
             <div class="form-container">
                 <p class="form-title"><spring:message code="login.form.title"/></p>
+                <c:if test="${param.error != null}">
+                    <p class="form-error"><spring:message code="login.error"/></p>
+                </c:if>
+                <p class="form-error">${exception}</p>
                 <div class="form-input-container">
                     <input type="text" class="form-control" name="j_email" placeholder="${mailPlaceholder}"/>
                 </div>
                 <div class="form-input-container">
                     <input type="password" class="form-control" name="j_password" placeholder="${passPlaceholder}"/>
                 </div>
-                <c:if test="${param.error != null}">
-                    <p class="form-error"><spring:message code="login.error"/></p>
-                </c:if>
-                <p class="form-error">${exception}</p>
                 <label class="login-checkbox">
                     <input class="checkbox" name="j_rememberme" type="checkbox"/>
                     <spring:message code="remember.me"/>

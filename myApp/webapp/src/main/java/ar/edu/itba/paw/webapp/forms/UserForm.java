@@ -6,17 +6,7 @@ public class UserForm {
 
     private String description, schedule;
 
-    private Boolean hasImage = false;
-
     private MultipartFile imageFile;
-
-    public Boolean getHasImage() {
-        return hasImage;
-    }
-
-    public void setHasImage(Boolean hasImage) {
-        this.hasImage = hasImage;
-    }
 
     public String getDescription() {
         return description;

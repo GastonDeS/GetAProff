@@ -22,7 +22,6 @@ public class UserFormValidator implements Validator {
         MultipartFile imageFile = uf.getImageFile();
         String description = uf.getDescription();
         String schedule = uf.getSchedule();
-        Boolean hasImage = uf.getHasImage();
 
         if (description.isEmpty()) {
             errors.rejectValue("description", "form.field.empty");
@@ -32,13 +31,9 @@ public class UserFormValidator implements Validator {
             errors.rejectValue("schedule", "form.field.empty");
         }
 
-        if (!hasImage) {
-            errors.rejectValue("imageFile", "form.image.required");
-        } else {
-            if (imageFile != null || !imageFile.isEmpty()) {
-                if(!checkContentType(imageFile.getContentType().toLowerCase())) {
-                    errors.rejectValue("imageFile", "form.image.format");
-                }
+        if (imageFile != null && imageFile.getSize() > 0) {
+            if(!checkContentType(imageFile.getContentType().toLowerCase())) {
+                errors.rejectValue("imageFile", "form.image.format");
             }
         }
     }
