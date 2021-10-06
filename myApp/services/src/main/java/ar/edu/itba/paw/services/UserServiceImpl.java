@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
       return userDao.findUsersBySubjectId(subjectId);
     }
 
+
     @Override
     public List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset) {
         int lvl = Integer.parseInt(level);
@@ -92,6 +93,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<CardProfile> filterUsers(String subject, String offset) {
         return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
+    }
+
+    @Override
+    public Integer getPageQty(String subject, String price, String level, String rating) {
+        return userDao.getPageQty( subject,  Integer.parseInt(price),  Integer.parseInt(level),  Integer.parseInt(rating));
+    }
+
+    @Override
+    public Integer getPageQty(String subject) {
+        return userDao.getPageQty(subject,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING);
     }
 
     @Override

@@ -14,6 +14,8 @@ public interface UserService {
     List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
     List<CardProfile> filterUsers(String subject);
     List<CardProfile> filterUsers(String subject, String offset);
+    Integer getPageQty(String subject, String price, String level, String rating);
+    Integer getPageQty(String subject);
 
 
     List<CardProfile> getFavourites(int uid);

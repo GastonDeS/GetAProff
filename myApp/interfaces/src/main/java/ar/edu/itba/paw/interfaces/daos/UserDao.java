@@ -14,6 +14,7 @@ public interface UserDao {
     List<CardProfile> findUsersBySubjectId(int subjectId);
     List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
     List<CardProfile> getFavourites(int uid);
+    Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
 
     int addFavourite(int teacherId, int studentId);
     int removeFavourite(int teacherId, int studentId);
