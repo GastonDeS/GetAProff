@@ -3,10 +3,10 @@
 
 <c:forEach begin="0" end="4" varStatus="loop">
     <c:choose>
-        <c:when test="${param.rate-loop.index >= 1}">
+        <c:when test="${param.rating - loop.index >= 1}">
             <span class="fa fa-star checked"></span>
         </c:when>
-        <c:when test="${param.rate-loop.index > 0 && param.rate-loop.index < 1}">
+        <c:when test="${param.rating - loop.index > 0 && param.rating - loop.index < 1}">
             <span class="fa fa-star-half-o checked"></span>
         </c:when>
         <c:otherwise>

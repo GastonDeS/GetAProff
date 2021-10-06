@@ -16,19 +16,9 @@
         <h5 class="card-title"><c:out value="${param.name}"/></h5>
         <p class="card-text-custom"><c:out value="${param.description}"/></p>
 <%--        <p class="card-text-custom"><c:out value="${param.rate}"/></p>--%>
-        <c:forEach begin="0" end="4" varStatus="loop">
-            <c:choose>
-                <c:when test="${param.rate-loop.index >= 1}">
-                    <span class="fa fa-star checked"></span>
-                </c:when>
-                <c:when test="${param.rate-loop.index > 0 && param.rate-loop.index < 1}">
-                    <span class="fa fa-star-half-o checked"></span>
-                </c:when>
-                <c:otherwise>
-                    <span class="fa fa-star-o checked"></span>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
+        <jsp:include page="ratingStars.jsp">
+            <jsp:param name="rating" value="${param.rate}"/>
+        </jsp:include>
         <c:choose>
             <c:when test="${param.minPrice != param.maxPrice}">
                 <p class="card-price">$<c:out value="${param.minPrice}"/> - $<c:out value="${param.maxPrice}"/></p>

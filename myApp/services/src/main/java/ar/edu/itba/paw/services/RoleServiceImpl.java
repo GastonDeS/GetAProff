@@ -28,19 +28,19 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<List<Role>> getUserRoles(int userid) {
+    public List<Role> getUserRoles(int userid) {
         return roleDao.getUserRoles(userid);
     }
 
     @Transactional
     @Override
-    public Optional<List<Role>> setUserRoles(int userId, int userRole) {
+    public List<Role> setUserRoles(int userId, int userRole) {
         List<Role> userRoles = new ArrayList<>();
         if (userRole == Roles.TEACHER.id) {
             addRoleToList(userRoles, Roles.TEACHER, userId);
         }
         addRoleToList(userRoles, Roles.STUDENT, userId);
-        return userRoles.isEmpty() ? Optional.empty() : Optional.of(userRoles);
+        return userRoles.isEmpty() ? new ArrayList<>() : userRoles;
     }
 
     private void addRoleToList(List<Role> userRoles, Roles role, int userId) {

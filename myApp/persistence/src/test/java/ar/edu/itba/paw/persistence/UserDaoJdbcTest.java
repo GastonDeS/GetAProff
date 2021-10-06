@@ -8,18 +8,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
-import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql(scripts = "classpath:user-test.sql")
+//@Sql(scripts = "classpath:user-test.sql")
 public class UserDaoJdbcTest {
 
     private static final String USERNAME = "John Doe";
@@ -58,6 +57,8 @@ public class UserDaoJdbcTest {
 
     @Test
     public void testCreate(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,"users");
+
         final User register = userDao.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE);
 
         Assert.assertNotNull(register);
@@ -65,19 +66,20 @@ public class UserDaoJdbcTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"users","name = '"+USERNAME+"'"));
     }
 
-    @Test
+    @Test(expected = DuplicateKeyException.class)
     public void testAlreadyRegistered(){
         final User register = userDao.create("gaston","gdeschant@itba.edu.ar","GFDA23faS$#","the best teacher ever","every day since 8 am to 4 pm");
         final User register2 = userDao.create("gaston","gdeschant@itba.edu.ar","GFDA23faS$#","the best teacher ever","every day since 8 am to 4 pm");
 
-
-        Assert.assertNotNull(register);
-        Assert.assertEquals("gdeschant@itba.edu.ar", register.getMail());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"users","name = '"+"gaston"+"'"));
-
+        Assert.fail("Duplicate key");
     }
 
+    @Test
+    public void testSetUserSchedule(){
+        final int valid = userDao.setUserSchedule(10,"todos los dias my rey");
 
+        Assert.assertEquals(0,valid);
+    }
 
 
 
