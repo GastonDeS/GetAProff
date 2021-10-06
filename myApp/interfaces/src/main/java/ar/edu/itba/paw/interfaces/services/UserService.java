@@ -35,13 +35,6 @@ public interface UserService {
     Pair<Float, Integer> getRatingById(int teacherId);
 
     /**
-     * Retrieves all the users registered
-     *
-     * @return A list of User
-     */
-    List<User> list();
-
-    /**
      * Retrieves the fee of the most expensive user
      * @param subject Subject to search for highest fee
      * @return Fee of most expensive user
@@ -60,8 +53,6 @@ public interface UserService {
     Optional<User> findByEmail(String mail);
 
     Optional<User> getCurrentUser();
-
-    Optional<String> getUserDescription(int userId);
 
     int setUserSchedule(int userId, String schedule);
 

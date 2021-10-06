@@ -49,12 +49,6 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<User> list() {
-        final List<User> list = jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
-        return list.isEmpty() ? null : list;
-    }
-
-    @Override
     public User create(String username, String mail, String password, String description, String schedule) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", username);
@@ -150,18 +144,18 @@ public class UserDaoJdbc implements UserDao {
                 .stream().findFirst();
     }
 
-    @Override
-    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
-        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
-        List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
-                new Object[] { userId}, pairRowMapper);
-        Map<Integer,List<String>> map = new HashMap<>();
-        for(Pair<Integer,String> p : rSet){
-            map.computeIfAbsent(p.getValue1(), k -> new ArrayList<>());
-            map.get(p.getValue1()).add(p.getValue2());
-        }
-        return map;
-    }
+//    @Override
+//    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
+//        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
+//        List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
+//                new Object[] { userId}, pairRowMapper);
+//        Map<Integer,List<String>> map = new HashMap<>();
+//        for(Pair<Integer,String> p : rSet){
+//            map.computeIfAbsent(p.getValue1(), k -> new ArrayList<>());
+//            map.get(p.getValue1()).add(p.getValue2());
+//        }
+//        return map;
+//    }
 
     @Override
     public int setUserSchedule(int userId, String schedule) {

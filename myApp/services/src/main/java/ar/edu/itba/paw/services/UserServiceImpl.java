@@ -115,10 +115,6 @@ public class UserServiceImpl implements UserService {
         return userDao.getFavourites(uid);
     }
 
-    public List<User> list() {
-        return userDao.list();
-    }
-
     @Override
     public Integer mostExpensiveUserFee(String subject) {
         Optional<CardProfile> mostExpensiveUser;
@@ -165,12 +161,6 @@ public class UserServiceImpl implements UserService {
             return this.findByEmail(userMail);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getUserDescription(int userId) {
-        Optional<User> u = userDao.get(userId);
-        return u.map(User::getDescription);
     }
 
     @Transactional

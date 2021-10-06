@@ -79,58 +79,62 @@
                         </div>
                     </div>
                 </div>
-                <c:if test="${user.teacher}">
-                <div class="main-container h-100">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-                                <li class="nav-item active" role="presentation">
-                                    <button class="nav-link nav-link-custom active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button"
-                                            role="tab" aria-controls="personal" aria-selected="false">
-                                        <spring:message code="profile.personal.info"/>
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button"
-                                            role="tab" aria-controls="subjects" aria-selected="true">
-                                        <spring:message code="profile.subjects"/>
-                                    </button>
-                                </li>
-                        </ul>
-                    </div>
-                    <div class="classes-container h-100">
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
-                                <div class="section-info">
-                                    <div class="profile-desc-sch">
-                                        <h1><spring:message code="profile.description"/></h1>
-                                        <p><c:out value="${user.description}"/></p>
+                <c:choose>
+                    <c:when test="${user.teacher}">
+                        <div class="main-container h-100">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                    <li class="nav-item active" role="presentation">
+                                        <button class="nav-link nav-link-custom active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button"
+                                                role="tab" aria-controls="personal" aria-selected="false">
+                                            <spring:message code="profile.personal.info"/>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button"
+                                                role="tab" aria-controls="subjects" aria-selected="true">
+                                            <spring:message code="profile.subjects"/>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="classes-container h-100">
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                                        <div class="section-info">
+                                            <div class="profile-desc-sch">
+                                                <h1><spring:message code="profile.description"/></h1>
+                                                <p><c:out value="${user.description}"/></p>
+                                            </div>
+                                            <div class="profile-desc-sch">
+                                                <h1><spring:message code="profile.schedule"/></h1>
+                                                <p><c:out value="${user.schedule}"/></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="profile-desc-sch">
-                                        <h1><spring:message code="profile.schedule"/></h1>
-                                        <p><c:out value="${user.schedule}"/></p>
+                                    <div class="tab-pane fade" id="subjects" role="tabpanel" aria-labelledby="subjects-tab">
+                                        <table>
+                                            <tr class="subjects-row" style="width: 100%">
+                                                <td class="row-title" style="width: 55%">${tableSubject}</td>
+                                                <td class="row-title" style="width: 15%">${tablePrice}</td>
+                                                <td class="row-title" style="width: 30%">${tableLevel}</td>
+                                            </tr>
+                                            <c:forEach items="${subjectsList}" var="subject">
+                                                <tr class="subjects-row" style="width: 100%">
+                                                    <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
+                                                    <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                                    <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                                </tr>
+                                            </c:forEach>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="subjects" role="tabpanel" aria-labelledby="subjects-tab">
-                                <table>
-                                    <tr class="subjects-row" style="width: 100%">
-                                        <td class="row-title" style="width: 55%">${tableSubject}</td>
-                                        <td class="row-title" style="width: 15%">${tablePrice}</td>
-                                        <td class="row-title" style="width: 30%">${tableLevel}</td>
-                                    </tr>
-                                    <c:forEach items="${subjectsList}" var="subject">
-                                        <tr class="subjects-row" style="width: 100%">
-                                            <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
-                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
-                                            <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
-                                        </tr>
-                                    </c:forEach>
-                                </table>
-                            </div>
                         </div>
-                    </div>
-                </div>
-                </c:if>
+                    </c:when>
+                    <c:otherwise>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <script>

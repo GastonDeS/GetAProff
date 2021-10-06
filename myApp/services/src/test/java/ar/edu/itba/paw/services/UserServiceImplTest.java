@@ -107,15 +107,15 @@ public class UserServiceImplTest {
         Assert.fail("Duplicate user creation should have thrown");
     }
 
-    @Test
-    public void testGetUserDescription() {
-        when(mockDao.get(eq(USER_ID))).thenReturn(Optional.ofNullable(user));
-
-        Optional<String> description = userService.getUserDescription(USER_ID);
-
-        Assert.assertTrue(description.isPresent());
-        Assert.assertEquals(DESCRIPTION,description.get());
-    }
+//    @Test
+//    public void testGetUserDescription() {
+//        when(mockDao.get(eq(USER_ID))).thenReturn(Optional.ofNullable(user));
+//
+//        Optional<String> description = userService.getUserDescription(USER_ID);
+//
+//        Assert.assertTrue(description.isPresent());
+//        Assert.assertEquals(DESCRIPTION,description.get());
+//    }
 
     @Test
     public void testMostExpensiveUserFee() {
