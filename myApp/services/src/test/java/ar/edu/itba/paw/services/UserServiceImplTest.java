@@ -123,7 +123,7 @@ public class UserServiceImplTest {
     public void testMostExpensiveUserFee() {
         List<CardProfile> cards = new ArrayList<>();
         cards.add(new CardProfile(USER_ID,USERNAME,MAXPRICE,MINPRICE,DESCRIPTION,0,RATE));
-        when(mockDao.filterUsers(eq(SUBJECT),eq(Integer.MAX_VALUE),eq(0)/* any_level */)).thenReturn(cards);
+        when(mockDao.filterUsers(eq(SUBJECT),eq(0),eq(Integer.MAX_VALUE),eq(0)/* any_level */,eq(0),eq(0))).thenReturn(cards);
 
         Integer max = userService.mostExpensiveUserFee(SUBJECT);
 
