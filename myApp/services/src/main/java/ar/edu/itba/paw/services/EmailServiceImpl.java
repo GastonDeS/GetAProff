@@ -130,5 +130,13 @@ public class EmailServiceImpl implements EmailService {
         sendSimpleMessage(teacher.get().getMail(),"GetAProff:Nueva calificación", text);
     }
 
+    @Override
+    @Async
+    public void sendSubjectRequest(int uid, String subject, String message) {
+        sendSimpleMessage("getaproff@gmail.com","Nueva petición de Materia, uid:" + String.valueOf(uid),"<p>Materia:" +
+                subject + "</><p>Razón: " +
+                message + "</p>");
+    }
+
 
 }

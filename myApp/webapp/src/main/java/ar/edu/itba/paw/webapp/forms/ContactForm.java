@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 public class ContactForm {
 
-    @Size(max = 255)
+    @Size(max = 256)
     private String message;
 
     @NotNull

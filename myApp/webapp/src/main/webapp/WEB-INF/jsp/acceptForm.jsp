@@ -19,7 +19,7 @@
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
-<div class="main-container">
+<div class="page-container">
     <c:url value="/accept/${cid}" var="acceptUrl"/>
     <h1 class="d-flex justify-content-center mt-4">
         <spring:message code="accept.form.header"/>

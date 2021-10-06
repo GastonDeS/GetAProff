@@ -81,8 +81,4 @@ public class ContactHandlingController {
         return new ModelAndView("redirect:/emailSent");
     }
 
-    @RequestMapping("/emailSent")
-    public ModelAndView emailSent() {
-        return new ModelAndView("emailSent");
-    }
 }
