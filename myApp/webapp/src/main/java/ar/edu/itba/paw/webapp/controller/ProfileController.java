@@ -69,7 +69,6 @@ public class ProfileController {
         mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
-//                .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
                 .addObject("isTeacher", user.get().isTeacher() ? 1 : 0)
                 .addObject("rating", userService.getRatingById(uid));
         return mav;
@@ -77,10 +76,12 @@ public class ProfileController {
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
     public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form) {
-        User u = getCurrUser();
-        ModelAndView mav = new ModelAndView("userForm").addObject("uid", u.getId());
-        form.setDescription(u.getDescription());
-        form.setSchedule(u.getSchedule());
+        User user = getCurrUser();
+        ModelAndView mav = new ModelAndView("userForm").addObject("user", user);
+        form.setTeacher(user.isTeacher());
+        form.setDescription(user.getDescription());
+        form.setSchedule(user.getSchedule());
+        form.setName(user.getName());
         return mav;
     }
 
@@ -99,7 +100,9 @@ public class ProfileController {
         }
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
-        if (desc == 0 || sch == 0) {
+        int name = userService.setUserName(uid, form.getName());
+        System.out.println("printing new name" + form.getName());
+        if (desc == 0 || sch == 0 || name == 0) {
             throw new OperationFailedException("exception.edit.profile");
         }
         String redirect = "redirect:/profile/" + uid;

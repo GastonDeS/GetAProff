@@ -168,6 +168,11 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
+    public int setUserName(int userId, String name) {
+        return jdbcTemplate.update("UPDATE users SET name = ? WHERE userid = ?", name, userId);
+    }
+
+    @Override
     public Boolean isFaved(int teacherId, int studentId) {
         RowMapper<String> mapper = (rs, rowNum) -> (String.valueOf(rs.getInt("faved")));
         List<String> list = jdbcTemplate.query("select count(*) as faved\n" +

@@ -170,6 +170,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public int setUserName(int userId, String name){
+        return userDao.setUserName(userId, name);
+    }
+
+    @Transactional
+    @Override
     public int addFavourite(int teacherId, int studentId) {
         int modified;
         try {

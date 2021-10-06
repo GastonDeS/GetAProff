@@ -4,9 +4,27 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserForm {
 
-    private String description, schedule;
+    private String description, schedule, name;
 
     private MultipartFile imageFile;
+
+    private boolean isTeacher;
+
+    public void setTeacher(boolean teacher) {
+        isTeacher = teacher;
+    }
+
+    public boolean isTeacher() {
+        return isTeacher;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getDescription() {
         return description;

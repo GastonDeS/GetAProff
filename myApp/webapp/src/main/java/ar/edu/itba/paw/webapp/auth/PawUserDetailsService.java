@@ -26,7 +26,7 @@ public class PawUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         final Optional<User> user = us.findByEmail(email);
         if (!user.isPresent()) {
-            throw new LoginErrorException("login.error"); //mandar al login
+            throw new LoginErrorException("login.error");
         }
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         for (Role r : user.get().getUserRoles()) {
