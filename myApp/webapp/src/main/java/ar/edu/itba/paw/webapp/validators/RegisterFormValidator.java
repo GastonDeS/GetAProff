@@ -55,14 +55,11 @@ public class RegisterFormValidator implements Validator {
         }
 
         if (imageFile == null || imageFile.isEmpty()) {
-            if (role == 1) {
-                System.out.println("entro en image file");
                 errors.rejectValue("imageFile", "form.image.required");
-            }
         }
-//        else if (!checkContentType(imageFile.getContentType().toLowerCase())) {
-//            errors.rejectValue("imageFile", "form.image.format");
-//        }
+        else if (!checkContentType(imageFile.getContentType().toLowerCase())) {
+            errors.rejectValue("imageFile", "form.image.format");
+        }
     }
 
     private boolean checkContentType(String contentType) {

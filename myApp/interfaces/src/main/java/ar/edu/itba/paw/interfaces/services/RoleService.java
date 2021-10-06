@@ -13,4 +13,6 @@ public interface RoleService {
     List<Role> setUserRoles(int userId, int userRole);
 
     List<Role> getUserRoles(int userid);
+
+    int addTeacherRole(int userId);
 }

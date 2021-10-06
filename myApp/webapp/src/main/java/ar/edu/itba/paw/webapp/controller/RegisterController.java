@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -31,6 +33,9 @@ public class RegisterController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private ImageService imageService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -48,7 +53,7 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) {
+    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) throws IOException {
         if (errors.hasErrors()) {
             return new ModelAndView("register");
         }
@@ -56,9 +61,10 @@ public class RegisterController {
         if (!maybeUser.isPresent()) {
             throw new RegisterErrorException("exception.register");
         }
-        User u = maybeUser.get();
-        UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
-        Authentication auth = new UsernamePasswordAuthenticationToken(u.getMail(), u.getPassword(), user.getAuthorities());
+        User user = maybeUser.get();
+        imageService.createOrUpdate(user.getId(), form.getImageFile().getBytes());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getMail());
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getMail(), user.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
         if (form.getUserRole() == 1) {
             return new ModelAndView("redirect:/editSubjects");
