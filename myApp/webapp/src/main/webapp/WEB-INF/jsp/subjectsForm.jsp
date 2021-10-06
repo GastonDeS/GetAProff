@@ -30,7 +30,7 @@
             <p class="form-title">${subjectPlaceholder}</p>
             <div class="subject-form-container">
                 <form:select path="subjectid">
-                    <c:forEach items="${toGive}" var="subject">
+                    <c:forEach items="${subjects}" var="subject">
                         <form:option value="${subject.id}" label="${subject.name}"/>
                     </c:forEach>
                 </form:select>

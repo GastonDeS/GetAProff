@@ -57,9 +57,9 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public Teaches findByUserAndSubject(int userId, int subjectId) {
+    public Teaches findByUserAndSubjectAndLevel(int userId, int subjectId, int level) {
         final List<Teaches> list = jdbcTemplate.query(
-                "SELECT * FROM teaches WHERE userId = ? AND subjectId = ?", new Object[] {userId, subjectId}, ROW_MAPPER);
+                "SELECT * FROM teaches WHERE userId = ? AND subjectId = ? AND level  = ?", new Object[] {userId, subjectId, level}, ROW_MAPPER);
         return list.isEmpty() ? null : list.get(0);
     }
 

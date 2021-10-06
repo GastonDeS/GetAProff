@@ -77,11 +77,11 @@ public class ProfileController {
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
         int uid = userService.getCurrentUser().getId();
-        List<Subject> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
+        List<Subject> subjectsNotGiven = subjectService.list();
         return new ModelAndView("subjectsForm")
                     .addObject("userid", uid)
                     .addObject("given", teachesService.getSubjectInfoListByUser(uid))
-                    .addObject("toGive", subjectsNotGiven);
+                    .addObject("subjects", subjectsNotGiven);
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)

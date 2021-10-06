@@ -15,5 +15,5 @@ public interface TeachesService {
 
     List<SubjectInfo> getSubjectInfoListByUser(int userid);
 
-    Teaches findByUserAndSubject(int userId, int subjectId);
+    Teaches findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
 }
