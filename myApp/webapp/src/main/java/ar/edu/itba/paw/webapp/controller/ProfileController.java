@@ -77,30 +77,34 @@ public class ProfileController {
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
-        if (!user.isPresent() || !user.get().isTeacher()) {
+        if (!user.isPresent()) {
             throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
         }
+        ModelAndView mav = new ModelAndView("profile");
+        if (curr.isPresent()) {
+            if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
+                throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
+            }
+            mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
+        }
         List<SubjectInfo> subjectsGiven = getSubject(uid);
-        ModelAndView mav = new ModelAndView("profile")
-                .addObject("user", user.get())
+        mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
                 .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
-                        .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
-        curr.ifPresent(value -> mav.addObject("currentUser", value)
-                .addObject("edit", value.getId() == user.get().getId() ? 1 : 0));
+                .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
         return mav;
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
         int uid = getCurrUser().getId();
-        Optional<List<Subject>> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
+        Optional<List<Subject>> subjects = subjectService.list();
         List<SubjectInfo> subjectsGiven = getSubject(uid);
         return new ModelAndView("subjectsForm")
                     .addObject("userid", uid)
                     .addObject("given", subjectsGiven)
-                    .addObject("toGive", subjectsNotGiven.isPresent() ? subjectsNotGiven.get() : new ArrayList<>());
+                    .addObject("subjects", subjects.get());
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)

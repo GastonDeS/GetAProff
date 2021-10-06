@@ -30,7 +30,7 @@
             <p class="form-title">${subjectPlaceholder}</p>
             <div class="subject-form-container">
                 <form:select path="subjectid">
-                    <c:forEach items="${toGive}" var="subject">
+                    <c:forEach items="${subjects}" var="subject">
                         <form:option value="${subject.id}" label="${subject.name}"/>
                     </c:forEach>
                 </form:select>
@@ -48,6 +48,7 @@
                         </c:forEach>
                     </form:select>
                 </div>
+                <form:errors path="level" element="p" cssClass="form-error"/>
             </div>
             <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
             <div class="account-check-container">
