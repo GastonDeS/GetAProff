@@ -77,18 +77,22 @@ public class ProfileController {
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
-        if (!user.isPresent() || !user.get().isTeacher()) {
+        if (!user.isPresent()) {
             throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
         }
+        ModelAndView mav = new ModelAndView("profile");
+        if (curr.isPresent()) {
+            if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
+                throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
+            }
+            mav.addObject("currentUser", curr).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
+        }
         List<SubjectInfo> subjectsGiven = getSubject(uid);
-        ModelAndView mav = new ModelAndView("profile")
-                .addObject("user", user.get())
+        mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
                 .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
-                        .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
-        curr.ifPresent(value -> mav.addObject("currentUser", value)
-                .addObject("edit", value.getId() == user.get().getId() ? 1 : 0));
+                .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
         return mav;
     }
 
