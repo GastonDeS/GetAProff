@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.LoginErrorException;
 import org.jboss.logging.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -16,15 +18,13 @@ import java.util.Optional;
 
 @Controller
 public class LoginController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private ImageService imageService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @RequestMapping("/login")
     public ModelAndView login() {
@@ -45,6 +45,9 @@ public class LoginController {
         if (!imageService.findImageById(currentUser.get().getId()).isPresent()) {
             return new ModelAndView("redirect:/editProfile?image=false");
         }
+
+        LOGGER.debug("Logged user is {}", currentUser.get().getId());
+
         String redirect = "redirect:/profile/" + currentUser.get().getId();
         return new ModelAndView(redirect);
     }

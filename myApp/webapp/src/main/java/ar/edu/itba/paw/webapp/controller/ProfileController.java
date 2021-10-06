@@ -6,6 +6,8 @@ import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.UserForm;
 import ar.edu.itba.paw.webapp.validators.UserFormValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,8 @@ import java.util.Optional;
 
 @Controller
 public class ProfileController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileController.class);
 
     @Autowired
     private UserService userService;
@@ -56,11 +60,13 @@ public class ProfileController {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
         if (!user.isPresent()) {
+            LOGGER.debug("No profile found for if: " + uid);
             throw new ProfileNotFoundException("exception.profile");
         }
         ModelAndView mav = new ModelAndView("profile");
         if (curr.isPresent()) {
             if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
+                LOGGER.debug("Cannot access profile for id: " + uid);
                 throw new ProfileNotFoundException("exception.profile");
             }
             mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
@@ -106,7 +112,6 @@ public class ProfileController {
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         int name = userService.setUserName(uid, form.getName());
-        System.out.println("printing new name" + form.getName());
         if (desc == 0 || sch == 0 || name == 0) {
             throw new OperationFailedException("exception.edit.profile");
         }

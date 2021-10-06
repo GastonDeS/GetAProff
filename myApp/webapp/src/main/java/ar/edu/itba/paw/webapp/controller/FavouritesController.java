@@ -25,24 +25,27 @@ public class FavouritesController {
     @RequestMapping(value = "/favourites")
     public ModelAndView favourites() {
         final ModelAndView mav = new ModelAndView("favourites");
-        Optional<User> u = userService.getCurrentUser();
-        if (!u.isPresent()) {
+        Optional<User> user = userService.getCurrentUser();
+        if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
-        List<CardProfile> favouritesTutors = userService.getFavourites(u.get().getId());
-        mav.addObject("uid", u.get().getId());
+        List<CardProfile> favouritesTutors = userService.getFavourites(user.get().getId());
+        mav.addObject("uid", user.get().getId());
         mav.addObject("favouritesTutors", favouritesTutors);
         return mav;
     }
 
     @RequestMapping(value = "/addFavourite/{tutorId}", method = RequestMethod.POST)
     public ModelAndView addFavourite(@PathVariable("tutorId") final int tutorId) {
-        Optional<User> u = userService.getCurrentUser();
-        if (!u.isPresent()) {
+        Optional<User> user = userService.getCurrentUser();
+        if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
-        userService.addFavourite(tutorId, u.get().getId());
-        return new ModelAndView("redirect:/profile/"+tutorId);
+        int added = userService.addFavourite(tutorId, user.get().getId());
+        if (added == 0) {
+            throw new OperationFailedException("exception.failed");
+        }
+        return new ModelAndView("redirect:/profile/" + tutorId);
     }
 
     @RequestMapping(value = "/removeFavourite/{tutorId}", method = RequestMethod.POST)

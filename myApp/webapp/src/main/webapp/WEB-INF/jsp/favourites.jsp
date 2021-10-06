@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="en">
 <head>
     <title><spring:message code="favourites.title"/> – GetAProff</title>
@@ -15,24 +16,30 @@
         <jsp:param name="uid" value="${uid}"/>
         <jsp:param name="section" value="3"/>
     </jsp:include>
-    <h2><spring:message code="nav.button.3"/></h2>
-    <div class="container mb-5">
-        <div class="row">
-            <c:forEach var="tutor" items="${favouritesTutors}" varStatus="loop">
-                <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                    <div class="container">
-                        <jsp:include page="../components/tutorCard.jsp">
-                            <jsp:param name="image" value="${tutor.image}"/>
-                            <jsp:param name="name" value="${tutor.name}"/>
-                            <jsp:param name="uid" value="${tutor.userId}"/>
-                            <jsp:param name="rate" value="${tutor.rate}"/>
-                            <jsp:param name="description" value="${tutor.description}"/>
-                            <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
-                            <jsp:param name="minPrice" value="${tutor.minPrice}"/>
-                        </jsp:include>
-                    </div>
-                </div>
-            </c:forEach>
+    <div class="page-container">
+        <div class="row w-100">
+            <c:choose>
+                <c:when test="${fn:length(favouritesTutors) == 0}">
+                    <p class="no-favourites"><spring:message code="no.favourites.tutors"/></p>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="tutor" items="${favouritesTutors}" varStatus="loop">
+                        <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div class="container">
+                                <jsp:include page="../components/tutorCard.jsp">
+                                    <jsp:param name="image" value="${tutor.image}"/>
+                                    <jsp:param name="name" value="${tutor.name}"/>
+                                    <jsp:param name="uid" value="${tutor.userId}"/>
+                                    <jsp:param name="rate" value="${tutor.rate}"/>
+                                    <jsp:param name="description" value="${tutor.description}"/>
+                                    <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
+                                    <jsp:param name="minPrice" value="${tutor.minPrice}"/>
+                                </jsp:include>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
