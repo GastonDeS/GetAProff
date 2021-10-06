@@ -3,9 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,9 @@ public class SearchController {
     @Autowired
     private SubjectService subjectService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     private void addUserId(ModelAndView mav) {
         Optional<User> u = userService.getCurrentUser();
         u.ifPresent(user -> mav.addObject("uid", user.getId()));
@@ -37,13 +41,14 @@ public class SearchController {
         addUserId(mav);
         Integer pageQty = userService.getPageQty(searchQuery);
         if (Integer.parseInt(offset) > pageQty) {
-            return new ModelAndView("403");
+            return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
         List<CardProfile> maybeTutors = userService.filterUsers(searchQuery, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", "?query=" + searchQuery);
+        mav.addObject("searchQuery", searchQuery);
         mav.addObject("offset", offset);
         mav.addObject("pageQty",userService.getPageQty(searchQuery));
         return mav;
@@ -61,6 +66,7 @@ public class SearchController {
         mav.addObject("subject", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", urlParams);
+        mav.addObject("searchQuery", searchQuery);
         mav.addObject("offset", offset);
         mav.addObject("pageQty",userService.getPageQty(searchQuery, price, level, rating));
         return mav;

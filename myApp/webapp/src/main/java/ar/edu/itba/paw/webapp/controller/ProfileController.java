@@ -85,6 +85,11 @@ public class ProfileController {
         return mav;
     }
 
+    @RequestMapping("/editProfile?image=false")
+    public ModelAndView noImageFound() {
+        return new ModelAndView("redirect:/editProfile");
+    }
+
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
     public ModelAndView userForm(@ModelAttribute("userForm") @Valid final UserForm form,
                                  final BindingResult errors) throws IOException {
