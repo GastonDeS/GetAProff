@@ -48,6 +48,7 @@ public class SearchController {
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", "?query=" + searchQuery);
+        mav.addObject("searchQuery", searchQuery);
         mav.addObject("offset", offset);
         mav.addObject("pageQty",userService.getPageQty(searchQuery));
         return mav;
@@ -65,6 +66,7 @@ public class SearchController {
         mav.addObject("subject", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", urlParams);
+        mav.addObject("searchQuery", searchQuery);
         mav.addObject("offset", offset);
         mav.addObject("pageQty",userService.getPageQty(searchQuery, price, level, rating));
         return mav;
