@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS classes
     subjectId INTEGER NOT NULL,
     price     INTEGER NOT NULL,
     status    INTEGER NOT NULL,
+    deleted INTEGER default 0 NOT NULL,
     request varchar(256) default '',
     reply    varchar(256) default '',
     FOREIGN KEY (studentId) REFERENCES users ON DELETE CASCADE,

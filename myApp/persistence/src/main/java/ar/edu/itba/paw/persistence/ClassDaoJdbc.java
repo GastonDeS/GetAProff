@@ -23,10 +23,10 @@ public class ClassDaoJdbc implements ClassDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<Class> ROW_MAPPER = (rs, rowNum) -> new Class(
             rs.getInt("classid"), rs.getInt("studentid"), rs.getInt("teacherid"), rs.getInt("level"),
-            rs.getInt("subjectid"), rs.getInt("price"), rs.getInt("status"), rs.getString("request"), rs.getString("reply"));
+            rs.getInt("subjectid"), rs.getInt("price"), rs.getInt("status"), rs.getString("request"), rs.getString("reply"), rs.getInt("deleted"));
     private final static RowMapper<ClassInfo> CLASS_INFO_ROW_MAPPER = (rs, rowNum) -> new ClassInfo(
             rs.getString("teacherName"), rs.getString("studentName"), rs.getString("subjectName"), rs.getString("reply"),
-            rs.getString("request"), rs.getInt("price"), rs.getInt("level"), rs.getInt("status"), rs.getInt("classId"));
+            rs.getString("request"), rs.getInt("price"), rs.getInt("level"), rs.getInt("status"), rs.getInt("classId"), rs.getInt("deleted"));
 
     @Autowired
     public ClassDaoJdbc(final DataSource ds) {
@@ -45,7 +45,7 @@ public class ClassDaoJdbc implements ClassDao {
     @Override
     public List<ClassInfo> findClassesByStudentId(int id) {
         String query = "SELECT classId,  st.name AS studentName, t.name AS teacherName, level, status,\n" +
-                "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply\n" +
+                "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply, a1.deleted AS deleted\n" +
                 "FROM (SELECT * FROM classes WHERE studentid = ?) AS a1 JOIN users st ON st.userId = a1.studentId\n" +
                 "             JOIN users t ON t.userid = a1.teacherid JOIN subject s on a1.subjectid = s.subjectid";
         List<ClassInfo> list = jdbcTemplate.query(query, new Object[] { id }, CLASS_INFO_ROW_MAPPER);
@@ -55,7 +55,7 @@ public class ClassDaoJdbc implements ClassDao {
     @Override
     public List<ClassInfo> findClassesByTeacherId(int id) {
         String query = "SELECT classId,  st.name AS studentName, t.name AS teacherName, level, status,\n" +
-                "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply\n" +
+                "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply, a1.deleted AS deleted\n" +
                 "FROM (SELECT * FROM classes WHERE teacherid = ?) AS a1 JOIN users st ON st.userId = a1.studentId\n" +
                 "             JOIN users t ON t.userid = a1.teacherid JOIN subject s on a1.subjectid = s.subjectid";
         List<ClassInfo> list = jdbcTemplate.query(query, new Object[]{id}, CLASS_INFO_ROW_MAPPER);
@@ -72,13 +72,20 @@ public class ClassDaoJdbc implements ClassDao {
         args.put("price", price);
         args.put("status", status);
         args.put("request", message);
+        args.put("reply","");
+        args.put("deleted",0);
         final Number classId = jdbcInsert.executeAndReturnKey(args);
-        return new Class(classId.intValue(), studentId, teacherId, level, subjectId, price, status, "", "");
+        return new Class(classId.intValue(), studentId, teacherId, level, subjectId, price, status, message, "",0);
     }
 
     @Override
     public int setStatus(int classId, int status) {
         return jdbcTemplate.update("UPDATE classes SET status = ? WHERE classid = ?", status, classId);
+    }
+
+    @Override
+    public int setDeleted(int classId, int deleted) {
+        return jdbcTemplate.update("UPDATE classes SET deleted = ? WHERE classid = ?", deleted, classId);
     }
 
     @Override

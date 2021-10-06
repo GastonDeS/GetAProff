@@ -5,33 +5,34 @@
 
 <html lang="en">
 <head>
-    <title><spring:message code="contact.title"/> – GetAProff </title>
+    <title> <spring:message code="new.subject.title"/> - GetAProff </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
     <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
-    <spring:message code="request.message.placeholder" var="messagePlaceHolder"/>
+    <spring:message code="request.subject.message.placeholder" var="messagePlaceHolder"/>
+    <spring:message code="request.subject.btn.value" var="requestSubjectValue"/>
+    <spring:message code="request.subject.subject.placeholder" var="subjectPlaceHolder"/>
+
+
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
 </jsp:include>
 <div class="page-container">
-    <c:url value="/contact/${uid}" var="contactUrl"/>
+    <c:url value="/newSubjectForm/${uid}" var="newSubjectUrl"/>
     <h1 class="d-flex justify-content-center mt-4">
-        <spring:message code="contact.form.contact.with"/>
-        <c:out value="${user.name}"/></h1>
-    <form:form class="d-flex justify-content-center" modelAttribute="contactForm" action="${contactUrl}" method="post">
+        <spring:message code="new.subject.form.header"/>
+    </h1>
+    <form:form class="d-flex justify-content-center" modelAttribute="newSubjectForm" action="${newSubjectUrl}" method="post">
         <div class="form-container">
             <div class="input-section">
                 <div class="form-input">
-                    <form:label path="subjectId"><spring:message code="contact.form.subject"/></form:label>
-                    <form:select path="subjectId">
-                        <c:forEach var="subject" items="${subjects}">
-                            <form:option value="${subject.id}" label="${subject.name}"/>
-                        </c:forEach>
-                    </form:select>
+                    <form:label path="subject"><spring:message code="new.subject.form.subject"/></form:label>
+                    <form:input type="text" placeHolder="${subjectPlaceholder}" path="subject"/>
+                    <form:errors path="subject" element="p" cssClass="form-error"/>
                 </div>
                 <div class="form-input">
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>
@@ -41,8 +42,8 @@
                     <form:errors path="message" element="p" cssClass="form-error"/>
                 </div>
                 <div class="btn-container">
-                    <input type="submit"  class="btn btn-custom bd-highlight"
-                           value="<spring:message code="contact.form.request.button"/>">
+                    <input type="submit" class="btn btn-custom bd-highlight"
+                           value="${requestSubjectValue}"/>
                 </div>
             </div>
         </div>

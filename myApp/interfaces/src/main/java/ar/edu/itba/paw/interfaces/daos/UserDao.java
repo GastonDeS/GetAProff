@@ -12,7 +12,7 @@ public interface UserDao {
     List<User> list();
     User save(User user);
     List<CardProfile> findUsersBySubjectId(int subjectId);
-    List<CardProfile> filterUsers(String subject, Integer price, Integer level);
+    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
     List<CardProfile> getFavourites(int uid);
 
     int addFavourite(int teacherId, int studentId);
