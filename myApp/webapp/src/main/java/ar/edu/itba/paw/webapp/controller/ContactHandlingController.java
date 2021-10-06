@@ -77,8 +77,12 @@ public class ContactHandlingController {
         if (!subject.isPresent()) {
             throw new OperationFailedException("exception"); //manadar a 403
         }
-        emailService.sendContactMessage(user.get().getMail(), curr.get().getName(), subject.get().getName(), form.getMessage());
-        return new ModelAndView("redirect:/emailSent");
+        try {
+            emailService.sendContactMessage(user.get().getMail(), curr.get().getName(), subject.get().getName(), form.getMessage());
+        } catch (RuntimeException e) {
+            throw new OperationFailedException("exception");
+        }
+        return new ModelAndView("redirect:/myClasses");
     }
 
 }

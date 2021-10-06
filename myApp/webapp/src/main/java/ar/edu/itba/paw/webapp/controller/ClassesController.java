@@ -74,6 +74,7 @@ public class ClassesController {
             }
         } else {
             classService.setStatus(cid, Class.Status.valueOf(status).getValue());
+            myClass.get().setStatus(Class.Status.valueOf(status).getValue());
             try {
                 emailService.sendStatusChangeMessage(myClass.get());
             } catch (RuntimeException e) {
@@ -138,11 +139,11 @@ public class ClassesController {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
+        classService.setStatus(cid, Class.Status.RATED.getValue());
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("exception.class"); //mandar a 403
         }
-        classService.setStatus(cid, Class.Status.RATED.getValue());
         userService.addRating(myClass.get().getTeacherId(),myClass.get().getStudentId(), form.getRating(), form.getReview());
         try {
             emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());

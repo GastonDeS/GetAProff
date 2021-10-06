@@ -41,7 +41,7 @@
                                     <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
                                         <spring:message code="profile.btn.edit"/>
                                     </a>
-                                    <c:if test="${isTeacher}">
+                                    <c:if test="${user.teacher}">
                                         <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
                                             <spring:message code="profile.btn.edit.subjects"/>
                                         </a>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <c:if test="${isTeacher}">
+                <c:if test="${user.teacher}">
                 <div class="main-container h-100">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
@@ -103,11 +103,11 @@
                                 <div class="section-info">
                                     <div class="profile-desc-sch">
                                         <h1><spring:message code="profile.description"/></h1>
-                                        <p><c:out value="${description}"/></p>
+                                        <p><c:out value="${user.description}"/></p>
                                     </div>
                                     <div class="profile-desc-sch">
                                         <h1><spring:message code="profile.schedule"/></h1>
-                                        <p><c:out value="${schedule}"/></p>
+                                        <p><c:out value="${user.schedule}"/></p>
                                     </div>
                                 </div>
                             </div>

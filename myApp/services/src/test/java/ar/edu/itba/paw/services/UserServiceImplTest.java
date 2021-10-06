@@ -49,10 +49,8 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private RoleService roleService;
-    @Mock
-    private UserDetailsService userDetailsService;
 
-    private User u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);;
+    private User user = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);;
 
 
 //    @Before
@@ -111,18 +109,19 @@ public class UserServiceImplTest {
 
     @Test
     public void testGetUserDescription() {
-        when(mockDao.get(eq(USER_ID))).thenReturn(u);
+        when(mockDao.get(eq(USER_ID))).thenReturn(Optional.ofNullable(user));
 
-        String description = userService.getUserDescription(USER_ID);
+        Optional<String> description = userService.getUserDescription(USER_ID);
 
-        Assert.assertEquals(DESCRIPTION,description);
+        Assert.assertTrue(description.isPresent());
+        Assert.assertEquals(DESCRIPTION,description.get());
     }
 
     @Test
     public void testMostExpensiveUserFee() {
         List<CardProfile> cards = new ArrayList<>();
         cards.add(new CardProfile(USER_ID,USERNAME,MAXPRICE,MINPRICE,DESCRIPTION,0,RATE));
-        when(mockDao.filterUsers(eq(SUBJECT),eq(0),eq(Integer.MAX_VALUE),eq(0)/* any_level */,eq(0),eq(0))).thenReturn(cards);
+        when(mockDao.filterUsers(eq(SUBJECT),eq(0),eq(Integer.MAX_VALUE),eq(0)/* any_level */,eq(0),eq(0))).thenReturn(Optional.of(cards));
 
         Integer max = userService.mostExpensiveUserFee(SUBJECT);
 

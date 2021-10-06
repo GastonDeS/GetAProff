@@ -11,8 +11,6 @@ public interface UserDao {
     Optional<User> get(int id);
 
     List<User> list();
-    User save(User user);
-    List<CardProfile> findUsersBySubjectId(int subjectId);
     Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
     Optional<List<CardProfile>> getFavourites(int uid);
     Integer getPageQty(String subject, Integer price, Integer level, Integer rating);

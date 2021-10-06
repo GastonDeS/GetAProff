@@ -82,13 +82,11 @@ public class ProfileController {
         }
         List<SubjectInfo> subjectsGiven = getSubject(uid);
         ModelAndView mav = new ModelAndView("profile")
-                .addObject("user", user)
+                .addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
-                .addObject("description", user.get().getDescription())
-                .addObject("schedule", user.get().getSchedule())
                 .addObject("subjectsList", subjectsGiven)
                 .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
-                .addObject("isTeacher",user.get().isTeacher());
+                        .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
         curr.ifPresent(value -> mav.addObject("currentUser", value)
                 .addObject("edit", value.getId() == user.get().getId() ? 1 : 0));
         return mav;
@@ -102,7 +100,7 @@ public class ProfileController {
         return new ModelAndView("subjectsForm")
                     .addObject("userid", uid)
                     .addObject("given", subjectsGiven)
-                    .addObject("toGive", subjectsNotGiven.isPresent() ? subjectsNotGiven : new ArrayList<>());
+                    .addObject("toGive", subjectsNotGiven.isPresent() ? subjectsNotGiven.get() : new ArrayList<>());
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
