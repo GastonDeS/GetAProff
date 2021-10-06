@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS teaches
     level     INTEGER,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (subjectId) REFERENCES subject ON DELETE CASCADE,
-    PRIMARY KEY (userId, subjectId)
+    PRIMARY KEY (userId, subjectId, level)
 );
 
 CREATE TABLE IF NOT EXISTS classes

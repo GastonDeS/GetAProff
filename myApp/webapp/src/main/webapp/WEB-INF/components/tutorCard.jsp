@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class="tutor-card card" onclick="window.location.href='${pageContext.request.contextPath}/profile/${param.uid}'">
+<div class="tutor-card card h-100" style= "width: 85%;" onclick="window.location.href='${pageContext.request.contextPath}/profile/${param.uid}'">
     <c:choose>
         <c:when test="${param.image == 0}">
             <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="tutor-img" alt="teacherImg">
