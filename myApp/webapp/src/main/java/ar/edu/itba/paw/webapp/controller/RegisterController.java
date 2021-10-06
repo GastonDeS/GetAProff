@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +26,8 @@ import java.util.Optional;
 
 @Controller
 public class RegisterController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
 
     @Autowired
     private UserService userService;
@@ -66,6 +70,9 @@ public class RegisterController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getMail());
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getMail(), user.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
+
+        LOGGER.debug("Registered user is {}", user.getId());
+
         if (form.getUserRole() == 1) {
             return new ModelAndView("redirect:/editSubjects");
         }

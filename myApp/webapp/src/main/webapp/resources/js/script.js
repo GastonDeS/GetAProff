@@ -24,25 +24,6 @@ const resetFilters = () => {
 }
 
 
-const keepPriceButtonFocused = () => {
-    document.getElementById('priceDropdownButton').focus();
-}
-
-const showFilterButton = () => {
-    document.getElementById('filter-button').style.display = 'block';
-
-}
-
-const elem = document.getElementsByTagName('input');
-for(let item of elem)
-    if(item.id !== 'query')
-        item.addEventListener('change', showFilterButton);
-
-document.getElementsByName('order')[0].addEventListener('change',showFilterButton);
-
-
-
-
 const checkFilters = () => {
     const urlParams = new URLSearchParams(location.search);
     if(urlParams.get('order') !== null) {

@@ -127,11 +127,10 @@ public class EmailServiceImpl implements EmailService {
         if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
             throw new NoSuchElementException();
         }
-        StringBuilder toFormat = new StringBuilder ("<p>");
-        toFormat.append("Tu alumno ").append(student.get().getName()).append(" ha calificado tu clase de ").append(mySubject.get().getName())
-                .append("</p><p>Su calificación fue de: ").append(rating).append(" estrellas").append("</p><p>Su reseña fue:</p><p>")
-                .append(review).append("</p><p>").append("Entra a GetAproff para ver tu calificación general!</p>");
-        String text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ String.valueOf(teacher.get().getId()),"GetAProff/misClases");
+        String toFormat = "<p>" + "Tu alumno " + student.get().getName() + " ha calificado tu clase de " + mySubject.get().getName() +
+                "</p><p>Su calificación fue de: " + rating + " estrellas" + "</p><p>Su reseña fue:</p><p>" +
+                review + "</p><p>" + "Entra a GetAproff para ver tu calificación general!</p>";
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ String.valueOf(teacher.get().getId()),"GetAProff/misClases");
         sendSimpleMessage(teacher.get().getMail(),"GetAProff:Nueva calificación", text);
     }
 

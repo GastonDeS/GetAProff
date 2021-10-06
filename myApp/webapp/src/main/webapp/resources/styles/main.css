@@ -1,4 +1,9 @@
-
+.no-favourites {
+    font-size: 24px;
+    font-family: "Roboto Light", sans-serif;
+    color: black;
+    font-weight: bold;
+}
 
 .exception-msg {
     font-size: 20px;
@@ -14,7 +19,6 @@
     padding: 16px 10px 16px 10px;
     word-break: break-all;
 }
-
 
 .nav-container {
     margin-top: 50px;

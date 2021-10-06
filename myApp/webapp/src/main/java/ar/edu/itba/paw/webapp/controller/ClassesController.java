@@ -66,7 +66,7 @@ public class ClassesController {
     public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("exception.class");
+            throw new ClassNotFoundException("No class found for class id " + cid);
         }
         if (status.equals("STUDENT") || status.equals("TEACHER")){
             if (myClass.get().getDeleted() == 0) {
@@ -93,7 +93,7 @@ public class ClassesController {
         final ModelAndView mav = new ModelAndView("acceptForm");
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("exception.class");
+            throw new ClassNotFoundException("No class found for class id " + cid);
         }
         Optional<User> student = userService.findById(myClass.get().getStudentId());
         if (!student.isPresent()) {
@@ -110,7 +110,7 @@ public class ClassesController {
         }
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("exception.class");
+            throw new ClassNotFoundException("No class found for class id " + cid);
         }
         classService.setStatus(myClass.get().getClassId(), Class.Status.ACCEPTED.getValue());
         classService.setReply(myClass.get().getClassId(), form.getMessage());
@@ -127,7 +127,7 @@ public class ClassesController {
         final ModelAndView mav = new ModelAndView("rateForm");
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("exception.class");
+            throw new ClassNotFoundException("No class found for class id " + cid);
         }
         Optional<User> teacher = userService.findById(myClass.get().getTeacherId());
         if (!teacher.isPresent()) {
@@ -144,7 +144,7 @@ public class ClassesController {
         }
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("exception.class");
+            throw new ClassNotFoundException("No class found for class id " + cid);
         }
         classService.setStatus(cid, Class.Status.RATED.getValue());
         myClass.get().setStatus(Class.Status.RATED.getValue());

@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Controller
 public class MainController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     @Autowired
     private UserService userService;

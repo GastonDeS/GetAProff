@@ -63,7 +63,7 @@ public class SearchController {
         addUserId(mav);
         List<CardProfile> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", maybeTutors);
-        mav.addObject("subject", subjectService.list());
+        mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", urlParams);
         mav.addObject("searchQuery", searchQuery);
