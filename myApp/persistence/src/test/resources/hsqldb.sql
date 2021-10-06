@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users
     userId      SERIAL PRIMARY KEY,
     name        varchar(100),
     password    varchar(100),
-    mail        varchar(100),
+    mail        varchar(100) UNIQUE ,
     description varchar(256) default '',
     schedule    varchar(256) default ''
 );

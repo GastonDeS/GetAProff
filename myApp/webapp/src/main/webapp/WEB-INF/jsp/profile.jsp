@@ -37,6 +37,21 @@
                     <div class="profile-info">
                         <div class="profile-name">
                             <h1><c:out value="${user.name}"/></h1>
+                            <div>
+                                <c:if test="${user.teacher}">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rating" value="${rating.value1}"/>
+                                    </jsp:include>
+                                </c:if>
+                                <c:choose>
+                                    <c:when test="${rating.value2 != 1}">
+                                        (${rating.value2} <spring:message code="profile.rating.times"/>s)
+                                    </c:when>
+                                    <c:otherwise>
+                                        (${rating.value2} <spring:message code="profile.rating.times"/>)
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                         </div>
                         <div class="profile-info-btn">
                             <c:if test="${edit == 1}">

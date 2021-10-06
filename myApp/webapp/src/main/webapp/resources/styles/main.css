@@ -125,6 +125,15 @@ input[type="radio"]:checked + label {
     padding: 0 10px 0 10px;
 }
 
+.custom-active {
+    background: #026670;
+    color: white;
+}
+.custom-active:hover {
+    background: rgb(49, 133, 140);
+    color: white;
+}
+
 .filter-container {
     background: #9fedd7;
     border-radius: 8px;
@@ -665,6 +674,7 @@ input:focus {
     align-items: flex-start;
     width: fit-content;
     height: fit-content;
+    margin: 8px;
 }
 
 .profile-name > h1 {
@@ -672,7 +682,6 @@ input:focus {
     font-family: "Roboto Light", sans-serif;
     color: white;
     font-weight: bold;
-    margin: 8px;
 }
 
 .profile-info-btn {

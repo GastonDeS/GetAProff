@@ -39,6 +39,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UtilsService utilsService;
 
+    void setUtilsService(UtilsService utilsService) {
+        this.utilsService = utilsService;
+    }
+
     void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
