@@ -21,7 +21,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image findImageById(int userId) {
+    public Optional<Image> findImageById(int userId) {
         return imageDao.findImageById(userId);
     }
 }

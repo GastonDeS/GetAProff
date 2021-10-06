@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class RoleDaoJdbc implements RoleDao{
@@ -36,15 +37,15 @@ public class RoleDaoJdbc implements RoleDao{
     }
 
     @Override
-    public Role findRoleById(int roleId) {
+    public Optional<Role> findRoleById(int roleId) {
         final List<Role> list = jdbcTemplate.query("SELECT * FROM roles WHERE roleid = ?", new Object[] { roleId }, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
-    public Role findRoleByName(String role) {
+    public Optional<Role> findRoleByName(String role) {
         final List<Role> list = jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", new Object[] { role }, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
@@ -53,8 +54,9 @@ public class RoleDaoJdbc implements RoleDao{
     }
 
     @Override
-    public List<Role> getUserRoles(int userid) {
-        return jdbcTemplate.query("SELECT r.roleid as roleid, role FROM roles r JOIN userroles u ON r.roleid = u.roleid WHERE userid = ?",
+    public Optional<List<Role>> getUserRoles(int userid) {
+        final List<Role> list = jdbcTemplate.query("SELECT r.roleid as roleid, role FROM roles r JOIN userroles u ON r.roleid = u.roleid WHERE userid = ?",
                 new Object[] {userid}, ROW_MAPPER);
+        return Optional.ofNullable(list);
     }
 }

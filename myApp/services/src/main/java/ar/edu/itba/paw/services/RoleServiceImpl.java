@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -22,37 +23,36 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findRoleById(int roleId) {
+    public Optional<Role> findRoleById(int roleId) {
         return roleDao.findRoleById(roleId);
     }
 
     @Override
-    public Role findRoleByName(String role) {
+    public Optional<Role> findRoleByName(String role) {
         return roleDao.findRoleByName(role);
     }
 
     @Override
-    public List<Role> getUserRoles(int userid) {
+    public Optional<List<Role>> getUserRoles(int userid) {
         return roleDao.getUserRoles(userid);
     }
 
     @Transactional
     @Override
-    public List<Role> setUserRoles(int userId, int userRole) {
+    public Optional<List<Role>> setUserRoles(int userId, int userRole) {
         List<Role> userRoles = new ArrayList<>();
         if (userRole == Roles.TEACHER.id) {
             addRoleToList(userRoles, Roles.TEACHER, userId);
         }
         addRoleToList(userRoles, Roles.STUDENT, userId);
-        return userRoles;
+        return userRoles.isEmpty() ? Optional.empty() : Optional.of(userRoles);
     }
 
     private void addRoleToList(List<Role> userRoles, Roles role, int userId) {
-        //TODO: manage exception if null
-        Role newRole = findRoleByName(role.name);
-        if (newRole != null) {
-            userRoles.add(newRole);
-            roleDao.addRoleToUser(newRole.getRoleId(), userId);
+        Optional<Role> newRole = findRoleByName(role.name);
+        if (newRole.isPresent()) {
+            userRoles.add(newRole.get());
+            roleDao.addRoleToUser(newRole.get().getRoleId(), userId);
         }
     }
 

@@ -9,9 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ImageDaoJdbc implements ImageDao {
@@ -37,9 +36,9 @@ public class ImageDaoJdbc implements ImageDao {
     }
 
     @Override
-    public Image findImageById(int userId) {
-        List<Image> image = jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { userId }, ROW_MAPPER);
-        return image.isEmpty() ? null : image.get(0);
+    public Optional<Image> findImageById(int userId) {
+        List<Image> list = jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { userId }, ROW_MAPPER);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
 

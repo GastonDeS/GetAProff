@@ -31,9 +31,9 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
-    public Subject findById(int id) {
+    public Optional<Subject> findById(int id) {
         List<Subject> list = jdbcTemplate.query("SELECT * FROM subject WHERE subjectId = ?", new Object[] { id }, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
@@ -56,17 +56,17 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
-    public List<Subject> listSubjects() {
+    public Optional<List<Subject>> listSubjects() {
         final List<Subject> list = jdbcTemplate.query("SELECT * FROM subject", ROW_MAPPER);
-        return list;
+        return Optional.ofNullable(list);
     }
 
     @Override
-    public List<Subject> subjectsNotGiven(int userId) {
+    public Optional<List<Subject>> subjectsNotGiven(int userId) {
         final List<Subject> list = jdbcTemplate.query(
                 "SELECT * FROM subject WHERE subjectid NOT IN " +
                         "(SELECT subjectid FROM teaches WHERE userid = ?) ",
                 new Object[] {userId}, ROW_MAPPER);
-        return list;
+        return Optional.ofNullable(list);
      }
 }

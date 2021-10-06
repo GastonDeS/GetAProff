@@ -29,8 +29,9 @@ public class SubjectsFormValidator implements Validator {
     public void validate(Object o, Errors errors) {
         SubjectsForm sf = (SubjectsForm) o;
         int price = sf.getPrice();
+        Optional<User> current = us.getCurrentUser();
 
-        if (ts.findByUserAndSubjectAndLevel(1, sf.getSubjectid(), sf.getLevel()) != null) {
+        if (ts.findByUserAndSubjectAndLevel(current.get().getId(), sf.getSubjectid(), sf.getLevel()).isPresent()) {
             errors.rejectValue("level","form.level.invalid");
         }
 

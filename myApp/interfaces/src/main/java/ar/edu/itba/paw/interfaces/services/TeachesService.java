@@ -9,11 +9,11 @@ import java.util.Optional;
 public interface TeachesService {
     Optional<Teaches> addSubjectToUser(int userid, int subjectid, int price, int level);
 
-    List<Teaches> getSubjectListByUser(int userid);
+    Optional<List<Teaches>> getSubjectListByUser(int userid);
 
     int removeSubjectToUser(int userid, int subjectid);
 
-    List<SubjectInfo> getSubjectInfoListByUser(int userid);
+    Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid);
 
-    Teaches findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
+    Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
 }

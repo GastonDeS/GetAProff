@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Pair;
+import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +20,19 @@ public class UserDaoJdbc implements UserDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
             rs.getInt("userid"), rs.getString("mail"), rs.getString("description"),rs.getString("schedule"));
-    private final static Integer PAGE_SIZE = 9, GET_ALL = 0;
+    private final static int PAGE_SIZE = 9, GET_ALL = 0;
+
+    private final static String MAIN_QUERY =
+            "select * from ( select a4.userid,name,maxPrice,minPrice,description,image ,sum(coalesce(rate,0))/count(coalesce(rate,0)) as rate\n" +
+            "FROM (SELECT a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
+            "FROM ((SELECT uid, name, description, image, max(price) as maxPrice, min(price) as minPrice\n" +
+            "FROM (SELECT u.userid AS uid, name, description, (CASE WHEN image IS NULL THEN 0 ELSE 1 END) AS image\n" +
+            "FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
+            "GROUP BY uid, name, description, image) AS a2 JOIN teaches t ON a2.uid = t.userid) AS a3\n"+
+            "JOIN subject s ON a3.subjectid = s.subjectid\n" +
+            "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)) as a4 LEFT OUTER JOIN rating r ON a4.userid = teacherid\n" +
+            "group by a4.userid, name, maxPrice, minPrice, description, image) as a5\n" +
+            "group by a5.userid, name, maxPrice, minPrice, description, image, rate HAVING sum(coalesce(rate,0))/count(coalesce(rate,0)) >= ? ";
 
     @Autowired
     public UserDaoJdbc (final DataSource ds){
@@ -31,20 +43,15 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User get(int id) {
+    public Optional<User> get(int id) {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[] { id }, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<User> list() {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
         return list.isEmpty() ? null : list;
-    }
-
-    @Override
-    public User save(User user) {
-        return null;
     }
 
     @Override
@@ -60,13 +67,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<CardProfile> findUsersBySubjectId(int subjectId) {
-        List<String> subjectName = jdbcTemplate.queryForList("SELECT name FROM subject WHERE subjectId = ?", new Object[] {subjectId}, String.class);
-        return subjectName.isEmpty() ? null : filterUsers(subjectName.get(0),0,Integer.MAX_VALUE,0,0, GET_ALL);
-    }
-
-    @Override
-    public List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
+    public Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -75,17 +76,7 @@ public class UserDaoJdbc implements UserDao {
         if( level == 0) { minLevel = 1; maxLevel = 3;}
         else
             minLevel = maxLevel = level;
-        String query = "select * from (select a4.userid,name,maxPrice,minPrice,description,image ,sum(coalesce(rate,0))/count(coalesce(rate,0)) as rate\n" +
-                        "FROM (SELECT a3.uid as userid, a3.name as name, maxPrice, minPrice, description, image\n" +
-                        "FROM ((SELECT uid, name, description, image, max(price) as maxPrice, min(price) as minPrice\n" +
-                        "FROM (SELECT u.userid AS uid, name, description, (CASE WHEN image IS NULL THEN 0 ELSE 1 END) AS image\n" +
-                        "FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
-                        "GROUP BY uid, name, description, image) AS a2 JOIN teaches t ON a2.uid = t.userid) AS a3\n"+
-                        "JOIN subject s ON a3.subjectid = s.subjectid\n" +
-                        "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)) as a4 LEFT OUTER JOIN rating r ON a4.userid = teacherid\n" +
-                        "group by a4.userid, name, maxPrice, minPrice, description, image) as a5\n" +
-                        "group by a5.userid, name, maxPrice, minPrice, description, image, rate HAVING sum(coalesce(rate,0))/count(coalesce(rate,0)) >= ? ";
-
+        String query = MAIN_QUERY;
         query += checkOrdering(order);
         query += "LIMIT " + PAGE_SIZE + " ";
         if(offset > 0) {
@@ -97,7 +88,7 @@ public class UserDaoJdbc implements UserDao {
          list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating}, mapper);
 
-        return list.isEmpty() ? null : list;
+        return Optional.ofNullable(list);
     }
 
     private String checkOrdering(int order){
@@ -122,7 +113,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<CardProfile> getFavourites(int uid) {
+    public Optional<List<CardProfile>> getFavourites(int uid) {
         RowMapper<CardProfile> mapper = (rs,rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -140,7 +131,17 @@ public class UserDaoJdbc implements UserDao {
                 "                order by rate DESC";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {uid}, mapper);
-        return list().isEmpty()? null : list;
+        return Optional.ofNullable(list);
+    }
+
+    @Override
+    public Integer getPageQty(String subject, Integer price, Integer level, Integer rating) {
+        int minLevel, maxLevel;
+        if( level == 0) { minLevel = 1; maxLevel = 3;}
+        else
+            minLevel = maxLevel = level;
+        return (int) Math.ceil(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM (" + MAIN_QUERY + ") AS qty", Double.class,
+                subject.toLowerCase().trim(), price, minLevel, maxLevel, rating) / (double) PAGE_SIZE);
     }
 
     @Override
@@ -173,12 +174,13 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public boolean isFaved(int teacherId, int studentId) {
+    public Optional<String> isFaved(int teacherId, int studentId) {
         RowMapper<String> pairRowMapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
-        return jdbcTemplate.query("select count(*) as count\n" +
+        List<String> list = jdbcTemplate.query("select count(*) as count\n" +
                 "from favourites\n" +
                 "where teacherid = ?\n" +
-                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper).get(0).equals("1");
+                "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override

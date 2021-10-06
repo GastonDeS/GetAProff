@@ -48,6 +48,7 @@
                         </c:forEach>
                     </form:select>
                 </div>
+                <form:errors path="level" element="p" cssClass="form-error"/>
             </div>
             <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
             <div class="account-check-container">

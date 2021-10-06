@@ -16,7 +16,6 @@
         <jsp:param name="isMainPage" value="${false}"/>
     </jsp:include>
     <div class="page-container">
-        <h1 class="error-view">${exception}</h1>
         <c:url value="/login" var="loginURL"/>
         <form method="post" action="${loginURL}">
             <div class="form-container">
@@ -30,7 +29,7 @@
                 <c:if test="${param.error != null}">
                     <p class="form-error"><spring:message code="login.error"/></p>
                 </c:if>
-                <p>${param.exception}</p>
+                <p class="form-error">${exception}</p>
                 <label class="login-checkbox">
                     <input class="checkbox" name="j_rememberme" type="checkbox"/>
                     <spring:message code="remember.me"/>

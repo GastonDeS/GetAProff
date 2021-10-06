@@ -1,27 +1,36 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Pair;
+import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User findById(int id);
-    List<CardProfile> findUsersBySubjectId(int subjectId);
-    List<CardProfile> filterUsers(String subject, String price, String level);
-    List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
-    List<CardProfile> filterUsers(String subject);
-    List<CardProfile> filterUsers(String subject, String offset);
+    Optional<User> findById(int id);
 
+    Optional<List<CardProfile>> filterUsers(String subject, String price, String level);
 
-    List<CardProfile> getFavourites(int uid);
+    Optional<List<CardProfile>> filterUsers(String subject, String order, String price, String level, String rating, String offset);
+
+    Optional<List<CardProfile>> filterUsers(String subject);
+
+    Optional<List<CardProfile>> filterUsers(String subject, String offset);
+
+    Integer getPageQty(String subject, String price, String level, String rating);
+    Integer getPageQty(String subject);
+
+    Optional<List<CardProfile>> getFavourites(int uid);
+
     int addFavourite(int teacherId, int studentId);
+
     int removeFavourite(int teacherId, int studentId);
+
     boolean isFaved(int teacherId, int studentId);
 
     int addRating(int teacherId, int studentId, float rate, String review);
+
     Pair<Float, Integer> getRatingById(int teacherId);
 
     /**
@@ -30,7 +39,7 @@ public interface UserService {
          * @param userId The id of the user.
          * @return A String description of the user's schedule.
          */
-    String getUserSchedule(int userId);
+    Optional<String> getUserSchedule(int userId);
 
     /**
      * Retrieves all the users registered
@@ -54,9 +63,14 @@ public interface UserService {
      * @return The created user.
      */
     Optional<User> create(String username, String mail, String password, String description, String schedule, int userole);
+
     Optional<User> findByEmail(String mail);
-    User getCurrentUser();
-    String getUserDescription(int userId);
+
+    Optional<User> getCurrentUser();
+
+    Optional<String> getUserDescription(int userId);
+
     int setUserSchedule(int userId, String schedule);
+
     int setUserDescription(int userId, String description);
 }

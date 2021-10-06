@@ -27,10 +27,10 @@ public class ImagesController {
     @RequestMapping(value = "/image/{uid}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
     byte[] getImage(@PathVariable("uid") final int uid) {
-        Image image =  imageService.findImageById(uid);
-        if (image == null) {
-            throw new ImageNotFoundException("");
+        Optional<Image> image =  imageService.findImageById(uid);
+        if (!image.isPresent()) {
+            throw new ImageNotFoundException(""); //cambiar la imagen a no image found
         }
-        return image.getImage();
+        return image.get().getImage();
     }
 }

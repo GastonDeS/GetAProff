@@ -7,12 +7,12 @@ import java.util.Optional;
 
 public interface SubjectService {
 
-    Subject findById(int id);
+    Optional<Subject> findById(int id);
 
     Subject create(String subject);
 
-    List<Subject> list();
+    Optional<List<Subject>> list();
 
-    List<Subject> subjectsNotGiven(int userId);
+    Optional<List<Subject>> subjectsNotGiven(int userId);
 
 }

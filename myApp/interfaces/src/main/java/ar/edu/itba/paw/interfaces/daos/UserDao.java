@@ -1,27 +1,29 @@
 package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Pair;
+import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.User;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public interface UserDao {
-    User get(int id);
+    Optional<User> get(int id);
+
     List<User> list();
-    User save(User user);
-    List<CardProfile> findUsersBySubjectId(int subjectId);
-    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
-    List<CardProfile> getFavourites(int uid);
+    Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
+    Optional<List<CardProfile>> getFavourites(int uid);
+    Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
 
     int addFavourite(int teacherId, int studentId);
+
     int removeFavourite(int teacherId, int studentId);
-    boolean isFaved(int teacherId, int studentId);
+
+    Optional<String> isFaved(int teacherId, int studentId);
 
     int addRating(int teacherId, int studentId, float rate, String review);
-    Pair<Float, Integer> getRatingById(int teacherId);
 
+    Pair<Float, Integer> getRatingById(int teacherId);
 
     /**
      * Create a new user.

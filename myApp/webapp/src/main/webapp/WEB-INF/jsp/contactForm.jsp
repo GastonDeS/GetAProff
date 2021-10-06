@@ -26,12 +26,13 @@
         <div class="form-container">
             <div class="input-section">
                 <div class="form-input">
-                    <form:label path="subjectId"><spring:message code="contact.form.subject"/></form:label>
-                    <form:select path="subjectId">
+                    <form:label path="subjectAndLevel"><spring:message code="contact.form.subject"/></form:label>
+                    <form:select path="subjectAndLevel">
                         <c:forEach var="subject" items="${subjects}">
-                            <form:option value="${subject.id}" label="${subject.name}"/>
+                            <form:option value="${subject.id},${subject.level}" label="${subject.name} ${subject.level}"/>
                         </c:forEach>
                     </form:select>
+                    <form:errors path="subjectAndLevel" element="p" cssClass="form-error"/>
                 </div>
                 <div class="form-input">
                     <form:label path="message"><spring:message code="contact.form.message"/></form:label>

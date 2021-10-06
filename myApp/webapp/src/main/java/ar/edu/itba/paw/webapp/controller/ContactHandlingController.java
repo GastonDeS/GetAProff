@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.NotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ContactHandlingController {
@@ -41,9 +44,16 @@ public class ContactHandlingController {
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("contactForm");
-        mav.addObject("user", userService.findById(uid));
-        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
-        mav.addObject("subjects", subjectsGiven);
+        Optional<User> maybeUser = userService.findById(uid);
+        if (!maybeUser.isPresent()) {
+            throw new UserNotFoundException("exception.not.user");
+        }
+        mav.addObject("user", maybeUser.get());
+        Optional<List<SubjectInfo>> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+        if (!subjectsGiven.isPresent()) {
+            throw new NotFoundException("exception.no.subjects");
+        }
+        mav.addObject("subjects", subjectsGiven.get());
         return mav;
     }
 
@@ -53,18 +63,27 @@ public class ContactHandlingController {
         if (errors.hasErrors()) {
             return contactForm(form, uid);
         }
-        User user = userService.findById(uid);
-        User curr = userService.getCurrentUser();
-        Teaches t = teachesService.findByUserAndSubject(uid, form.getSubjectId());
-        if (t == null) {
-            throw new NotFoundException("Subject " + form.getSubjectId() + " not taught by user " + uid);
+        Optional<User> user = userService.findById(uid);
+        Optional<User> curr = userService.getCurrentUser();
+        String[] subjectIdAndLevel = form.getSubjectAndLevel().split(",",2);
+        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Integer.parseInt(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
+        if (!t.isPresent()) {
+            throw new NotFoundException("Subject " + Integer.parseInt(subjectIdAndLevel[0] + " not taught by user " + uid));
         }
-        classService.create(curr.getId(), uid, t.getLevel(), t.getSubjectId(), t.getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
-        Subject subject = subjectService.findById(form.getSubjectId());
-        if (subject == null) {
-            throw new NotFoundException("Cannot find subject for required id: " + form.getSubjectId());
+        if (!user.isPresent() || !curr.isPresent()) {
+            throw new NotFoundException("exception.user.not.found");
         }
-        emailService.sendContactMessage(user.getMail(), curr.getName(), subject.getName(), form.getMessage());
+        classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubjectId(), t.get().getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
+        Optional<Subject> subject = subjectService.findById(Integer.parseInt(subjectIdAndLevel[0]));
+        if (!subject.isPresent()) {
+            throw new OperationFailedException("exception"); //manadar a 403
+        }
+        try {
+            emailService.sendContactMessage(user.get().getMail(), curr.get().getName(), subject.get().getName(), form.getMessage());
+        } catch (RuntimeException e) {
+            throw new OperationFailedException("exception");
+        }
         return new ModelAndView("redirect:/myClasses");
     }
+
 }
