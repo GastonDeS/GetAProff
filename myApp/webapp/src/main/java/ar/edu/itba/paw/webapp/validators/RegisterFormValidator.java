@@ -27,10 +27,16 @@ public class RegisterFormValidator implements Validator {
         String mail = rf.getMail();
         String pass = rf.getPassword();
         String confPass = rf.getConfirmPass();
+        String name = rf.getName();
         MultipartFile imageFile = rf.getImageFile();
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "form.field.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mail", "form.field.empty");
+
+        if (!name.matches("^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")) {
+            errors.rejectValue("name", "form.name.format");
+        }
+
         if (role == 1) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "form.field.empty");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "schedule", "form.field.empty");

@@ -159,9 +159,9 @@ public class UserDaoJdbcTest {
         jdbcTemplate.update("insert into subject values (0,'matematica'),(1,'ingles')");
         jdbcTemplate.update("insert into teaches values (1,0,1500,1)");
 
-        Integer pages = userDao.getPageQty("mate",0,0,0);
-
-        Assert.assertEquals(Integer.valueOf(pages),pages);
+        Integer pages = userDao.getPageQty("mate",Integer.MAX_VALUE,0,0);
+        
+        Assert.assertEquals(Integer.valueOf(1),pages);
 
     }
 

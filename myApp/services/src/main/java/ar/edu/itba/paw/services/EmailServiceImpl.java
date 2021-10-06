@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -35,6 +37,9 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private SubjectService subjectService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
@@ -52,9 +57,8 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendContactMessage(String to, String userFrom, String subject, String message) {
-        String mailSubject = "GetAProff: Nueva petición de clase";
-        String toFormat = "<p>" + "Hola, desde GetAproff el usuario " + userFrom + " pide por tus clases de " + subject +
-                "</p><p>Su mensaje para vos es:</p><p>" + message + "</p><p>Entra a GetAproff para aceptar o rechazar la clase!</p>";
+        String mailSubject = messageSource.getMessage("mail.subject.new.class", null, LocaleContextHolder.getLocale());
+        String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject, message}, LocaleContextHolder.getLocale());
         String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
         sendSimpleMessage(to,mailSubject, text);
     }
@@ -62,15 +66,15 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendAcceptMessage(int toId, int fromId, int sid, String message) {
-        String mailSubject = "GetAProff: Clase Aceptada";
+        String mailSubject = messageSource.getMessage("mail.subject.accept.class", null, LocaleContextHolder.getLocale());
         Optional<User> to = userService.findById(toId);
         Optional<User> from = userService.findById(fromId);
         Optional<Subject> subject = subjectService.findById(sid);
         if (!to.isPresent() || !from.isPresent() || !subject.isPresent()) {
             throw new NoSuchElementException();
         }
-        String toFormat = "<p>" + from.get().getName() + " ha aceptado tu pedido de clase de " + subject.get().getName() + ".</p>" +
-                "<p>Su mensaje para vos es:</p><p>" + message + "</p><p>Su email es: " + from.get().getMail() + "</p><p>Contáctate con tu profesor para coordinar horarios y modalidades de la clase!</p>";
+        System.out.println("message" + message);
+        String toFormat = messageSource.getMessage("mail.subject.accept.class.body", new Object[] {from.get().getName(), subject.get().getName(), message, from.get().getMail()}, LocaleContextHolder.getLocale());
         String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
         sendSimpleMessage(to.get().getMail(),mailSubject, text);
     }

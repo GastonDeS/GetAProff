@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validators;
 import ar.edu.itba.paw.webapp.forms.UserForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,17 +19,26 @@ public class UserFormValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        UserForm uf = (UserForm) o;
-        MultipartFile imageFile = uf.getImageFile();
-        String description = uf.getDescription();
-        String schedule = uf.getSchedule();
+        UserForm userForm = (UserForm) o;
+        MultipartFile imageFile = userForm.getImageFile();
+        String description = userForm.getDescription();
+        String schedule = userForm.getSchedule();
+        String name = userForm.getName();
 
-        if (description.isEmpty()) {
-            errors.rejectValue("description", "form.field.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "form.field.empty");
+
+        if (!name.isEmpty() && !name.matches("^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")) {
+            errors.rejectValue("name", "form.name.format");
         }
 
-        if (schedule.isEmpty()) {
-            errors.rejectValue("schedule", "form.field.empty");
+        if(userForm.isTeacher()) {
+            if (description.isEmpty()) {
+                errors.rejectValue("description", "form.field.empty");
+            }
+
+            if (schedule.isEmpty()) {
+                errors.rejectValue("schedule", "form.field.empty");
+            }
         }
 
         if (imageFile != null && imageFile.getSize() > 0) {

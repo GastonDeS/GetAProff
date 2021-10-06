@@ -10,6 +10,7 @@
         <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
         <spring:message code="user.form.description" var="descriptionPlaceholder"/>
         <spring:message code="user.form.schedule" var="schedulePlaceholder"/>
+        <spring:message code="register.form.name" var="namePlaceholder"/>
     </head>
     <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -22,7 +23,7 @@
                 <div class="form-container">
                     <p class="form-title"><spring:message code="user.form.title"/></p>
                     <div class="img-upload">
-                        <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" id="img-preview" alt="teacherImg">
+                        <img src="${pageContext.request.contextPath}/image/${user.id}" class="profile-img" id="img-preview" alt="teacherImg">
                         <div class="edit-btn-container">
                             <label class="btn btn-custom">
                                 <form:input type="file" accept="image" name="file" style="display: none" id="photo" path="imageFile"/>
@@ -32,15 +33,21 @@
                     </div>
                     <form:errors path="imageFile" element="p" cssClass="form-error"/>
                     <div class="form-input-container">
-                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
-                        <form:errors path="description" element="p" cssClass="form-error"/>
+                        <form:input type="text" class="form-control" path="name" placeholder="${namePlaceholder}"/>
+                        <form:errors path="name" element="p" cssClass="form-error"/>
                     </div>
-                    <div class="form-input-container">
-                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="schedule" placeholder="${schedulePlaceholder}"/>
-                        <form:errors path="schedule" element="p" cssClass="form-error"/>
-                    </div>
+                    <c:if test="${user.teacher}">
+                        <div class="form-input-container">
+                            <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
+                            <form:errors path="description" element="p" cssClass="form-error"/>
+                        </div>
+                        <div class="form-input-container">
+                            <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="schedule" placeholder="${schedulePlaceholder}"/>
+                            <form:errors path="schedule" element="p" cssClass="form-error"/>
+                        </div>
+                    </c:if>
                     <div class="save-btn-container">
-                        <a href="${pageContext.request.contextPath}/profile/${uid}" class="btn btn-custom submit-btn">
+                        <a href="${pageContext.request.contextPath}/profile/${user.id}" class="btn btn-custom submit-btn">
                             <spring:message code="form.btn.cancel"/>
                         </a>
                         <input type="submit" class="btn btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>

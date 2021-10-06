@@ -55,4 +55,6 @@ public interface UserService {
     int setUserSchedule(int userId, String schedule);
 
     int setUserDescription(int userId, String description);
+
+    int setUserName(int userId, String name);
 }
