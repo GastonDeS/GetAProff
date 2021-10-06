@@ -31,7 +31,7 @@
             <div class="input-section">
                 <div class="form-input">
                     <form:label path="subject"><spring:message code="new.subject.form.subject"/></form:label>
-                    <form:input type="text" placeHolder="${subjectPlaceholder}" path="subject"/>
+                    <form:input type="text" cssClass="form-control" placeHolder="${subjectPlaceholder}" path="subject"/>
                     <form:errors path="subject" element="p" cssClass="form-error"/>
                 </div>
                 <div class="form-input">

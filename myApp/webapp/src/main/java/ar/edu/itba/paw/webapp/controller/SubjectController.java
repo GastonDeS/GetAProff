@@ -40,6 +40,13 @@ public class SubjectController {
             return newSubjectForm(form, uid);
         }
         emailService.sendSubjectRequest(uid, form.getSubject(), form.getMessage());
-        return new ModelAndView("redirect:/profile/" + String.valueOf(uid));
+        return new ModelAndView("redirect:/newSubjectFormSent/" + String.valueOf(uid));
+    }
+
+    @RequestMapping("/newSubjectFormSent/{uid}")
+    public ModelAndView classRequestSent(@PathVariable("uid")final int uid) {
+        final ModelAndView mav = new ModelAndView("subjectRequestSent");
+        mav.addObject("uid",String.valueOf(uid));
+        return mav;
     }
 }
