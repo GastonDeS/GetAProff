@@ -30,7 +30,7 @@ public class UserDaoJdbc implements UserDao {
             "FROM images RIGHT OUTER JOIN users u on u.userid = images.userid) AS a1 JOIN teaches t ON a1.uid = t.userid\n" +
             "GROUP BY uid, name, description, image) AS a2 JOIN teaches t ON a2.uid = t.userid) AS a3\n"+
             "JOIN subject s ON a3.subjectid = s.subjectid\n" +
-            "WHERE lower(s.name) SIMILAR TO '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)) as a4 LEFT OUTER JOIN rating r ON a4.userid = teacherid\n" +
+            "WHERE lower(s.name) LIKE '%'||?||'%' AND price <= ? AND ( level BETWEEN ? AND ? OR level = 0)) as a4 LEFT OUTER JOIN rating r ON a4.userid = teacherid\n" +
             "group by a4.userid, name, maxPrice, minPrice, description, image) as a5\n" +
             "group by a5.userid, name, maxPrice, minPrice, description, image, rate HAVING sum(coalesce(rate,0))/count(coalesce(rate,0)) >= ? ";
 
