@@ -65,11 +65,6 @@ public class ContactHandlingController {
             throw new NotFoundException("Cannot find subject for required id: " + form.getSubjectId());
         }
         emailService.sendContactMessage(user.getMail(), curr.getName(), subject.getName(), form.getMessage());
-        return new ModelAndView("redirect:/emailSent");
-    }
-
-    @RequestMapping("/emailSent")
-    public ModelAndView emailSent() {
-        return new ModelAndView("emailSent");
+        return new ModelAndView("redirect:/myClasses");
     }
 }

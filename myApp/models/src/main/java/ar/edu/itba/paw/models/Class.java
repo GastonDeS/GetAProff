@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.models;
 
 public class Class {
-    private int classId, studentId, teacherId, level, subjectid, price, status;
+    private int classId, studentId, teacherId, level, subjectid, price, status, deleted;
     private String messageRequest, messageReply;
 
-    public Class(int classId, int studentId, int teacherId, int level, int subjectid, int price, int status, String messageRequest, String messageReply) {
+    public Class(int classId, int studentId, int teacherId, int level, int subjectid, int price, int status, String messageRequest, String messageReply, int deleted) {
         this.classId = classId;
         this.studentId = studentId;
         this.teacherId = teacherId;
@@ -64,30 +64,6 @@ public class Class {
         this.price = price;
     }
 
-    //    public User getStudent() {
-//        return student;
-//    }
-//
-//    public void setStudent(User student) {
-//        this.student = student;
-//    }
-//
-//    public User getTeacher() {
-//        return teacher;
-//    }
-//
-//    public void setTeacher(User teacher) {
-//        this.teacher = teacher;
-//    }
-//
-//    public SubjectInfo getSubject() {
-//        return subject;
-//    }
-//
-//    public void setSubject(SubjectInfo subject) {
-//        this.subject = subject;
-//    }
-
     public String getMessageRequest() {
         return messageRequest;
     }
@@ -111,7 +87,8 @@ public class Class {
         CANCELEDS(3),
         CANCELEDT(4),
         REJECTED(5),
-        RATED(6);
+        RATED(6),
+        ;
 
         private final int value;
 
@@ -124,11 +101,36 @@ public class Class {
         }
     }
 
+    public enum Deleted{
+        NO(0),
+        STUDENT(1),
+        TEACHER(2),
+        BOTH(3);
+
+        private final int value;
+
+        public int getValue() {
+            return value;
+        }
+
+        Deleted(int value) {
+            this.value = value;
+        }
+    }
+
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
     }
 }

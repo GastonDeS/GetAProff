@@ -9,10 +9,8 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
-import jdk.net.SocketFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.NotFoundException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,19 +43,29 @@ public class ClassesController {
         List<ClassInfo> teacherClassList = classService.findClassesByTeacherId(user.getId());
         mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
         mav.addObject("teacherActiveClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("teacherFinishedClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+        mav.addObject("teacherFinishedClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.TEACHER.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
         mav.addObject("isTeacher", user.isTeacher() ? 1 : 0);
         List<ClassInfo> classList = classService.findClassesByStudentId(user.getId());
         mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
         mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
         return mav;
     }
 
     @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
     public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
+    if (status.equals("STUDENT") || status.equals("TEACHER")){
+        Class myClass = classService.findById(cid);
+        if (myClass.getDeleted() == 0) {
+            classService.setDeleted(cid, Class.Deleted.valueOf(status).getValue());
+        }
+        else {
+            classService.setDeleted(cid, Class.Deleted.BOTH.getValue());
+        }
+    } else {
         classService.setStatus(cid, Class.Status.valueOf(status).getValue());
         emailService.sendStatusChangeMessage(classService.findById(cid));
+    }
         return new ModelAndView("redirect:/myClasses");
     }
 
@@ -85,6 +93,7 @@ public class ClassesController {
         emailService.sendAcceptMessage(myClass.getStudentId(), myClass.getTeacherId(), 3, form.getMessage());
         return new ModelAndView("redirect:/myClasses");
     }
+
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final int cid) {
         final ModelAndView mav = new ModelAndView("rateForm");

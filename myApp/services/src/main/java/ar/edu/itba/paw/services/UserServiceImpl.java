@@ -39,9 +39,25 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
-
+    
     @Autowired
     private UtilsService utilsService;
+
+    void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @Override
     public User findById(int id) {
