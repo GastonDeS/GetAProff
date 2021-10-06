@@ -29,7 +29,8 @@
                     <form:label path="subjectAndLevel"><spring:message code="contact.form.subject"/></form:label>
                     <form:select path="subjectAndLevel">
                         <c:forEach var="subject" items="${subjects}">
-                            <form:option value="${subject.id},${subject.level}" label="${subject.name} ${subject.level}"/>
+                            <spring:message code="subjects.form.level.${subject.level}" var="level"/>
+                            <form:option value="${subject.id},${subject.level}" label="${subject.name} ${level}"/>
                         </c:forEach>
                     </form:select>
                     <form:errors path="subjectAndLevel" element="p" cssClass="form-error"/>
