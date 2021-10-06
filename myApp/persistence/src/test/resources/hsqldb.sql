@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS teaches
     level     INTEGER,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (subjectId) REFERENCES subject ON DELETE CASCADE,
-    PRIMARY KEY (userId, subjectId)
+    PRIMARY KEY (userId, subjectId, level)
 );
 
 CREATE TABLE IF NOT EXISTS classes
@@ -86,3 +86,5 @@ CREATE TABLE IF NOT EXISTS userRoles
     FOREIGN KEY (roleId) REFERENCES roles ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE
 );
+
+insert into roles values (0,'USER_TEACHER'),(1,'USER_STUDENT');

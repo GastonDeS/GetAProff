@@ -13,15 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-//@Sql(scripts = "classpath:user-test.sql")
 public class UserDaoJdbcTest {
 
     private static final String USERNAME = "John Doe";
@@ -51,7 +50,6 @@ public class UserDaoJdbcTest {
         jdbcTemplate = new JdbcTemplate(ds);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"users");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"subject");
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,"roles");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"rating");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"favourites");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"subject");
@@ -97,21 +95,10 @@ public class UserDaoJdbcTest {
         Assert.assertEquals(Integer.valueOf(1), ratingById.getValue2());
     }
 
-//    @Test
-//    public void testAddRating() {
-//        jdbcTemplate.execute("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
-//        jdbcTemplate.execute("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
-//
-//        userDao.addRating(0,1,4.5f,"puede ser la mejor clase que tuve en mi vida");
-//
-//        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"rating","teacherId = 0 and studentId = 1"));
-//    }
-
     @Test
     public void testFilterUsers() {
         jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
         jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
-        jdbcTemplate.update("insert into roles values (0,'USER_TEACHER'),(1,'USER_STUDENT');");
         jdbcTemplate.update("insert into userRoles values (0,1)");
         jdbcTemplate.update("insert into favourites values (1,0)");
         jdbcTemplate.update("insert into subject values (0,'matematica'),(1,'ingles')");
@@ -128,7 +115,6 @@ public class UserDaoJdbcTest {
     public void testGetFavourites() {
         jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
         jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
-        jdbcTemplate.update("insert into roles values (0,'USER_TEACHER'),(1,'USER_STUDENT');");
         jdbcTemplate.update("insert into userRoles values (0,1)");
         jdbcTemplate.update("insert into favourites values (1,0)");
         jdbcTemplate.update("insert into subject values (0,'matematica'),(1,'ingles')");
@@ -139,6 +125,44 @@ public class UserDaoJdbcTest {
 
         Assert.assertFalse(cardProfileList.isEmpty());
         Assert.assertEquals("naso",cardProfileList.get(0).getName());
+    }
+
+    @Test
+    public void testRemoveFavourite() {
+        jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into favourites values (0,1)");
+
+        int removed = userDao.removeFavourite(0,1);
+
+        Assert.assertEquals(1,removed);
+    }
+
+    @Test
+    public void testGet() {
+        jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+
+        Optional<User> user = userDao.get(0);
+
+        Assert.assertTrue(user.isPresent());
+        Assert.assertEquals("gaston",user.get().getName());
+
+    }
+
+    @Test
+    public void testGetPageQty() {
+        jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into userRoles values (0,1)");
+        jdbcTemplate.update("insert into favourites values (1,0)");
+        jdbcTemplate.update("insert into subject values (0,'matematica'),(1,'ingles')");
+        jdbcTemplate.update("insert into teaches values (1,0,1500,1)");
+
+        Integer pages = userDao.getPageQty("mate",Integer.MAX_VALUE,0,0);
+        
+        Assert.assertEquals(Integer.valueOf(1),pages);
+
     }
 
 }

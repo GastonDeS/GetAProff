@@ -72,8 +72,8 @@ public class UserDaoJdbc implements UserDao {
             minLevel = maxLevel = level;
         String query = MAIN_QUERY;
         query += checkOrdering(order);
-        query += "LIMIT " + PAGE_SIZE + " ";
         if(offset > 0) {
+            query += "LIMIT " + PAGE_SIZE + " ";
             query += "OFFSET " + PAGE_SIZE + "* ? ";
             list = jdbcTemplate.query(
                     query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating, offset - 1}, mapper);
@@ -143,19 +143,6 @@ public class UserDaoJdbc implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[] {mail}, ROW_MAPPER)
                 .stream().findFirst();
     }
-
-//    @Override
-//    public Map<Integer, List<String>> getUserSubjectsAndLevels(int userId) {
-//        RowMapper<Pair<Integer,String>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getInt("level"),rs.getString("name"));
-//        List<Pair<Integer,String>> rSet = jdbcTemplate.query("SELECT level, name FROM TEACHES JOIN subject s on teaches.subjectid = s.subjectid WHERE userid = ?",
-//                new Object[] { userId}, pairRowMapper);
-//        Map<Integer,List<String>> map = new HashMap<>();
-//        for(Pair<Integer,String> p : rSet){
-//            map.computeIfAbsent(p.getValue1(), k -> new ArrayList<>());
-//            map.get(p.getValue1()).add(p.getValue2());
-//        }
-//        return map;
-//    }
 
     @Override
     public int setUserSchedule(int userId, String schedule) {
