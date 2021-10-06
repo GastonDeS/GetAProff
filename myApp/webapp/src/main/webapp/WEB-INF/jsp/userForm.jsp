@@ -22,6 +22,9 @@
             <form:form modelAttribute="userForm" action="${editProfileURL}" method="post" enctype="multipart/form-data">
                 <div class="form-container">
                     <p class="form-title"><spring:message code="user.form.title"/></p>
+                    <c:if test="${param.image != null}">
+                        <p class="form-error" style="font-size: 20px"><spring:message code="exception.image.not.found"/></p>
+                    </c:if>
                     <div class="img-upload">
                         <img src="${pageContext.request.contextPath}/image/${user.id}" class="profile-img" id="img-preview" alt="teacherImg">
                         <div class="edit-btn-container">

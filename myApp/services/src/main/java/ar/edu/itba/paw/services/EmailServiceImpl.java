@@ -73,8 +73,8 @@ public class EmailServiceImpl implements EmailService {
         if (!to.isPresent() || !from.isPresent() || !subject.isPresent()) {
             throw new NoSuchElementException();
         }
-        String toFormat = "<p>" + from.get().getName() + " ha aceptado tu pedido de clase de " + subject.get().getName() + ".</p>" +
-                "<p>Su mensaje para vos es:</p><p>" + message + "</p><p>Su email es: " + from.get().getMail() + "</p><p>Contáctate con tu profesor para coordinar horarios y modalidades de la clase!</p>";
+        System.out.println("message" + message);
+        String toFormat = messageSource.getMessage("mail.subject.accept.class.body", new Object[] {from.get().getName(), subject.get().getName(), message, from.get().getMail()}, LocaleContextHolder.getLocale());
         String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
         sendSimpleMessage(to.get().getMail(),mailSubject, text);
     }
