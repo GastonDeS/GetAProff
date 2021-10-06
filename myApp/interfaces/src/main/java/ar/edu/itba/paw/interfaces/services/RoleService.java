@@ -7,8 +7,12 @@ import java.util.Optional;
 
 public interface RoleService {
     Role create(String role);
+
     Optional<Role> findRoleById(int roleId);
+
     Optional<Role> findRoleByName(String role);
-    List<Role> setUserRoles(int userId, int userRole);
+
+    Optional<List<Role>> setUserRoles(int userId, int userRole);
+
     Optional<List<Role>> getUserRoles(int userid);
 }

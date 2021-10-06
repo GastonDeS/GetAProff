@@ -12,11 +12,9 @@ public interface UserDao {
 
     List<User> list();
 
-    User save(User user);
+    Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
 
-    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
-
-    List<CardProfile> getFavourites(int uid);
+    Optional<List<CardProfile>> getFavourites(int uid);
 
     int addFavourite(int teacherId, int studentId);
 

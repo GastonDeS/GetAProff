@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Optional;
+
 @Controller
 public class LoginController {
 
@@ -26,11 +28,11 @@ public class LoginController {
 
     @RequestMapping("/default")
     public ModelAndView defaultRedirect() {
-        User curr = userService.getCurrentUser();
-        if (curr == null) {
-            throw new LoginErrorException("exception.login");
+        Optional<User> curr = userService.getCurrentUser();
+        if (!curr.isPresent()) {
+            throw new LoginErrorException("exception.login"); //mandar al login
         }
-        String redirect = "redirect:/profile/" + curr.getId();
+        String redirect = "redirect:/profile/" + curr.get().getId();
         return new ModelAndView(redirect);
     }
 }

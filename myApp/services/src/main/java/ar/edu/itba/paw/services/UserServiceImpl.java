@@ -5,19 +5,13 @@ import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UtilsService;
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.exceptions.ObjectNotFoundException;
-import ar.edu.itba.paw.models.exceptions.OperationFailedException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,27 +32,24 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private RoleService roleService;
 
     @Autowired
     private UtilsService utilsService;
 
     @Override
-    public User findById(int id) {
+    public Optional<User> findById(int id) {
         Optional<User> maybeUser = userDao.get(id);
-        if (!maybeUser.isPresent()) {
-            throw new UserNotFoundException("User not found for required: " + id);
+        if (maybeUser.isPresent()) {
+            User user = maybeUser.get();
+            Optional<List<Role>> roles = roleService.getUserRoles(id);
+            if (!roles.isPresent()) {
+                return Optional.empty();
+            }
+            user.setUserRoles(roles.get());
+            return Optional.of(user);
         }
-        User user = maybeUser.get();
-        Optional<List<Role>> roles = roleService.getUserRoles(id);
-        if (!roles.isPresent()) {
-            throw new ObjectNotFoundException("Roles not found for required user: " + id);
-        };
-        user.setUserRoles(roles.get());
-        return user;
+        return Optional.empty();
     }
 
     @Override
@@ -66,7 +57,7 @@ public class UserServiceImpl implements UserService {
         int lvl = Integer.parseInt(level);
         if(lvl < 0 || lvl > MAX_LEVEL)
             lvl = ANY_LEVEL;
-        int maxPrice = mostExpensiveUserFee(subject);
+        Integer maxPrice = mostExpensiveUserFee(subject);
         int intPrice = Integer.parseInt(price);
         if (intPrice > maxPrice)
             intPrice = maxPrice;
@@ -78,7 +69,7 @@ public class UserServiceImpl implements UserService {
         int lvl = Integer.parseInt(level);
         if(lvl < 0 || lvl > MAX_LEVEL)
             lvl = ANY_LEVEL;
-        int maxPrice = mostExpensiveUserFee(subject);
+        Integer maxPrice = mostExpensiveUserFee(subject);
         int intPrice = Integer.parseInt(price);
             if (intPrice > maxPrice)
                 intPrice = maxPrice;
@@ -101,12 +92,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getUserSchedule(int userId) {
+    public Optional<String> getUserSchedule(int userId) {
         Optional<User> u = userDao.get(userId);
-        if (!u.isPresent()) {
-            throw new UserNotFoundException("User not found for required: " + userId);
-        }
-        return u.get().getSchedule();
+        return u.map(User::getSchedule);
     }
 
     public List<User> list() {
@@ -118,66 +106,53 @@ public class UserServiceImpl implements UserService {
         Optional<CardProfile> mostExpensiveUser;
         Optional<List<CardProfile>> users = filterUsers(subject);
         if(!users.isPresent()) {
-            return 0;
+            return 1;
         }
         mostExpensiveUser = users.get().stream().max(Comparator.comparing(CardProfile::getMaxPrice));
-        if (!mostExpensiveUser.isPresent()) {
-            throw new ObjectNotFoundException("Object not found");
-        }
-        return mostExpensiveUser.get().getMaxPrice();
+        return mostExpensiveUser.map(CardProfile::getMaxPrice).orElse(1);
     }
 
     @Transactional
     @Override
-    public User create(String username, String mail, String password, String description, String schedule, int userole) {
+    public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
         User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
-        UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
-        Authentication auth = new UsernamePasswordAuthenticationToken(mail, password, user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        List<Role> roles = roleService.setUserRoles(u.getId(), userole);
-        if (roles == null) {
-            throw new OperationFailedException("Roles could not be set for required user: " + u.getId());
-        }
-        u.setUserRoles(roles);
-        return u;
-    }
-
-    @Override
-    public Optional<User> findByEmail(String mail) {
-        Optional<User> maybe = userDao.findByEmail(mail);
-        if (!maybe.isPresent()) {
-            throw new UserNotFoundException("User not found for required: " + mail);
-        }
-        User u = maybe.get();
-        Optional<List<Role>> roles = roleService.getUserRoles(u.getId());
+        Optional<List<Role>> roles = roleService.setUserRoles(u.getId(), userole);
         if (!roles.isPresent()) {
-            throw new ObjectNotFoundException("Roles not found for required user: " + u.getId());
+            return Optional.empty();
         }
         u.setUserRoles(roles.get());
         return Optional.of(u);
     }
 
     @Override
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String userMail = authentication.getName();
-            Optional<User> maybeUser = this.findByEmail(userMail);
-            if (!maybeUser.isPresent()) {
-                throw new UserNotFoundException("User not found for required: " + userMail);
+    public Optional<User> findByEmail(String mail) {
+        Optional<User> maybe = userDao.findByEmail(mail);
+        if (maybe.isPresent()) {
+            User u = maybe.get();
+            Optional<List<Role>> roles = roleService.getUserRoles(u.getId());
+            if (!roles.isPresent()) {
+                return Optional.empty();
             }
-            return maybeUser.get();
+            u.setUserRoles(roles.get());
+            return Optional.of(u);
         }
-        throw new OperationFailedException("Could not find authenticated user");
+        return Optional.empty();
     }
 
     @Override
-    public String getUserDescription(int userId) {
-        Optional<User> u = userDao.get(userId);
-        if (!u.isPresent()) {
-            throw new UserNotFoundException("User not found for required: " + userId);
+    public Optional<User> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String userMail = authentication.getName();
+            return this.findByEmail(userMail);
         }
-        return u.get().getDescription();
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getUserDescription(int userId) {
+        Optional<User> u = userDao.get(userId);
+        return u.map(User::getDescription);
     }
 
     @Transactional

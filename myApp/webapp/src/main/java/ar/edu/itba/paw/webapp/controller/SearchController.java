@@ -3,9 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.Timetable;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,22 +30,25 @@ public class SearchController {
     private SubjectService subjectService;
 
     private void addUserId(ModelAndView mav) {
-        User u;
-        try {
-            u = userService.getCurrentUser();
-        } catch (RuntimeException e) {
-            throw new NoUserLoggedException("exception.not.logged.user");
+        Optional<User> u = userService.getCurrentUser();
+        u.ifPresent(user -> mav.addObject("uid", user.getId()));
+    }
+
+    private List<Subject> getSubjects() {
+        Optional<List<Subject>> subjects = subjectService.list();
+        if (!subjects.isPresent()) {
+            throw new ListNotFoundException("exception.list");
         }
-        mav.addObject("uid", u.getId());
+        return subjects.get();
     }
 
     @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = "query")
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        List<CardProfile> tutors = userService.filterUsers(searchQuery, offset);
-        mav.addObject("tutors", tutors);
-        mav.addObject("subjects", subjectService.list());
+        Optional<List<CardProfile>> maybeTutors = userService.filterUsers(searchQuery, offset);
+        mav.addObject("tutors", maybeTutors.isPresent() ? maybeTutors.get() : new ArrayList<>());
+        mav.addObject("subjects", getSubjects());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         return mav;
@@ -55,9 +60,9 @@ public class SearchController {
                                @RequestParam(value = "rating") @NotNull final String rating, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        List<CardProfile> users = userService.filterUsers(searchQuery,order, price, level, rating, offset);
-        mav.addObject("tutors", users);
-        mav.addObject("subject", subjectService.list());
+        Optional<List<CardProfile>> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
+        mav.addObject("tutors", maybeTutors.isPresent() ? maybeTutors.get() : new ArrayList<>());
+        mav.addObject("subject", getSubjects());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
         return mav;

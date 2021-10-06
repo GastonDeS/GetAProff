@@ -2,7 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
+import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.UserForm;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,34 +57,52 @@ public class ProfileController {
         }
     }
 
+    private User getCurrUser() {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
+        return maybeUser.get();
+    }
+
+    private List<SubjectInfo> getSubject(int uid) {
+        Optional<List<SubjectInfo>> userSubjects = teachesService.getSubjectInfoListByUser(uid);
+        if (!userSubjects.isPresent()) {
+            throw new ListNotFoundException("exception.list");
+        }
+        return userSubjects.get();
+    }
+
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final int uid) {
-        User curr = userService.getCurrentUser();
-        User user = userService.findById(uid);
-        if (user == null) {
-            throw new ProfileNotFoundException("Profile not found for requested id: " + uid);
+        Optional<User> curr = userService.getCurrentUser();
+        Optional<User> user = userService.findById(uid);
+        if (!user.isPresent() || !user.get().isTeacher()) {
+            throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
         }
-        return new ModelAndView("profile")
+        List<SubjectInfo> subjectsGiven = getSubject(uid);
+        ModelAndView mav = new ModelAndView("profile")
                 .addObject("user", user)
-                .addObject("isFaved", curr != null && userService.isFaved(uid, curr.getId()))
-                .addObject("timetable", userService.getUserSchedule(uid))
-                .addObject("description", userService.getUserDescription(uid))
-                .addObject("schedule", userService.getUserSchedule(uid))
-                .addObject("subjectsList", teachesService.getSubjectInfoListByUser(uid))
-                .addObject("image", imageService.findImageById(uid) == null ? 0 : 1)
-                .addObject("currentUser",curr)
-                .addObject("isTeacher",user.isTeacher())
-                .addObject("edit", (curr != null && curr.getId() == user.getId())? 1: 0);
+                .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
+                .addObject("description", user.get().getDescription())
+                .addObject("schedule", user.get().getSchedule())
+                .addObject("subjectsList", subjectsGiven)
+                .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
+                .addObject("isTeacher",user.get().isTeacher());
+        curr.ifPresent(value -> mav.addObject("currentUser", value)
+                .addObject("edit", value.getId() == user.get().getId() ? 1 : 0));
+        return mav;
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        int uid = userService.getCurrentUser().getId();
-        List<Subject> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
+        int uid = getCurrUser().getId();
+        Optional<List<Subject>> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
+        List<SubjectInfo> subjectsGiven = getSubject(uid);
         return new ModelAndView("subjectsForm")
                     .addObject("userid", uid)
-                    .addObject("given", teachesService.getSubjectInfoListByUser(uid))
-                    .addObject("toGive", subjectsNotGiven);
+                    .addObject("given", subjectsGiven)
+                    .addObject("toGive", subjectsNotGiven.isPresent() ? subjectsNotGiven : new ArrayList<>());
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
@@ -89,52 +110,47 @@ public class ProfileController {
         if (errors.hasErrors()) {
             return subjectsForm(form);
         }
-        int uid = userService.getCurrentUser().getId();
+        int uid = getCurrUser().getId();
         Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
         if (!maybe.isPresent()) {
-            throw new InvalidOperationException("Cannot add subject " + form.getSubjectid() + "to required user " + uid, "/editSubjects");
+            throw new OperationFailedException("exception.add.subject"); //mandar a 403 con profile
         }
         return subjectsForm(form);
     }
 
     @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.POST)
     public ModelAndView removeSubject(@PathVariable("sid") final int sid) {
-        int uid = userService.getCurrentUser().getId();
+        int uid = getCurrUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
-            throw new InvalidOperationException("Cannot remove subject " + sid + "to required user " + uid, "/editSubjects");
+            throw new OperationFailedException("exception.remove.subject"); //mandar a 403 con profile
         }
         return new ModelAndView("redirect:/editSubjects");
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
     public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form) {
-        int uid = userService.getCurrentUser().getId();
-        ModelAndView mav = new ModelAndView("userForm").addObject("uid", uid);
-        form.setDescription(userService.getUserDescription(uid));
-        form.setSchedule(userService.getUserSchedule(uid));
-        Image maybeImg = imageService.findImageById(uid);
-        form.setHasImage(maybeImg != null && maybeImg.getImage().length > 0);
-        return mav.addObject("image", maybeImg != null);
+        User u = getCurrUser();
+        ModelAndView mav = new ModelAndView("userForm").addObject("uid", u.getId());
+        form.setDescription(u.getDescription());
+        form.setSchedule(u.getSchedule());
+        Optional<Image> maybeImg = imageService.findImageById(u.getId());
+        form.setHasImage(maybeImg.isPresent() && maybeImg.get().getImage().length > 0);
+        return mav.addObject("image", maybeImg.isPresent());
     }
-
-//    @RequestMapping(value = "/editProfile?error=true", method = RequestMethod.GET)
-//    public ModelAndView userFormError(@ModelAttribute("userForm") final UserForm form) {
-//        return userForm(form);
-//    }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
     public ModelAndView userForm(@ModelAttribute("userForm") @Valid final UserForm form,
                                  final BindingResult errors) throws IOException {
         if (errors.hasErrors())
             return userForm(form);
-        int uid = userService.getCurrentUser().getId();
+        int uid = getCurrUser().getId();
         if ( form.getImageFile().getSize() > 0) {
             imageService.createOrUpdate(uid, form.getImageFile().getBytes());
         }
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         if (desc == 0 || sch == 0) {
-            throw new InvalidOperationException("Cannot set user information for: " + uid, "/editProfile");
+            throw new OperationFailedException("exception.edit.profile"); //mandar a 403 con profile
         }
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);

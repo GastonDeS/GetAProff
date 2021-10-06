@@ -24,7 +24,7 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public List<Teaches> getSubjectListByUser(int userid) {
+    public Optional<List<Teaches>> getSubjectListByUser(int userid) {
         return teachesDao.findSubjectByUser(userid);
     }
 
@@ -35,12 +35,12 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public List<SubjectInfo> getSubjectInfoListByUser(int userid) {
-        return teachesDao.getSubjectInfoListByUser(userid); //TODO: MANAGE EXCEPTION
+    public Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid) {
+        return teachesDao.getSubjectInfoListByUser(userid);
     }
 
     @Override
-    public Teaches findByUserAndSubject(int userId, int subjectId) {
+    public Optional<Teaches> findByUserAndSubject(int userId, int subjectId) {
         return teachesDao.findByUserAndSubject(userId, subjectId);
     }
 }

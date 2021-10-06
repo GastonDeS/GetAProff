@@ -11,11 +11,11 @@ public interface TeachesDao {
 
     Teaches addSubjectToUser(int userid, int subjectid, int price, int level);
 
-    List<Teaches> findSubjectByUser(int userid);
+    Optional<List<Teaches>> findSubjectByUser(int userid);
 
     int removeSubjectToUser(int userid, int subjectid);
 
-    Teaches findByUserAndSubject(int userId, int subjectId);
+    Optional<Teaches> findByUserAndSubject(int userId, int subjectId);
 
-    List<SubjectInfo> getSubjectInfoListByUser(int userid);
+    Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid);
 }

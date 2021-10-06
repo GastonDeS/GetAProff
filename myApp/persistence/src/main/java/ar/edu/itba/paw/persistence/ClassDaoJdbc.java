@@ -11,10 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ClassDaoJdbc implements ClassDao {
@@ -37,29 +34,29 @@ public class ClassDaoJdbc implements ClassDao {
     }
 
     @Override
-    public Class get(int id) {
+    public Optional<Class> get(int id) {
         final List<Class> list = jdbcTemplate.query("SELECT * FROM classes WHERE classid = ?", new Object[]{id}, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
-    public List<ClassInfo> findClassesByStudentId(int id) {
+    public Optional<List<ClassInfo>> findClassesByStudentId(int id) {
         String query = "SELECT classId,  st.name AS studentName, t.name AS teacherName, level, status,\n" +
                 "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply, a1.deleted AS deleted\n" +
                 "FROM (SELECT * FROM classes WHERE studentid = ?) AS a1 JOIN users st ON st.userId = a1.studentId\n" +
                 "             JOIN users t ON t.userid = a1.teacherid JOIN subject s on a1.subjectid = s.subjectid";
         List<ClassInfo> list = jdbcTemplate.query(query, new Object[] { id }, CLASS_INFO_ROW_MAPPER);
-        return list.isEmpty() ? new ArrayList<>() : list;
+        return Optional.ofNullable(list);
     }
 
     @Override
-    public List<ClassInfo> findClassesByTeacherId(int id) {
+    public Optional<List<ClassInfo>> findClassesByTeacherId(int id) {
         String query = "SELECT classId,  st.name AS studentName, t.name AS teacherName, level, status,\n" +
                 "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply, a1.deleted AS deleted\n" +
                 "FROM (SELECT * FROM classes WHERE teacherid = ?) AS a1 JOIN users st ON st.userId = a1.studentId\n" +
                 "             JOIN users t ON t.userid = a1.teacherid JOIN subject s on a1.subjectid = s.subjectid";
         List<ClassInfo> list = jdbcTemplate.query(query, new Object[]{id}, CLASS_INFO_ROW_MAPPER);
-        return list.isEmpty() ? new ArrayList<>() : list;
+        return Optional.ofNullable(list);
     }
 
     @Override

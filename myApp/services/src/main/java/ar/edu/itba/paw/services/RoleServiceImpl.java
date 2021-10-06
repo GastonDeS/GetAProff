@@ -39,17 +39,16 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public List<Role> setUserRoles(int userId, int userRole) {
+    public Optional<List<Role>> setUserRoles(int userId, int userRole) {
         List<Role> userRoles = new ArrayList<>();
         if (userRole == Roles.TEACHER.id) {
             addRoleToList(userRoles, Roles.TEACHER, userId);
         }
         addRoleToList(userRoles, Roles.STUDENT, userId);
-        return userRoles;
+        return userRoles.isEmpty() ? Optional.empty() : Optional.of(userRoles);
     }
 
     private void addRoleToList(List<Role> userRoles, Roles role, int userId) {
-        //TODO: manage exception if empty
         Optional<Role> newRole = findRoleByName(role.name);
         if (newRole.isPresent()) {
             userRoles.add(newRole.get());

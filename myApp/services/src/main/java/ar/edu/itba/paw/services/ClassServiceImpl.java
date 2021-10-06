@@ -17,24 +17,23 @@ public class ClassServiceImpl implements ClassService {
     private ClassDao classDao;
 
     @Override
-    public Class findById(int id) {
-        return this.classDao.get(id);
+    public Optional<Class> findById(int id) {
+        return classDao.get(id);
     }
 
     @Override
-    public List<ClassInfo> findClassesByStudentId(int id) {
+    public Optional<List<ClassInfo>> findClassesByStudentId(int id) {
         return classDao.findClassesByStudentId(id);
     }
 
     @Override
-    public List<ClassInfo> findClassesByTeacherId(int id) {
+    public Optional<List<ClassInfo>> findClassesByTeacherId(int id) {
         return classDao.findClassesByTeacherId(id);
     }
 
     @Override
-    public Optional<Class> create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message) {
-        Class u = classDao.create(studentId, teacherId, level, subjectId, price, status, message);
-        return Optional.of(u);
+    public Class create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message) {
+        return classDao.create(studentId, teacherId, level, subjectId, price, status, message);
     }
 
     @Override

@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface ImageService {
     Image createOrUpdate(int uid, byte[] image);
 
-    Image findImageById(int userId);
+    Optional<Image> findImageById(int userId);
 
 }

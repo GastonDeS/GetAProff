@@ -39,13 +39,13 @@ public class RoleDaoJdbc implements RoleDao{
     @Override
     public Optional<Role> findRoleById(int roleId) {
         final List<Role> list = jdbcTemplate.query("SELECT * FROM roles WHERE roleid = ?", new Object[] { roleId }, ROW_MAPPER);
-        return Optional.ofNullable(list.get(0));
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Role> findRoleByName(String role) {
         final List<Role> list = jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", new Object[] { role }, ROW_MAPPER);
-        return Optional.ofNullable(list.get(0));
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override

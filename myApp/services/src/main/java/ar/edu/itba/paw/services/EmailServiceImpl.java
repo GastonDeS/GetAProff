@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.services.ClassService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -13,10 +12,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @EnableAsync
@@ -34,9 +34,6 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private SubjectService subjectService;
 
-    @Autowired
-    private ClassService classService;
-
     @Override
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
@@ -46,8 +43,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             helper.setText(text, true);
             javaMailSender.send(message);
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch (Exception e){
+            throw new RuntimeException();
         }
     }
 
@@ -55,11 +52,9 @@ public class EmailServiceImpl implements EmailService {
     @Async
     public void sendContactMessage(String to, String userFrom, String subject, String message) {
         String mailSubject = "GetAProff: Nueva petición de clase";
-        StringBuilder toFormat = new StringBuilder("<p>");
-        toFormat.append("Hola, desde GetAproff el usuario ").append(userFrom).append(" pide por tus clases de ").append(subject)
-                .append("</p><p>Su mensaje para vos es:</p><p>").append(message).append("</p><p>Entra a GetAproff para aceptar o rechazar la clase!</p>");
-
-        String text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+        String toFormat = "<p>" + "Hola, desde GetAproff el usuario " + userFrom + " pide por tus clases de " + subject +
+                "</p><p>Su mensaje para vos es:</p><p>" + message + "</p><p>Entra a GetAproff para aceptar o rechazar la clase!</p>";
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
         sendSimpleMessage(to,mailSubject, text);
     }
 
@@ -67,27 +62,31 @@ public class EmailServiceImpl implements EmailService {
     @Async
     public void sendAcceptMessage(int toId, int fromId, int sid, String message) {
         String mailSubject = "GetAProff: Clase Aceptada";
-        User to = userService.findById(toId);
-        User from = userService.findById(fromId);
-        Subject subject = subjectService.findById(sid);
-        if (to == null || from == null || subject == null) {
-            return; //TODO: manage exception
+        Optional<User> to = userService.findById(toId);
+        Optional<User> from = userService.findById(fromId);
+        Optional<Subject> subject = subjectService.findById(sid);
+        if (!to.isPresent() || !from.isPresent() || !subject.isPresent()) {
+            throw new NoSuchElementException();
         }
-        StringBuilder toFormat = new StringBuilder("<p>");
-        toFormat.append(from.getName()).append(" ha aceptado tu pedido de clase de ").append(subject.getName()).append(".</p>")
-                .append("<p>Su mensaje para vos es:</p><p>").append(message).append("</p><p>Su email es: ").append(from.getMail()).append("</p><p>Contáctate con tu profesor para coordinar horarios y modalidades de la clase!</p>");
-
-        String text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-        sendSimpleMessage(to.getMail(),mailSubject, text);
+        String toFormat = "<p>" + from.get().getName() + " ha aceptado tu pedido de clase de " + subject.get().getName() + ".</p>" +
+                "<p>Su mensaje para vos es:</p><p>" + message + "</p><p>Su email es: " + from.get().getMail() + "</p><p>Contáctate con tu profesor para coordinar horarios y modalidades de la clase!</p>";
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+        sendSimpleMessage(to.get().getMail(),mailSubject, text);
     }
 
     @Override
     @Async
     public void sendStatusChangeMessage(Class myClass) {
-        User student = userService.findById(myClass.getStudentId());
-        User teacher = userService.findById(myClass.getTeacherId());
-        Subject mySubject = subjectService.findById(myClass.getSubjectid());
+        Optional<User> maybeS = userService.findById(myClass.getStudentId());
+        Optional<User> maybeT = userService.findById(myClass.getTeacherId());
+        Optional<Subject> maybeSub = subjectService.findById(myClass.getSubjectid());
+        if (!maybeS.isPresent() || !maybeT.isPresent() || !maybeSub.isPresent()) {
+            throw new NoSuchElementException();
+        }
         int myStatus = myClass.getStatus();
+        Subject mySubject = maybeSub.get();
+        User student = maybeS.get();
+        User teacher = maybeT.get();
         StringBuilder toFormat = new StringBuilder ("<p>");
         String text;
         switch (myStatus) {
@@ -117,15 +116,18 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendRatedMessage(Class myClass, int rating, String review) {
-        User student = userService.findById(myClass.getStudentId());
-        User teacher = userService.findById(myClass.getTeacherId());
-        Subject mySubject = subjectService.findById(myClass.getSubjectid());
+        Optional<User> student = userService.findById(myClass.getStudentId());
+        Optional<User> teacher = userService.findById(myClass.getTeacherId());
+        Optional<Subject> mySubject = subjectService.findById(myClass.getSubjectid());
+        if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
+            throw new NoSuchElementException();
+        }
         StringBuilder toFormat = new StringBuilder ("<p>");
-        toFormat.append("Tu alumno ").append(student.getName()).append(" ha calificado tu clase de ").append(mySubject.getName())
+        toFormat.append("Tu alumno ").append(student.get().getName()).append(" ha calificado tu clase de ").append(mySubject.get().getName())
                 .append("</p><p>Su calificación fue de: ").append(rating).append(" estrellas").append("</p><p>Su reseña fue:</p><p>")
                 .append(review).append("</p><p>").append("Entra a GetAproff para ver tu calificación general!</p>");
-        String text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ String.valueOf(teacher.getId()),"GetAProff/misClases");
-        sendSimpleMessage(teacher.getMail(),"GetAProff:Nueva calificación", text);
+        String text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ String.valueOf(teacher.get().getId()),"GetAProff/misClases");
+        sendSimpleMessage(teacher.get().getMail(),"GetAProff:Nueva calificación", text);
     }
 
 

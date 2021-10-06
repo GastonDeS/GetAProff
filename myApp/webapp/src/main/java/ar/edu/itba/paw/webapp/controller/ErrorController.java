@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.management.OperatingSystemMXBean;
+import java.util.Optional;
+
 @Controller
 public class ErrorController {
 
@@ -15,11 +18,9 @@ public class ErrorController {
 
     @RequestMapping("/403")
     public ModelAndView helloWorld() {
-        User curr = userService.getCurrentUser();
+        Optional<User> curr = userService.getCurrentUser();
         final ModelAndView mav = new ModelAndView("403");
-        if (curr != null){
-            mav.addObject("uid", curr.getId());
-        }
+        curr.ifPresent(user -> mav.addObject("uid", user.getId()));
         return mav;
     }
 }

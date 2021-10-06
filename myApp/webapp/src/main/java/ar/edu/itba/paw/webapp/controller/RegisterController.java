@@ -6,6 +6,11 @@ import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -23,6 +28,9 @@ public class RegisterController {
 
     @Autowired
     private RegisterFormValidator registerFormValidator;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder){
@@ -46,8 +54,12 @@ public class RegisterController {
         }
         Optional<User> maybeUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
         if (!maybeUser.isPresent()) {
-            throw new RegisterErrorException("exception.register");
+            throw new RegisterErrorException("exception.register"); //mandar a register con msj de error
         }
+        User u = maybeUser.get();
+        UserDetails user = userDetailsService.loadUserByUsername(u.getMail());
+        Authentication auth = new UsernamePasswordAuthenticationToken(u.getMail(), u.getPassword(), user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
         if (form.getUserRole() == 1) {
             return new ModelAndView("redirect:/editSubjects");
         }

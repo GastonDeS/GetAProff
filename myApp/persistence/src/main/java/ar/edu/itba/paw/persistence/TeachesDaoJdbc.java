@@ -10,10 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class TeachesDaoJdbc implements TeachesDao {
@@ -50,27 +47,26 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public List<Teaches> findSubjectByUser(int userId) {
+    public Optional<List<Teaches>> findSubjectByUser(int userId) {
         final List<Teaches> list = jdbcTemplate.query("SELECT * FROM teaches WHERE userId = ?",
                 new Object[] { userId }, ROW_MAPPER);
-        return list.isEmpty() ? new ArrayList<>() : list ;
+        return Optional.ofNullable(list);
     }
 
     @Override
-    public Teaches findByUserAndSubject(int userId, int subjectId) {
+    public Optional<Teaches> findByUserAndSubject(int userId, int subjectId) {
         final List<Teaches> list = jdbcTemplate.query(
                 "SELECT * FROM teaches WHERE userId = ? AND subjectId = ?", new Object[] {userId, subjectId}, ROW_MAPPER);
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public int removeSubjectToUser(int userId, int subjectId) {
         return jdbcTemplate.update("DELETE FROM teaches WHERE userId = ? AND subjectId = ?", userId, subjectId);
-        // Returns != 0 if removed correctly
     }
 
     @Override
-    public List<SubjectInfo> getSubjectInfoListByUser(int userid) {
+    public Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid) {
         RowMapper<SubjectInfo> subjectInfoRowMapper = (rs, rowNum) ->
                 new SubjectInfo(rs.getInt("id"), rs.getString("name"),
                         rs.getInt("price"), rs.getInt("level"));
@@ -78,7 +74,7 @@ public class TeachesDaoJdbc implements TeachesDao {
                 "SELECT s.subjectid as id, s.name as name, price, level\n" +
                         "FROM teaches t JOIN subject s ON t.subjectid = s.subjectid WHERE userId = ?",
                 new Object[] {userid}, subjectInfoRowMapper);
-        return list.isEmpty() ? null : list;
+        return Optional.ofNullable(list);
     }
 
 }

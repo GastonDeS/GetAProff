@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User findById(int id);
+    Optional<User> findById(int id);
 
     Optional<List<CardProfile>> filterUsers(String subject, String price, String level);
 
@@ -20,6 +20,7 @@ public interface UserService {
 
 
     Optional<List<CardProfile>> getFavourites(int uid);
+
     int addFavourite(int teacherId, int studentId);
 
     int removeFavourite(int teacherId, int studentId);
@@ -36,7 +37,7 @@ public interface UserService {
          * @param userId The id of the user.
          * @return A String description of the user's schedule.
          */
-    String getUserSchedule(int userId);
+    Optional<String> getUserSchedule(int userId);
 
     /**
      * Retrieves all the users registered
@@ -59,13 +60,13 @@ public interface UserService {
      * @param mail The mail of the user.
      * @return The created user.
      */
-    User create(String username, String mail, String password, String description, String schedule, int userole);
+    Optional<User> create(String username, String mail, String password, String description, String schedule, int userole);
 
     Optional<User> findByEmail(String mail);
 
-    User getCurrentUser();
+    Optional<User> getCurrentUser();
 
-    String getUserDescription(int userId);
+    Optional<String> getUserDescription(int userId);
 
     int setUserSchedule(int userId, String schedule);
 

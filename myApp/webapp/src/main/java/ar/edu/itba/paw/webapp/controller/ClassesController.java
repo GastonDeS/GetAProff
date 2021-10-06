@@ -6,13 +6,11 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.ClassInfo;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
+import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
-import jdk.net.SocketFlow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.model.NotFoundException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,34 +39,47 @@ public class ClassesController {
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
         final ModelAndView mav = new ModelAndView("classes");
-        User user = userService.getCurrentUser();
-        mav.addObject("user", user);
-        List<ClassInfo> teacherClassList = classService.findClassesByTeacherId(user.getId());
-        mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
-        mav.addObject("teacherActiveClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("teacherFinishedClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.TEACHER.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
-        mav.addObject("isTeacher", user.isTeacher() ? 1 : 0);
-        List<ClassInfo> classList = classService.findClassesByStudentId(user.getId());
-        mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
-        mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
+        Optional<User> user = userService.getCurrentUser();
+        if (!user.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login
+        }
+        mav.addObject("user", user.get());
+        Optional<List<ClassInfo>> teacherClassList = classService.findClassesByTeacherId(user.get().getId());
+        Optional<List<ClassInfo>> classList = classService.findClassesByStudentId(user.get().getId());
+        if (!teacherClassList.isPresent() || !classList.isPresent()) {
+            throw new ListNotFoundException("exception"); // mandar a 403
+        }
+        mav.addObject("teacherPendingClasses", teacherClassList.get().stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+        mav.addObject("teacherActiveClasses", teacherClassList.get().stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+        mav.addObject("teacherFinishedClasses", teacherClassList.get().stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.TEACHER.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
+        mav.addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
+        mav.addObject("pendingClasses", classList.get().stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
+        mav.addObject("activeClasses", classList.get().stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
+        mav.addObject("finishedClasses", classList.get().stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
         return mav;
     }
 
     @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
     public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
-    if (status.equals("STUDENT") || status.equals("TEACHER")){
-        Class myClass = classService.findById(cid);
-        if (myClass.getDeleted() == 0) {
-            classService.setDeleted(cid, Class.Deleted.valueOf(status).getValue());
+        Optional<Class> myClass = classService.findById(cid);
+        if (!myClass.isPresent()) {
+            throw new ClassNotFoundException("exception.class"); //mandar a 403
         }
-        else {
-            classService.setDeleted(cid, Class.Deleted.BOTH.getValue());
+        if (status.equals("STUDENT") || status.equals("TEACHER")){
+            if (myClass.get().getDeleted() == 0) {
+                classService.setDeleted(cid, Class.Deleted.valueOf(status).getValue());
+            }
+            else {
+                classService.setDeleted(cid, Class.Deleted.BOTH.getValue());
+            }
+        } else {
+            classService.setStatus(cid, Class.Status.valueOf(status).getValue());
+            try {
+                emailService.sendStatusChangeMessage(myClass.get());
+            } catch (RuntimeException e) {
+                throw new OperationFailedException("exception.failed"); //mandar a 403
+            }
         }
-    } else {
-        classService.setStatus(cid, Class.Status.valueOf(status).getValue());
-        emailService.sendStatusChangeMessage(classService.findById(cid));
-    }
         return new ModelAndView("redirect:/myClasses");
     }
 
@@ -75,12 +87,15 @@ public class ClassesController {
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
     public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final int cid) {
         final ModelAndView mav = new ModelAndView("acceptForm");
-        Class myClass = classService.findById(cid);
-        User student = userService.findById(myClass.getStudentId());
-        if (student == null) {
-            throw new NotFoundException("User not found");
+        Optional<Class> myClass = classService.findById(cid);
+        if (!myClass.isPresent()) {
+            throw new ClassNotFoundException("exception.class"); //mandar a 403
         }
-        return mav.addObject("student", student.getName());
+        Optional<User> student = userService.findById(myClass.get().getStudentId());
+        if (!student.isPresent()) {
+            throw new UserNotFoundException("User not found"); //mandar a 403
+        }
+        return mav.addObject("student", student.get().getName());
     }
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
@@ -89,17 +104,32 @@ public class ClassesController {
         if (errors.hasErrors()) {
             return acceptForm(form, cid);
         }
-        Class myClass = classService.findById(cid);
-        classService.setStatus(myClass.getClassId(), Class.Status.ACCEPTED.getValue());
-        classService.setReply(myClass.getClassId(), form.getMessage());
-        emailService.sendAcceptMessage(myClass.getStudentId(), myClass.getTeacherId(), 3, form.getMessage());
+        Optional<Class> myClass = classService.findById(cid);
+        if (!myClass.isPresent()) {
+            throw new ClassNotFoundException("exception.class"); //mandar a 403
+        }
+        classService.setStatus(myClass.get().getClassId(), Class.Status.ACCEPTED.getValue());
+        classService.setReply(myClass.get().getClassId(), form.getMessage());
+        try {
+            emailService.sendAcceptMessage(myClass.get().getStudentId(), myClass.get().getTeacherId(), 3, form.getMessage());
+        } catch (RuntimeException e) {
+            throw new OperationFailedException("exception.failed"); //mandar a 403
+        }
         return new ModelAndView("redirect:/myClasses");
     }
+
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final int cid) {
         final ModelAndView mav = new ModelAndView("rateForm");
-        String teacher = userService.findById(classService.findById(cid).getTeacherId()).getName();
-        return mav.addObject("teacher", teacher);
+        Optional<Class> myClass = classService.findById(cid);
+        if (!myClass.isPresent()) {
+            throw new ClassNotFoundException("exception.class"); //mandar a 403
+        }
+        Optional<User> teacher = userService.findById(myClass.get().getTeacherId());
+        if (!teacher.isPresent()) {
+            throw new UserNotFoundException("exception.user"); //mandar a 403
+        }
+        return mav.addObject("teacher", teacher.get().getName());
     }
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
@@ -108,10 +138,17 @@ public class ClassesController {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
-        Class myClass = classService.findById(cid);
+        Optional<Class> myClass = classService.findById(cid);
+        if (!myClass.isPresent()) {
+            throw new ClassNotFoundException("exception.class"); //mandar a 403
+        }
         classService.setStatus(cid, Class.Status.RATED.getValue());
-        userService.addRating(myClass.getTeacherId(),myClass.getStudentId(), form.getRating(), form.getReview());
-        emailService.sendRatedMessage(myClass, form.getRating(), form.getReview());
+        userService.addRating(myClass.get().getTeacherId(),myClass.get().getStudentId(), form.getRating(), form.getReview());
+        try {
+            emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());
+        } catch (RuntimeException e) {
+            throw new OperationFailedException("exception.failed"); //mandar a 403
+        }
         return new ModelAndView("redirect:/myClasses");
     }
 }

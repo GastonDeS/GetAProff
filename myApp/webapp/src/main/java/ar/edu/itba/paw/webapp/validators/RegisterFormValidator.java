@@ -36,7 +36,12 @@ public class RegisterFormValidator implements Validator {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "schedule", "form.field.empty");
         }
 
-        if (us.findByEmail(mail).isPresent() && !mail.isEmpty()) {
+        if (!mail.isEmpty()) {
+            try {
+                us.findByEmail(mail);
+            } catch (RuntimeException e) {
+
+            }
             errors.rejectValue("mail", "form.unique.user");
         }
 

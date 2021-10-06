@@ -33,18 +33,13 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Optional<User> get(int id) {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[] { id }, ROW_MAPPER);
-        return Optional.ofNullable(list.get(0));
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<User> list() {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
         return list.isEmpty() ? null : list;
-    }
-
-    @Override
-    public User save(User user) {
-        return null;
     }
 
     @Override
@@ -60,7 +55,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject, Integer price, Integer level) {
+    public Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -173,7 +168,7 @@ public class UserDaoJdbc implements UserDao {
                 "from favourites\n" +
                 "where teacherid = ?\n" +
                 "  and  studentid = ?;", new Object[]{teacherId,studentId},pairRowMapper);
-        return Optional.ofNullable(list.get(0));
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
