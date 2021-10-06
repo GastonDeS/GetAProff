@@ -120,4 +120,10 @@ public class ProfileController {
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);
     }
+
+    @RequestMapping(value = "/editProfile?teach=true")
+    public ModelAndView changeUserRole() {
+        return new ModelAndView("redirect:/editProfile");
+    }
+
 }

@@ -39,7 +39,7 @@
                         <form:input type="text" class="form-control" path="name" placeholder="${namePlaceholder}"/>
                         <form:errors path="name" element="p" cssClass="form-error"/>
                     </div>
-                    <c:if test="${user.teacher}">
+                    <c:if test="${user.teacher || param.teach != null}">
                         <div class="form-input-container">
                             <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
                             <form:errors path="description" element="p" cssClass="form-error"/>

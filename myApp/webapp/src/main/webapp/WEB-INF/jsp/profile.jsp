@@ -59,7 +59,7 @@
                                             </a>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
+                                            <a href="${pageContext.request.contextPath}/editProfile?teach=true" class="btn btn-custom">
                                                 <spring:message code="profile.btn.give.class"/>
                                             </a>
                                         </c:otherwise>
