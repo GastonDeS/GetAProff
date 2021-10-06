@@ -42,6 +42,14 @@
                                         <jsp:param name="rating" value="${rating.value1}"/>
                                     </jsp:include>
                                 </c:if>
+                                <c:choose>
+                                    <c:when test="${rating.value2 != 1}">
+                                        (${rating.value2} <spring:message code="profile.rating.times"/>s)
+                                    </c:when>
+                                    <c:otherwise>
+                                        (${rating.value2} <spring:message code="profile.rating.times"/>)
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                         <div class="profile-info-btn">
