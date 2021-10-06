@@ -85,7 +85,7 @@ public class ProfileController {
             if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
                 throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
             }
-            mav.addObject("currentUser", curr).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
+            mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
         }
         List<SubjectInfo> subjectsGiven = getSubject(uid);
         mav.addObject("user", user.get())
