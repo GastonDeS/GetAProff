@@ -65,15 +65,16 @@ public class ContactHandlingController {
         }
         Optional<User> user = userService.findById(uid);
         Optional<User> curr = userService.getCurrentUser();
-        Optional<Teaches> t = teachesService.findByUserAndSubject(uid, form.getSubjectId());
+        String[] subjectIdAndLevel = form.getSubjectAndLevel().split(",",2);
+        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Integer.parseInt(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
         if (!t.isPresent()) {
-            throw new NotFoundException("Subject " + form.getSubjectId() + " not taught by user " + uid);
+            throw new NotFoundException("Subject " + Integer.parseInt(subjectIdAndLevel[0] + " not taught by user " + uid));
         }
         if (!user.isPresent() || !curr.isPresent()) {
             throw new NotFoundException("exception.user.not.found");
         }
         classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubjectId(), t.get().getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
-        Optional<Subject> subject = subjectService.findById(form.getSubjectId());
+        Optional<Subject> subject = subjectService.findById(Integer.parseInt(subjectIdAndLevel[0]));
         if (!subject.isPresent()) {
             throw new OperationFailedException("exception"); //manadar a 403
         }

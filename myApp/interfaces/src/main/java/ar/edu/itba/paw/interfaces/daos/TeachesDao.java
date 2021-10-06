@@ -15,7 +15,7 @@ public interface TeachesDao {
 
     int removeSubjectToUser(int userid, int subjectid);
 
-    Optional<Teaches> findByUserAndSubject(int userId, int subjectId);
+    Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
 
     Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid);
 }
