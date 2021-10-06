@@ -20,7 +20,7 @@
         <div class="page-container">
             <div class="search-bar">
                 <form name="Search" action="tutors/1" method="get" >
-                    <input class="form-control" list="datalistOptions" id="query" name="query" placeholder=${searchPlaceholder}/>
+                    <input class="form-control" list="datalistOptions" id="query" name="query" placeholder= "${searchPlaceholder}"/>
                     <datalist id="datalistOptions">
                         <c:forEach var="subject" items="${subjects}">
                             <option value="${subject.name}">
