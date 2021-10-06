@@ -33,7 +33,7 @@ public class RegisterFormValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "form.field.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mail", "form.field.empty");
 
-        if (!name.isEmpty() && !name.matches("^([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+")) {
+        if (!name.matches("^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")) {
             errors.rejectValue("name", "form.name.format");
         }
 

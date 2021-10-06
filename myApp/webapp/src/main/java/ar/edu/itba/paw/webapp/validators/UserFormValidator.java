@@ -27,7 +27,7 @@ public class UserFormValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "form.field.empty");
 
-        if (!name.isEmpty() && !name.matches("^([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+")) {
+        if (!name.isEmpty() && !name.matches("^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")) {
             errors.rejectValue("name", "form.name.format");
         }
 
