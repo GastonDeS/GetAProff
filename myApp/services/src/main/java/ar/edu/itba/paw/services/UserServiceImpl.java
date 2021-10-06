@@ -56,11 +56,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> maybeUser = userDao.get(id);
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-            Optional<List<Role>> roles = roleService.getUserRoles(id);
-            if (!roles.isPresent()) {
+            List<Role> roles = roleService.getUserRoles(id);
+            if (roles.isEmpty()) {
                 return Optional.empty();
             }
-            user.setUserRoles(roles.get());
+            user.setUserRoles(roles);
             return Optional.of(user);
         }
         return Optional.empty();
@@ -130,11 +130,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
         User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
-        Optional<List<Role>> roles = roleService.setUserRoles(u.getId(), userole);
-        if (!roles.isPresent()) {
+        List<Role> roles = roleService.setUserRoles(u.getId(), userole);
+        if (roles.isEmpty()) {
             return Optional.empty();
         }
-        u.setUserRoles(roles.get());
+        u.setUserRoles(roles);
         return Optional.of(u);
     }
 
@@ -143,11 +143,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> maybe = userDao.findByEmail(mail);
         if (maybe.isPresent()) {
             User u = maybe.get();
-            Optional<List<Role>> roles = roleService.getUserRoles(u.getId());
-            if (!roles.isPresent()) {
+            List<Role> roles = roleService.getUserRoles(u.getId());
+            if (roles.isEmpty()) {
                 return Optional.empty();
             }
-            u.setUserRoles(roles.get());
+            u.setUserRoles(roles);
             return Optional.of(u);
         }
         return Optional.empty();

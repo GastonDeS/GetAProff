@@ -90,9 +90,7 @@ public class ProfileController {
         if (errors.hasErrors())
             return userForm(form);
         int uid = getCurrUser().getId();
-        if ( form.getImageFile().getSize() > 0) {
-            imageService.createOrUpdate(uid, form.getImageFile().getBytes());
-        }
+        imageService.createOrUpdate(uid, form.getImageFile().getBytes());
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         if (desc == 0 || sch == 0) {
