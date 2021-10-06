@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,17 @@ public class ContactHandlingController {
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
         final ModelAndView mav = new ModelAndView("contactForm");
         Optional<User> maybeUser = userService.findById(uid);
+        Optional<User> curr = userService.getCurrentUser();
+        if (!curr.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
         if (!maybeUser.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
         mav.addObject("user", maybeUser.get());
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         mav.addObject("subjects", subjectsGiven);
+        mav.addObject("uid", curr.get().getId());
         return mav;
     }
 
