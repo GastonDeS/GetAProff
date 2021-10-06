@@ -73,7 +73,6 @@ public class EmailServiceImpl implements EmailService {
         if (!to.isPresent() || !from.isPresent() || !subject.isPresent()) {
             throw new NoSuchElementException();
         }
-        System.out.println("message" + message);
         String toFormat = messageSource.getMessage("mail.subject.accept.class.body", new Object[] {from.get().getName(), subject.get().getName(), message, from.get().getMail()}, LocaleContextHolder.getLocale());
         String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
         sendSimpleMessage(to.get().getMail(),mailSubject, text);
@@ -92,28 +91,33 @@ public class EmailServiceImpl implements EmailService {
         Subject mySubject = maybeSub.get();
         User student = maybeS.get();
         User teacher = maybeT.get();
-        StringBuilder toFormat = new StringBuilder ("<p>");
         String text;
+        String mailSubject;
+        String format;
         switch (myStatus) {
             case 2:
-                toFormat.append("Ha finalizado tu clase de ").append(mySubject.getName()).append(" con ").append(teacher.getName()).append("</p><p>").append("Entra a GetAProff para darle un rating!</p>");
-                text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                sendSimpleMessage(student.getMail(),"GetAProff: Clase finalizada", text);
+                format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());
+                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 3:
-                toFormat.append("El alumno ").append(student.getName()).append(" ha cancelado la clase de ").append(mySubject.getName()).append("</p><p>").append("Entra a GetAProff para ver que otras clases tienes!</p>");
-                text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                sendSimpleMessage(teacher.getMail(),"GetAProff: Clase cancelada", text);
+                format = messageSource.getMessage("mail.class.student.cancelled.body", new Object[] {student.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
+                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                sendSimpleMessage(teacher.getMail(),mailSubject, text);
                 break;
             case 4:
-                toFormat.append("Tu profesor ").append(teacher.getName()).append(" ha cancelado tu clase de ").append(mySubject.getName()).append("</p><p>").append("Entra a GetAProff para poder pedir otras clases!</p>");
-                text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                sendSimpleMessage(student.getMail(),"GetAProff: Clase cancelada", text);
+                format = messageSource.getMessage("mail.class.teacher.cancelled.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
+                sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 5:
-                toFormat.append("El profesor ").append(teacher.getName()).append(" ha rechazado tu pedido de clase de ").append(mySubject.getName()).append("</p><p>").append("Entra a GetAProff para poder pedir otras clases!</p>");
-                text = String.format(templateMailMessage.getText(), toFormat.toString(), "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                sendSimpleMessage(student.getMail(),"GetAProff:Clase rechazada", text);
+                format = messageSource.getMessage("mail.class.rejected.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                mailSubject = messageSource.getMessage("mail.class.rejected", null, LocaleContextHolder.getLocale());
+                sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
         }
     }
@@ -127,19 +131,19 @@ public class EmailServiceImpl implements EmailService {
         if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
             throw new NoSuchElementException();
         }
-        String toFormat = "<p>" + "Tu alumno " + student.get().getName() + " ha calificado tu clase de " + mySubject.get().getName() +
-                "</p><p>Su calificación fue de: " + rating + " estrellas" + "</p><p>Su reseña fue:</p><p>" +
-                review + "</p><p>" + "Entra a GetAproff para ver tu calificación general!</p>";
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ String.valueOf(teacher.get().getId()),"GetAProff/misClases");
-        sendSimpleMessage(teacher.get().getMail(),"GetAProff:Nueva calificación", text);
+        String toFormat = messageSource.getMessage("mail.subject.rated.body", new Object[] {
+                student.get().getName(), mySubject.get().getName(), rating, review}, LocaleContextHolder.getLocale());
+        String mailSubject = messageSource.getMessage("mail.subject.rated", null, LocaleContextHolder.getLocale());
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ teacher.get().getId(),"GetAProff/misClases");
+        sendSimpleMessage(teacher.get().getMail(),mailSubject, text);
     }
 
     @Override
     @Async
     public void sendSubjectRequest(int uid, String subject, String message) {
-        sendSimpleMessage("getaproff@gmail.com","Nueva petición de Materia, uid:" + String.valueOf(uid),"<p>Materia:" +
-                subject + "</><p>Razón: " +
-                message + "</p>");
+        String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {subject}, LocaleContextHolder.getLocale());
+        String text = messageSource.getMessage("mail.subject.request.body", new Object[] {subject, message}, LocaleContextHolder.getLocale());
+        sendSimpleMessage("getaproff@gmail.com", mailSubject,text);
     }
 
 

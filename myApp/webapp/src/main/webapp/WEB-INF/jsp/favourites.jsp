@@ -17,12 +17,12 @@
         <jsp:param name="section" value="3"/>
     </jsp:include>
     <div class="page-container">
-        <div class="row w-100">
-            <c:choose>
-                <c:when test="${fn:length(favouritesTutors) == 0}">
-                    <p class="no-favourites"><spring:message code="no.favourites.tutors"/></p>
-                </c:when>
-                <c:otherwise>
+        <c:choose>
+            <c:when test="${fn:length(favouritesTutors) == 0}">
+                <p class="no-favourites"><spring:message code="no.favourites.tutors"/></p>
+            </c:when>
+            <c:otherwise>
+                <div class="row w-100">
                     <c:forEach var="tutor" items="${favouritesTutors}" varStatus="loop">
                         <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
                             <div class="container">
@@ -38,9 +38,9 @@
                             </div>
                         </div>
                     </c:forEach>
-                </c:otherwise>
-            </c:choose>
-        </div>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
     <jsp:include page="../components/footer.jsp">
         <jsp:param name="" value=""/>
