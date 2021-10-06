@@ -51,6 +51,9 @@ public class SearchController {
         mav.addObject("subjects", getSubjects());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
+        mav.addObject("urlParams", "?query=" + searchQuery);
+        mav.addObject("offset", offset);
+        mav.addObject("pageQty",userService.getPageQty(searchQuery));
         return mav;
     }
 
@@ -59,12 +62,17 @@ public class SearchController {
                                @RequestParam(value = "price") @NotNull final String price, @RequestParam(value = "level") @NotNull final String level,
                                @RequestParam(value = "rating") @NotNull final String rating, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
+        String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
         addUserId(mav);
         Optional<List<CardProfile>> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", maybeTutors.isPresent() ? maybeTutors.get() : new ArrayList<>());
         mav.addObject("subject", getSubjects());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
         mav.addObject("weekDays", Timetable.Days.values());
+        mav.addObject("urlParams", urlParams);
+        mav.addObject("offset", offset);
+        mav.addObject("pageQty",userService.getPageQty(searchQuery, price, level, rating));
+
         return mav;
     }
 }

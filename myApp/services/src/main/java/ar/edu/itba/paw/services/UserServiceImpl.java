@@ -45,10 +45,6 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
     void setRoleService(RoleService roleService) {
         this.roleService = roleService;
     }
@@ -100,6 +96,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<List<CardProfile>> filterUsers(String subject, String offset) {
         return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
+    }
+
+    @Override
+    public Integer getPageQty(String subject, String price, String level, String rating) {
+        return userDao.getPageQty( subject,  Integer.parseInt(price),  Integer.parseInt(level),  Integer.parseInt(rating));
+    }
+
+    @Override
+    public Integer getPageQty(String subject) {
+        return userDao.getPageQty(subject,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING);
     }
 
     @Override

@@ -148,7 +148,7 @@
                     <button type="button" id="clear-filter-button" class="btn btn-custom"
                             style="display: none; width: 100%; margin: 5px 0;"
                             onclick="resetFilters()">
-                        <spring:message code ="tutors.filters.resetBtn"/>
+                        <spring:message code="tutors.filters.resetBtn"/>
                     </button>
                 </div>
             </form>
@@ -156,7 +156,7 @@
         <div class="search-and-results-container">
             <div class="tutors-search">
                 <div class="search-bar">
-                    <form name="Search" action="${pageContext.request.contextPath}/tutors" method="get">
+                    <form name="Search" action="${pageContext.request.contextPath}/tutors/1" method="get">
                         <input class="form-control" list="datalistOptions" id="query" name="query"
                                value="<%=request.getParameter("query")%>"/>
                         <datalist id="datalistOptions">
@@ -181,37 +181,79 @@
                 </c:otherwise>
             </c:choose>
             <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%; height: fit-content">
-                    <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                        <div style="margin-top: 30px" class="col">
-                                <jsp:include page="../components/tutorCard.jsp">
-                                    <jsp:param name="image" value="${tutor.image}"/>
-                                    <jsp:param name="name" value="${tutor.name}"/>
-                                    <jsp:param name="uid" value="${tutor.userId}"/>
-                                    <jsp:param name="rate" value="${tutor.rate}"/>
-                                    <jsp:param name="description" value="${tutor.description}"/>
-                                    <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
-                                    <jsp:param name="minPrice" value="${tutor.minPrice}"/>
-                                </jsp:include>
-                        </div>
-                    </c:forEach>
+                <c:forEach var="tutor" items="${tutors}" varStatus="loop">
+                    <div style="margin-top: 30px" class="col">
+                        <jsp:include page="../components/tutorCard.jsp">
+                            <jsp:param name="image" value="${tutor.image}"/>
+                            <jsp:param name="name" value="${tutor.name}"/>
+                            <jsp:param name="uid" value="${tutor.userId}"/>
+                            <jsp:param name="rate" value="${tutor.rate}"/>
+                            <jsp:param name="description" value="${tutor.description}"/>
+                            <jsp:param name="maxPrice" value="${tutor.maxPrice}"/>
+                            <jsp:param name="minPrice" value="${tutor.minPrice}"/>
+                        </jsp:include>
+                    </div>
+                </c:forEach>
             </div>
         </div>
     </div>
-    <div class="nav-container">
-        <nav aria-label="Page navigation example">
+</div>
+<div class="nav-container">
+    <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            <c:choose>
+                <c:when test="${offset == 1}">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item">
+                        <a class="page-link" href="${pageContext.request.contextPath}/tutors/${offset-1}${urlParams}"
+                           tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+            <c:forEach begin="0" end="2" var="idx">
+                <c:choose>
+                    <c:when test="${offset < 3}">
+                        <c:set var="show" value=""/>
+                        <c:if test="${idx + 1 == offset}">
+                            <c:set var="show" value="active"/>
+                        </c:if>
+                        <c:set var="display" value="disabled"/>
+                        <c:if test="${idx + 1 <= pageQty}">
+                            <c:set var="display" value=""/>
+                        </c:if>
+                        <li class="page-item ${show} ${display}"><a class="page-link"
+                                                         href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="show" value=""/>
+                        <c:if test="${offset + idx - 1  == offset}">
+                            <c:set var="show" value="active"/>
+                        </c:if>
+                        <c:set var="display" value="disabled"/>
+                        <c:if test="${offset + idx - 1 <= pageQty}">
+                            <c:set var="display" value=""/>
+                        </c:if>
+                        <li class="page-item ${show} ${display}"><a class="page-link"
+                                                 href="${pageContext.request.contextPath}/tutors/${offset + idx - 1}${urlParams}">${offset + idx - 1}</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:set var="display" value="disabled"/>
+            <c:if test="${offset < pageQty}">
+                <c:set var="display" value=""/>
+            </c:if>
+            <li class="page-item ${display}">
+                <a class="page-link " href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
+
         </ul>
     </nav>
-    </div>
 </div>
 <jsp:include page="../components/footer.jsp">
     <jsp:param name="" value=""/>
