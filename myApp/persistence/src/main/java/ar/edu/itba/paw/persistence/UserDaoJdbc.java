@@ -161,13 +161,12 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public Boolean isFaved(int teacherId, int studentId) {
-        RowMapper<String> mapper = (rs, rowNum) -> (String.valueOf(rs.getInt("faved")));
-        List<String> list = jdbcTemplate.query("select count(*) as faved\n" +
+        RowMapper<String> mapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
+        List<String> list = jdbcTemplate.query("select count(*) as count\n" +
                 "from favourites\n" +
                 "where teacherid = ?\n" +
                 "  and  studentid = ?;", new Object[]{teacherId,studentId},mapper);
-        list.forEach(System.out::println);
-        return list.isEmpty() ? false : true;
+        return !list.isEmpty() && !list.get(0).equals("0");
     }
 
     @Override
