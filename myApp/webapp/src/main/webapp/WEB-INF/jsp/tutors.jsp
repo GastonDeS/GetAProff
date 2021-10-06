@@ -149,10 +149,9 @@
                         </ul>
                     </li>
                 </ul>
-                <hr>
                 <div class="filter-btn-container">
                     <button type="submit" id="filter-button" class="btn btn-custom"
-                            style="display: none; width: 100%; margin: 5px 0;">
+                            style="width: 100%; margin: 5px 0;">
                         <spring:message code="tutors.filters.applyBtn"/>
                     </button>
                     <button type="button" id="clear-filter-button" class="btn btn-custom"
