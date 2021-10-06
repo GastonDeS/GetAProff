@@ -27,7 +27,7 @@ public class FavouritesController {
         final ModelAndView mav = new ModelAndView("favourites");
         Optional<User> u = userService.getCurrentUser();
         if (!u.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login
+            throw new NoUserLoggedException("exception.not.logger.user");
         }
         List<CardProfile> favouritesTutors = userService.getFavourites(u.get().getId());
         mav.addObject("uid", u.get().getId());
@@ -39,7 +39,7 @@ public class FavouritesController {
     public ModelAndView addFavourite(@PathVariable("tutorId") final int tutorId) {
         Optional<User> u = userService.getCurrentUser();
         if (!u.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login
+            throw new NoUserLoggedException("exception.not.logger.user");
         }
         userService.addFavourite(tutorId, u.get().getId());
         return new ModelAndView("redirect:/profile/"+tutorId);

@@ -81,9 +81,7 @@ public class ProfileController {
         ModelAndView mav = new ModelAndView("userForm").addObject("uid", u.getId());
         form.setDescription(u.getDescription());
         form.setSchedule(u.getSchedule());
-        Optional<Image> maybeImg = imageService.findImageById(u.getId());
-        form.setHasImage(maybeImg.isPresent() && maybeImg.get().getImage().length > 0);
-        return mav.addObject("image", maybeImg.isPresent());
+        return mav;
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
@@ -96,7 +94,9 @@ public class ProfileController {
         if (!user.isTeacher()) {
             roleService.addTeacherRole(uid);
         }
-        imageService.createOrUpdate(uid, form.getImageFile().getBytes());
+        if (form.getImageFile() != null && form.getImageFile().getSize() > 0) {
+            imageService.createOrUpdate(uid, form.getImageFile().getBytes());
+        }
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         if (desc == 0 || sch == 0) {

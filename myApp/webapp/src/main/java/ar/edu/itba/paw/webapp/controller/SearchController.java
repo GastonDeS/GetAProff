@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +35,10 @@ public class SearchController {
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
+        Integer pageQty = userService.getPageQty(searchQuery);
+        if (Integer.parseInt(offset) > pageQty) {
+            return new ModelAndView("403");
+        }
         List<CardProfile> maybeTutors = userService.filterUsers(searchQuery, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
@@ -62,7 +65,6 @@ public class SearchController {
         mav.addObject("urlParams", urlParams);
         mav.addObject("offset", offset);
         mav.addObject("pageQty",userService.getPageQty(searchQuery, price, level, rating));
-
         return mav;
     }
 }

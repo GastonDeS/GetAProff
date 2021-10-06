@@ -42,7 +42,7 @@ public class ClassesController {
         final ModelAndView mav = new ModelAndView("classes");
         Optional<User> user = userService.getCurrentUser();
         if (!user.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login
+            throw new NoUserLoggedException("exception.not.logger.user");
         }
         mav.addObject("user", user.get());
         List<ClassInfo> teacherClassList = classService.findClassesByTeacherId(user.get().getId());

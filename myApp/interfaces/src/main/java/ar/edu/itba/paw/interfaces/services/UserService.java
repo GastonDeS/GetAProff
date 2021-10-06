@@ -10,8 +10,6 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> findById(int id);
 
-    List<CardProfile> filterUsers(String subject, String price, String level);
-
     List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
 
     List<CardProfile> filterUsers(String subject);

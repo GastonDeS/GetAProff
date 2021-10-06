@@ -23,8 +23,9 @@ public class ExceptionHandlingController {
     @Autowired
     private UserService userService;
 
-    @ExceptionHandler(LoginErrorException.class)
-    public ModelAndView loginErrorException(LoginErrorException e) {
+    @ExceptionHandler({LoginErrorException.class,
+            NoUserLoggedException.class})
+    public ModelAndView loginErrorException(RuntimeException e) {
         ModelAndView mav = new ModelAndView("login");
         return mav.addObject("exception", messageSource.getMessage(e.getMessage(), null, LocaleContextHolder.getLocale()));
     }
