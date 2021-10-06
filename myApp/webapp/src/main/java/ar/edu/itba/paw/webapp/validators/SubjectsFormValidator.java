@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validators;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,9 @@ public class SubjectsFormValidator implements Validator {
         SubjectsForm sf = (SubjectsForm) o;
         int price = sf.getPrice();
         Optional<User> current = us.getCurrentUser();
+        if (!current.isPresent()) {
+            throw new NoUserLoggedException("Exception");
+        }
 
         if (ts.findByUserAndSubjectAndLevel(current.get().getId(), sf.getSubjectid(), sf.getLevel()).isPresent()) {
             errors.rejectValue("level","form.level.invalid");
