@@ -15,5 +15,5 @@ public interface TeachesService {
 
     Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid);
 
-    Optional<Teaches> findByUserAndSubject(int userId, int subjectId);
+    Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
 }

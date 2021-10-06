@@ -14,8 +14,6 @@
     <spring:message code="request.subject.message.placeholder" var="messagePlaceHolder"/>
     <spring:message code="request.subject.btn.value" var="requestSubjectValue"/>
     <spring:message code="request.subject.subject.placeholder" var="subjectPlaceHolder"/>
-
-
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -31,7 +29,7 @@
             <div class="input-section">
                 <div class="form-input">
                     <form:label path="subject"><spring:message code="new.subject.form.subject"/></form:label>
-                    <form:input type="text" cssClass="form-control" placeHolder="${subjectPlaceholder}" path="subject"/>
+                    <form:input type="text" cssClass="form-control" placeHolder="${subjectPlaceHolder}" path="subject"/>
                     <form:errors path="subject" element="p" cssClass="form-error"/>
                 </div>
                 <div class="form-input">

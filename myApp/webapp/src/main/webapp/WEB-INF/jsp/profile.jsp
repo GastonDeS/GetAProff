@@ -36,6 +36,8 @@
                     <div class="profile-info">
                         <div class="profile-name">
                             <h1><c:out value="${user.name}"/></h1>
+                        </div>
+                        <div class="profile-info-btn">
                             <c:if test="${edit == 1}">
                                 <div class="profile-btn">
                                     <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
@@ -48,8 +50,6 @@
                                     </c:if>
                                 </div>
                             </c:if>
-                        </div>
-                        <div class="profile-info-btn">
                             <c:if test="${edit == 0}">
                                 <sec:authorize access="isAuthenticated()">
                                     <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom" style="margin-right: 10px">

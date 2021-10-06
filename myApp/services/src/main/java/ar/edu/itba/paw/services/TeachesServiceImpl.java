@@ -40,7 +40,7 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public Optional<Teaches> findByUserAndSubject(int userId, int subjectId) {
-        return teachesDao.findByUserAndSubject(userId, subjectId);
+    public Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level) {
+        return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
     }
 }

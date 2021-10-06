@@ -59,10 +59,7 @@ public class ProfileController {
 
     private User getCurrUser() {
         Optional<User> maybeUser = userService.getCurrentUser();
-        if (!maybeUser.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user");
-        }
-        return maybeUser.get();
+        return maybeUser.orElseGet(User::new);
     }
 
     private List<SubjectInfo> getSubject(int uid) {
@@ -77,52 +74,23 @@ public class ProfileController {
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
-        if (!user.isPresent() || !user.get().isTeacher()) {
-            throw new ProfileNotFoundException("Profile not found for requested id: " + uid); //mandar a 403
+        if (!user.isPresent()) {
+            throw new ProfileNotFoundException("exception.profile"); //mandar a 403
+        }
+        ModelAndView mav = new ModelAndView("profile");
+        if (curr.isPresent()) {
+            if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
+                throw new ProfileNotFoundException("exception.profile"); //mandar a 403
+            }
+            mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
         }
         List<SubjectInfo> subjectsGiven = getSubject(uid);
-        ModelAndView mav = new ModelAndView("profile")
-                .addObject("user", user.get())
+        mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
                 .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
-                        .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
-        curr.ifPresent(value -> mav.addObject("currentUser", value)
-                .addObject("edit", value.getId() == user.get().getId() ? 1 : 0));
+                .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
         return mav;
-    }
-
-    @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
-    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        int uid = getCurrUser().getId();
-        Optional<List<Subject>> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
-        List<SubjectInfo> subjectsGiven = getSubject(uid);
-        return new ModelAndView("subjectsForm")
-                    .addObject("userid", uid)
-                    .addObject("given", subjectsGiven)
-                    .addObject("toGive", subjectsNotGiven.isPresent() ? subjectsNotGiven.get() : new ArrayList<>());
-    }
-
-    @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
-    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return subjectsForm(form);
-        }
-        int uid = getCurrUser().getId();
-        Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
-        if (!maybe.isPresent()) {
-            throw new OperationFailedException("exception.add.subject"); //mandar a 403 con profile
-        }
-        return subjectsForm(form);
-    }
-
-    @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.POST)
-    public ModelAndView removeSubject(@PathVariable("sid") final int sid) {
-        int uid = getCurrUser().getId();
-        if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
-            throw new OperationFailedException("exception.remove.subject"); //mandar a 403 con profile
-        }
-        return new ModelAndView("redirect:/editSubjects");
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)

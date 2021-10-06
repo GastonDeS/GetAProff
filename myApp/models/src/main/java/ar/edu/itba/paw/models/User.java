@@ -26,6 +26,9 @@ public class User {
         this.userRoles = new ArrayList<>();
     }
 
+    public User() {
+    }
+
     public int getId() {
         return id;
     }
