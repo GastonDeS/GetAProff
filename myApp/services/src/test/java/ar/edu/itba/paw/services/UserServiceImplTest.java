@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,7 +54,7 @@ public class UserServiceImplTest {
     @Mock
     private UtilsService utilsService;
 
-    private User user = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);;
+    private final User user = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
 
     @Test
     public void testCreate(){
@@ -62,7 +63,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
         List<Role> roles = new ArrayList<>();
         roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
-        when(roleService.setUserRoles(USER_ID,USER_ROLE)).thenReturn(roles);
+        when(roleService.setUserRoles(eq(USER_ID),eq(USER_ROLE))).thenReturn(roles);
         when(utilsService.capitalizeString(eq(USERNAME))).thenReturn(USERNAME); //este username ya esta capitalizado
 
 //        2 ejercito la class under test una unica linea
@@ -72,16 +73,15 @@ public class UserServiceImplTest {
 //        3 Asserts - postcondiciones
 
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(user.get().getMail(),USER_MAIL);
+        Assert.assertEquals(USER_MAIL, user.get().getMail());
     }
 
-    @Test(expected = RuntimeException.class) //TODO
+    @Test(expected = DuplicateKeyException.class)
     public void testCreateDuplicateUser(){
 //        1 setup - precondiciones
-
-        User u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
+        when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenThrow(DuplicateKeyException.class);
+        when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
+        when(utilsService.capitalizeString(eq(USERNAME))).thenReturn(USERNAME);
 
 //        2 ejercito la class under test una unica linea
 
@@ -101,5 +101,35 @@ public class UserServiceImplTest {
         Integer max = userService.mostExpensiveUserFee(SUBJECT);
 
         Assert.assertEquals(MAXPRICE, max);
+    }
+
+    @Test
+    public void testFindByEmail() {
+        //setup
+        when(mockDao.findByEmail(eq(USER_MAIL))).thenReturn(Optional.of(user));
+
+        List<Role> roles = new ArrayList<>();
+        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
+        when(roleService.getUserRoles(eq(USER_ID))).thenReturn(roles);
+
+        final Optional<User> user = userService.findByEmail(USER_MAIL);
+
+        Assert.assertTrue(user.isPresent());
+        Assert.assertEquals(USER_MAIL, user.get().getMail());
+    }
+
+    @Test
+    public void testFindById() {
+        //setup
+        when(mockDao.get(eq(USER_ID))).thenReturn(Optional.of(user));
+
+        List<Role> roles = new ArrayList<>();
+        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
+        when(roleService.getUserRoles(eq(USER_ID))).thenReturn(roles);
+
+        final Optional<User> user = userService.findById(USER_ID);
+
+        Assert.assertTrue(user.isPresent());
+        Assert.assertEquals(USER_ID, user.get().getId());
     }
 }

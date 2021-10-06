@@ -82,17 +82,6 @@ public class UserServiceImpl implements UserService {
         return userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
     }
 
-    @Override
-    public List<CardProfile> filterUsers(String subject, String price, String level) {
-        int lvl = Integer.parseInt(level);
-        if(lvl < 0 || lvl > MAX_LEVEL)
-            lvl = ANY_LEVEL;
-        Integer maxPrice = mostExpensiveUserFee(subject);
-        int intPrice = Integer.parseInt(price);
-            if (intPrice > maxPrice)
-                intPrice = maxPrice;
-        return userDao.filterUsers(subject,RAND_ORDER,intPrice,lvl,ANY_RATING,GET_ALL);
-    }
 
     @Override
     public List<CardProfile> filterUsers(String subject) {
