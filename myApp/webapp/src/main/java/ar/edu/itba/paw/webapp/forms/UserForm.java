@@ -6,7 +6,7 @@ public class UserForm {
 
     private String description, schedule;
 
-    private Boolean hasImage;
+    private Boolean hasImage = false;
 
     private MultipartFile imageFile;
 
