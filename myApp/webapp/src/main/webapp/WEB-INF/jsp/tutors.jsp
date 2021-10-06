@@ -184,8 +184,7 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> <spring:message
-                            code="tutors.search.resultTitle"/> ${searchQuery} :
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"><spring:message code="tutors.search.resultTitle"/> ${searchQuery}:
                     </h3>
                 </c:otherwise>
             </c:choose>

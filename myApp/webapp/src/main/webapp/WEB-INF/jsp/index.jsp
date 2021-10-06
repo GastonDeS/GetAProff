@@ -8,7 +8,6 @@
         <title>GetAProff</title>
         <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
         <link rel="stylesheet"  type="text/css" href=" <c:url value="/resources/styles/main.css"/>">
-        <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
         <spring:message code="home.search.placeholder" var="searchPlaceholder"/>
     </head>
     <body>
