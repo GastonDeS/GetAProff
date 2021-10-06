@@ -21,7 +21,6 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-//@Sql(scripts = "classpath:user-test.sql")
 public class ClassDaoJdbcTest {
 
     @Autowired
