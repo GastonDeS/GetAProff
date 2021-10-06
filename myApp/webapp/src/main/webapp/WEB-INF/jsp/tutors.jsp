@@ -138,13 +138,12 @@
                             <li>
                                 <input name="rating" type="radio" class="rating-radio" id="rating-0+"
                                        value="0" checked>
-                                <label class="form-check-label" for="rating-1+">
+                                <label class="form-check-label" for="rating-0+">
                                     <jsp:include page="../components/ratingStars.jsp">
                                         <jsp:param name="rating" value="0"/>
                                     </jsp:include>
                                     <spring:message
                                             code="search.filter.ratingExtraText"/></label>
-
                             </li>
                         </ul>
                     </li>
