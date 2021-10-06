@@ -44,7 +44,8 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
         Integer pageQty = userService.getPageQty(searchQuery);
-        if (Integer.parseInt(offset) > pageQty) {
+        Integer offsetToInt = Integer.parseInt(offset);
+        if (offsetToInt != 1 && offsetToInt > pageQty) {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
         LOGGER.debug("Teachers found for {}", searchQuery);
