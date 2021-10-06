@@ -99,7 +99,7 @@ public class ClassesController {
         if (!student.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        return mav.addObject("student", student.get().getName());
+        return mav.addObject("student", student.get().getName()).addObject("uid",myClass.get().getTeacherId());
     }
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
