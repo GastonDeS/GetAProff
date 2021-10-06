@@ -6,11 +6,10 @@ import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.ContactForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,14 +45,11 @@ public class ContactHandlingController {
         final ModelAndView mav = new ModelAndView("contactForm");
         Optional<User> maybeUser = userService.findById(uid);
         if (!maybeUser.isPresent()) {
-            throw new UserNotFoundException("exception.not.user");
+            throw new InvalidOperationException("exception.invalid");
         }
         mav.addObject("user", maybeUser.get());
-        Optional<List<SubjectInfo>> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
-        if (!subjectsGiven.isPresent()) {
-            throw new NotFoundException("exception.no.subjects");
-        }
-        mav.addObject("subjects", subjectsGiven.get());
+        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+        mav.addObject("subjects", subjectsGiven);
         return mav;
     }
 
@@ -67,20 +63,17 @@ public class ContactHandlingController {
         Optional<User> curr = userService.getCurrentUser();
         String[] subjectIdAndLevel = form.getSubjectAndLevel().split(",",2);
         Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Integer.parseInt(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
-        if (!t.isPresent()) {
-            throw new NotFoundException("Subject " + Integer.parseInt(subjectIdAndLevel[0] + " not taught by user " + uid));
-        }
-        if (!user.isPresent() || !curr.isPresent()) {
-            throw new NotFoundException("exception.user.not.found");
+        if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
+            throw new InvalidOperationException("exception.invalid");
         }
         classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubjectId(), t.get().getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
         Optional<Subject> subject = subjectService.findById(Integer.parseInt(subjectIdAndLevel[0]));
         if (!subject.isPresent()) {
-            throw new OperationFailedException("exception"); //manadar a 403
+            throw new OperationFailedException("exception");
         }
         try {
             emailService.sendContactMessage(user.get().getMail(), curr.get().getName(), subject.get().getName(), form.getMessage());
-        } catch (RuntimeException e) {
+        } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
         return new ModelAndView("redirect:/myClasses");

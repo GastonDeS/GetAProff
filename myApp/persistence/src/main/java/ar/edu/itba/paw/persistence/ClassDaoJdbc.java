@@ -40,23 +40,23 @@ public class ClassDaoJdbc implements ClassDao {
     }
 
     @Override
-    public Optional<List<ClassInfo>> findClassesByStudentId(int id) {
+    public List<ClassInfo> findClassesByStudentId(int id) {
         String query = "SELECT classId,  st.name AS studentName, t.name AS teacherName, level, status,\n" +
                 "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply, a1.deleted AS deleted\n" +
                 "FROM (SELECT * FROM classes WHERE studentid = ?) AS a1 JOIN users st ON st.userId = a1.studentId\n" +
                 "             JOIN users t ON t.userid = a1.teacherid JOIN subject s on a1.subjectid = s.subjectid";
         List<ClassInfo> list = jdbcTemplate.query(query, new Object[] { id }, CLASS_INFO_ROW_MAPPER);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
     @Override
-    public Optional<List<ClassInfo>> findClassesByTeacherId(int id) {
+    public List<ClassInfo> findClassesByTeacherId(int id) {
         String query = "SELECT classId,  st.name AS studentName, t.name AS teacherName, level, status,\n" +
                 "       price, s.name AS subjectName, a1.request AS request, a1.reply AS reply, a1.deleted AS deleted\n" +
                 "FROM (SELECT * FROM classes WHERE teacherid = ?) AS a1 JOIN users st ON st.userId = a1.studentId\n" +
                 "             JOIN users t ON t.userid = a1.teacherid JOIN subject s on a1.subjectid = s.subjectid";
         List<ClassInfo> list = jdbcTemplate.query(query, new Object[]{id}, CLASS_INFO_ROW_MAPPER);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
     @Override

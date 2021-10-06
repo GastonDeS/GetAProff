@@ -23,11 +23,6 @@ public class TeachesServiceImpl implements TeachesService {
         return Optional.of(teachesDao.addSubjectToUser(userid, subjectid, price, level));
     }
 
-    @Override
-    public Optional<List<Teaches>> getSubjectListByUser(int userid) {
-        return teachesDao.findSubjectByUser(userid);
-    }
-
     @Transactional
     @Override
     public int removeSubjectToUser(int userid, int subjectid) {
@@ -35,7 +30,7 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public Optional<List<SubjectInfo>> getSubjectInfoListByUser(int userid) {
+    public List<SubjectInfo> getSubjectInfoListByUser(int userid) {
         return teachesDao.getSubjectInfoListByUser(userid);
     }
 

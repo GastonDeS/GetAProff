@@ -8,22 +8,20 @@ import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.NewSubjectForm;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
+import ar.edu.itba.paw.webapp.forms.UserForm;
+import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,20 +40,25 @@ public class SubjectController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private SubjectsFormValidator subjectsFormValidator;
+
+    @InitBinder
+    public void initSubjectsBinder(WebDataBinder webDataBinder){
+        Object target = webDataBinder.getTarget();
+        if (target != null) {
+            if (target.getClass().equals(SubjectsForm.class)) {
+                webDataBinder.setValidator(subjectsFormValidator);
+            }
+        }
+    }
+
     private User getCurrUser() {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
         return maybeUser.get();
-    }
-
-    private List<SubjectInfo> getSubject(int uid) {
-        Optional<List<SubjectInfo>> userSubjects = teachesService.getSubjectInfoListByUser(uid);
-        if (!userSubjects.isPresent()) {
-            throw new ListNotFoundException("exception.list");
-        }
-        return userSubjects.get();
     }
 
     @RequestMapping(value = "/newSubjectForm/{uid}", method = RequestMethod.GET)
@@ -69,7 +72,11 @@ public class SubjectController {
         if (errors.hasErrors()) {
             return newSubjectForm(form, uid);
         }
-        emailService.sendSubjectRequest(uid, form.getSubject(), form.getMessage());
+        try {
+            emailService.sendSubjectRequest(uid, form.getSubject(), form.getMessage());
+        } catch (RuntimeException exception) {
+            throw new OperationFailedException("exception.failed");
+        }
         return new ModelAndView("redirect:/newSubjectFormSent/" + uid);
     }
 
@@ -83,12 +90,11 @@ public class SubjectController {
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
         int uid = getCurrUser().getId();
-        Optional<List<Subject>> subjectsNotGiven = subjectService.subjectsNotGiven(uid);
-        List<SubjectInfo> subjectsGiven = getSubject(uid);
+        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         return new ModelAndView("subjectsForm")
                 .addObject("userid", uid)
                 .addObject("given", subjectsGiven)
-                .addObject("toGive", subjectsNotGiven.isPresent() ? subjectsNotGiven.get() : new ArrayList<>());
+                .addObject("subjects", subjectService.list());
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
@@ -99,7 +105,7 @@ public class SubjectController {
         int uid = getCurrUser().getId();
         Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
         if (!maybe.isPresent()) {
-            throw new OperationFailedException("exception.add.subject"); //mandar a 403 con profile
+            throw new OperationFailedException("exception.failed");
         }
         return subjectsForm(form);
     }
@@ -108,7 +114,7 @@ public class SubjectController {
     public ModelAndView removeSubject(@PathVariable("sid") final int sid) {
         int uid = getCurrUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
-            throw new OperationFailedException("exception.remove.subject"); //mandar a 403 con profile
+            throw new OperationFailedException("exception.failed");
         }
         return new ModelAndView("redirect:/editSubjects");
     }

@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.UserForm;
@@ -19,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,16 +27,10 @@ public class ProfileController {
     private UserService userService;
 
     @Autowired
-    private SubjectService subjectService;
-
-    @Autowired
     private TeachesService teachesService;
 
     @Autowired
     private ImageService imageService;
-
-    @Autowired
-    private SubjectsFormValidator subjectsFormValidator;
 
     @Autowired
     private UserFormValidator userFormValidator;
@@ -48,10 +39,7 @@ public class ProfileController {
     public void initSubjectsBinder(WebDataBinder webDataBinder){
         Object target = webDataBinder.getTarget();
         if (target != null) {
-            if (target.getClass().equals(SubjectsForm.class)) {
-                webDataBinder.setValidator(subjectsFormValidator);
-            }
-            else if (target.getClass().equals(UserForm.class)) {
+            if (target.getClass().equals(UserForm.class)) {
                 webDataBinder.setValidator(userFormValidator);
             }
         }
@@ -62,29 +50,21 @@ public class ProfileController {
         return maybeUser.orElseGet(User::new);
     }
 
-    private List<SubjectInfo> getSubject(int uid) {
-        Optional<List<SubjectInfo>> userSubjects = teachesService.getSubjectInfoListByUser(uid);
-        if (!userSubjects.isPresent()) {
-            throw new ListNotFoundException("exception.list");
-        }
-        return userSubjects.get();
-    }
-
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final int uid) {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
         if (!user.isPresent()) {
-            throw new ProfileNotFoundException("exception.profile"); //mandar a 403
+            throw new ProfileNotFoundException("exception.profile");
         }
         ModelAndView mav = new ModelAndView("profile");
         if (curr.isPresent()) {
             if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
-                throw new ProfileNotFoundException("exception.profile"); //mandar a 403
+                throw new ProfileNotFoundException("exception.profile");
             }
             mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
         }
-        List<SubjectInfo> subjectsGiven = getSubject(uid);
+        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
@@ -116,7 +96,7 @@ public class ProfileController {
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());
         if (desc == 0 || sch == 0) {
-            throw new OperationFailedException("exception.edit.profile"); //mandar a 403 con profile
+            throw new OperationFailedException("exception.edit.profile");
         }
         String redirect = "redirect:/profile/" + uid;
         return new ModelAndView(redirect);

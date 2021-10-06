@@ -67,7 +67,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<List<CardProfile>> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
+    public List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
         RowMapper<CardProfile> mapper = (rs, rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -88,7 +88,7 @@ public class UserDaoJdbc implements UserDao {
          list = jdbcTemplate.query(
                 query, new Object[] {subject.toLowerCase().trim(),price, minLevel, maxLevel, rating}, mapper);
 
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
     private String checkOrdering(int order){
@@ -113,7 +113,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<List<CardProfile>> getFavourites(int uid) {
+    public List<CardProfile> getFavourites(int uid) {
         RowMapper<CardProfile> mapper = (rs,rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -131,7 +131,7 @@ public class UserDaoJdbc implements UserDao {
                 "                order by rate DESC";
         List<CardProfile> list = jdbcTemplate.query(
                 query, new Object[] {uid}, mapper);
-        return Optional.ofNullable(list);
+        return list.isEmpty() ? new ArrayList<>() : list;
     }
 
     @Override

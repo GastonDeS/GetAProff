@@ -16,6 +16,7 @@
         </jsp:include>
         <div class="page-container">
             <div class="form-container">
+                <p class="form-title"><spring:message code="403.title"/></p>
                 <p class="exception-msg">${exception}</p>
                 <a href="${pageContext.request.contextPath}/" class="btn btn-custom">
                     <spring:message code="403.btn"/>

@@ -27,12 +27,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Optional<List<Subject>> list() {
+    public List<Subject> list() {
         return subjectDao.listSubjects();
-    }
-
-    @Override
-    public Optional<List<Subject>> subjectsNotGiven(int userId) {
-        return subjectDao.subjectsNotGiven(userId);
     }
 }

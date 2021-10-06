@@ -29,7 +29,7 @@ public class ImagesController {
     byte[] getImage(@PathVariable("uid") final int uid) {
         Optional<Image> image =  imageService.findImageById(uid);
         if (!image.isPresent()) {
-            throw new ImageNotFoundException(""); //cambiar la imagen a no image found
+            return new byte[] {0};
         }
         return image.get().getImage();
     }

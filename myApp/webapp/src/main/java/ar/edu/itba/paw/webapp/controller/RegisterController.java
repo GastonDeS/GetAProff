@@ -54,7 +54,7 @@ public class RegisterController {
         }
         Optional<User> maybeUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
         if (!maybeUser.isPresent()) {
-            throw new RegisterErrorException("exception.register"); //mandar a register con msj de error
+            throw new RegisterErrorException("exception.register");
         }
         User u = maybeUser.get();
         UserDetails user = userDetailsService.loadUserByUsername(u.getMail());

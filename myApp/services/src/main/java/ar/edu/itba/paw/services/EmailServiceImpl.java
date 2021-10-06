@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.MailNotSentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -44,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(text, true);
             javaMailSender.send(message);
         }catch (Exception e){
-            throw new RuntimeException();
+            throw new MailNotSentException("Unable to send mail");
         }
     }
 

@@ -10,18 +10,19 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> findById(int id);
 
-    Optional<List<CardProfile>> filterUsers(String subject, String price, String level);
+    List<CardProfile> filterUsers(String subject, String price, String level);
 
-    Optional<List<CardProfile>> filterUsers(String subject, String order, String price, String level, String rating, String offset);
+    List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
 
-    Optional<List<CardProfile>> filterUsers(String subject);
+    List<CardProfile> filterUsers(String subject);
 
-    Optional<List<CardProfile>> filterUsers(String subject, String offset);
+    List<CardProfile> filterUsers(String subject, String offset);
 
     Integer getPageQty(String subject, String price, String level, String rating);
+
     Integer getPageQty(String subject);
 
-    Optional<List<CardProfile>> getFavourites(int uid);
+    List<CardProfile> getFavourites(int uid);
 
     int addFavourite(int teacherId, int studentId);
 
@@ -32,14 +33,6 @@ public interface UserService {
     int addRating(int teacherId, int studentId, float rate, String review);
 
     Pair<Float, Integer> getRatingById(int teacherId);
-
-    /**
-         * Retrieves user schedule
-         *
-         * @param userId The id of the user.
-         * @return A String description of the user's schedule.
-         */
-    Optional<String> getUserSchedule(int userId);
 
     /**
      * Retrieves all the users registered

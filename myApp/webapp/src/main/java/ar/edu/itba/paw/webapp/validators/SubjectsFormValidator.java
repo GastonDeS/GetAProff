@@ -16,10 +16,10 @@ import java.util.Optional;
 public class SubjectsFormValidator implements Validator {
 
     @Autowired
-    private TeachesService ts;
+    private TeachesService teachesService;
 
     @Autowired
-    private UserService us;
+    private UserService userService;
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -27,15 +27,16 @@ public class SubjectsFormValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
-        SubjectsForm sf = (SubjectsForm) o;
-        int price = sf.getPrice();
-        Optional<User> current = us.getCurrentUser();
+    public void validate(Object object, Errors errors) {
+        SubjectsForm subjectsForm = (SubjectsForm) object;
+        int price = subjectsForm.getPrice();
+
+        Optional<User> current = userService.getCurrentUser();
         if (!current.isPresent()) {
             throw new NoUserLoggedException("Exception");
         }
 
-        if (ts.findByUserAndSubjectAndLevel(current.get().getId(), sf.getSubjectid(), sf.getLevel()).isPresent()) {
+        if (teachesService.findByUserAndSubjectAndLevel(current.get().getId(), subjectsForm.getSubjectid(), subjectsForm.getLevel()).isPresent()) {
             errors.rejectValue("level","form.level.invalid");
         }
 

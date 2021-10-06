@@ -23,11 +23,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findRoleById(int roleId) {
-        return roleDao.findRoleById(roleId);
-    }
-
-    @Override
     public Optional<Role> findRoleByName(String role) {
         return roleDao.findRoleByName(role);
     }

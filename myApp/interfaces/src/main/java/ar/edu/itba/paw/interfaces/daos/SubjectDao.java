@@ -8,13 +8,9 @@ import java.util.Optional;
 public interface SubjectDao {
     Optional<Subject> findById(int id);
 
-    Subject save(Subject subject);
-
     Subject create (String subject);
 
-    Optional<List<Subject>> listSubjects();
+    List<Subject> listSubjects();
 
     Optional<Subject> findByName(String name);
-
-    Optional<List<Subject>> subjectsNotGiven(int userId);
 }
