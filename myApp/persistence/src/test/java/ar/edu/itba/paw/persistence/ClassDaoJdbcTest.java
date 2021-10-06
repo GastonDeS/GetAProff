@@ -72,6 +72,19 @@ public class ClassDaoJdbcTest {
         Assert.assertNotNull(myClasses);
         Assert.assertEquals(2, myClasses.size());
     }
+    @Test
+    public void testEmptyFindClassesByTeacherId() {
+        jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into userRoles values (1,0)");
+        jdbcTemplate.update("insert into users values (1,'segun','GFDA23faS$#','sespina@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into userRoles values (1,1)");
+        jdbcTemplate.update("insert into subject values (0,'matematica')");
+        jdbcTemplate.update("insert into teaches values (0,0,200,2)");
+
+        final List<ClassInfo> myClasses = classDao.findClassesByTeacherId(0);
+        Assert.assertEquals(0, myClasses.size());
+
+    }
 
     @Test
     public void testFindClassesByStudentId() {
@@ -87,5 +100,18 @@ public class ClassDaoJdbcTest {
         final List<ClassInfo> myClasses = classDao.findClassesByStudentId(1);
         Assert.assertNotNull(myClasses);
         Assert.assertEquals(2, myClasses.size());
+    }
+    @Test
+    public void testEmptyFindClassesByStudentId() {
+        jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into userRoles values (1,0)");
+        jdbcTemplate.update("insert into users values (1,'segun','GFDA23faS$#','sespina@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
+        jdbcTemplate.update("insert into userRoles values (1,1)");
+        jdbcTemplate.update("insert into subject values (0,'matematica')");
+        jdbcTemplate.update("insert into teaches values (0,0,200,2)");
+
+        final List<ClassInfo> myClasses = classDao.findClassesByStudentId(1);
+        Assert.assertEquals(0, myClasses.size());
+
     }
 }
