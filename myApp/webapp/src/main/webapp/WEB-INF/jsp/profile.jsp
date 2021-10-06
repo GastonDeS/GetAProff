@@ -36,6 +36,13 @@
                     <div class="profile-info">
                         <div class="profile-name">
                             <h1><c:out value="${user.name}"/></h1>
+                            <div>
+                                <c:if test="${user.teacher}">
+                                    <jsp:include page="../components/ratingStars.jsp">
+                                        <jsp:param name="rate" value="${rating.value1}"/>
+                                    </jsp:include>
+                                </c:if>
+                            </div>
                         </div>
                         <div class="profile-info-btn">
                             <c:if test="${edit == 1}">

@@ -69,7 +69,8 @@ public class ProfileController {
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
                 .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
-                .addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
+                .addObject("isTeacher", user.get().isTeacher() ? 1 : 0)
+                .addObject("rating", userService.getRatingById(uid));
         return mav;
     }
 
