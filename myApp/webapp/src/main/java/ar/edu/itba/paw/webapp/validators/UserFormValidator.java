@@ -6,6 +6,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 @Component
 public class UserFormValidator implements Validator {
 
@@ -30,11 +32,10 @@ public class UserFormValidator implements Validator {
             errors.rejectValue("schedule", "form.field.empty");
         }
 
-        if ( hasImage == null || !hasImage) {
-            if (imageFile == null || imageFile.isEmpty()) {
-                errors.rejectValue("imageFile", "form.image.required");
-            }
-            else {
+        if (!hasImage) {
+            errors.rejectValue("imageFile", "form.image.required");
+        } else {
+            if (imageFile != null || !imageFile.isEmpty()) {
                 if(!checkContentType(imageFile.getContentType().toLowerCase())) {
                     errors.rejectValue("imageFile", "form.image.format");
                 }

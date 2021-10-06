@@ -25,14 +25,15 @@
         <div class="page-container">
             <div class="profile-container">
                 <div class="info-container">
-                    <c:choose>
-                        <c:when test="${image == 0}">
-                            <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg">
-                        </c:when>
-                        <c:otherwise>
-                            <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" alt="teacherImg">
-                        </c:otherwise>
-                    </c:choose>
+<%--                    <c:choose>--%>
+<%--                        <c:when test="${image == 0}">--%>
+<%--                            <img src="${pageContext.request.contextPath}/resources/images/user_default_img.jpeg" class="profile-img" alt="teacherImg">--%>
+<%--                        </c:when>--%>
+<%--                        <c:otherwise>--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" alt="teacherImg">--%>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
+                    <img src="${pageContext.request.contextPath}/image/${uid}" class="profile-img" alt="teacherImg">
                     <div class="profile-info">
                         <div class="profile-name">
                             <h1><c:out value="${user.name}"/></h1>
@@ -58,11 +59,18 @@
                                     <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
                                         <spring:message code="profile.btn.edit"/>
                                     </a>
-                                    <c:if test="${user.teacher}">
-                                        <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
-                                            <spring:message code="profile.btn.edit.subjects"/>
-                                        </a>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${user.teacher}">
+                                            <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
+                                                <spring:message code="profile.btn.edit.subjects"/>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom">
+                                                <spring:message code="profile.btn.give.class"/>
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </c:if>
                             <c:if test="${edit == 0}">

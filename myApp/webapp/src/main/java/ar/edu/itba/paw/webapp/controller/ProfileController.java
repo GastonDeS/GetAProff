@@ -4,9 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
-import ar.edu.itba.paw.webapp.forms.SubjectsForm;
 import ar.edu.itba.paw.webapp.forms.UserForm;
-import ar.edu.itba.paw.webapp.validators.SubjectsFormValidator;
 import ar.edu.itba.paw.webapp.validators.UserFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +32,9 @@ public class ProfileController {
 
     @Autowired
     private UserFormValidator userFormValidator;
+
+    @Autowired
+    private RoleService roleService;
 
     @InitBinder
     public void initSubjectsBinder(WebDataBinder webDataBinder){
@@ -68,7 +69,7 @@ public class ProfileController {
         mav.addObject("user", user.get())
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
-                .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
+//                .addObject("image", !imageService.findImageById(uid).isPresent() ? 0 : 1)
                 .addObject("isTeacher", user.get().isTeacher() ? 1 : 0)
                 .addObject("rating", userService.getRatingById(uid));
         return mav;
@@ -90,7 +91,11 @@ public class ProfileController {
                                  final BindingResult errors) throws IOException {
         if (errors.hasErrors())
             return userForm(form);
-        int uid = getCurrUser().getId();
+        User user = getCurrUser();
+        int uid = user.getId();
+        if (!user.isTeacher()) {
+            roleService.addTeacherRole(uid);
+        }
         imageService.createOrUpdate(uid, form.getImageFile().getBytes());
         int desc = userService.setUserDescription(uid, form.getDescription());
         int sch = userService.setUserSchedule(uid, form.getSchedule());

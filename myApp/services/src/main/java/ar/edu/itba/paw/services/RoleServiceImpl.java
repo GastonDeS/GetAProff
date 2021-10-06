@@ -43,6 +43,12 @@ public class RoleServiceImpl implements RoleService {
         return userRoles.isEmpty() ? new ArrayList<>() : userRoles;
     }
 
+    @Override
+    public int addTeacherRole(int userId) {
+        Optional<Role> teacherRole = findRoleByName(Roles.TEACHER.name);
+        return teacherRole.map(role -> roleDao.addRoleToUser(role.getRoleId(), userId)).orElse(0);
+    }
+
     private void addRoleToList(List<Role> userRoles, Roles role, int userId) {
         Optional<Role> newRole = findRoleByName(role.name);
         if (newRole.isPresent()) {
