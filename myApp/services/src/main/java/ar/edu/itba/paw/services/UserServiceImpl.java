@@ -197,8 +197,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isFaved(int teacherId, int studentId) {
-        Optional<String> count = userDao.isFaved(teacherId, studentId);
-        return count.map(s -> s.equals("1")).orElse(false);
+        Optional<Boolean> count = userDao.isFaved(teacherId, studentId);
+        return count.map(s -> s.equals(true)).orElse(false);
     }
 
     @Override
