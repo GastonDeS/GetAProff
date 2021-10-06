@@ -6,6 +6,12 @@
 /*    margin-bottom: 10px;*/
 /*}*/
 
+.exception-msg {
+    font-size: 20px;
+    font-family: "Roboto Light", sans-serif;
+    color: #026670;
+}
+
 .user-schedule-display {
     height: fit-content;
     margin-top: 1px;
@@ -270,7 +276,7 @@ input[type="radio"]:checked + label {
 .nav-font {
     font-size: 20px;
     font-family: "Roboto Light", sans-serif;
-    color: #026670;
+    color: #026670 !important;
     font-weight: bold;
 }
 
