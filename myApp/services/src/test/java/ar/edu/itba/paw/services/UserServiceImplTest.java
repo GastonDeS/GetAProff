@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
 
     private static final String USERNAME = "John Doe";
@@ -39,35 +40,33 @@ public class UserServiceImplTest {
     private static final Integer MINPRICE = 550;
     private static final float RATE = 3.99f ;
 
+    @InjectMocks
     private  UserServiceImpl userService = new UserServiceImpl();
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-
-//    @Mock
+    @Mock
     private UserDao mockDao;
-//    @Mock
+    @Mock
     private PasswordEncoder passwordEncoder;
-//    @Mock
+    @Mock
     private RoleService roleService;
-//    @Mock
+    @Mock
     private UserDetailsService userDetailsService;
 
-    private User u;
+    private User u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);;
 
 
-    @Before
-    public void setUp() {
-        mockDao = Mockito.mock(UserDao.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        roleService = Mockito.mock(RoleService.class);
-        userDetailsService = Mockito.mock(UserDetailsService.class);
-        u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
-        userService.setUserDao(mockDao);
-        userService.setPasswordEncoder(passwordEncoder);
-        userService.setRoleService(roleService);
-        userService.setUserDetailsService(userDetailsService);
-    }
+//    @Before
+//    public void setUp() {
+//        mockDao = Mockito.mock(UserDao.class);
+//        passwordEncoder = Mockito.mock(PasswordEncoder.class);
+//        roleService = Mockito.mock(RoleService.class);
+//        userDetailsService = Mockito.mock(UserDetailsService.class);
+//        u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
+//        userService.setUserDao(mockDao);
+//        userService.setPasswordEncoder(passwordEncoder);
+//        userService.setRoleService(roleService);
+//        userService.setUserDetailsService(userDetailsService);
+//    }
 
 //    @Test
 //    public void testCreate(){
@@ -96,11 +95,11 @@ public class UserServiceImplTest {
     public void testCreateDuplicateUser(){
 //        1 setup - precondiciones
         User u = new User(USERNAME,USER_PASS,USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
-        when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenThrow(RuntimeException.class);
-        when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
+//        when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenThrow(RuntimeException.class);
+//        when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
         List<Role> roles = new ArrayList<>();
         roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
-        when(roleService.setUserRoles(USER_ID,USER_ROLE)).thenReturn(roles);
+//        when(roleService.setUserRoles(USER_ID,USER_ROLE)).thenReturn(roles);
 //        2 ejercito la class under test una unica linea
 
         final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);
@@ -116,7 +115,7 @@ public class UserServiceImplTest {
 
         String description = userService.getUserDescription(USER_ID);
 
-        Assert.assertEquals(description,DESCRIPTION);
+        Assert.assertEquals(DESCRIPTION,description);
     }
 
     @Test
