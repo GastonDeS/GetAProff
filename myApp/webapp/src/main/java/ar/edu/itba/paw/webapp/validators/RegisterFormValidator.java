@@ -37,12 +37,9 @@ public class RegisterFormValidator implements Validator {
         }
 
         if (!mail.isEmpty()) {
-            try {
-                us.findByEmail(mail);
-            } catch (RuntimeException e) {
-
+            if (us.findByEmail(mail).isPresent()) {
+                errors.rejectValue("mail", "form.unique.user");
             }
-            errors.rejectValue("mail", "form.unique.user");
         }
 
         if (!mail.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$") && !mail.isEmpty()) {
