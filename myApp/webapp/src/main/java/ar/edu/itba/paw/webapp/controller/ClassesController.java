@@ -68,7 +68,7 @@ public class ClassesController {
     }
 
     @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
-    public ModelAndView classesStatusChange(@PathVariable("cid") final int cid, @PathVariable final String status) {
+    public ModelAndView classesStatusChange(@PathVariable("cid") final Long cid, @PathVariable final String status) {
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
@@ -95,13 +95,13 @@ public class ClassesController {
 
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
-    public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final int cid) {
+    public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final Long cid) {
         final ModelAndView mav = new ModelAndView("acceptForm");
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        Optional<User> student = userService.findById(myClass.get().getStudentId());
+        Optional<User> student = userService.findById((long) myClass.get().getStudentId());
         if (!student.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
@@ -109,7 +109,7 @@ public class ClassesController {
     }
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
-    public ModelAndView accept(@PathVariable("cid") final int cid, @ModelAttribute("acceptForm") @Valid final AcceptForm form,
+    public ModelAndView accept(@PathVariable("cid") final Long cid, @ModelAttribute("acceptForm") @Valid final AcceptForm form,
                                final BindingResult errors) {
         if (errors.hasErrors()) {
             return acceptForm(form, cid);
@@ -121,7 +121,7 @@ public class ClassesController {
         classService.setStatus(myClass.get().getClassId(), Class.Status.ACCEPTED.getValue());
         classService.setReply(myClass.get().getClassId(), form.getMessage());
         try {
-            emailService.sendAcceptMessage(myClass.get().getStudentId(), myClass.get().getTeacherId(), 3, form.getMessage());
+            emailService.sendAcceptMessage(myClass.get().getStudentId(), myClass.get().getTeacherId(), (long) 3, form.getMessage());
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
@@ -130,13 +130,13 @@ public class ClassesController {
     }
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
-    public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final int cid) {
+    public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final Long cid) {
         final ModelAndView mav = new ModelAndView("rateForm");
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        Optional<User> teacher = userService.findById(myClass.get().getTeacherId());
+        Optional<User> teacher = userService.findById((long) myClass.get().getTeacherId());
         if (!teacher.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
@@ -144,7 +144,7 @@ public class ClassesController {
     }
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
-    public ModelAndView rate(@PathVariable("cid") final int cid, @ModelAttribute("rateForm") @Valid final RateForm form,
+    public ModelAndView rate(@PathVariable("cid") final Long cid, @ModelAttribute("rateForm") @Valid final RateForm form,
                                final BindingResult errors) {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
@@ -155,7 +155,7 @@ public class ClassesController {
         }
         classService.setStatus(cid, Class.Status.RATED.getValue());
         myClass.get().setStatus(Class.Status.RATED.getValue());
-        userService.addRating(myClass.get().getTeacherId(),myClass.get().getStudentId(), form.getRating(), form.getReview());
+        userService.addRating((long) myClass.get().getTeacherId(), (long) myClass.get().getStudentId(), form.getRating(), form.getReview());
         try {
             emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());
         } catch (MailNotSentException exception) {

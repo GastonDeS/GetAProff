@@ -18,7 +18,7 @@ public class TeachesDaoJdbc implements TeachesDao {
     private final JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<Teaches> ROW_MAPPER = (rs, rowNum) ->
-            new Teaches(rs.getInt("userId"), rs.getInt("subjectId"),
+            new Teaches(rs.getLong("userId"), rs.getLong("subjectId"),
                     rs.getInt("price"), rs.getInt("level"));
 
     @Autowired
@@ -29,7 +29,7 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public Teaches addSubjectToUser(int userid, int subjectid, int price, int level) {
+    public Teaches addSubjectToUser(Long userid, Long subjectid, int price, int level) {
         final Map<String, Object> args = new HashMap<>();
         args.put("userid", userid);
         args.put("subjectid", subjectid);
@@ -40,19 +40,19 @@ public class TeachesDaoJdbc implements TeachesDao {
     }
 
     @Override
-    public Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level) {
+    public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
         final List<Teaches> list = jdbcTemplate.query(
                 "SELECT * FROM teaches WHERE userId = ? AND subjectId = ? AND level  = ?", new Object[] {userId, subjectId, level}, ROW_MAPPER);
         return list.isEmpty() ? Optional.empty(): Optional.of(list.get(0));
     }
 
     @Override
-    public int removeSubjectToUser(int userId, int subjectId) {
+    public int removeSubjectToUser(Long userId, Long subjectId) {
         return jdbcTemplate.update("DELETE FROM teaches WHERE userId = ? AND subjectId = ?", userId, subjectId);
     }
 
     @Override
-    public List<SubjectInfo> getSubjectInfoListByUser(int userid) {
+    public List<SubjectInfo> getSubjectInfoListByUser(Long userid) {
         RowMapper<SubjectInfo> subjectInfoRowMapper = (rs, rowNum) ->
                 new SubjectInfo(rs.getInt("id"), rs.getString("name"),
                         rs.getInt("price"), rs.getInt("level"));

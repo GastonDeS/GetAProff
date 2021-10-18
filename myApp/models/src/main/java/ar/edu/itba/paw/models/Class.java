@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.models;
 
 public class Class {
-    private int classId, studentId, teacherId, level, subjectid, price, status, deleted;
+    private Long classId, studentId, teacherId, subjectid;
+    private int level, price, status, deleted;
     private String messageRequest, messageReply;
 
-    public Class(int classId, int studentId, int teacherId, int level, int subjectid, int price, int status, String messageRequest, String messageReply, int deleted) {
+    public Class(Long classId, Long studentId, Long teacherId, int level, Long subjectid, int price, int status, String messageRequest, String messageReply, int deleted) {
         this.classId = classId;
         this.studentId = studentId;
         this.teacherId = teacherId;
@@ -16,27 +17,27 @@ public class Class {
         this.messageReply = messageReply;
     }
 
-    public int getClassId() {
+    public Long getClassId() {
         return classId;
     }
 
-    public void setClassId(int classId) {
+    public void setClassId(Long classId) {
         this.classId = classId;
     }
 
-    public int getStudentId() {
+    public Long getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(Long studentId) {
         this.studentId = studentId;
     }
 
-    public int getTeacherId() {
+    public Long getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(int teacherId) {
+    public void setTeacherId(Long teacherId) {
         this.teacherId = teacherId;
     }
 
@@ -48,11 +49,11 @@ public class Class {
         this.level = level;
     }
 
-    public int getSubjectid() {
+    public Long getSubjectid() {
         return subjectid;
     }
 
-    public void setSubjectid(int subjectid) {
+    public void setSubjectid(Long subjectid) {
         this.subjectid = subjectid;
     }
 

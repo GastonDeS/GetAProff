@@ -65,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendAcceptMessage(int toId, int fromId, int sid, String message) {
+    public void sendAcceptMessage(Long toId, Long fromId, Long sid, String message) {
         String mailSubject = messageSource.getMessage("mail.subject.accept.class", null, LocaleContextHolder.getLocale());
         Optional<User> to = userService.findById(toId);
         Optional<User> from = userService.findById(fromId);
@@ -140,7 +140,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendSubjectRequest(int uid, String subject, String message) {
+    public void sendSubjectRequest(Long uid, String subject, String message) {
         String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {subject}, LocaleContextHolder.getLocale());
         String text = messageSource.getMessage("mail.subject.request.body", new Object[] {subject, message}, LocaleContextHolder.getLocale());
         sendSimpleMessage("getaproff@gmail.com", mailSubject,text);

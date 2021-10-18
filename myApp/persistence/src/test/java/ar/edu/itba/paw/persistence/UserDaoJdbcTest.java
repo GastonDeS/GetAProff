@@ -78,7 +78,7 @@ public class UserDaoJdbcTest {
 
     @Test
     public void testSetUserSchedule(){
-        final int valid = userDao.setUserSchedule(10,"todos los dias my rey");
+        final int valid = userDao.setUserSchedule((long) 10,"todos los dias my rey");
 
         Assert.assertEquals(0,valid);
     }
@@ -89,7 +89,7 @@ public class UserDaoJdbcTest {
         jdbcTemplate.execute("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
         jdbcTemplate.execute("insert into rating values (0,1,4.5,'the teacher on my life')");
 
-        final Pair<Float,Integer> ratingById = userDao.getRatingById(0);
+        final Pair<Float,Integer> ratingById = userDao.getRatingById((long) 0);
 
         Assert.assertEquals(Float.valueOf(4.5f), ratingById.getValue1());
         Assert.assertEquals(Integer.valueOf(1), ratingById.getValue2());
@@ -121,7 +121,7 @@ public class UserDaoJdbcTest {
         jdbcTemplate.update("insert into teaches values (1,0,1500,1)");
 
 
-        List<CardProfile> cardProfileList = userDao.getFavourites(0);
+        List<CardProfile> cardProfileList = userDao.getFavourites((long)0);
 
         Assert.assertFalse(cardProfileList.isEmpty());
         Assert.assertEquals("naso",cardProfileList.get(0).getName());
@@ -133,7 +133,7 @@ public class UserDaoJdbcTest {
         jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
         jdbcTemplate.update("insert into favourites values (0,1)");
 
-        int removed = userDao.removeFavourite(0,1);
+        int removed = userDao.removeFavourite((long) 0,(long) 1);
 
         Assert.assertEquals(1,removed);
     }
@@ -143,7 +143,7 @@ public class UserDaoJdbcTest {
         jdbcTemplate.update("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
         jdbcTemplate.update("insert into users values (1,'naso','GFDA23faS$#','anaso@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
 
-        Optional<User> user = userDao.get(0);
+        Optional<User> user = userDao.get((long) 0);
 
         Assert.assertTrue(user.isPresent());
         Assert.assertEquals("gaston",user.get().getName());

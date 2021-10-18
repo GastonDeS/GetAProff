@@ -2,18 +2,18 @@ package ar.edu.itba.paw.models;
 
 public class Image {
 
-    private int uid;
+    private Long uid;
 
-    public int getUid() {
+    public Long getUid() {
         return uid;
     }
 
-    public Image(int uid, byte[] image) {
+    public Image(Long uid, byte[] image) {
         this.uid = uid;
         this.image = image;
     }
 
-    public void setUid(int uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 

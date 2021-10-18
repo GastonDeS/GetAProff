@@ -13,7 +13,7 @@ public interface RoleDao {
 
     Optional<Role> findRoleByName(String role);
 
-    int addRoleToUser(int roleId, int userId);
+    int addRoleToUser(int roleId, Long userId);
 
-    List<Role> getUserRoles(int userid);
+    List<Role> getUserRoles(Long userid);
 }

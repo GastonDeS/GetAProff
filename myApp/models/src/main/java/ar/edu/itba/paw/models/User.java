@@ -1,14 +1,39 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User {
 
-    private  String name, password, mail, description, schedule;
-    private int id;
+    @Column
+    private String name;
+
+    @Column
+    private String description;
+
+    @Column
+    private String schedule;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid_seq")
+    @SequenceGenerator(name = "users_userid_seq", sequenceName = "users_userid_seq", allocationSize = 1)
+    private Long userid;
+
+    @Column(nullable = false, length = 8)
+    private String password; //Por default toma nombre de columna password
+
+    @Column(nullable = false)
+    private String mail;
+
     private List<Role> userRoles;
+
+    public User() {
+        //Just for Hibernate
+    }
 
     // For testing
     public User(String name, String mail, String password) {
@@ -18,19 +43,16 @@ public class User {
     }
 
     // For creating user (empty description and schedule)
-    public User(String name, String password, int id, String mail, String description, String schedule){
+    public User(String name, String password, Long id, String mail, String description, String schedule){
         this(name, mail, password);
-        this.id = id;
+        this.userid = id;
         this.description = description;
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
     }
 
-    public User() {
-    }
-
-    public int getId() {
-        return id;
+    public Long getId() {
+        return userid;
     }
 
     public String getName() {
@@ -73,8 +95,8 @@ public class User {
         this.schedule = schedule;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(Long id) {
+        this.userid = id;
     }
 
     public void setUserRoles(List<Role> userRoles) {
@@ -96,6 +118,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("Id: %d - Name: %s - Mail: %s\n", id, name, mail);
+        return String.format("Id: %d - Name: %s - Mail: %s\n", userid, name, mail);
     }
 }

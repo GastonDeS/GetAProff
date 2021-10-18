@@ -16,7 +16,7 @@ public class SubjectServiceImpl implements SubjectService {
     private SubjectDao subjectDao;
 
     @Override
-    public Optional<Subject> findById(int id) {
+    public Optional<Subject> findById(Long id) {
         return subjectDao.findById(id);
     }
 

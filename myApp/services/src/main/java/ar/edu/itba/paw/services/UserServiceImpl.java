@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(int id) {
+    public Optional<User> findById(Long id) {
         Optional<User> maybeUser = userDao.get(id);
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<CardProfile> getFavourites(int uid) {
+    public List<CardProfile> getFavourites(Long uid) {
         return userDao.getFavourites(uid);
     }
 
@@ -158,25 +158,25 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public int setUserSchedule(int userId, String schedule){
+    public int setUserSchedule(Long userId, String schedule){
         return userDao.setUserSchedule(userId, schedule);
     }
 
     @Transactional
     @Override
-    public int setUserDescription(int userId, String description) {
+    public int setUserDescription(Long userId, String description) {
         return userDao.setUserDescription(userId, description);
     }
 
     @Transactional
     @Override
-    public int setUserName(int userId, String name){
+    public int setUserName(Long userId, String name){
         return userDao.setUserName(userId, name);
     }
 
     @Transactional
     @Override
-    public int addFavourite(int teacherId, int studentId) {
+    public int addFavourite(Long teacherId, Long studentId) {
         int modified;
         try {
             modified = userDao.addFavourite(teacherId, studentId);
@@ -187,12 +187,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isFaved(int teacherId, int studentId) {
+    public boolean isFaved(Long teacherId, Long studentId) {
         return userDao.isFaved(teacherId, studentId);
     }
 
     @Override
-    public int addRating(int teacherId, int studentId, float rate, String review) {
+    public int addRating(Long teacherId, Long studentId, float rate, String review) {
         int modified;
         try {
             modified = userDao.addRating(teacherId, studentId, rate, review);
@@ -203,13 +203,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Pair<Float, Integer> getRatingById(int teacherId) {
+    public Pair<Float, Integer> getRatingById(Long teacherId) {
         return userDao.getRatingById(teacherId);
     }
 
     @Transactional
     @Override
-    public int removeFavourite(int teacherId, int studentId) {
+    public int removeFavourite(Long teacherId, Long studentId) {
         return userDao.removeFavourite(teacherId, studentId);
     }
 }

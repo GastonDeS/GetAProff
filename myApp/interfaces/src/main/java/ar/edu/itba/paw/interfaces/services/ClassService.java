@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClassService {
-    Optional<Class> findById(int id);
+    Optional<Class> findById(Long id);
 
-    List<ClassInfo> findClassesByStudentId(int id);
+    List<ClassInfo> findClassesByStudentId(Long id);
 
-    List<ClassInfo> findClassesByTeacherId(int id);
+    List<ClassInfo> findClassesByTeacherId(Long id);
 
-    Class create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message);
+    Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
 
-    int setStatus(int classId, int status);
+    int setStatus(Long classId, int status);
 
-    int setDeleted(int classId, int deleted);
+    int setDeleted(Long classId, int deleted);
 
-    int setRequest(int classId, String message);
+    int setRequest(Long classId, String message);
 
-    int setReply(int classId, String message);
+    int setReply(Long classId, String message);
 }

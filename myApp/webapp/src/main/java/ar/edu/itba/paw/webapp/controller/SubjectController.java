@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
@@ -65,12 +64,12 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "/newSubjectForm/{uid}", method = RequestMethod.GET)
-    public ModelAndView newSubjectForm(@ModelAttribute("newSubjectForm") final NewSubjectForm form, @PathVariable("uid") final int uid) {
+    public ModelAndView newSubjectForm(@ModelAttribute("newSubjectForm") final NewSubjectForm form, @PathVariable("uid") final Long uid) {
         return new ModelAndView("newSubjectForm");
     }
 
     @RequestMapping(value = "/newSubjectForm/{uid}", method = RequestMethod.POST)
-    public ModelAndView newSubject(@PathVariable("uid") final int uid, @ModelAttribute("newSubjectForm") @Valid final NewSubjectForm form,
+    public ModelAndView newSubject(@PathVariable("uid") final Long uid, @ModelAttribute("newSubjectForm") @Valid final NewSubjectForm form,
                                final BindingResult errors) {
         if (errors.hasErrors()) {
             return newSubjectForm(form, uid);
@@ -85,7 +84,7 @@ public class SubjectController {
     }
 
     @RequestMapping("/newSubjectFormSent/{uid}")
-    public ModelAndView classRequestSent(@PathVariable("uid")final int uid) {
+    public ModelAndView classRequestSent(@PathVariable("uid")final Long uid) {
         final ModelAndView mav = new ModelAndView("subjectRequestSent");
         mav.addObject("uid", uid);
         return mav;
@@ -93,7 +92,7 @@ public class SubjectController {
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
     public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        int uid = getCurrUser().getId();
+        Long uid = getCurrUser().getId();
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         return new ModelAndView("subjectsForm")
                 .addObject("userid", uid)
@@ -106,7 +105,7 @@ public class SubjectController {
         if (errors.hasErrors()) {
             return subjectsForm(form);
         }
-        int uid = getCurrUser().getId();
+        Long uid = getCurrUser().getId();
         Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
         if (!maybe.isPresent()) {
             throw new OperationFailedException("exception.failed");
@@ -116,8 +115,8 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.POST)
-    public ModelAndView removeSubject(@PathVariable("sid") final int sid) {
-        int uid = getCurrUser().getId();
+    public ModelAndView removeSubject(@PathVariable("sid") final Long sid) {
+        Long uid = getCurrUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
             throw new OperationFailedException("exception.failed");
         }

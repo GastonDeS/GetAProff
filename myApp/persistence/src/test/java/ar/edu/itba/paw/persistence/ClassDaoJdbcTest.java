@@ -51,9 +51,9 @@ public class ClassDaoJdbcTest {
         jdbcTemplate.update("insert into subject values (1,'matematica')");
         jdbcTemplate.update("insert into teaches values (0,1,200,2)");
 
-        final Class myClass = classDao.create(1,0,2,1, 200, 0, "hola");
+        final Class myClass = classDao.create(1L, 0L,2, 1L, 200, 0, "hola");
         Assert.assertNotNull(myClass);
-        Assert.assertEquals(1, myClass.getStudentId());
+        Assert.assertEquals(Long.valueOf(1), myClass.getStudentId());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ClassDaoJdbcTest {
         jdbcTemplate.update("insert into classes values (0,1,0,2,0,200,0,0,'hola','')");
         jdbcTemplate.update("insert into classes values (1,1,0,2,0,200,0,0,'hola','')");
 
-        final List<ClassInfo> myClasses = classDao.findClassesByTeacherId(0);
+        final List<ClassInfo> myClasses = classDao.findClassesByTeacherId((long) 0);
         Assert.assertNotNull(myClasses);
         Assert.assertEquals(2, myClasses.size());
     }
@@ -80,7 +80,7 @@ public class ClassDaoJdbcTest {
         jdbcTemplate.update("insert into subject values (0,'matematica')");
         jdbcTemplate.update("insert into teaches values (0,0,200,2)");
 
-        final List<ClassInfo> myClasses = classDao.findClassesByTeacherId(0);
+        final List<ClassInfo> myClasses = classDao.findClassesByTeacherId((long) 0);
         Assert.assertEquals(0, myClasses.size());
 
     }
@@ -96,7 +96,7 @@ public class ClassDaoJdbcTest {
         jdbcTemplate.update("insert into classes values (0,1,0,2,0,200,0,0,'hola','')");
         jdbcTemplate.update("insert into classes values (1,1,0,2,0,200,0,0,'hola','')");
 
-        final List<ClassInfo> myClasses = classDao.findClassesByStudentId(1);
+        final List<ClassInfo> myClasses = classDao.findClassesByStudentId((long) 1);
         Assert.assertNotNull(myClasses);
         Assert.assertEquals(2, myClasses.size());
     }
@@ -109,7 +109,7 @@ public class ClassDaoJdbcTest {
         jdbcTemplate.update("insert into subject values (0,'matematica')");
         jdbcTemplate.update("insert into teaches values (0,0,200,2)");
 
-        final List<ClassInfo> myClasses = classDao.findClassesByStudentId(1);
+        final List<ClassInfo> myClasses = classDao.findClassesByStudentId((long) 1);
         Assert.assertEquals(0, myClasses.size());
 
     }

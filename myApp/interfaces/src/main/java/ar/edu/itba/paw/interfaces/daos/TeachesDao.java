@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface TeachesDao {
 
-    Teaches addSubjectToUser(int userid, int subjectid, int price, int level);
+    Teaches addSubjectToUser(Long userid, Long subjectid, int price, int level);
 
-    int removeSubjectToUser(int userid, int subjectid);
+    int removeSubjectToUser(Long userid, Long subjectid);
 
-    Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
+    Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 
-    List<SubjectInfo> getSubjectInfoListByUser(int userid);
+    List<SubjectInfo> getSubjectInfoListByUser(Long userid);
 }

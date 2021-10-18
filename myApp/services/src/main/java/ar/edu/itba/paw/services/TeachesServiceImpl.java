@@ -19,23 +19,23 @@ public class TeachesServiceImpl implements TeachesService {
 
     @Transactional
     @Override
-    public Optional<Teaches> addSubjectToUser(int userid, int subjectid, int price, int level) {
+    public Optional<Teaches> addSubjectToUser(Long userid, Long subjectid, int price, int level) {
         return Optional.of(teachesDao.addSubjectToUser(userid, subjectid, price, level));
     }
 
     @Transactional
     @Override
-    public int removeSubjectToUser(int userid, int subjectid) {
+    public int removeSubjectToUser(Long userid, Long subjectid) {
         return teachesDao.removeSubjectToUser(userid, subjectid);
     }
 
     @Override
-    public List<SubjectInfo> getSubjectInfoListByUser(int userid) {
+    public List<SubjectInfo> getSubjectInfoListByUser(Long userid) {
         return teachesDao.getSubjectInfoListByUser(userid);
     }
 
     @Override
-    public Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level) {
+    public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
         return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
     }
 }

@@ -56,7 +56,7 @@ public class ProfileController {
     }
 
     @RequestMapping("/profile/{uid}")
-    public ModelAndView profile(@PathVariable("uid") final int uid) {
+    public ModelAndView profile(@PathVariable("uid") final Long uid) {
         Optional<User> curr = userService.getCurrentUser();
         Optional<User> user = userService.findById(uid);
         if (!user.isPresent()) {
@@ -103,7 +103,7 @@ public class ProfileController {
         if (errors.hasErrors())
             return userForm(form);
         User user = getCurrUser();
-        int uid = user.getId();
+        Long uid = user.getId();
         if (!user.isTeacher()) {
             roleService.addTeacherRole(uid);
         }

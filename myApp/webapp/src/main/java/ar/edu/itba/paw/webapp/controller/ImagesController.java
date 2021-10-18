@@ -16,7 +16,7 @@ public class ImagesController {
 
     @RequestMapping(value = "/image/{uid}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
-    byte[] getImage(@PathVariable("uid") final int uid) {
+    byte[] getImage(@PathVariable("uid") final Long uid) {
         Optional<Image> image =  imageService.findImageById(uid);
         return image.map(Image::getImage).orElse(null);
     }
