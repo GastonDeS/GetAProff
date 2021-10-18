@@ -40,7 +40,7 @@ public class RoleDaoJdbcTest {
         jdbcTemplate.execute("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
         jdbcTemplate.update("insert into userRoles values (1,0)");
 
-        List<Role> roles =  roleDao.getUserRoles(0);
+        List<Role> roles =  roleDao.getUserRoles(0L);
 
         Assert.assertFalse(roles.isEmpty());
         Assert.assertEquals(1,roles.size());

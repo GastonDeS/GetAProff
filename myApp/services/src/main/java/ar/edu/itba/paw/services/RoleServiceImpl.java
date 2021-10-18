@@ -28,13 +28,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getUserRoles(int userid) {
+    public List<Role> getUserRoles(Long userid) {
         return roleDao.getUserRoles(userid);
     }
 
     @Transactional
     @Override
-    public List<Role> setUserRoles(int userId, int userRole) {
+    public List<Role> setUserRoles(Long userId, int userRole) {
         List<Role> userRoles = new ArrayList<>();
         if (userRole == Roles.TEACHER.id) {
             addRoleToList(userRoles, Roles.TEACHER, userId);
@@ -44,12 +44,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public int addTeacherRole(int userId) {
+    public int addTeacherRole(Long userId) {
         Optional<Role> teacherRole = findRoleByName(Roles.TEACHER.name);
         return teacherRole.map(role -> roleDao.addRoleToUser(role.getRoleId(), userId)).orElse(0);
     }
 
-    private void addRoleToList(List<Role> userRoles, Roles role, int userId) {
+    private void addRoleToList(List<Role> userRoles, Roles role, Long userId) {
         Optional<Role> newRole = findRoleByName(role.name);
         if (newRole.isPresent()) {
             userRoles.add(newRole.get());

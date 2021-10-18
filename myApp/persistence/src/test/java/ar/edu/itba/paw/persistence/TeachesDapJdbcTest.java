@@ -47,7 +47,7 @@ public class TeachesDapJdbcTest {
         jdbcTemplate.update("insert into teaches values (0,1,2000,1)");
 
 
-        List<SubjectInfo> subjectInfos = teachesDao.getSubjectInfoListByUser(0);
+        List<SubjectInfo> subjectInfos = teachesDao.getSubjectInfoListByUser(0L);
 
         subjectInfos = subjectInfos.stream().sorted((p,m) -> (p.getId() - m.getId())).collect(Collectors.toList());
 
@@ -61,9 +61,9 @@ public class TeachesDapJdbcTest {
         jdbcTemplate.execute("insert into users values (0,'gaston','GFDA23faS$#','gdeschant@itba.edu.ar','the best teacher ever','every day since 8 am to 4 pm')");
 
 
-        Teaches teaches = teachesDao.addSubjectToUser(0,0,500,0);
+        Teaches teaches = teachesDao.addSubjectToUser(0L,0L,500,0);
 
-        Assert.assertEquals(0,teaches.getUserId());
+        Assert.assertEquals(Long.valueOf(0), teaches.getUserId());
 
     }
 
