@@ -75,7 +75,7 @@ public class UserDaoJpa implements UserDao {
     @Override
     public Optional<User> findByEmail(String mail) {
         //TODO: ARREGLAR FROM
-        final TypedQuery<User> query = entityManager.createQuery("select userid from User where mail = :mail", User.class);
+        final TypedQuery<User> query = entityManager.createQuery("from User where mail = :mail", User.class);
         query.setParameter("mail", mail);
         return query.getResultList().stream().findFirst();
     }
