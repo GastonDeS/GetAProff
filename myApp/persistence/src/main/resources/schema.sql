@@ -42,20 +42,6 @@ CREATE TABLE IF NOT EXISTS subject
     name      varchar(100)
 );
 
-CREATE TABLE IF NOT EXISTS timetable
-(
-    userId    INTEGER,
-    monday    VARCHAR(100),
-    tuesday   VARCHAR(100),
-    wednesday VARCHAR(100),
-    thursday  VARCHAR(100),
-    friday    VARCHAR(100),
-    saturday  VARCHAR(100),
-    sunday    VARCHAR(100),
-    FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
-    PRIMARY KEY (userId)
-);
-
 CREATE TABLE IF NOT EXISTS teaches
 (
     userId    INTEGER,

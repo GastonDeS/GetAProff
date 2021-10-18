@@ -149,6 +149,7 @@
                         </ul>
                     </li>
                 </ul>
+                <hr>
                 <div class="filter-btn-container">
                     <button type="submit" id="filter-button" class="btn btn-custom"
                             style="width: 100%; margin: 5px 0;">
@@ -184,8 +185,7 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> <spring:message
-                            code="tutors.search.resultTitle"/> ${searchQuery} :
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"><spring:message code="tutors.search.resultTitle"/> ${searchQuery}:
                     </h3>
                 </c:otherwise>
             </c:choose>
