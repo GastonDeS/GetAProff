@@ -185,7 +185,8 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"><spring:message code="tutors.search.resultTitle"/> ${searchQuery}:
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"><spring:message
+                            code="tutors.search.resultTitle"/> ${searchQuery}:
                     </h3>
                 </c:otherwise>
             </c:choose>
@@ -208,67 +209,89 @@
     </div>
 </div>
 <div class="nav-container">
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <c:choose>
-                <c:when test="${offset == 1}">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                    </li>
+                <c:when test="${pageQty > 1 && pageQty < 4}">
+                    <c:forEach begin="1" end="3" var="idx">
+                        <c:if test="${idx <= pageQty}">
+                            <c:choose>
+                                <c:when test="${idx == offset}">
+                                    <li class="page-item"><a class="page-link custom-active "
+                                                             href="${pageContext.request.contextPath}/tutors/${idx}${urlParams}">${idx}</a>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li class="page-item"><a class="page-link"
+                                                             href="${pageContext.request.contextPath}/tutors/${idx}${urlParams}">${idx}</a>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                    </c:forEach>
                 </c:when>
-                <c:otherwise>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/tutors/${offset-1}${urlParams}"
-                           tabindex="-1" aria-disabled="true" style="color: #026670;">Previous</a>
-                    </li>
-                </c:otherwise>
-            </c:choose>
-            <c:forEach begin="0" end="2" var="idx">
-                <c:choose>
-                    <c:when test="${offset < 3}">
+                <c:when test="${pageQty >= 4}">
+                    <c:choose>
+                        <c:when test="${offset == 1}">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="${pageContext.request.contextPath}/tutors/${offset-1}${urlParams}"
+                                   tabindex="-1" aria-disabled="true" style="color: #026670;">Previous</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:forEach begin="0" end="2" var="idx">
                         <c:choose>
-                            <c:when test="${idx + 1 == offset}">
-                                <li class="page-item"><a class="page-link custom-active "
-                                                         href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
-                                </li>
-                            </c:when>
-                            <c:otherwise>
+                            <c:when test="${offset < 4}">
                                 <c:choose>
-                                    <c:when test="${idx + 1 <= pageQty}">
-                                        <li class="page-item "><a class="page-link" style="color: #026670;"
-                                                                  href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                                    <c:when test="${idx + 1 == offset}">
+                                        <li class="page-item"><a class="page-link custom-active "
+                                                                 href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
                                         </li>
                                     </c:when>
                                     <c:otherwise>
-                                        <li class="page-item disabled"><a class="page-link "
-                                                                          href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${offset  - 2 + idx == offset}">
+                                        <li class="page-item"><a class="page-link custom-active "
+                                                                 href="${pageContext.request.contextPath}/tutors/${offset - 2 + idx}${urlParams}">${offset - 2 +  idx}</a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="${pageContext.request.contextPath}/tutors/${offset -2 +  idx}${urlParams}">${offset -2 +  idx}</a>
                                         </li>
                                     </c:otherwise>
                                 </c:choose>
                             </c:otherwise>
                         </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="page-item"><a class="page-link "
-                                                 href="${pageContext.request.contextPath}/tutors/${offset + idx }${urlParams}">${offset + idx - 1}
-                            aa${offset}</a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
-            <c:choose>
-                <c:when test="${offset + 1 <= pageQty}">
-                    <li class="page-item">
-                        <a class="page-link" style="color: #026670;"
-                           href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
-                    </li>
+                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${offset == pageQty}">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="${pageContext.request.contextPath}/tutors/${offset+1}${urlParams}"
+                                   tabindex="-1" aria-disabled="true" style="color: #026670;">Next</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
                 </c:when>
-                <c:otherwise>
-                    <li class="page-item disabled">
-                        <a class="page-link"
-                           href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
-                    </li>
-                </c:otherwise>
             </c:choose>
         </ul>
     </nav>
