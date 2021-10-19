@@ -57,17 +57,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findById(Long id) {
-        Optional<User> maybeUser = userDao.get(id);
-        if (maybeUser.isPresent()) {
-            User user = maybeUser.get();
-            List<Role> roles = roleService.getUserRoles(id);
-            if (roles.isEmpty()) {
-                return Optional.empty();
-            }
-            user.setUserRoles(roles);
-            return Optional.of(user);
-        }
-        return Optional.empty();
+//        Optional<User> maybeUser = userDao.get(id);
+//        if (maybeUser.isPresent()) {
+//            User user = maybeUser.get();
+//            List<Role> roles = roleService.getUserRoles(id);
+//            if (roles.isEmpty()) {
+//                return Optional.empty();
+//            }
+//            user.setUserRoles(roles);
+//            return Optional.of(user);
+//        }
+//        return Optional.empty();
+        return userDao.get(id);
     }
 
     @Override
@@ -133,17 +134,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByEmail(String mail) {
-        Optional<User> maybe = userDao.findByEmail(mail);
-        if (maybe.isPresent()) {
-            User u = maybe.get();
-            List<Role> roles = roleService.getUserRoles(u.getId());
-            if (roles.isEmpty()) {
-                return Optional.empty();
-            }
-            u.setUserRoles(roles);
-            return Optional.of(u);
-        }
-        return Optional.empty();
+        return userDao.findByEmail(mail);
     }
 
     @Override

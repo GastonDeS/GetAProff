@@ -30,6 +30,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<Role> getUserRoles(Long userid) {
+        //TODO: BORRAR PORQUE YA NO SIRVE
         return roleDao.getUserRoles(userid);
     }
 
@@ -38,9 +39,9 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> setUserRoles(Long userId, Long userRole) {
         List<Role> userRoles = new ArrayList<>();
         if (Objects.equals(userRole, Roles.TEACHER.id)) {
-            addRoleToList(userRoles, Roles.TEACHER, userId);
+            addRoleToList(userRoles, Roles.TEACHER);
         }
-        addRoleToList(userRoles, Roles.STUDENT, userId);
+        addRoleToList(userRoles, Roles.STUDENT);
         return userRoles.isEmpty() ? new ArrayList<>() : userRoles;
     }
 
@@ -50,12 +51,9 @@ public class RoleServiceImpl implements RoleService {
         return teacherRole.map(role -> roleDao.addRoleToUser(role.getRoleId(), userId)).orElse(0);
     }
 
-    private void addRoleToList(List<Role> userRoles, Roles role, Long userId) {
+    private void addRoleToList(List<Role> userRoles, Roles role) {
         Optional<Role> newRole = findRoleByName(role.name);
-        if (newRole.isPresent()) {
-            userRoles.add(newRole.get());
-            roleDao.addRoleToUser(newRole.get().getRoleId(), userId);
-        }
+        newRole.ifPresent(userRoles::add);
     }
 
     private enum Roles {
