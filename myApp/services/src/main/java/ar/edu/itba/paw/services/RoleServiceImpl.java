@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -28,43 +29,41 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getUserRoles(int userid) {
+    public List<Role> getUserRoles(Long userid) {
+        //TODO: BORRAR PORQUE YA NO SIRVE
         return roleDao.getUserRoles(userid);
     }
 
     @Transactional
     @Override
-    public List<Role> setUserRoles(int userId, int userRole) {
+    public List<Role> setUserRoles(Long userId, Long userRole) {
         List<Role> userRoles = new ArrayList<>();
-        if (userRole == Roles.TEACHER.id) {
-            addRoleToList(userRoles, Roles.TEACHER, userId);
+        if (Objects.equals(userRole, Roles.TEACHER.id)) {
+            addRoleToList(userRoles, Roles.TEACHER);
         }
-        addRoleToList(userRoles, Roles.STUDENT, userId);
+        addRoleToList(userRoles, Roles.STUDENT);
         return userRoles.isEmpty() ? new ArrayList<>() : userRoles;
     }
 
     @Override
-    public int addTeacherRole(int userId) {
+    public int addTeacherRole(Long userId) {
         Optional<Role> teacherRole = findRoleByName(Roles.TEACHER.name);
         return teacherRole.map(role -> roleDao.addRoleToUser(role.getRoleId(), userId)).orElse(0);
     }
 
-    private void addRoleToList(List<Role> userRoles, Roles role, int userId) {
+    private void addRoleToList(List<Role> userRoles, Roles role) {
         Optional<Role> newRole = findRoleByName(role.name);
-        if (newRole.isPresent()) {
-            userRoles.add(newRole.get());
-            roleDao.addRoleToUser(newRole.get().getRoleId(), userId);
-        }
+        newRole.ifPresent(userRoles::add);
     }
 
     private enum Roles {
-        STUDENT("USER_STUDENT", 0),
-        TEACHER("USER_TEACHER", 1);
+        STUDENT("USER_STUDENT", 0L),
+        TEACHER("USER_TEACHER", 1L);
 
         private String name;
-        private int id;
+        private Long id;
 
-        Roles(String name, int id) {
+        Roles(String name, Long id) {
             this.name = name;
             this.id = id;
         }
@@ -73,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
             return name;
         }
 
-        public int getId() {
+        public Long getId() {
             return id;
         }
     }

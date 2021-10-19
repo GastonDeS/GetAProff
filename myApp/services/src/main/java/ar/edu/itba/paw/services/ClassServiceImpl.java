@@ -17,42 +17,42 @@ public class ClassServiceImpl implements ClassService {
     private ClassDao classDao;
 
     @Override
-    public Optional<Class> findById(int id) {
+    public Optional<Class> findById(Long id) {
         return classDao.get(id);
     }
 
     @Override
-    public List<ClassInfo> findClassesByStudentId(int id) {
+    public List<ClassInfo> findClassesByStudentId(Long id) {
         return classDao.findClassesByStudentId(id);
     }
 
     @Override
-    public List<ClassInfo> findClassesByTeacherId(int id) {
+    public List<ClassInfo> findClassesByTeacherId(Long id) {
         return classDao.findClassesByTeacherId(id);
     }
 
     @Override
-    public Class create(int studentId, int teacherId, int level, int subjectId, int price, int status, String message) {
+    public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
         return classDao.create(studentId, teacherId, level, subjectId, price, status, message);
     }
 
     @Override
-    public int setStatus(int classId, int status) {
+    public int setStatus(Long classId, int status) {
         return classDao.setStatus(classId, status);
     }
 
     @Override
-    public int setDeleted(int classId, int deleted) {
+    public int setDeleted(Long classId, int deleted) {
         return classDao.setDeleted(classId, deleted);
     }
 
     @Override
-    public int setRequest(int classId, String message) {
+    public int setRequest(Long classId, String message) {
         return classDao.setRequest(classId, message);
     }
 
     @Override
-    public int setReply(int classId, String message) {
+    public int setReply(Long classId, String message) {
         return classDao.setReply(classId, message);
     }
 

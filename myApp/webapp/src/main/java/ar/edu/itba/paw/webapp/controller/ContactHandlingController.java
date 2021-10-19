@@ -46,7 +46,7 @@ public class ContactHandlingController {
     private SubjectService subjectService;
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
-    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final int uid) {
+    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final Long uid) {
         final ModelAndView mav = new ModelAndView("contactForm");
         Optional<User> maybeUser = userService.findById(uid);
         Optional<User> curr = userService.getCurrentUser();
@@ -65,7 +65,7 @@ public class ContactHandlingController {
     }
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
-    public ModelAndView contact(@PathVariable("uid") final int uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
+    public ModelAndView contact(@PathVariable("uid") final Long uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
                                 final BindingResult errors) {
         if (errors.hasErrors()) {
             return contactForm(form, uid);
@@ -73,12 +73,12 @@ public class ContactHandlingController {
         Optional<User> user = userService.findById(uid);
         Optional<User> curr = userService.getCurrentUser();
         String[] subjectIdAndLevel = form.getSubjectAndLevel().split(",",2);
-        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Integer.parseInt(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
+        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.parseLong(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
         if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
         classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubjectId(), t.get().getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
-        Optional<Subject> subject = subjectService.findById(Integer.parseInt(subjectIdAndLevel[0]));
+        Optional<Subject> subject = subjectService.findById(Long.parseLong(subjectIdAndLevel[0]));
         if (!subject.isPresent()) {
             throw new OperationFailedException("exception");
         }

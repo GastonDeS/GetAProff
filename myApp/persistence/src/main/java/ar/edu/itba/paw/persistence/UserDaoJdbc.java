@@ -19,7 +19,7 @@ public class UserDaoJdbc implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getString("name"), rs.getString("password"),
-            rs.getInt("userid"), rs.getString("mail"), rs.getString("description"),rs.getString("schedule"));
+            rs.getLong("userid"), rs.getString("mail"), rs.getString("description"),rs.getString("schedule"));
     private final static int PAGE_SIZE = 9, GET_ALL = 0;
 
     private final static String MAIN_QUERY =
@@ -43,7 +43,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<User> get(int id) {
+    public Optional<User> get(Long id) {
         final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[] { id }, ROW_MAPPER);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
@@ -57,7 +57,7 @@ public class UserDaoJdbc implements UserDao {
         args.put("description", description);
         args.put("schedule", schedule);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(username, password, userId.intValue(), mail, description, schedule);
+        return new User(username, password, userId.longValue(), mail, description, schedule);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public List<CardProfile> getFavourites(int uid) {
+    public List<CardProfile> getFavourites(Long uid) {
         RowMapper<CardProfile> mapper = (rs,rowNum) -> new CardProfile(rs.getInt("userId"), rs.getString("name"),
                 rs.getInt("maxPrice"),rs.getInt("minPrice"), rs.getString("description"),
                 rs.getInt("image"), rs.getFloat("rate"));
@@ -145,22 +145,22 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public int setUserSchedule(int userId, String schedule) {
+    public int setUserSchedule(Long userId, String schedule) {
         return jdbcTemplate.update("UPDATE users SET schedule = ? WHERE userid = ?", schedule, userId);
     }
 
     @Override
-    public int setUserDescription(int userId, String description) {
+    public int setUserDescription(Long userId, String description) {
         return jdbcTemplate.update("UPDATE users SET description = ? WHERE userid = ?", description, userId);
     }
 
     @Override
-    public int setUserName(int userId, String name) {
+    public int setUserName(Long userId, String name) {
         return jdbcTemplate.update("UPDATE users SET name = ? WHERE userid = ?", name, userId);
     }
 
     @Override
-    public Boolean isFaved(int teacherId, int studentId) {
+    public Boolean isFaved(Long teacherId, Long studentId) {
         RowMapper<String> mapper = (rs, rowNum) -> (String.valueOf(rs.getInt("count")));
         List<String> list = jdbcTemplate.query("select count(*) as count\n" +
                 "from favourites\n" +
@@ -170,28 +170,28 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public int addRating(int teacherId, int studentId, float rate, String review) {
+    public int addRating(Long teacherId, Long studentId, float rate, String review) {
         return jdbcTemplate.update("insert into rating values (?,?,?,?)\n" +
                 "on conflict on constraint rating_pkey\n" +
                 "do update set (rate,review) = (excluded.rate,excluded.review)", teacherId, studentId, rate, review);
     }
 
     @Override
-    public Pair<Float,Integer> getRatingById(int teacherId) {
+    public Pair<Float,Integer> getRatingById(Long teacherId) {
         RowMapper<Pair<Float,Integer>> pairRowMapper = (rs, rowNum) -> new Pair<>(rs.getFloat("rate"), rs.getInt("rateCount"));
         return jdbcTemplate.query("select sum(rate) / count(rate) as rate, count(rate) as rateCount from rating\n" +
                 "where teacherid = ?;", new Object[]{teacherId}, pairRowMapper).get(0);
     }
 
     @Override
-    public int addFavourite(int teacherId, int studentId) {
+    public int addFavourite(Long teacherId, Long studentId) {
         return jdbcTemplate.update("insert into favourites\n" +
                 "values (?,?)\n" +
                 "on conflict do nothing;",teacherId,studentId);
     }
 
     @Override
-    public int removeFavourite(int teacherId, int studentId) {
+    public int removeFavourite(Long teacherId, Long studentId) {
         return jdbcTemplate.update("delete from favourites\n" +
                 "where teacherid = ? AND studentid = ?;",teacherId,studentId);
     }

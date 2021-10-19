@@ -40,7 +40,7 @@ public class FavouritesController {
     }
 
     @RequestMapping(value = "/addFavourite/{tutorId}", method = RequestMethod.POST)
-    public ModelAndView addFavourite(@PathVariable("tutorId") final int tutorId) {
+    public ModelAndView addFavourite(@PathVariable("tutorId") final Long tutorId) {
         Optional<User> user = userService.getCurrentUser();
         if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
@@ -54,7 +54,7 @@ public class FavouritesController {
     }
 
     @RequestMapping(value = "/removeFavourite/{tutorId}", method = RequestMethod.POST)
-    public ModelAndView removeFavourite(@PathVariable("tutorId") final int tutorId) {
+    public ModelAndView removeFavourite(@PathVariable("tutorId") final Long tutorId) {
         Optional<User> user = userService.getCurrentUser();
         if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login

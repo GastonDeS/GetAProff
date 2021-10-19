@@ -8,23 +8,23 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserDao {
-    Optional<User> get(int id);
+    Optional<User> get(Long id);
 
     List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
 
-    List<CardProfile> getFavourites(int uid);
+    List<CardProfile> getFavourites(Long uid);
 
     Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
 
-    int addFavourite(int teacherId, int studentId);
+    int addFavourite(Long teacherId, Long studentId);
 
-    int removeFavourite(int teacherId, int studentId);
+    int removeFavourite(Long teacherId, Long studentId);
 
-    Boolean isFaved(int teacherId, int studentId);
+    Boolean isFaved(Long teacherId, Long studentId);
 
-    int addRating(int teacherId, int studentId, float rate, String review);
+    int addRating(Long teacherId, Long studentId, float rate, String review);
 
-    Pair<Float, Integer> getRatingById(int teacherId);
+    Pair<Float, Integer> getRatingById(Long teacherId);
 
     /**
      * Create a new user.
@@ -37,9 +37,9 @@ public interface UserDao {
 
     Optional<User> findByEmail(String mail);
 
-    int setUserSchedule(int userId, String schedule);
+    int setUserSchedule(Long userId, String schedule);
 
-    int setUserDescription(int userId, String description);
+    int setUserDescription(Long userId, String description);
 
-    int setUserName(int userId, String name);
+    int setUserName(Long userId, String name);
 }

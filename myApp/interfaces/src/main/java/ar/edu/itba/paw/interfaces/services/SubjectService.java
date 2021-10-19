@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface SubjectService {
 
-    Optional<Subject> findById(int id);
+    Optional<Subject> findById(Long id);
 
     Subject create(String subject);
 

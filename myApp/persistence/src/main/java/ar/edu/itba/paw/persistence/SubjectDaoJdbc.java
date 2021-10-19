@@ -17,7 +17,7 @@ public class SubjectDaoJdbc implements SubjectDao {
     private final JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
     private final static RowMapper<Subject> ROW_MAPPER = (rs, rowNum) ->
-            new Subject(rs.getString("name"), rs.getInt("subjectid"));
+            new Subject(rs.getString("name"), rs.getLong("subjectid"));
 
     @Autowired
     public SubjectDaoJdbc(final DataSource ds) {
@@ -28,7 +28,7 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override
-    public Optional<Subject> findById(int id) {
+    public Optional<Subject> findById(Long id) {
         List<Subject> list = jdbcTemplate.query("SELECT * FROM subject WHERE subjectId = ?", new Object[] { id }, ROW_MAPPER);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
@@ -44,7 +44,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", subject);
         final Number subjectid = jdbcInsert.executeAndReturnKey(args);
-        return new Subject(subject, subjectid.intValue());
+        return new Subject(subject, (long) subjectid.intValue());
     }
 
     @Override

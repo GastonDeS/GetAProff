@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> findById(int id);
+    Optional<User> findById(Long id);
 
     List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
 
@@ -20,17 +20,17 @@ public interface UserService {
 
     Integer getPageQty(String subject);
 
-    List<CardProfile> getFavourites(int uid);
+    List<CardProfile> getFavourites(Long uid);
 
-    int addFavourite(int teacherId, int studentId);
+    int addFavourite(Long teacherId, Long studentId);
 
-    int removeFavourite(int teacherId, int studentId);
+    int removeFavourite(Long teacherId, Long studentId);
 
-    boolean isFaved(int teacherId, int studentId);
+    boolean isFaved(Long teacherId, Long studentId);
 
-    int addRating(int teacherId, int studentId, float rate, String review);
+    int addRating(Long teacherId, Long studentId, float rate, String review);
 
-    Pair<Float, Integer> getRatingById(int teacherId);
+    Pair<Float, Integer> getRatingById(Long teacherId);
 
     /**
      * Retrieves the fee of the most expensive user
@@ -46,15 +46,15 @@ public interface UserService {
      * @param mail The mail of the user.
      * @return The created user.
      */
-    Optional<User> create(String username, String mail, String password, String description, String schedule, int userole);
+    Optional<User> create(String username, String mail, String password, String description, String schedule, Long userole);
 
     Optional<User> findByEmail(String mail);
 
     Optional<User> getCurrentUser();
 
-    int setUserSchedule(int userId, String schedule);
+    int setUserSchedule(Long userId, String schedule);
 
-    int setUserDescription(int userId, String description);
+    int setUserDescription(Long userId, String description);
 
-    int setUserName(int userId, String name);
+    int setUserName(Long userId, String name);
 }

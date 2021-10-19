@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeachesService {
-    Optional<Teaches> addSubjectToUser(int userid, int subjectid, int price, int level);
+    Optional<Teaches> addSubjectToUser(Long userid, Long subjectid, int price, int level);
 
-    int removeSubjectToUser(int userid, int subjectid);
+    int removeSubjectToUser(Long userid, Long subjectid);
 
-    List<SubjectInfo> getSubjectInfoListByUser(int userid);
+    List<SubjectInfo> getSubjectInfoListByUser(Long userid);
 
-    Optional<Teaches> findByUserAndSubjectAndLevel(int userId, int subjectId, int level);
+    Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 }

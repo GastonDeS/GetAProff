@@ -1,19 +1,31 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "images")
 public class Image {
 
-    private int uid;
+    @Id
+    private Long uid;
 
-    public int getUid() {
-        return uid;
-    }
+    @Column
+    private byte[] image;
 
-    public Image(int uid, byte[] image) {
+    public Image(Long uid, byte[] image) {
         this.uid = uid;
         this.image = image;
     }
 
-    public void setUid(int uid) {
+    /*default*/ Image() {
+
+    }
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
@@ -25,5 +37,5 @@ public class Image {
         this.image = image;
     }
 
-    private byte[] image;
+
 }

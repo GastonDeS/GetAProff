@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.models;
 
 public class Teaches {
-    private int userId, subjectId, price, level;
+    private int price, level;
+    private Long userId, subjectId;
 
-    public Teaches (int userId, int subjectId, int price, int level){
+    public Teaches (Long userId, Long subjectId, int price, int level){
         this.userId = userId;
         this.subjectId = subjectId;
         this.price = price;
@@ -18,19 +19,19 @@ public class Teaches {
         this.level = level;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public int getSubjectId() {
+    public Long getSubjectId() {
         return subjectId;
     }
 
-    public void setSubjectId(int subjectId) {
+    public void setSubjectId(Long subjectId) {
         this.subjectId = subjectId;
     }
 

@@ -23,7 +23,7 @@ public class RegisterFormValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         RegisterForm rf = (RegisterForm) o;
-        int role = rf.getUserRole();
+        Long role = rf.getUserRole();
         String mail = rf.getMail();
         String pass = rf.getPassword();
         String confPass = rf.getConfirmPass();
@@ -37,7 +37,7 @@ public class RegisterFormValidator implements Validator {
             errors.rejectValue("name", "form.name.format");
         }
 
-        if (role == 1) {
+        if (role == 1L) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "form.field.empty");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "schedule", "form.field.empty");
         }

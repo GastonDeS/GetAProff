@@ -15,7 +15,7 @@ import java.util.*;
 public class RoleDaoJdbc implements RoleDao{
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final static RowMapper<Role> ROW_MAPPER = (rs, rowNum) -> new Role(rs.getInt("roleid"), rs.getString("role"));
+    private final static RowMapper<Role> ROW_MAPPER = (rs, rowNum) -> new Role(rs.getLong("roleid"), rs.getString("role"));
 
     @Autowired
     public RoleDaoJdbc (final DataSource ds){
@@ -30,13 +30,7 @@ public class RoleDaoJdbc implements RoleDao{
         final Map<String, Object> args = new HashMap<>();
         args.put("role", role);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new Role(userId.intValue(), role);
-    }
-
-    @Override
-    public Optional<Role> findRoleById(int roleId) {
-        final List<Role> list = jdbcTemplate.query("SELECT * FROM roles WHERE roleid = ?", new Object[] { roleId }, ROW_MAPPER);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return new Role(userId.longValue(), role);
     }
 
     @Override
@@ -46,12 +40,12 @@ public class RoleDaoJdbc implements RoleDao{
     }
 
     @Override
-    public int addRoleToUser(int roleId, int userId) {
+    public int addRoleToUser(Long roleId, Long userId) {
         return jdbcTemplate.update("INSERT INTO userRoles(roleId, userId) VALUES (?, ?)", roleId, userId);
     }
 
     @Override
-    public List<Role> getUserRoles(int userid) {
+    public List<Role> getUserRoles(Long userid) {
         final List<Role> list = jdbcTemplate.query("SELECT r.roleid as roleid, role FROM roles r JOIN userroles u ON r.roleid = u.roleid WHERE userid = ?",
                 new Object[] {userid}, ROW_MAPPER);
         return list.isEmpty() ? new ArrayList<>() : list;

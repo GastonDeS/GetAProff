@@ -1,19 +1,19 @@
 package ar.edu.itba.paw.models;
 
 public class Subject {
-    private int id;
+    private Long id;
     private String name;
 
-    public Subject(String name, int id){
+    public Subject(String name, Long id){
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

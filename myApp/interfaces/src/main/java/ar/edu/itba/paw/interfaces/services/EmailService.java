@@ -7,12 +7,12 @@ public interface EmailService {
 
     void sendContactMessage(String to, String userFrom, String subject, String message);
 
-    void sendAcceptMessage(int toId, int fromId, int sid, String message);
+    void sendAcceptMessage(Long toId, Long fromId, Long sid, String message);
 
     void sendStatusChangeMessage(Class myClass);
 
     void sendRatedMessage(Class myClass, int rating, String review);
 
-    void sendSubjectRequest(int uid, String Subject, String message);
+    void sendSubjectRequest(Long uid, String Subject, String message);
 
 }

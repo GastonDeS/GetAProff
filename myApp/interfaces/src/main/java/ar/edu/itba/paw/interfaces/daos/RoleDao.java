@@ -9,11 +9,9 @@ public interface RoleDao {
 
     Role create(String role);
 
-    Optional<Role> findRoleById(int roleId);
-
     Optional<Role> findRoleByName(String role);
 
-    int addRoleToUser(int roleId, int userId);
+    int addRoleToUser(Long roleId, Long userId);
 
-    List<Role> getUserRoles(int userid);
+    List<Role> getUserRoles(Long userid);
 }
