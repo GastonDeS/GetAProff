@@ -38,6 +38,9 @@ public class User {
                     name = "roleid", referencedColumnName = "roleid"))
     private List<Role> userRoles;
 
+    @OneToOne
+    private Image image;
+
     User() {
         //Just for Hibernate
     }
