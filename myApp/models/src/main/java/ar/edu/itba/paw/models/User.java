@@ -29,7 +29,7 @@ public class User {
     @Column(nullable = false)
     private String mail;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "userroles",
             joinColumns = @JoinColumn(

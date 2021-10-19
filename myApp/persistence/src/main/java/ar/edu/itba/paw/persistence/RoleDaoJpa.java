@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,9 @@ public class RoleDaoJpa implements RoleDao {
 
     @Override
     public Optional<Role> findRoleByName(String role) {
-        return Optional.empty();
+        final TypedQuery<Role> query = entityManager.createQuery("from Role where role = :role", Role.class);
+        query.setParameter("role", role);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override
@@ -37,6 +40,6 @@ public class RoleDaoJpa implements RoleDao {
 
     @Override
     public List<Role> getUserRoles(Long userid) {
-        return null;
+        return new ArrayList<>();
     }
 }

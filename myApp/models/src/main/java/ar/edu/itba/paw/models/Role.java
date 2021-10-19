@@ -15,9 +15,16 @@ public class Role {
     @Column
     private String role;
 
+    @ManyToMany(mappedBy = "userRoles")
+    private Collection<User> users;
+
     public Role(Long roleId, String role) {
         this.roleId = roleId;
         this.role = role;
+    }
+
+    Role() {
+        //Just for Hibernate
     }
 
     public Long getRoleId() {
