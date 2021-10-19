@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password, String description, String schedule, int userole) {
+    public Optional<User> create(String username, String mail, String password, String description, String schedule, Long userole) {
         User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
         List<Role> roles = roleService.setUserRoles(u.getId(), userole);
         if (roles.isEmpty()) {

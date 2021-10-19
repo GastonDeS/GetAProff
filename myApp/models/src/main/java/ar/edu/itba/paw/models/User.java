@@ -23,15 +23,22 @@ public class User {
     @SequenceGenerator(name = "users_userid_seq", sequenceName = "users_userid_seq", allocationSize = 1)
     private Long userid;
 
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 160)
     private String password; //Por default toma nombre de columna password
 
     @Column(nullable = false)
     private String mail;
 
+    @ManyToMany
+    @JoinTable(
+            name = "userroles",
+            joinColumns = @JoinColumn(
+                    name = "userid", referencedColumnName = "userid"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "roleid", referencedColumnName = "roleid"))
     private List<Role> userRoles;
 
-    public User() {
+    User() {
         //Just for Hibernate
     }
 

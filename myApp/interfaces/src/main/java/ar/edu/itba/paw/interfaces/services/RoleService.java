@@ -10,7 +10,7 @@ public interface RoleService {
 
     Optional<Role> findRoleByName(String role);
 
-    List<Role> setUserRoles(Long userId, int userRole);
+    List<Role> setUserRoles(Long userId, Long userRole);
 
     List<Role> getUserRoles(Long userid);
 

@@ -12,7 +12,7 @@ public class RegisterForm {
 
     private String confirmPass;
 
-    private int userRole;
+    private Long userRole;
 
     private String description, schedule;
 
@@ -74,11 +74,11 @@ public class RegisterForm {
         this.confirmPass = confirmPass;
     }
 
-    public int getUserRole() {
+    public Long getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(int userRole) {
+    public void setUserRole(Long userRole) {
         this.userRole = userRole;
     }
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.UserForm;
@@ -50,11 +51,6 @@ public class ProfileController {
         }
     }
 
-    private User getCurrUser() {
-        Optional<User> maybeUser = userService.getCurrentUser();
-        return maybeUser.orElseGet(User::new);
-    }
-
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final Long uid) {
         Optional<User> curr = userService.getCurrentUser();
@@ -83,7 +79,11 @@ public class ProfileController {
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
     public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form) {
-        User user = getCurrUser();
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
+        User user = maybeUser.get();
         ModelAndView mav = new ModelAndView("userForm").addObject("user", user);
         form.setTeacher(user.isTeacher());
         form.setDescription(user.getDescription());
@@ -102,7 +102,11 @@ public class ProfileController {
                                  final BindingResult errors) throws IOException {
         if (errors.hasErrors())
             return userForm(form);
-        User user = getCurrUser();
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
+        User user = maybeUser.get();
         Long uid = user.getId();
         if (!user.isTeacher()) {
             roleService.addTeacherRole(uid);

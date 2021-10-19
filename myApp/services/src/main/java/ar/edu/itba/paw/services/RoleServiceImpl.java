@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -34,9 +35,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public List<Role> setUserRoles(Long userId, int userRole) {
+    public List<Role> setUserRoles(Long userId, Long userRole) {
         List<Role> userRoles = new ArrayList<>();
-        if (userRole == Roles.TEACHER.id) {
+        if (Objects.equals(userRole, Roles.TEACHER.id)) {
             addRoleToList(userRoles, Roles.TEACHER, userId);
         }
         addRoleToList(userRoles, Roles.STUDENT, userId);
@@ -58,13 +59,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private enum Roles {
-        STUDENT("USER_STUDENT", 0),
-        TEACHER("USER_TEACHER", 1);
+        STUDENT("USER_STUDENT", 0L),
+        TEACHER("USER_TEACHER", 1L);
 
         private String name;
-        private int id;
+        private Long id;
 
-        Roles(String name, int id) {
+        Roles(String name, Long id) {
             this.name = name;
             this.id = id;
         }
@@ -73,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
             return name;
         }
 
-        public int getId() {
+        public Long getId() {
             return id;
         }
     }

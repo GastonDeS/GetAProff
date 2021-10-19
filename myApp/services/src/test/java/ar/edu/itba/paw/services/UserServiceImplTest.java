@@ -62,13 +62,13 @@ public class UserServiceImplTest {
         when(mockDao.create(eq(USERNAME),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION), eq(SCHEDULE))).thenReturn(user);
         when(passwordEncoder.encode(eq(USER_PASS))).thenReturn(USER_PASS);
         List<Role> roles = new ArrayList<>();
-        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
-        when(roleService.setUserRoles((long) eq(USER_ID),eq(USER_ROLE))).thenReturn(roles);
+        roles.add(new Role((long) USER_ID,String.valueOf(USER_ROLE)));
+        when(roleService.setUserRoles((long) eq(USER_ID), (long) eq(USER_ROLE))).thenReturn(roles);
         when(utilsService.capitalizeString(eq(USERNAME))).thenReturn(USERNAME); //este username ya esta capitalizado
 
 //        2 ejercito la class under test una unica linea
 
-        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);
+        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,(long) USER_ROLE);
 
 //        3 Asserts - postcondiciones
 
@@ -85,7 +85,7 @@ public class UserServiceImplTest {
 
 //        2 ejercito la class under test una unica linea
 
-        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);
+        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,(long) USER_ROLE);
 
 //        3 Asserts - postcondiciones
 
@@ -109,7 +109,7 @@ public class UserServiceImplTest {
         when(mockDao.findByEmail(eq(USER_MAIL))).thenReturn(Optional.of(user));
 
         List<Role> roles = new ArrayList<>();
-        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
+        roles.add(new Role((long) USER_ID,String.valueOf(USER_ROLE)));
         when(roleService.getUserRoles((long) eq(USER_ID))).thenReturn(roles);
 
         final Optional<User> user = userService.findByEmail(USER_MAIL);
@@ -124,7 +124,7 @@ public class UserServiceImplTest {
         when(mockDao.get((long) eq(USER_ID))).thenReturn(Optional.of(user));
 
         List<Role> roles = new ArrayList<>();
-        roles.add(new Role(USER_ID,String.valueOf(USER_ROLE)));
+        roles.add(new Role((long) USER_ID,String.valueOf(USER_ROLE)));
         when(roleService.getUserRoles((long) eq(USER_ID))).thenReturn(roles);
 
         final Optional<User> user = userService.findById((long) USER_ID);

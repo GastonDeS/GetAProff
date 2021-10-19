@@ -44,7 +44,7 @@ public class RoleDaoJdbcTest {
 
         Assert.assertFalse(roles.isEmpty());
         Assert.assertEquals(1,roles.size());
-        Assert.assertEquals(1,roles.get(0).getRoleId());
+        Assert.assertEquals(Long.valueOf(1),roles.get(0).getRoleId());
     }
 
 

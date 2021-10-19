@@ -1,19 +1,30 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+import java.util.Collection;
+
+@Entity
+@Table(name = "roles")
 public class Role {
-    private int roleId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_roleid_seq")
+    @SequenceGenerator(name = "roles_roleid_seq", sequenceName = "roles_roleid_seq", allocationSize = 1)
+    private Long roleId;
+
+    @Column
     private String role;
 
-    public Role(int roleId, String role) {
+    public Role(Long roleId, String role) {
         this.roleId = roleId;
         this.role = role;
     }
 
-    public int getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 

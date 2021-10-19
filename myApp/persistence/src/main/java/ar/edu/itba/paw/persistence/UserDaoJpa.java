@@ -74,15 +74,17 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String mail) {
-        //TODO: ARREGLAR FROM
-        final TypedQuery<User> query = entityManager.createQuery("from User where mail = :mail", User.class);
+        final TypedQuery<User> query = entityManager.createQuery("from User u where u.mail = :mail", User.class);
         query.setParameter("mail", mail);
         return query.getResultList().stream().findFirst();
     }
 
     @Override
     public int setUserSchedule(Long userId, String schedule) {
-        return 0;
+        final TypedQuery<User> query = entityManager.createQuery("update User set schedule = :schedule where userid = :userid", User.class);
+        query.setParameter("schedule", schedule);
+        query.setParameter("userid", userId);
+        return query.executeUpdate();
     }
 
     @Override
