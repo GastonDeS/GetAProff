@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ImageDao;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,11 @@ public class ImageDaoJpa implements ImageDao {
 
     @Override
     public Image createOrUpdate(Long uid, byte[] image) {
-        final Image newImage = new Image(null,image);
+        User user = entityManager.find(User.class,uid);
+
+        final Image newImage = new Image(uid,image);
+        newImage.setUser(user);
+        user.setImage(newImage);
         entityManager.persist(newImage);
         return newImage;
     }

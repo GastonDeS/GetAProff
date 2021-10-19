@@ -17,6 +17,22 @@ public class Image {
     @MapsId
     private User user;
 
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Image(Long uid, byte[] image) {
         this.userid = uid;
         this.image = image;
@@ -24,14 +40,6 @@ public class Image {
 
     /*default*/ Image() {
 
-    }
-
-    public Long getUid() {
-        return userid;
-    }
-
-    public void setUid(Long uid) {
-        this.userid = uid;
     }
 
     public byte[] getImage() {

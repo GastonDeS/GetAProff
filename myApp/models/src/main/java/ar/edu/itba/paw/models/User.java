@@ -29,6 +29,14 @@ public class User {
     @Column(nullable = false)
     private String mail;
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "userroles",
