@@ -20,7 +20,7 @@ public class Class {
     private User teacher;
 
     @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Subject subject;
 
     @Column

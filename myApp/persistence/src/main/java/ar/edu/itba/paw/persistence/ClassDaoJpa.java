@@ -45,7 +45,10 @@ public class ClassDaoJpa implements ClassDao {
     }
 
     @Override
-    public Class create(User student, User teacher, int level, Subject subject, int price, int status, String message) {
+    public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
+        final User student = em.getReference(User.class, studentId);
+        final User teacher = em.getReference(User.class, teacherId);
+        final Subject subject = em.getReference(Subject.class, subjectId);
         final Class newClass = new Class(student, teacher, subject, level, price, message);
         em.persist(newClass);
         return newClass;

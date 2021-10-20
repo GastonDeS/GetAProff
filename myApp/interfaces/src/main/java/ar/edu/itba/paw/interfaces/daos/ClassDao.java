@@ -17,7 +17,7 @@ public interface ClassDao {
 
     List<Class> findClassesByTeacherId(User teacher);
 
-    Class create(User student, User teacher, int level, Subject subject, int price, int status, String message);
+    Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
 
     int setStatus(Long classId, int status);
 
