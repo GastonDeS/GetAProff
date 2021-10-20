@@ -30,7 +30,8 @@ public class ClassDaoJpa implements ClassDao {
     }
 
     @Override
-    public List<Class> findClassesByStudentId(User student) {
+    public List<Class> findClassesByStudentId(Long studentId) {
+        final User student = em.getReference(User.class, studentId);
         final TypedQuery<Class> query = em.createQuery("from Class c where c.student = :student", Class.class);
         query.setParameter("student", student);
         return query.getResultList();
@@ -38,7 +39,8 @@ public class ClassDaoJpa implements ClassDao {
     }
 
     @Override
-    public List<Class> findClassesByTeacherId(User teacher) {
+    public List<Class> findClassesByTeacherId(Long teacherId) {
+        final User teacher = em.getReference(User.class, teacherId);
         final TypedQuery<Class> query = em.createQuery("from Class c where c.teacher = :teacher", Class.class);
         query.setParameter("teacher", teacher);
         return query.getResultList();

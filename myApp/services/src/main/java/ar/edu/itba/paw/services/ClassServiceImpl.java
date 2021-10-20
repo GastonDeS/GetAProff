@@ -35,14 +35,19 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List<Class> findClassesByStudentId(Long id) {
-        User student = userDao.get(id).orElseThrow(RuntimeException::new);
-        return classDao.findClassesByStudentId(student);
+        if (!userDao.get(id).isPresent()) {
+            throw new RuntimeException();
+        }
+        return classDao.findClassesByStudentId(id);
     }
 
     @Override
     public List<Class> findClassesByTeacherId(Long id) {
-        User teacher = userDao.get(id).orElseThrow(RuntimeException::new);
-        return classDao.findClassesByTeacherId(teacher);
+
+        if (!userDao.get(id).isPresent()) {
+            throw new RuntimeException();
+        }
+        return classDao.findClassesByTeacherId(id);
     }
 
     @Transactional

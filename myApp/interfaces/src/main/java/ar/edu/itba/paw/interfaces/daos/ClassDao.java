@@ -13,9 +13,9 @@ public interface ClassDao {
 
     Optional<Class> get(Long id);
 
-    List<Class> findClassesByStudentId(User student);
+    List<Class> findClassesByStudentId(Long studentId);
 
-    List<Class> findClassesByTeacherId(User teacher);
+    List<Class> findClassesByTeacherId(Long teacherId);
 
     Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
 
