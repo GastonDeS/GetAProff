@@ -18,43 +18,42 @@ import java.util.*;
 public class ClassDaoJpa implements ClassDao {
 
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Override
     public Optional<Class> get(Long id) {
-        return Optional.ofNullable(em.find(Class.class, id));
+        return Optional.ofNullable(entityManager.find(Class.class, id));
     }
 
     @Override
     public List<Class> findClassesByStudentId(Long studentId) {
-        final User student = em.getReference(User.class, studentId);
-        final TypedQuery<Class> query = em.createQuery("from Class c where c.student = :student", Class.class);
+        final User student = entityManager.getReference(User.class, studentId);
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.student = :student", Class.class);
         query.setParameter("student", student);
         return query.getResultList();
-
     }
 
     @Override
     public List<Class> findClassesByTeacherId(Long teacherId) {
-        final User teacher = em.getReference(User.class, teacherId);
-        final TypedQuery<Class> query = em.createQuery("from Class c where c.teacher = :teacher", Class.class);
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.teacher = :teacher", Class.class);
         query.setParameter("teacher", teacher);
         return query.getResultList();
     }
 
     @Override
     public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
-        final User student = em.getReference(User.class, studentId);
-        final User teacher = em.getReference(User.class, teacherId);
-        final Subject subject = em.getReference(Subject.class, subjectId);
+        final User student = entityManager.getReference(User.class, studentId);
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final Subject subject = entityManager.getReference(Subject.class, subjectId);
         final Class newClass = new Class(student, teacher, subject, level, price, message);
-        em.persist(newClass);
+        entityManager.persist(newClass);
         return newClass;
     }
 
     @Override
     public int setStatus(Long classId, int status) {
-        final Query query = em.createQuery("update Class set status = :status where classId = :classId");
+        final Query query = entityManager.createQuery("update Class set status = :status where classId = :classId");
         query.setParameter("status", status)
                 .setParameter("classId", classId);
         return query.executeUpdate();
@@ -62,7 +61,7 @@ public class ClassDaoJpa implements ClassDao {
 
     @Override
     public int setDeleted(Long classId, int deleted) {
-        final Query query = em.createQuery("update Class set deleted = :deleted where classId = :classId");
+        final Query query = entityManager.createQuery("update Class set deleted = :deleted where classId = :classId");
         query.setParameter("deleted", deleted)
                 .setParameter("classId", classId);
         return query.executeUpdate();
@@ -70,7 +69,7 @@ public class ClassDaoJpa implements ClassDao {
 
     @Override
     public int setRequest(Long classId, String message) {
-        final Query query = em.createQuery("update Class set messageRequest = :request where classId = :classId");
+        final Query query = entityManager.createQuery("update Class set messageRequest = :request where classId = :classId");
         query.setParameter("request", message)
                 .setParameter("classId", classId);
         return query.executeUpdate();
@@ -78,7 +77,7 @@ public class ClassDaoJpa implements ClassDao {
 
     @Override
     public int setReply(Long classId, String message) {
-        final Query query = em.createQuery("update Class set messageReply = :reply where classId = :classId");
+        final Query query = entityManager.createQuery("update Class set messageReply = :reply where classId = :classId");
         query.setParameter("reply", message)
                 .setParameter("classId", classId);
         return query.executeUpdate();

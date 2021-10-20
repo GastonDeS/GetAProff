@@ -114,10 +114,10 @@ public class SubjectController {
         return subjectsForm(form);
     }
 
-    @RequestMapping(value = "/editSubjects/remove/{sid}", method = RequestMethod.POST)
-    public ModelAndView removeSubject(@PathVariable("sid") final Long sid) {
+    @RequestMapping(value = "/editSubjects/remove/{sid}/{level}", method = RequestMethod.POST)
+    public ModelAndView removeSubject(@PathVariable("sid") final Long sid, @PathVariable("level") final int level) {
         Long uid = getCurrUser().getId();
-        if (teachesService.removeSubjectToUser(uid, sid) == 0 ) {
+        if (teachesService.removeSubjectToUser(uid, sid, level) == 0 ) {
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Subject removed for user {}",uid);

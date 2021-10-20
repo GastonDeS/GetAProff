@@ -73,7 +73,7 @@
                     <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
                     <td class="row-info" style="width: 25%"><spring:message
                             code="subjects.form.level.${subject.level}"/></td>
-                    <form action="<c:url value="/editSubjects/remove/${subject.id}"/>" method="post">
+                    <form action="<c:url value="/editSubjects/remove/${subject.id}/${subject.level}"/>" method="post">
                         <td class="remove-btn">
                             <input type="submit" class="btn btn-custom"
                                    value="<spring:message code="subjects.form.remove"/>">

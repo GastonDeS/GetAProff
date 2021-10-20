@@ -1,12 +1,31 @@
 package ar.edu.itba.paw.models;
 
-public class Teaches {
-    private int price, level;
-    private Long userId, subjectId;
+import javax.persistence.*;
 
-    public Teaches (Long userId, Long subjectId, int price, int level){
-        this.userId = userId;
-        this.subjectId = subjectId;
+@Entity
+@Table(name = "teaches")
+@IdClass(TeachesId.class)
+public class Teaches {
+
+    @Column
+    private int price;
+
+    @Id
+    private int level;
+
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    @ManyToOne(optional = false)
+    @Id
+    private User teacher;
+
+    @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
+    @ManyToOne(optional = false)
+    @Id
+    private Subject subject;
+
+    public Teaches (User teacher, Subject subject, int price, int level) {
+        this.teacher = teacher;
+        this.subject = subject;
         this.price = price;
         this.level = level;
     }
@@ -19,22 +38,6 @@ public class Teaches {
         this.level = level;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
-    }
-
     public int getPrice() {
         return price;
     }
@@ -43,9 +46,20 @@ public class Teaches {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
-        return String.format("UserID: %d - SubjectID: %d - Price: %d\n", userId, subjectId, price);
+    public User getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public enum Level {
