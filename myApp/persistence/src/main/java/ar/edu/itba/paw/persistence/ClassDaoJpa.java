@@ -37,8 +37,8 @@ public class ClassDaoJpa implements ClassDao {
     public List<Class> findClassesByStudentId(Long id) {
         Optional<User> student = userDao.get(id);
         if (student.isPresent()) {
-            final TypedQuery<Class> query = em.createQuery("select c from Class c, User u where u.userid = :student and c.student = u", Class.class);
-            query.setParameter("student", student.get().getId());
+            final TypedQuery<Class> query = em.createQuery("from Class c where c.student = :student", Class.class);
+            query.setParameter("student", student.get());
             return query.getResultList();
         }
         return new ArrayList<>();
@@ -48,8 +48,8 @@ public class ClassDaoJpa implements ClassDao {
     public List<Class> findClassesByTeacherId(Long id) {
         Optional<User> teacher = userDao.get(id);
         if (teacher.isPresent()) {
-            final TypedQuery<Class> query = em.createQuery("select c from Class c, User u where u.userid = :teacher and c.teacher = u", Class.class);
-            query.setParameter("teacher", teacher.get().getId());
+            final TypedQuery<Class> query = em.createQuery("from Class c where c.teacher = :teacher", Class.class);
+            query.setParameter("teacher", teacher.get());
             return query.getResultList();
         }
         return new ArrayList<>();
