@@ -22,7 +22,6 @@ public class ImageDaoJpa implements ImageDao {
     @Transactional
     public Image createOrUpdate(Long uid, byte[] image) {
         User user = entityManager.find(User.class,uid);
-
         final Image newImage = new Image(uid,image);
         newImage.setUser(user);
         user.setImage(newImage);

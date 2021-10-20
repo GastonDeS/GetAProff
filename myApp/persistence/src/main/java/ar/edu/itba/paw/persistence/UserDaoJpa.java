@@ -37,9 +37,10 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public List<CardProfile> getFavourites(Long uid) {
-        final TypedQuery<CardProfile> query = entityManager.createQuery("from User u where",CardProfile.class);
-
-        return query.getResultList();
+//        final TypedQuery<CardProfile> query = entityManager.createQuery("from User u where",CardProfile.class);
+//
+//        return query.getResultList();
+        return new ArrayList<>();
     }
 
     @Override
@@ -49,17 +50,39 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public int addFavourite(Long teacherId, Long studentId) {
+        User student = entityManager.find(User.class, studentId);
+        User teacher = entityManager.find(User.class, teacherId);
+        if (student != null && teacher != null) {
+            student.getFavourites().add(teacher);
+            entityManager.persist(student);
+            return 1;
+        }
         return 0;
     }
 
     @Override
     public int removeFavourite(Long teacherId, Long studentId) {
+        User student = entityManager.find(User.class, studentId);
+        User teacher = entityManager.find(User.class, teacherId);
+        if (student != null && teacher != null) {
+           student.getFavourites().remove(teacher);
+           entityManager.persist(student);
+           return 1;
+        }
         return 0;
     }
 
     @Override
     public Boolean isFaved(Long teacherId, Long studentId) {
-        return null;
+        User student = entityManager.find(User.class, studentId);
+        if (student != null) {
+            for (User teacher : student.getFavourites()) {
+                if (teacher.getId().equals(teacherId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -96,11 +119,17 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public int setUserDescription(Long userId, String description) {
-        return 0;
+        final TypedQuery<User> query = entityManager.createQuery("update User set description = :description where userid = :userid", User.class);
+        query.setParameter("description", description);
+        query.setParameter("userid", userId);
+        return query.executeUpdate();
     }
 
     @Override
     public int setUserName(Long userId, String name) {
-        return 0;
+        final TypedQuery<User> query = entityManager.createQuery("update User set name = :name where userid = :userid", User.class);
+        query.setParameter("name", name);
+        query.setParameter("userid", userId);
+        return query.executeUpdate();
     }
 }

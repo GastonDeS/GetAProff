@@ -51,8 +51,7 @@ public class RoleServiceImpl implements RoleService {
     public Boolean addTeacherRole(Long userId) {
         Optional<Role> teacherRole = findRoleByName(Roles.TEACHER.name);
         if (teacherRole.isPresent()) {
-            User user = roleDao.addRoleToUser(teacherRole.get().getRoleId(), userId);
-            return user.isTeacher();
+            return roleDao.addRoleToUser(teacherRole.get().getRoleId(), userId);
         }
         return false;
     }

@@ -41,9 +41,9 @@ public class RoleDaoJdbc implements RoleDao{
     }
 
     @Override
-    public User addRoleToUser(Long roleId, Long userId) {
+    public Boolean addRoleToUser(Long roleId, Long userId) {
         jdbcTemplate.update("INSERT INTO userRoles(roleId, userId) VALUES (?, ?)", roleId, userId);
-        return new User(null, null, null, null, null, null);
+        return true;
     }
 
     @Override

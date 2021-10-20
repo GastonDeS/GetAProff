@@ -35,12 +35,15 @@ public class RoleDaoJpa implements RoleDao {
     }
 
     @Override
-    public User addRoleToUser(Long roleId, Long userId) {
+    public Boolean addRoleToUser(Long roleId, Long userId) {
         User user = entityManager.find(User.class, userId);
         Role role = entityManager.find(Role.class, roleId);
+        if (user == null || role == null) {
+            return false;
+        }
         user.getUserRoles().add(role);
         entityManager.persist(user);
-        return user;
+        return user.isTeacher();
     }
 
     //TODO: BORRAR PORQUE NO USAMOS
