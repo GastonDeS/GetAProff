@@ -2,6 +2,8 @@ package ar.edu.itba.paw.interfaces.daos;
 
 
 import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.models.User;
 
 
 import java.util.List;
@@ -11,11 +13,11 @@ public interface ClassDao {
 
     Optional<Class> get(Long id);
 
-    List<Class> findClassesByStudentId(Long id);
+    List<Class> findClassesByStudentId(User student);
 
-    List<Class> findClassesByTeacherId(Long id);
+    List<Class> findClassesByTeacherId(User teacher);
 
-    Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
+    Class create(User student, User teacher, int level, Subject subject, int price, int status, String message);
 
     int setStatus(Long classId, int status);
 

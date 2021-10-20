@@ -15,6 +15,7 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageDao imageDao;
 
+    @Transactional
     @Override
     public Image createOrUpdate(Long userId, byte[] image){
         return imageDao.createOrUpdate(userId, image);

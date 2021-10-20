@@ -24,51 +24,33 @@ public class ClassDaoJpa implements ClassDao {
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private SubjectDao subjectDao;
-
     @Override
     public Optional<Class> get(Long id) {
         return Optional.ofNullable(em.find(Class.class, id));
     }
 
     @Override
-    public List<Class> findClassesByStudentId(Long id) {
-        Optional<User> student = userDao.get(id);
-        if (student.isPresent()) {
-            final TypedQuery<Class> query = em.createQuery("from Class c where c.student = :student", Class.class);
-            query.setParameter("student", student.get());
-            return query.getResultList();
-        }
-        return new ArrayList<>();
+    public List<Class> findClassesByStudentId(User student) {
+        final TypedQuery<Class> query = em.createQuery("from Class c where c.student = :student", Class.class);
+        query.setParameter("student", student);
+        return query.getResultList();
+
     }
 
     @Override
-    public List<Class> findClassesByTeacherId(Long id) {
-        Optional<User> teacher = userDao.get(id);
-        if (teacher.isPresent()) {
-            final TypedQuery<Class> query = em.createQuery("from Class c where c.teacher = :teacher", Class.class);
-            query.setParameter("teacher", teacher.get());
-            return query.getResultList();
-        }
-        return new ArrayList<>();
+    public List<Class> findClassesByTeacherId(User teacher) {
+        final TypedQuery<Class> query = em.createQuery("from Class c where c.teacher = :teacher", Class.class);
+        query.setParameter("teacher", teacher);
+        return query.getResultList();
     }
 
     @Override
-    public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
-        UserDaoJpa userDaoJpa = new UserDaoJpa();
-        User student = userDao.get(studentId).orElseThrow(RuntimeException::new);
-        User teacher = userDao.get(teacherId).orElseThrow(RuntimeException::new);
-        Subject subject = subjectDao.findById(studentId).orElseThrow(RuntimeException::new);
+    public Class create(User student, User teacher, int level, Subject subject, int price, int status, String message) {
         final Class newClass = new Class(student, teacher, subject, level, price, message);
         em.persist(newClass);
         return newClass;
     }
 
-    @Transactional
     @Override
     public int setStatus(Long classId, int status) {
         final Query query = em.createQuery("update Class set status = :status where classId = :classId");
@@ -77,7 +59,6 @@ public class ClassDaoJpa implements ClassDao {
         return query.executeUpdate();
     }
 
-    @Transactional
     @Override
     public int setDeleted(Long classId, int deleted) {
         final Query query = em.createQuery("update Class set deleted = :deleted where classId = :classId");
@@ -86,7 +67,6 @@ public class ClassDaoJpa implements ClassDao {
         return query.executeUpdate();
     }
 
-    @Transactional
     @Override
     public int setRequest(Long classId, String message) {
         final Query query = em.createQuery("update Class set messageRequest = :request where classId = :classId");
@@ -95,7 +75,6 @@ public class ClassDaoJpa implements ClassDao {
         return query.executeUpdate();
     }
 
-    @Transactional
     @Override
     public int setReply(Long classId, String message) {
         final Query query = em.createQuery("update Class set messageReply = :reply where classId = :classId");
