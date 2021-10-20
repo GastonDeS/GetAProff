@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
@@ -22,10 +23,16 @@ public class ImageDaoJpa implements ImageDao {
     @Override
     public Image createOrUpdate(Long uid, byte[] image) {
         User user = entityManager.find(User.class,uid);
-        final Image newImage = new Image(uid,image);
-        newImage.setUser(user);
-        user.setImage(newImage);
-        entityManager.persist(newImage);
+        final Image newImage = new Image(uid, image);
+        if ( findImageById(uid).isPresent() ) {
+            final Query query = entityManager.createQuery("update Image set image = :image where userid = :userid");
+            query.setParameter("image", image).setParameter("userid",uid);
+            query.executeUpdate();
+        } else {
+            newImage.setUser(user);
+            user.setImage(newImage);
+            entityManager.persist(newImage);
+        }
         return newImage;
     }
 
