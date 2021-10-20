@@ -1,9 +1,25 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "classes")
 public class Class {
-    private Long classId, studentId, teacherId, subjectid;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classes_classid_seq")
+    @SequenceGenerator(name = "classes_classid_seq", sequenceName = "classes_classid_seq", allocationSize = 1)
+    private Long classId;
+    @Column
+    private Long studentId, teacherId, subjectid;
+    @Column
     private int level, price, status, deleted;
+    @Column
     private String messageRequest, messageReply;
+
+    Class(){
+        //For Hibernate
+    }
 
     public Class(Long classId, Long studentId, Long teacherId, int level, Long subjectid, int price, int status, String messageRequest, String messageReply, int deleted) {
         this.classId = classId;
