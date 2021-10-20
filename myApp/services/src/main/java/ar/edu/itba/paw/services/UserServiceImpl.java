@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService {
         return Optional.of(u);
     }
 
+    @Transactional
     @Override
     public Optional<User> findByEmail(String mail) {
         return userDao.findByEmail(mail);

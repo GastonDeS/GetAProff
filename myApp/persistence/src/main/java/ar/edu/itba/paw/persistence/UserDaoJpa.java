@@ -55,7 +55,6 @@ public class UserDaoJpa implements UserDao {
         User teacher = entityManager.find(User.class, teacherId);
         if (student != null && teacher != null) {
             student.getFavourites().add(teacher);
-            entityManager.persist(student);
             return 1;
         }
         return 0;
@@ -67,7 +66,6 @@ public class UserDaoJpa implements UserDao {
         User teacher = entityManager.find(User.class, teacherId);
         if (student != null && teacher != null) {
            student.getFavourites().remove(teacher);
-           entityManager.persist(student);
            return 1;
         }
         return 0;
