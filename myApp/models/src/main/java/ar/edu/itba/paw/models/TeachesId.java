@@ -1,9 +1,15 @@
 package ar.edu.itba.paw.models;
 
-public class TeachesId {
+import java.io.Serializable;
+
+public class TeachesId implements Serializable {
     private Long teacher, subject;
 
     private int level;
+
+    TeachesId() {
+        //Just for hibernate
+    }
 
     public TeachesId(Long teacher, Long subject, int level) {
         this.teacher = teacher;

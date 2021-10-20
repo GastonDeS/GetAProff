@@ -13,33 +13,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ImageDaoJdbc implements ImageDao {
+public class ImageDaoJdbc {
 
-    private final JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
-    private final static RowMapper<Image> ROW_MAPPER = (rs, rowNum) ->
-            new Image(rs.getLong("userid"), rs.getBytes("image"));
-
-    @Autowired
-    public ImageDaoJdbc(final DataSource ds) {
-        jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("images");
-    }
-
-    @Override
-    public Image createOrUpdate(Long uid, byte[] image) {
-        jdbcTemplate.update("insert into images values (?,?)\n" +
-                " on conflict on constraint images_pkey\n" +
-                "     do update set image = excluded.image;",uid, image);
-        return new Image(uid, image);
-    }
-
-    @Override
-    public Optional<Image> findImageById(Long userId) {
-        List<Image> list = jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { userId }, ROW_MAPPER);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-    }
+//    private final JdbcTemplate jdbcTemplate;
+//    private SimpleJdbcInsert jdbcInsert;
+//    private final static RowMapper<Image> ROW_MAPPER = (rs, rowNum) ->
+//            new Image(rs.getLong("userid"), rs.getBytes("image"));
+//
+//    @Autowired
+//    public ImageDaoJdbc(final DataSource ds) {
+//        jdbcTemplate = new JdbcTemplate(ds);
+//        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+//                .withTableName("images");
+//    }
+//
+//    @Override
+//    public Image createOrUpdate(Long uid, byte[] image) {
+//        jdbcTemplate.update("insert into images values (?,?)\n" +
+//                " on conflict on constraint images_pkey\n" +
+//                "     do update set image = excluded.image;",uid, image);
+//        return new Image(uid, image);
+//    }
+//
+//    @Override
+//    public Optional<Image> findImageById(Long userId) {
+//        List<Image> list = jdbcTemplate.query("SELECT * FROM images WHERE userid = ?", new Object[] { userId }, ROW_MAPPER);
+//        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+//    }
 
 
 }

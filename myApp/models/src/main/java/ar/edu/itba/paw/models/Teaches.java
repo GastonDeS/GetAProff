@@ -23,6 +23,10 @@ public class Teaches {
     @Id
     private Subject subject;
 
+    Teaches() {
+        //Just for hibernate
+    }
+
     public Teaches (User teacher, Subject subject, int price, int level) {
         this.teacher = teacher;
         this.subject = subject;
