@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.forms;
 
-import ar.edu.itba.paw.models.ClassInfo;
 import ar.edu.itba.paw.models.Teaches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;

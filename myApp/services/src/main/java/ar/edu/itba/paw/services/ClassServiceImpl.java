@@ -22,12 +22,12 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassInfo> findClassesByStudentId(Long id) {
+    public List<Class> findClassesByStudentId(Long id) {
         return classDao.findClassesByStudentId(id);
     }
 
     @Override
-    public List<ClassInfo> findClassesByTeacherId(Long id) {
+    public List<Class> findClassesByTeacherId(Long id) {
         return classDao.findClassesByTeacherId(id);
     }
 

@@ -25,6 +25,7 @@ public class MainController {
     @RequestMapping("/")
     public ModelAndView index() {
         Optional<User> curr = userService.getCurrentUser();
+        Optional<User> usere = userService.findById(15L);
         List<Subject> subjectList = subjectService.list();
         final ModelAndView mav = new ModelAndView("index")
                 .addObject("subjects", subjectList);

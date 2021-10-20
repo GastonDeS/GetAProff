@@ -10,27 +10,35 @@ public class Class {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classes_classid_seq")
     @SequenceGenerator(name = "classes_classid_seq", sequenceName = "classes_classid_seq", allocationSize = 1)
     private Long classId;
-    @Column
-    private Long studentId, teacherId, subjectid;
+
+    @ManyToOne(optional = false)
+    private User student;
+
+    @ManyToOne(optional = false)
+    private User teacher;
+
+    @OneToOne(optional = false)
+    private Subject subject;
+
     @Column
     private int level, price, status, deleted;
+
     @Column
     private String messageRequest, messageReply;
 
-    Class(){
+     Class() {
         //For Hibernate
     }
 
-    public Class(Long classId, Long studentId, Long teacherId, int level, Long subjectid, int price, int status, String messageRequest, String messageReply, int deleted) {
-        this.classId = classId;
-        this.studentId = studentId;
-        this.teacherId = teacherId;
+    public Class(User student, User teacher, Subject subject, int level, int price,String messageRequest) {
+        this.student = student;
+        this.teacher = teacher;
+        this.subject = subject;
         this.level = level;
-        this.subjectid = subjectid;
         this.price = price;
-        this.status = status;
+        this.status = Status.PENDING.value;
+        this.deleted = Deleted.NO.value;
         this.messageRequest = messageRequest;
-        this.messageReply = messageReply;
     }
 
     public Long getClassId() {
@@ -41,20 +49,28 @@ public class Class {
         this.classId = classId;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public User getStudent() {
+        return student;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setStudent(User student) {
+        this.student = student;
     }
 
-    public Long getTeacherId() {
-        return teacherId;
+    public User getTeacher() {
+        return teacher;
     }
 
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public int getLevel() {
@@ -63,14 +79,6 @@ public class Class {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public Long getSubjectid() {
-        return subjectid;
-    }
-
-    public void setSubjectid(Long subjectid) {
-        this.subjectid = subjectid;
     }
 
     public int getPrice() {
@@ -97,7 +105,7 @@ public class Class {
         this.messageReply = messageReply;
     }
 
-    public enum Status{
+    public enum Status {
         PENDING(0),
         ACCEPTED(1),
         FINISHED(2),
@@ -118,7 +126,7 @@ public class Class {
         }
     }
 
-    public enum Deleted{
+    public enum Deleted {
         NO(0),
         STUDENT(1),
         TEACHER(2),

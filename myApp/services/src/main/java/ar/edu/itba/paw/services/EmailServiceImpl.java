@@ -81,9 +81,9 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendStatusChangeMessage(Class myClass) {
-        Optional<User> maybeS = userService.findById(myClass.getStudentId());
-        Optional<User> maybeT = userService.findById(myClass.getTeacherId());
-        Optional<Subject> maybeSub = subjectService.findById(myClass.getSubjectid());
+        Optional<User> maybeS = userService.findById(myClass.getStudent().getId());
+        Optional<User> maybeT = userService.findById(myClass.getTeacher().getId());
+        Optional<Subject> maybeSub = subjectService.findById(myClass.getSubject().getId());
         if (!maybeS.isPresent() || !maybeT.isPresent() || !maybeSub.isPresent()) {
             throw new NoSuchElementException();
         }
@@ -125,9 +125,9 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendRatedMessage(Class myClass, int rating, String review) {
-        Optional<User> student = userService.findById(myClass.getStudentId());
-        Optional<User> teacher = userService.findById(myClass.getTeacherId());
-        Optional<Subject> mySubject = subjectService.findById(myClass.getSubjectid());
+        Optional<User> student = userService.findById(myClass.getStudent().getId());
+        Optional<User> teacher = userService.findById(myClass.getTeacher().getId());
+        Optional<Subject> mySubject = subjectService.findById(myClass.getSubject().getId());
         if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
             throw new NoSuchElementException();
         }
