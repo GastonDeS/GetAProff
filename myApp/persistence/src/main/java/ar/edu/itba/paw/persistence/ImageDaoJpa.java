@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +19,7 @@ public class ImageDaoJpa implements ImageDao {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Image createOrUpdate(Long uid, byte[] image) {
         User user = entityManager.find(User.class,uid);
 
