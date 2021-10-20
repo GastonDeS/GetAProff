@@ -47,51 +47,58 @@
                             </div>
                         </div>
                         <div class="profile-info-btn">
-                            <c:if test="${edit == 1}">
-                                <div class="profile-btn">
-                                    <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
-                                        <spring:message code="profile.btn.edit"/>
-                                    </a>
-                                    <c:choose>
-                                        <c:when test="${user.teacher}">
-                                            <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
-                                                <spring:message code="profile.btn.edit.subjects"/>
-                                            </a>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <a href="${pageContext.request.contextPath}/editProfile?teach=true" class="btn btn-custom">
-                                                <spring:message code="profile.btn.give.class"/>
-                                            </a>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </c:if>
-                            <c:if test="${edit == 0}">
-                                <sec:authorize access="isAuthenticated()">
-                                    <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom" style="margin-right: 10px">
-                                        <spring:message code="profile.btn.contact"/>
-                                    </a>
-                                </sec:authorize>
-                                <sec:authorize access="!isAuthenticated()">
-                                    <a href="${pageContext.request.contextPath}/login" class="btn btn-custom" style="margin-right: 10px">
-                                        <spring:message code="profile.btn.contact"/>
-                                    </a>
-                                </sec:authorize>
-                                <sec:authorize access="isAuthenticated()">
-                                    <c:choose>
-                                        <c:when test="${!isFaved}">
-                                            <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
-                                                <input type="submit" class="btn btn-custom" value="${addFav}"/>
-                                            </form>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <form action="<c:url value="/removeFavourite/${user.id}"/>" method="post">
-                                                <input type="submit" class="btn btn-custom" value="${removeFav}"/>
-                                            </form>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </sec:authorize>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${edit == 1}">
+                                    <div class="profile-btn">
+                                        <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom" style="margin-right: 10px">
+                                            <spring:message code="profile.btn.edit"/>
+                                        </a>
+                                        <c:choose>
+                                            <c:when test="${user.teacher}">
+                                                <a href="${pageContext.request.contextPath}/editSubjects" class="btn btn-custom">
+                                                    <spring:message code="profile.btn.edit.subjects"/>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${pageContext.request.contextPath}/editProfile?teach=true" class="btn btn-custom">
+                                                    <spring:message code="profile.btn.give.class"/>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <sec:authorize access="isAuthenticated()">
+                                        <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom" style="margin-right: 10px">
+                                            <spring:message code="profile.btn.contact"/>
+                                        </a>
+                                    </sec:authorize>
+                                    <sec:authorize access="!isAuthenticated()">
+                                        <a href="${pageContext.request.contextPath}/login" class="btn btn-custom" style="margin-right: 10px">
+                                            <spring:message code="profile.btn.contact"/>
+                                        </a>
+                                    </sec:authorize>
+                                    <sec:authorize access="isAuthenticated()">
+                                        <c:choose>
+                                            <c:when test="${!isFaved}">
+                                                <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
+                                                    <input type="submit" class="btn btn-custom" value="${addFav}"/>
+                                                </form>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form action="<c:url value="/removeFavourite/${user.id}"/>" method="post">
+                                                    <input type="submit" class="btn btn-custom" value="${removeFav}"/>
+                                                </form>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </sec:authorize>
+                                    <sec:authorize access="!isAuthenticated()">
+                                        <a href="${pageContext.request.contextPath}/login" class="btn btn-custom" style="margin-right: 10px">
+                                                ${addFav}
+                                        </a>
+                                    </sec:authorize>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </div>

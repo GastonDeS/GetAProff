@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -65,7 +66,7 @@ public class ProfileController {
                 LOGGER.debug("Cannot access profile for id: {}", uid);
                 throw new ProfileNotFoundException("exception.profile");
             }
-            mav.addObject("currentUser", curr.get()).addObject("edit", curr.get().getId() == user.get().getId() ? 1 : 0);
+            mav.addObject("currentUser", curr.get()).addObject("edit", Objects.equals(curr.get().getId(), user.get().getId()) ? 1 : 0);
         }
         LOGGER.debug("Accessing profile for id: {}", uid);
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);

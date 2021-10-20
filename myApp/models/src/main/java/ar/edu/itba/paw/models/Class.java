@@ -11,13 +11,16 @@ public class Class {
     @SequenceGenerator(name = "classes_classid_seq", sequenceName = "classes_classid_seq", allocationSize = 1)
     private Long classId;
 
+    @JoinColumn(name = "studentid", referencedColumnName = "userid")
     @ManyToOne(optional = false)
     private User student;
 
+    @JoinColumn(name = "teacherid", referencedColumnName = "userid")
     @ManyToOne(optional = false)
     private User teacher;
 
-    @OneToOne(optional = false)
+    @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
+    @ManyToOne(optional = false)
     private Subject subject;
 
     @Column
