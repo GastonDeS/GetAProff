@@ -1,15 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ClassDao;
-import ar.edu.itba.paw.interfaces.daos.SubjectDao;
-import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

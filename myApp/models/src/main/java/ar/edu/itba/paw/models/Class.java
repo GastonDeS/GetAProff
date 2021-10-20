@@ -33,7 +33,7 @@ public class Class {
     @Column(name = "reply")
     private String messageReply;
 
-     Class() {
+    Class() {
         //For Hibernate
     }
 

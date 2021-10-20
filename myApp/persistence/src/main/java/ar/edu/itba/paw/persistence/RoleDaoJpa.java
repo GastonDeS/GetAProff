@@ -42,7 +42,6 @@ public class RoleDaoJpa implements RoleDao {
             return false;
         }
         user.getUserRoles().add(role);
-        entityManager.persist(user);
         return user.isTeacher();
     }
 
