@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -12,15 +13,15 @@ public class Class {
     private Long classId;
 
     @JoinColumn(name = "studentid", referencedColumnName = "userid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User student;
 
     @JoinColumn(name = "teacherid", referencedColumnName = "userid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User teacher;
 
     @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Subject subject;
 
     @Column
