@@ -14,5 +14,5 @@ public interface RoleService {
 
     List<Role> getUserRoles(Long userid);
 
-    int addTeacherRole(Long userId);
+    Boolean addTeacherRole(Long userId);
 }

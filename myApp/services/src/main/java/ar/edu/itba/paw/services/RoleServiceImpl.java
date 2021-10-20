@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.daos.RoleDao;
 import ar.edu.itba.paw.interfaces.services.RoleService;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,10 +46,15 @@ public class RoleServiceImpl implements RoleService {
         return userRoles.isEmpty() ? new ArrayList<>() : userRoles;
     }
 
+    @Transactional
     @Override
-    public int addTeacherRole(Long userId) {
+    public Boolean addTeacherRole(Long userId) {
         Optional<Role> teacherRole = findRoleByName(Roles.TEACHER.name);
-        return teacherRole.map(role -> roleDao.addRoleToUser(role.getRoleId(), userId)).orElse(0);
+        if (teacherRole.isPresent()) {
+            User user = roleDao.addRoleToUser(teacherRole.get().getRoleId(), userId);
+            return user.isTeacher();
+        }
+        return false;
     }
 
     private void addRoleToList(List<Role> userRoles, Roles role) {

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.RoleDao;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -34,10 +35,15 @@ public class RoleDaoJpa implements RoleDao {
     }
 
     @Override
-    public int addRoleToUser(Long roleId, Long userId) {
-        return 0;
+    public User addRoleToUser(Long roleId, Long userId) {
+        User user = entityManager.find(User.class, userId);
+        Role role = entityManager.find(Role.class, roleId);
+        user.getUserRoles().add(role);
+        entityManager.persist(user);
+        return user;
     }
 
+    //TODO: BORRAR PORQUE NO USAMOS
     @Override
     public List<Role> getUserRoles(Long userid) {
         return new ArrayList<>();

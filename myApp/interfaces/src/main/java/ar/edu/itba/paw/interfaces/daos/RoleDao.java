@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,7 @@ public interface RoleDao {
 
     Optional<Role> findRoleByName(String role);
 
-    int addRoleToUser(Long roleId, Long userId);
+    User addRoleToUser(Long roleId, Long userId);
 
     List<Role> getUserRoles(Long userid);
 }

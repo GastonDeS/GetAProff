@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.RoleDao;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,8 +41,9 @@ public class RoleDaoJdbc implements RoleDao{
     }
 
     @Override
-    public int addRoleToUser(Long roleId, Long userId) {
-        return jdbcTemplate.update("INSERT INTO userRoles(roleId, userId) VALUES (?, ?)", roleId, userId);
+    public User addRoleToUser(Long roleId, Long userId) {
+        jdbcTemplate.update("INSERT INTO userRoles(roleId, userId) VALUES (?, ?)", roleId, userId);
+        return new User(null, null, null, null, null, null);
     }
 
     @Override

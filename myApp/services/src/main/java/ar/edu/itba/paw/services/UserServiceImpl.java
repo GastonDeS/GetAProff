@@ -57,17 +57,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findById(Long id) {
-//        Optional<User> maybeUser = userDao.get(id);
-//        if (maybeUser.isPresent()) {
-//            User user = maybeUser.get();
-//            List<Role> roles = roleService.getUserRoles(id);
-//            if (roles.isEmpty()) {
-//                return Optional.empty();
-//            }
-//            user.setUserRoles(roles);
-//            return Optional.of(user);
-//        }
-//        return Optional.empty();
         return userDao.get(id);
     }
 
