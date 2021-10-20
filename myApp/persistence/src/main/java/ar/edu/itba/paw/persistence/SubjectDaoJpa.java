@@ -20,7 +20,7 @@ public class SubjectDaoJpa implements SubjectDao {
 
     @Override
     public Optional<Subject> findById(Long id) {
-        final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where s.subjectid = :subjectid", Subject.class);
+        final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where s.id = :subjectid", Subject.class);
         query.setParameter("subjectid", id);
         return query.getResultList().stream().findFirst();
     }

@@ -45,11 +45,12 @@ public class ClassServiceImpl implements ClassService {
         return classDao.findClassesByTeacherId(teacher);
     }
 
+    @Transactional
     @Override
     public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
         User student = userDao.get(studentId).orElseThrow(RuntimeException::new);
         User teacher = userDao.get(teacherId).orElseThrow(RuntimeException::new);
-        Subject subject = subjectDao.findById(studentId).orElseThrow(RuntimeException::new);
+        Subject subject = subjectDao.findById(subjectId).orElseThrow(RuntimeException::new);
         return classDao.create(student, teacher, level, subject, price, status, message);
     }
 
