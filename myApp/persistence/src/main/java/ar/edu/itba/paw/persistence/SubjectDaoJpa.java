@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +21,7 @@ public class SubjectDaoJpa implements SubjectDao {
 
     @Override
     public Optional<Subject> findById(Long id) {
-        final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where s.id = :subjectid", Subject.class);
-        query.setParameter("subjectid", id);
-        return query.getResultList().stream().findFirst();
+        return Optional.ofNullable(entityManager.find(Subject.class, id));
     }
 
     @Override
