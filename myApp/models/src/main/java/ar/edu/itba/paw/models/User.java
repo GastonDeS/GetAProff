@@ -3,7 +3,6 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -29,7 +28,7 @@ public class User {
     @Column(nullable = false)
     private String mail;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "userroles",
             joinColumns = @JoinColumn(
@@ -37,6 +36,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "roleid", referencedColumnName = "roleid"))
     private List<Role> userRoles;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @JoinTable(
+            name = "favourites",
+            joinColumns = @JoinColumn(
+                    name = "teacherid", referencedColumnName = "userid"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "studentid", referencedColumnName = "userid"))
+    private List<User> favourites;
+
+    @OneToOne
+    private Image image;
 
     User() {
         //Just for Hibernate
@@ -49,6 +60,14 @@ public class User {
         this.password = password;
     }
 
+    public List<User> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<User> favourites) {
+        this.favourites = favourites;
+    }
+
     // For creating user (empty description and schedule)
     public User(String name, String password, Long id, String mail, String description, String schedule){
         this(name, mail, password);
@@ -56,6 +75,14 @@ public class User {
         this.description = description;
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public Long getId() {
@@ -116,7 +143,7 @@ public class User {
 
     public boolean isTeacher() {
         for (Role role : userRoles) {
-            if (Objects.equals(role.getRole(),"USER_TEACHER")) {
+            if (role.getRole().equals("USER_TEACHER")) {
                 return true;
             }
         }

@@ -7,26 +7,39 @@ import javax.persistence.*;
 public class Image {
 
     @Id
-    private Long uid;
+    private Long userid;
 
     @Column
     private byte[] image;
 
+    @OneToOne
+    @JoinColumn(name = "userid")
+    @MapsId
+    private User user;
+
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Image(Long uid, byte[] image) {
-        this.uid = uid;
+        this.userid = uid;
         this.image = image;
     }
 
     /*default*/ Image() {
 
-    }
-
-    public Long getUid() {
-        return uid;
-    }
-
-    public void setUid(Long uid) {
-        this.uid = uid;
     }
 
     public byte[] getImage() {
