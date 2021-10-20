@@ -85,7 +85,7 @@
                                         <jsp:param name="teacherName" value="${activeClass.teacher}"/>
                                         <jsp:param name="price" value="${activeClass.price}"/>
                                         <jsp:param name="level" value="${activeClass.level}"/>
-                                        <jsp:param name="reply" value="${activeClass.reply}"/>
+                                        <jsp:param name="reply" value="${activeClass.messageReply}"/>
                                         <jsp:param name="cid" value="${activeClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
@@ -102,7 +102,7 @@
                                         <jsp:param name="teacherName" value="${pendingClass.teacher}"/>
                                         <jsp:param name="price" value="${pendingClass.price}"/>
                                         <jsp:param name="level" value="${pendingClass.level}"/>
-                                        <jsp:param name="request" value="${pendingClass.request}"/>
+                                        <jsp:param name="request" value="${pendingClass.messageRequest}"/>
                                         <jsp:param name="cid" value="${pendingClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
@@ -169,7 +169,7 @@
                                         <jsp:param name="price" value="${teacherActiveClass.price}"/>
                                         <jsp:param name="level" value="${teacherActiveClass.level}"/>
                                         <jsp:param name="active" value="1"/>
-                                        <jsp:param name="reply" value="${teacherActiveClass.reply}"/>
+                                        <jsp:param name="reply" value="${teacherActiveClass.messageReply}"/>
                                         <jsp:param name="cid" value="${teacherActiveClass.classId}"/>
                                     </jsp:include>
                                 </c:forEach>
@@ -187,7 +187,7 @@
                                         <jsp:param name="price" value="${teacherPendingClass.price}"/>
                                         <jsp:param name="level" value="${teacherPendingClass.level}"/>
                                         <jsp:param name="cid" value="${teacherPendingClass.classId}"/>
-                                        <jsp:param name="request" value="${teacherPendingClass.request}"/>
+                                        <jsp:param name="request" value="${teacherPendingClass.messageRequest}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>

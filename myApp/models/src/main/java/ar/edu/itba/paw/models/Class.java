@@ -23,8 +23,11 @@ public class Class {
     @Column
     private int level, price, status, deleted;
 
-    @Column
-    private String messageRequest, messageReply;
+    @Column(name = "request")
+    private String messageRequest;
+
+    @Column(name = "reply")
+    private String messageReply;
 
      Class() {
         //For Hibernate
