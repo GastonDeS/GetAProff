@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 @Primary
@@ -31,6 +32,8 @@ public class ImageDaoJpa implements ImageDao {
 
     @Override
     public Optional<Image> findImageById(Long userId) {
-        return Optional.empty();
+        final TypedQuery<Image> query = entityManager.createQuery("from Image i where i.userid = :id", Image.class);
+        query.setParameter("id", userId);
+        return query.getResultList().stream().findFirst();
     }
 }
