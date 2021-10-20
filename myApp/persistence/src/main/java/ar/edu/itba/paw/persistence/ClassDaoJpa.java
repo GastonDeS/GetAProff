@@ -9,9 +9,11 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
@@ -66,33 +68,37 @@ public class ClassDaoJpa implements ClassDao {
         return newClass;
     }
 
+    @Transactional
     @Override
     public int setStatus(Long classId, int status) {
-        final TypedQuery<Class> query = em.createQuery("update Class set status = :status where classId = :classId", Class.class);
+        final Query query = em.createQuery("update Class set status = :status where classId = :classId");
         query.setParameter("status", status)
                 .setParameter("classId", classId);
         return query.executeUpdate();
     }
 
+    @Transactional
     @Override
     public int setDeleted(Long classId, int deleted) {
-        final TypedQuery<Class> query = em.createQuery("update Class set deleted = :deleted where classId = :classId", Class.class);
+        final Query query = em.createQuery("update Class set deleted = :deleted where classId = :classId");
         query.setParameter("deleted", deleted)
                 .setParameter("classId", classId);
         return query.executeUpdate();
     }
 
+    @Transactional
     @Override
     public int setRequest(Long classId, String message) {
-        final TypedQuery<Class> query = em.createQuery("update Class set messageRequest = :request where classId = :classId", Class.class);
+        final Query query = em.createQuery("update Class set messageRequest = :request where classId = :classId");
         query.setParameter("request", message)
                 .setParameter("classId", classId);
         return query.executeUpdate();
     }
 
+    @Transactional
     @Override
     public int setReply(Long classId, String message) {
-        final TypedQuery<Class> query = em.createQuery("update Class set messageReply = :reply where classId = :classId", Class.class);
+        final Query query = em.createQuery("update Class set messageReply = :reply where classId = :classId");
         query.setParameter("reply", message)
                 .setParameter("classId", classId);
         return query.executeUpdate();
