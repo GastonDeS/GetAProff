@@ -1,20 +1,45 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "images")
 public class Image {
 
-    private Long uid;
+    @Id
+    private Long userid;
 
-    public Long getUid() {
-        return uid;
+    @Column
+    private byte[] image;
+
+    @OneToOne
+    @JoinColumn(name = "userid")
+    @MapsId
+    private User user;
+
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Image(Long uid, byte[] image) {
-        this.uid = uid;
+        this.userid = uid;
         this.image = image;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    /*default*/ Image() {
+
     }
 
     public byte[] getImage() {
@@ -25,5 +50,5 @@ public class Image {
         this.image = image;
     }
 
-    private byte[] image;
+
 }

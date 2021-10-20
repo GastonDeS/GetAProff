@@ -37,6 +37,9 @@ public class User {
                     name = "roleid", referencedColumnName = "roleid"))
     private List<Role> userRoles;
 
+    @OneToOne
+    private Image image;
+
     User() {
         //Just for Hibernate
     }
@@ -55,6 +58,14 @@ public class User {
         this.description = description;
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public Long getId() {
