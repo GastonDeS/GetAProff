@@ -46,6 +46,15 @@ public class User {
                     name = "roleid", referencedColumnName = "roleid"))
     private List<Role> userRoles;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @JoinTable(
+            name = "favourites",
+            joinColumns = @JoinColumn(
+                    name = "teacherid", referencedColumnName = "userid"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "studentid", referencedColumnName = "userid"))
+    private List<User> favourites;
+
     @OneToOne
     private Image image;
 
@@ -58,6 +67,14 @@ public class User {
         this.name = name;
         this.mail = mail;
         this.password = password;
+    }
+
+    public List<User> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<User> favourites) {
+        this.favourites = favourites;
     }
 
     // For creating user (empty description and schedule)

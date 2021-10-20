@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +28,18 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
-        return null;
+        List<CardProfile> cards = new ArrayList<>();
+
+//        final TypedQuery<CardProfile> query = entityManager.createQuery("from User where",CardProfile.class);
+
+        return cards;
     }
 
     @Override
     public List<CardProfile> getFavourites(Long uid) {
-        return null;
+        final TypedQuery<CardProfile> query = entityManager.createQuery("from User u where",CardProfile.class);
+
+        return query.getResultList();
     }
 
     @Override
