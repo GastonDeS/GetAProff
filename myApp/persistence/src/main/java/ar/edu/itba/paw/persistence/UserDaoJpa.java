@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public int setUserSchedule(Long userId, String schedule) {
-        final TypedQuery<User> query = entityManager.createQuery("update User set schedule = :schedule where userid = :userid", User.class);
+        final Query query = entityManager.createQuery("update User set schedule = :schedule where userid = :userid");
         query.setParameter("schedule", schedule);
         query.setParameter("userid", userId);
         return query.executeUpdate();
@@ -119,7 +120,7 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public int setUserDescription(Long userId, String description) {
-        final TypedQuery<User> query = entityManager.createQuery("update User set description = :description where userid = :userid", User.class);
+        final Query query = entityManager.createQuery("update User set description = :description where userid = :userid");
         query.setParameter("description", description);
         query.setParameter("userid", userId);
         return query.executeUpdate();
@@ -127,7 +128,7 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public int setUserName(Long userId, String name) {
-        final TypedQuery<User> query = entityManager.createQuery("update User set name = :name where userid = :userid", User.class);
+        final Query query = entityManager.createQuery("update User set name = :name where userid = :userid");
         query.setParameter("name", name);
         query.setParameter("userid", userId);
         return query.executeUpdate();
