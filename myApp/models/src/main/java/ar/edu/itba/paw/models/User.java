@@ -3,7 +3,6 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -29,15 +28,7 @@ public class User {
     @Column(nullable = false)
     private String mail;
 
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "userroles",
             joinColumns = @JoinColumn(
@@ -84,6 +75,14 @@ public class User {
         this.description = description;
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public Long getId() {
@@ -144,7 +143,7 @@ public class User {
 
     public boolean isTeacher() {
         for (Role role : userRoles) {
-            if (Objects.equals(role.getRole(),"USER_TEACHER")) {
+            if (role.getRole().equals("USER_TEACHER")) {
                 return true;
             }
         }
