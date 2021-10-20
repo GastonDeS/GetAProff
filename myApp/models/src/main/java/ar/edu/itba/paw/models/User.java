@@ -75,6 +75,7 @@ public class User {
         this.description = description;
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
+        this.favourites = new ArrayList<>();
     }
 
     public Image getImage() {

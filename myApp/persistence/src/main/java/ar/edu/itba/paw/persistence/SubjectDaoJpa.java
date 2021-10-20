@@ -16,26 +16,32 @@ import java.util.Optional;
 public class SubjectDaoJpa implements SubjectDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager entityManager;
 
     @Override
     public Optional<Subject> findById(Long id) {
-        return Optional.ofNullable(em.find(Subject.class,id));
+        final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where s.subjectid = :subjectid", Subject.class);
+        query.setParameter("subjectid", id);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override
     public Subject create(String subject) {
-        return null;
+        final Subject newSubject = new Subject(subject, null);
+        entityManager.persist(newSubject);
+        return newSubject;
     }
 
     @Override
     public List<Subject> listSubjects() {
-        TypedQuery<Subject> query = em.createQuery("SELECT s FROM Subject s",Subject.class);
+        final TypedQuery<Subject> query = entityManager.createQuery("from Subject", Subject.class);
         return query.getResultList();
     }
 
     @Override
     public Optional<Subject> findByName(String name) {
-        return Optional.ofNullable(em.find(Subject.class,name));
+        final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where s.name = :name", Subject.class);
+        query.setParameter("name", name);
+        return query.getResultList().stream().findFirst();
     }
 }
