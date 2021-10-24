@@ -21,4 +21,8 @@ public interface TeachesDao {
      * @return The list or empty list if no subjects are being taught.
      */
     List<Teaches> get(Long teacherId);
+
+    int getMaxPrice(Long teacherId);
+
+    int getMinPrice(Long teacherId);
 }

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.models.Subject;
@@ -48,4 +47,20 @@ public class TeachesServiceImpl implements TeachesService {
     public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
         return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
     }
+
+    @Override
+    public int getMaxPrice(Long teacherId) {
+        return teachesDao.getMaxPrice(teacherId);
+    }
+
+    @Override
+    public int getMinPrice(Long teacherId) {
+        return teachesDao.getMinPrice(teacherId);
+    }
+
+    @Override
+    public List<Teaches> get(Long teacherId) {
+        return teachesDao.get(teacherId);
+    }
+
 }

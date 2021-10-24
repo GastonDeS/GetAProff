@@ -25,4 +25,9 @@ public class ImageServiceImpl implements ImageService {
     public Optional<Image> findImageById(Long userId) {
         return imageDao.findImageById(userId);
     }
+
+    @Override
+    public Integer hasImage(Long userId) {
+        return imageDao.findImageById(userId).isPresent() ? 1 : 0;
+    }
 }

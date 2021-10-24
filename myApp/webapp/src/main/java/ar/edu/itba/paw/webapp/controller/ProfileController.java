@@ -66,11 +66,13 @@ public class ProfileController {
         }
         ModelAndView mav = new ModelAndView("profile");
         if (curr.isPresent()) {
-            if (!user.get().isTeacher() && curr.get().getId() != user.get().getId()) {
+            if (curr.get().getId().equals(user.get().getId())) {
+                mav.addObject("currentUser", curr.get()).addObject("edit", 1);
+            }
+            else if (!user.get().isTeacher() || teachesService.get(user.get().getId()).isEmpty()) {
                 LOGGER.debug("Cannot access profile for id: {}", uid);
                 throw new ProfileNotFoundException("exception.profile");
             }
-            mav.addObject("currentUser", curr.get()).addObject("edit", Objects.equals(curr.get().getId(), user.get().getId()) ? 1 : 0);
         }
         LOGGER.debug("Accessing profile for id: {}", uid);
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);

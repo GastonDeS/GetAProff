@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +58,19 @@ public class TeachesDaoJpa implements TeachesDao {
         final TypedQuery<Teaches> query = entityManager.createQuery("from Teaches t where t.teacher = :teacher", Teaches.class);
         query.setParameter("teacher", teacher);
         return query.getResultList();
+    }
+
+    @Override
+    public int getMaxPrice(Long teacherId) {
+        final Query query = entityManager.createNativeQuery("select max(t.price) from Teaches t where t.userid = :userid group by t.userid");
+        query.setParameter("userid", teacherId);
+        return ((Number) query.getSingleResult()).intValue();
+    }
+
+    @Override
+    public int getMinPrice(Long teacherId) {
+        final Query query = entityManager.createNativeQuery("select min(t.price) from Teaches t where t.userid = :userid group by t.userid");
+        query.setParameter("userid", teacherId);
+        return ((Number) query.getSingleResult()).intValue();
     }
 }

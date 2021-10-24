@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Rating {
 
     @Column
-    private float rate;
+    private Float rate;
 
     @Column
     private String review;
@@ -23,7 +23,7 @@ public class Rating {
     @Id
     private User student;
 
-    public Rating(float rate, String review, User teacher, User student) {
+    public Rating(Float rate, String review, User teacher, User student) {
         this.rate = rate;
         this.review = review;
         this.teacher = teacher;
@@ -34,7 +34,7 @@ public class Rating {
         return rate;
     }
 
-    public void setRate(float rate) {
+    public void setRate(Float rate) {
         this.rate = rate;
     }
 

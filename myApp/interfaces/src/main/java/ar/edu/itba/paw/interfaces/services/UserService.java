@@ -19,7 +19,7 @@ public interface UserService {
 
     Integer getPageQty(String subject);
 
-    List<CardProfile> getFavourites(Long uid);
+    List<CardProfile> getFavourites(Long userId);
 
     int addFavourite(Long teacherId, Long studentId);
 

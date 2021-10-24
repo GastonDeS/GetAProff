@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
-import ar.edu.itba.paw.interfaces.services.RoleService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.interfaces.services.UtilsService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.exceptions.InsertException;
 import ar.edu.itba.paw.models.utils.Pair;
@@ -39,6 +37,15 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private UtilsService utilsService;
+
+    @Autowired
+    private RatingService ratingService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private TeachesService teachesService;
 
     void setUtilsService(UtilsService utilsService) {
         this.utilsService = utilsService;
@@ -94,13 +101,17 @@ public class UserServiceImpl implements UserService {
         return userDao.getPageQty(subject,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING);
     }
 
+    @Transactional
     @Override
-    public List<CardProfile> getFavourites(Long uid) {
-        List<User> favourites = userDao.getFavourites(uid);
+    public List<CardProfile> getFavourites(Long userId) {
+        List<User> favourites = userDao.getFavourites(userId);
         List<CardProfile> teacherCard = new ArrayList<>();
         for (User teacher : favourites) {
-
-            CardProfile cardProfile = new CardProfile(teacher.getId(), teacher.getName(), 0, 0, teacher.getDescription(), 0, 0);
+            Long teacherId = teacher.getId();
+            Float rate = ratingService.getRatingById(teacherId).getValue1();
+            CardProfile cardProfile = new CardProfile(teacherId, teacher.getName(), teachesService.getMaxPrice(teacherId),
+                    teachesService.getMinPrice(teacherId), teacher.getDescription(), imageService.hasImage(teacherId), rate);
+            teacherCard.add(cardProfile);
         }
         return teacherCard;
     }

@@ -14,4 +14,10 @@ public interface TeachesService {
     List<SubjectInfo> getSubjectInfoListByUser(Long teacherId);
 
     Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
+
+    int getMaxPrice(Long teacherId);
+
+    int getMinPrice(Long teacherId);
+
+    List<Teaches> get(Long teacherId);
 }

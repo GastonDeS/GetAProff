@@ -19,7 +19,7 @@ public interface UserDao {
 
     List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
 
-    List<User> getFavourites(Long uid);
+    List<User> getFavourites(Long userId);
 
     Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
 

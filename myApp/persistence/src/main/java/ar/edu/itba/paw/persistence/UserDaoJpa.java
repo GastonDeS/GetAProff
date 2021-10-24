@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.utils.Pair;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -37,12 +36,8 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public List<User> getFavourites(Long uid) {
-        Optional<User> user = get(uid);
-        if (user.isPresent()) {
-            return user.get().getFavourites();
-        }
-        return new ArrayList<>();
+    public List<User> getFavourites(Long userId) {
+        return entityManager.getReference(User.class, userId).getFavourites();
     }
 
     @Override
