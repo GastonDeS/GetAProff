@@ -23,8 +23,8 @@ public class UserDaoJpa implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public Optional<User> get(Long id) {
-        return Optional.ofNullable(entityManager.find(User.class, id));
+    public Optional<User> get(Long userId) {
+        return Optional.ofNullable(entityManager.find(User.class, userId));
     }
 
     @Override
@@ -37,10 +37,11 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public List<CardProfile> getFavourites(Long uid) {
-//        final TypedQuery<CardProfile> query = entityManager.createQuery("from User u where",CardProfile.class);
-//
-//        return query.getResultList();
+    public List<User> getFavourites(Long uid) {
+        Optional<User> user = get(uid);
+        if (user.isPresent()) {
+            return user.get().getFavourites();
+        }
         return new ArrayList<>();
     }
 
@@ -82,16 +83,6 @@ public class UserDaoJpa implements UserDao {
             }
         }
         return false;
-    }
-
-    @Override
-    public int addRating(Long teacherId, Long studentId, float rate, String review) {
-        return 0;
-    }
-
-    @Override
-    public Pair<Float, Integer> getRatingById(Long teacherId) {
-        return null;
     }
 
     @Override

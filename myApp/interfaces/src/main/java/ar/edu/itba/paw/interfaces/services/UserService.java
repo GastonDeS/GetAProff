@@ -1,14 +1,13 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> findById(Long id);
+    Optional<User> findById(Long userId);
 
     List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset);
 
@@ -28,10 +27,6 @@ public interface UserService {
 
     boolean isFaved(Long teacherId, Long studentId);
 
-    int addRating(Long teacherId, Long studentId, float rate, String review);
-
-    Pair<Float, Integer> getRatingById(Long teacherId);
-
     /**
      * Retrieves the fee of the most expensive user
      * @param subject Subject to search for highest fee
@@ -39,13 +34,6 @@ public interface UserService {
      */
     Integer mostExpensiveUserFee(String subject);
 
-    /**
-     * Create a new user.
-     *
-     * @param username The name of the user.
-     * @param mail The mail of the user.
-     * @return The created user.
-     */
     Optional<User> create(String username, String mail, String password, String description, String schedule, Long userole);
 
     Optional<User> findByEmail(String mail);

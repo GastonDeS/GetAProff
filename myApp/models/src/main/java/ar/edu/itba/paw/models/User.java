@@ -60,14 +60,6 @@ public class User {
         this.password = password;
     }
 
-    public List<User> getFavourites() {
-        return favourites;
-    }
-
-    public void setFavourites(List<User> favourites) {
-        this.favourites = favourites;
-    }
-
     // For creating user (empty description and schedule)
     public User(String name, String password, Long id, String mail, String description, String schedule){
         this(name, mail, password);
@@ -76,6 +68,14 @@ public class User {
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
         this.favourites = new ArrayList<>();
+    }
+
+    public List<User> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<User> favourites) {
+        this.favourites = favourites;
     }
 
     public Image getImage() {

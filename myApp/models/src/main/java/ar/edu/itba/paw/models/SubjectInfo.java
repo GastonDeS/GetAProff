@@ -3,21 +3,22 @@ package ar.edu.itba.paw.models;
 public class SubjectInfo {
 
     private String name;
-    private int price, level, id;
+    private Long subjectId;
+    private int price, level;
 
-    public SubjectInfo(int id, String name, int price, int level) {
-        this.id = id;
+    public SubjectInfo(Long subjectId, String name, int price, int level) {
+        this.subjectId = subjectId;
         this.name = name;
         this.price = price;
         this.level = level;
     }
 
-    public int getId() {
-        return id;
+    public Long getSubjectId() {
+        return subjectId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getName() {

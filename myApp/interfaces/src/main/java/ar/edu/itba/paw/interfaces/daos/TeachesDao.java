@@ -14,5 +14,11 @@ public interface TeachesDao {
 
     Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 
-    List<SubjectInfo> getSubjectInfoListByUser(Long userId);
+    /**
+     * Get list of subjects being taught by teacher.
+     *
+     * @param teacherId The id of the teacher.
+     * @return The list or empty list if no subjects are being taught.
+     */
+    List<Teaches> get(Long teacherId);
 }

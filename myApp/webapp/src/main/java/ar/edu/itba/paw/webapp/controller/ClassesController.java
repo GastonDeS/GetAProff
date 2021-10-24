@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ClassService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.User;
@@ -41,6 +42,9 @@ public class ClassesController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private RatingService ratingService;
 
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
@@ -156,7 +160,8 @@ public class ClassesController {
         }
         classService.setStatus(cid, Class.Status.RATED.getValue());
         myClass.get().setStatus(Class.Status.RATED.getValue());
-        userService.addRating((long) myClass.get().getTeacher().getId(), myClass.get().getStudent().getId(), form.getRating(), form.getReview());
+        //TODO: chequear si se agrego
+        ratingService.addRating(myClass.get().getTeacher().getId(), myClass.get().getStudent().getId(), form.getRating(), form.getReview());
         try {
             emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());
         } catch (MailNotSentException exception) {

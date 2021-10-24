@@ -4,14 +4,14 @@ package ar.edu.itba.paw.webapp.forms;
 public class SubjectsForm {
 
     private int price, level;
-    private Long subjectid;
+    private Long subjectId;
 
-    public Long getSubjectid() {
-        return subjectid;
+    public Long getSubjectId() {
+        return subjectId;
     }
 
-    public void setSubjectid(Long subjectid) {
-        this.subjectid = subjectid;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
     public int getPrice() {

@@ -29,7 +29,7 @@
         <div class="form-container">
             <p class="form-title">${subjectPlaceholder}</p>
             <div class="subject-form-container">
-                <form:select path="subjectid">
+                <form:select path="subjectId">
                     <c:forEach items="${subjects}" var="subject">
                         <form:option value="${subject.id}" label="${subject.name}"/>
                     </c:forEach>
@@ -73,7 +73,7 @@
                     <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
                     <td class="row-info" style="width: 25%"><spring:message
                             code="subjects.form.level.${subject.level}"/></td>
-                    <form action="<c:url value="/editSubjects/remove/${subject.id}/${subject.level}"/>" method="post">
+                    <form action="<c:url value="/editSubjects/remove/${subject.subjectId}/${subject.level}"/>" method="post">
                         <td class="remove-btn">
                             <input type="submit" class="btn btn-custom"
                                    value="<spring:message code="subjects.form.remove"/>">

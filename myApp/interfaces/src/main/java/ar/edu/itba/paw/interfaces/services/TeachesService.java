@@ -11,7 +11,7 @@ public interface TeachesService {
 
     int removeSubjectToUser(Long userId, Long subjectId, int level);
 
-    List<SubjectInfo> getSubjectInfoListByUser(Long userId);
+    List<SubjectInfo> getSubjectInfoListByUser(Long teacherId);
 
     Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 }

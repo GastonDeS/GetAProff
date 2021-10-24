@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -21,6 +19,9 @@ public class MainController {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private TeachesService teachesService;
 
     @RequestMapping("/")
     public ModelAndView index() {

@@ -106,7 +106,7 @@ public class SubjectController {
             return subjectsForm(form);
         }
         Long uid = getCurrUser().getId();
-        Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectid(), form.getPrice(), form.getLevel());
+        Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectId(), form.getPrice(), form.getLevel());
         if (!maybe.isPresent()) {
             throw new OperationFailedException("exception.failed");
         }

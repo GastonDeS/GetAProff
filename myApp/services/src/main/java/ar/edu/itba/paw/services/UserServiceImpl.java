@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -56,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userDao.get(id);
+    public Optional<User> findById(Long userId) {
+        return userDao.get(userId);
     }
 
     @Override
@@ -95,7 +96,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<CardProfile> getFavourites(Long uid) {
-        return userDao.getFavourites(uid);
+        List<User> favourites = userDao.getFavourites(uid);
+        List<CardProfile> teacherCard = new ArrayList<>();
+        for (User teacher : favourites) {
+
+            CardProfile cardProfile = new CardProfile(teacher.getId(), teacher.getName(), 0, 0, teacher.getDescription(), 0, 0);
+        }
+        return teacherCard;
     }
 
     @Override
@@ -170,22 +177,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isFaved(Long teacherId, Long studentId) {
         return userDao.isFaved(teacherId, studentId);
-    }
-
-    @Override
-    public int addRating(Long teacherId, Long studentId, float rate, String review) {
-        int modified;
-        try {
-            modified = userDao.addRating(teacherId, studentId, rate, review);
-        } catch (DuplicateKeyException exception) {
-            throw new InsertException("Unable to insert");
-        }
-        return modified;
-    }
-
-    @Override
-    public Pair<Float, Integer> getRatingById(Long teacherId) {
-        return userDao.getRatingById(teacherId);
     }
 
     @Transactional

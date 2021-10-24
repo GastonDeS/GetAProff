@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.models;
 
 public class CardProfile {
-    private final int userId, minPrice, maxPrice, image;
+    private final int minPrice, maxPrice, image;
     private final String name, description;
     private final float rate;
+    private final Long userId;
 
-    public CardProfile(int userId, String name, int maxPrice, int minPrice, String desc, int image, float rate) {
+    public CardProfile(Long userId, String name, int maxPrice, int minPrice, String desc, int image, float rate) {
         this.userId = userId;
         this.name = name;
         this.minPrice = minPrice;
@@ -19,7 +20,7 @@ public class CardProfile {
         return rate;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 

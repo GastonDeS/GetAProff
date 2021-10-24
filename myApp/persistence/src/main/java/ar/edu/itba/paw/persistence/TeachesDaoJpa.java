@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
 import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
@@ -12,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class TeachesDaoJpa implements TeachesDao {
     public int removeSubjectToUser(Long userId, Long subjectId, int level) {
         final User teacher = entityManager.getReference(User.class, userId);
         final Subject subject = entityManager.getReference(Subject.class, subjectId);
-        final Query query = entityManager.createQuery("delete Teaches t where t.subject = :subject and t.teacher = :teacher and t.level = :level", Teaches.class);
+        final Query query = entityManager.createQuery("delete from Teaches t where t.subject = :subject and t.teacher = :teacher and t.level = :level");
         query.setParameter("subject", subject)
                 .setParameter("teacher", teacher)
                 .setParameter("level", level);
@@ -53,9 +53,11 @@ public class TeachesDaoJpa implements TeachesDao {
         return query.getResultList().stream().findFirst();
     }
 
-    //TODO
     @Override
-    public List<SubjectInfo> getSubjectInfoListByUser(Long userId) {
-        return null;
+    public List<Teaches> get(Long teacherId) {
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final TypedQuery<Teaches> query = entityManager.createQuery("from Teaches t where t.teacher = :teacher", Teaches.class);
+        query.setParameter("teacher", teacher);
+        return query.getResultList();
     }
 }

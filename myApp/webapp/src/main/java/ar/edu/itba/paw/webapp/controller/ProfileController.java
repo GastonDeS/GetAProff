@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.daos.RatingDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
@@ -42,6 +43,9 @@ public class ProfileController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private RatingService ratingService;
+
     @InitBinder
     public void initSubjectsBinder(WebDataBinder webDataBinder){
         Object target = webDataBinder.getTarget();
@@ -74,7 +78,7 @@ public class ProfileController {
                 .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
                 .addObject("subjectsList", subjectsGiven)
                 .addObject("isTeacher", user.get().isTeacher() ? 1 : 0)
-                .addObject("rating", userService.getRatingById(uid));
+                .addObject("rating", ratingService.getRatingById(uid));
         return mav;
     }
 
