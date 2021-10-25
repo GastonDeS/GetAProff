@@ -30,19 +30,21 @@
                     <div class="profile-info">
                         <div class="profile-name">
                             <h1><c:out value="${user.name}"/></h1>
-                            <div>
+                            <div class="profile-stars">
                                 <c:if test="${user.teacher}">
                                     <jsp:include page="../components/ratingStars.jsp">
                                         <jsp:param name="rating" value="${rating.value1}"/>
                                     </jsp:include>
-                                    <c:choose>
-                                        <c:when test="${rating.value2 != 1}">
-                                            (${rating.value2} <spring:message code="profile.rating.times"/>s)
-                                        </c:when>
-                                        <c:otherwise>
-                                            (${rating.value2} <spring:message code="profile.rating.times"/>)
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${rating.value2 != 1}">
+                                                (${rating.value2} <spring:message code="profile.rating.times"/>s)
+                                            </c:when>
+                                            <c:otherwise>
+                                                (${rating.value2} <spring:message code="profile.rating.times"/>)
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
                                 </c:if>
                             </div>
                         </div>
@@ -141,16 +143,15 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="subjects-info" role="tabpanel" aria-labelledby="subjects-tab">
-                                    <div style="display: flex; justify-content: center; align-items: center;">
-<%--                                        TODO--%>
-                                        <table style="width: 95%; margin: 10px 8px 8px 8px;">
-                                            <tr class="subjects-row" style="width: 100%">
+                                    <div class="profile-subjects">
+                                        <table class="subjects-info">
+                                            <tr class="subjects-row">
                                                 <td class="row-title" style="width: 55%">${tableSubject}</td>
                                                 <td class="row-title" style="width: 15%">${tablePrice}</td>
                                                 <td class="row-title" style="width: 30%">${tableLevel}</td>
                                             </tr>
                                             <c:forEach items="${subjectsList}" var="subject">
-                                                <tr class="subjects-row" style="width: 100%">
+                                                <tr class="subjects-row">
                                                     <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
                                                     <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
                                                     <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
@@ -161,17 +162,17 @@
                                 </div>
                                 <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                                     <div class="section-info">
-                                        <div class="profile-desc-sch">
-                                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                <h5>Monica</h5>
-                                                <jsp:include page="../components/ratingStars.jsp">
-                                                    <jsp:param name="rating" value="${rating.value1}"/>
-                                                </jsp:include>
+                                        <c:forEach items="${ratingList}" var="rating">
+                                            <div class="profile-desc-sch">
+                                                <div class="review-title">
+                                                    <h5><c:out value="${rating.student.name}"/></h5>
+                                                    <jsp:include page="../components/ratingStars.jsp">
+                                                        <jsp:param name="rating" value="${rating.rate}"/>
+                                                    </jsp:include>
+                                                </div>
+                                                <p><c:out value="${rating.review}"/></p>
                                             </div>
-                                            <div class="">
-                                                <p>La clase fue una verga</p>
-                                            </div>
-                                        </div>
+                                        </c:forEach>
                                     </div>
                                 </div>
                             </div>

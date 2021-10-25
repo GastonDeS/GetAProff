@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,5 +24,10 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public Optional<Rating> addRating(Long teacherId, Long studentId, float rate, String review) {
         return Optional.ofNullable(ratingDao.addRating(teacherId,studentId, rate, review));
+    }
+
+    @Override
+    public List<Rating> getTeacherRatings(Long teacherId) {
+        return ratingDao.getTeacherRatings(teacherId);
     }
 }

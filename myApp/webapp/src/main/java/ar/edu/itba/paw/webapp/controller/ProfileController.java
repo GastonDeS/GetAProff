@@ -64,7 +64,7 @@ public class ProfileController {
             LOGGER.debug("No profile found for id: {}", uid);
             throw new ProfileNotFoundException("exception.profile");
         }
-        ModelAndView mav = new ModelAndView("profile");
+        ModelAndView mav = new ModelAndView("profile").addObject("user", user.get());
         if (curr.isPresent()) {
             if (curr.get().getId().equals(user.get().getId())) {
                 mav.addObject("currentUser", curr.get()).addObject("edit", 1);
@@ -73,14 +73,17 @@ public class ProfileController {
                 LOGGER.debug("Cannot access profile for id: {}", uid);
                 throw new ProfileNotFoundException("exception.profile");
             }
+            else {
+                mav.addObject("isFaved", userService.isFaved(uid, curr.get().getId()));
+            }
         }
         LOGGER.debug("Accessing profile for id: {}", uid);
-        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
-        mav.addObject("user", user.get())
-                .addObject("isFaved", curr.isPresent() && userService.isFaved(uid, curr.get().getId()))
-                .addObject("subjectsList", subjectsGiven)
-                .addObject("isTeacher", user.get().isTeacher() ? 1 : 0)
-                .addObject("rating", ratingService.getRatingById(uid));
+        if (user.get().isTeacher()) {
+            List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+            mav.addObject("subjectsList", subjectsGiven)
+                    .addObject("rating", ratingService.getRatingById(uid))
+                    .addObject("ratingList", ratingService.getTeacherRatings(uid));
+        }
         return mav;
     }
 

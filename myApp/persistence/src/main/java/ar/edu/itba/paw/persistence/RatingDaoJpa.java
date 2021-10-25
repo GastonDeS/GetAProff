@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
 public class RatingDaoJpa implements RatingDao {
@@ -35,5 +37,13 @@ public class RatingDaoJpa implements RatingDao {
         sumQuery.setParameter("teacherid", teacherId);
         float sumRatings = ((Number) sumQuery.getSingleResult()).floatValue();
         return new Pair<>(sumRatings/totalRatings, totalRatings);
+    }
+
+    @Override
+    public List<Rating> getTeacherRatings(Long teacherId) {
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final TypedQuery<Rating> query = entityManager.createQuery("from Rating r where r.teacher = :teacher", Rating.class);
+        query.setParameter("teacher", teacher);
+        return query.getResultList();
     }
 }

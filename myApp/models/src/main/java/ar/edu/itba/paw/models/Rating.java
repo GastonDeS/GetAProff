@@ -23,6 +23,10 @@ public class Rating {
     @Id
     private User student;
 
+    Rating() {
+        //Just for hibernate
+    }
+
     public Rating(Float rate, String review, User teacher, User student) {
         this.rate = rate;
         this.review = review;

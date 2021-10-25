@@ -62,7 +62,7 @@
     <div class="form-container">
         <p class="form-title">${yourSubjectPlaceholder}</p>
         <table class="subjects-table">
-            <tr class="subjects-row" style="width: 100%">
+            <tr class="subjects-row">
                 <td class="row-title" style="width: 43%">${tableSubject}</td>
                 <td class="row-title" style="width: 17%">${tablePrice}</td>
                 <td class="row-title" style="width: 40%">${tableLevel}</td>
