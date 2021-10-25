@@ -107,22 +107,28 @@
                         <div class="tabs-container">
                             <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                                 <li class="nav-item active" role="presentation">
-                                    <button class="nav-link nav-link-custom active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button"
-                                            role="tab" aria-controls="personal" aria-selected="false">
+                                    <button class="nav-link nav-link-custom active" id="personal-info-tab" data-bs-toggle="tab" data-bs-target="#personal-info" type="button"
+                                            role="tab" aria-controls="personal-info" aria-selected="true">
                                         <spring:message code="profile.personal.info"/>
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button"
-                                            role="tab" aria-controls="subjects" aria-selected="true">
+                                    <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects-info" type="button"
+                                            role="tab" aria-controls="subjects-info" aria-selected="false">
                                         <spring:message code="profile.subjects"/>
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link nav-link-custom" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+                                            role="tab" aria-controls="reviews" aria-selected="false">
+                                        <spring:message code="profile.reviews"/>
                                     </button>
                                 </li>
                             </ul>
                         </div>
                         <div class="classes-container h-100">
                             <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                                <div class="tab-pane fade show active" id="personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
                                     <div class="section-info">
                                         <div class="profile-desc-sch">
                                             <h1><spring:message code="profile.description"/></h1>
@@ -134,21 +140,39 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="subjects" role="tabpanel" aria-labelledby="subjects-tab">
-                                    <table>
-                                        <tr class="subjects-row" style="width: 100%">
-                                            <td class="row-title" style="width: 55%">${tableSubject}</td>
-                                            <td class="row-title" style="width: 15%">${tablePrice}</td>
-                                            <td class="row-title" style="width: 30%">${tableLevel}</td>
-                                        </tr>
-                                        <c:forEach items="${subjectsList}" var="subject">
+                                <div class="tab-pane fade" id="subjects-info" role="tabpanel" aria-labelledby="subjects-tab">
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+<%--                                        TODO--%>
+                                        <table style="width: 95%; margin: 10px 8px 8px 8px;">
                                             <tr class="subjects-row" style="width: 100%">
-                                                <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
-                                                <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
-                                                <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                                <td class="row-title" style="width: 55%">${tableSubject}</td>
+                                                <td class="row-title" style="width: 15%">${tablePrice}</td>
+                                                <td class="row-title" style="width: 30%">${tableLevel}</td>
                                             </tr>
-                                        </c:forEach>
-                                    </table>
+                                            <c:forEach items="${subjectsList}" var="subject">
+                                                <tr class="subjects-row" style="width: 100%">
+                                                    <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
+                                                    <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                                    <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                                </tr>
+                                            </c:forEach>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                    <div class="section-info">
+                                        <div class="profile-desc-sch">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <h5>Monica</h5>
+                                                <jsp:include page="../components/ratingStars.jsp">
+                                                    <jsp:param name="rating" value="${rating.value1}"/>
+                                                </jsp:include>
+                                            </div>
+                                            <div class="">
+                                                <p>La clase fue una verga</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -595,6 +595,34 @@ input:focus {
     height: fit-content;
 }
 
+.review-section-profile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.review-profile {
+    width: 96%;
+    border-radius: 10px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px;
+    background-color: hsla(185, 96%, 22%, 0.35);
+    padding: 8px;
+}
+
+.review-header-profile {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+}
+
 .subjects-table {
     width: 100%;
     margin: 12px 0 8px 0;
@@ -743,16 +771,16 @@ input:focus {
     margin-bottom: 8px;
 }
 
-#subjects {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/*#subjects-info {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
 
-#subjects > table {
-    margin: 10px 8px 8px 8px;
-    width: 95%;
-}
+/*#subjects-table-profile {*/
+/*    margin: */
+/*    width: 95%;*/
+/*}*/
 
 .section-info > p {
     font-size: 16px;
