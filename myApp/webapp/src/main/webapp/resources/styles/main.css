@@ -811,7 +811,7 @@ input:focus {
 .subjects-info {
     display: table;
     width: 95%;
-    margin: 10px 8px 8px 8px;
+    margin: 10px 0px 8px 0px;
 }
 
 .section-info > p {
