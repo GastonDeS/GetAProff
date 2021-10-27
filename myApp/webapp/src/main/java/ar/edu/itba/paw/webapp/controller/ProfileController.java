@@ -142,17 +142,4 @@ public class ProfileController {
         return new ModelAndView("redirect:/editProfile");
     }
 
-
-    @RequestMapping(value = "/shareProfile/{tutorId}", method = RequestMethod.POST)
-    public ModelAndView removeFavourite(@PathVariable("tutorId") final Long tutorId) {
-        String myString = "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/" +
-                tutorId.toString();
-        StringSelection stringSelection = new StringSelection(myString);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(stringSelection, null);
-
-        LOGGER.debug("Profile link added to clipboard");
-        return new ModelAndView("redirect:/profile/" + tutorId);
-    }
-
 }

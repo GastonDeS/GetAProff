@@ -18,6 +18,7 @@
     <spring:message code="profile.add.favorites" var="addFav"/>
     <spring:message code="profile.remove.favorites" var="removeFav"/>
     <spring:message code="profile.share" var="shareProfile"/>
+
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -107,9 +108,7 @@
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${user.teacher}">
-                        <form action="<c:url value="/shareProfile/${user.id}"/>" method="post">
-                            <input type="submit" class="btn btn-custom" style="margin-left: 10px" value="${shareProfile}"/>
-                        </form>
+                        <a class="btn btn-custom" style="margin-left: 10px" onclick="copyToClipboard()" ><c:out value="${shareProfile}"/></a>
                     </c:if>
                 </div>
             </div>
@@ -198,6 +197,7 @@
         </c:if>
     </div>
 </div>
+<div id="snackbar"><spring:message code="profile.share.success"/></div>
 <jsp:include page="../components/footer.jsp">
     <jsp:param name="" value=""/>
 </jsp:include>
@@ -210,6 +210,24 @@
             tabTrigger.show()
         })
     })
+</script>
+<script>
+    function copyToClipboard() {
+        navigator.clipboard.writeText(window.location.href);
+        showSnackbar();
+    }
+</script>
+<script>
+    function showSnackbar() {
+        // Get the snackbar DIV
+        var x = document.getElementById("snackbar");
+
+        // Add the "show" class to DIV
+        x.className = "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
         integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
