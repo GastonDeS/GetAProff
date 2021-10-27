@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -137,6 +140,19 @@ public class ProfileController {
     @RequestMapping(value = "/editProfile?teach=true")
     public ModelAndView changeUserRole() {
         return new ModelAndView("redirect:/editProfile");
+    }
+
+
+    @RequestMapping(value = "/shareProfile/{tutorId}", method = RequestMethod.POST)
+    public ModelAndView removeFavourite(@PathVariable("tutorId") final Long tutorId) {
+        String myString = "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/" +
+                tutorId.toString();
+        StringSelection stringSelection = new StringSelection(myString);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+
+        LOGGER.debug("Profile link added to clipboard");
+        return new ModelAndView("redirect:/profile/" + tutorId);
     }
 
 }
