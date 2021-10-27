@@ -47,7 +47,7 @@ public class ProfileController {
     private RatingService ratingService;
 
     @InitBinder
-    public void initSubjectsBinder(WebDataBinder webDataBinder){
+    public void initSubjectsBinder(WebDataBinder webDataBinder) {
         Object target = webDataBinder.getTarget();
         if (target != null) {
             if (target.getClass().equals(UserForm.class)) {
@@ -66,14 +66,13 @@ public class ProfileController {
         }
         ModelAndView mav = new ModelAndView("profile").addObject("user", user.get());
         if (curr.isPresent()) {
+            mav.addObject("currentUser", curr.get());
             if (curr.get().getId().equals(user.get().getId())) {
-                mav.addObject("currentUser", curr.get()).addObject("edit", 1);
-            }
-            else if (!user.get().isTeacher() || teachesService.get(user.get().getId()).isEmpty()) {
+                mav.addObject("edit", 1);
+            } else if (!user.get().isTeacher() || teachesService.get(user.get().getId()).isEmpty()) {
                 LOGGER.debug("Cannot access profile for id: {}", uid);
                 throw new ProfileNotFoundException("exception.profile");
-            }
-            else {
+            } else {
                 mav.addObject("isFaved", userService.isFaved(uid, curr.get().getId()));
             }
         }
