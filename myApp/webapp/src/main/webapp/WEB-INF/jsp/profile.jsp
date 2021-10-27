@@ -165,7 +165,7 @@
                                         <c:forEach items="${ratingList}" var="rating">
                                             <div class="profile-desc-sch">
                                                 <div class="review-title">
-                                                    <h5><c:out value="${rating.student.name}"/></h5>
+                                                    <h4><c:out value="${rating.student.name}"/></h4>
                                                     <jsp:include page="../components/ratingStars.jsp">
                                                         <jsp:param name="rating" value="${rating.rate}"/>
                                                     </jsp:include>
