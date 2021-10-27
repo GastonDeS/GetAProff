@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SubjectService;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
@@ -34,6 +35,9 @@ public class SearchController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private TeachesService teachesService;
+
     private void addUserId(ModelAndView mav) {
         Optional<User> u = userService.getCurrentUser();
         u.ifPresent(user -> mav.addObject("uid", user.getId()));
@@ -49,7 +53,7 @@ public class SearchController {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
         LOGGER.debug("Teachers found for {}", searchQuery);
-        List<CardProfile> maybeTutors = userService.filterUsers(searchQuery, offset);
+        List<CardProfile> maybeTutors = teachesService.filterTeachingUsers(searchQuery);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));

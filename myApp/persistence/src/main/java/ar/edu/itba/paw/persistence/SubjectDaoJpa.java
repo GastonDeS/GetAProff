@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -42,5 +41,12 @@ public class SubjectDaoJpa implements SubjectDao {
         final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where s.name = :name", Subject.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findFirst();
+    }
+
+    @Override
+    public List<Subject> getSubjectsMatching(String name){
+        final TypedQuery<Subject> query = entityManager.createQuery("from Subject s where LOWER(s.name) LIKE :name", Subject.class);
+        query.setParameter("name", "%"+name.toLowerCase()+"%");
+        return query.getResultList();
     }
 }

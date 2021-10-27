@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
@@ -25,4 +26,6 @@ public interface TeachesDao {
     int getMaxPrice(Long teacherId);
 
     int getMinPrice(Long teacherId);
+
+    List<Teaches> findUsersTeaching(Subject s);
 }

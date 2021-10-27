@@ -70,6 +70,6 @@ public class Teaches {
         NONE,
         PRIMARY,
         SECONDARY,
-        TERTIARY;
+        TERTIARY
     }
 }

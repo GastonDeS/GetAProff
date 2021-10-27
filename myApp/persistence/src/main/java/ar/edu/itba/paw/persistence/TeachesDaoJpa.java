@@ -73,4 +73,11 @@ public class TeachesDaoJpa implements TeachesDao {
         query.setParameter("userid", teacherId);
         return ((Number) query.getSingleResult()).intValue();
     }
+
+    @Override
+    public List<Teaches> findUsersTeaching(Subject s) {
+        final TypedQuery<Teaches> query = entityManager.createQuery("SELECT DISTINCT (t) FROM Teaches t WHERE t.subject = :subject",Teaches.class);
+        query.setParameter("subject",s);
+        return query.getResultList();
+    }
 }

@@ -30,4 +30,9 @@ public class SubjectServiceImpl implements SubjectService {
     public List<Subject> list() {
         return subjectDao.listSubjects();
     }
+
+    @Override
+    public List<Subject> getSubjectsMatching(String name) {
+        return subjectDao.getSubjectsMatching(name);
+    }
 }

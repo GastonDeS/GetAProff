@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.exceptions.InsertException;
-import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -77,18 +77,38 @@ public class UserServiceImpl implements UserService {
         int intPrice = Integer.parseInt(price);
         if (intPrice > maxPrice)
             intPrice = maxPrice;
-        return userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
+        List<User> filteredUsers = userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
+        List<CardProfile> teacherCard = new ArrayList<>();
+        for (User teacher : filteredUsers) {
+            Long teacherId = teacher.getId();
+            Float rate = ratingService.getRatingById(teacherId).getValue1();
+            CardProfile cardProfile = new CardProfile(teacherId, teacher.getName(), teachesService.getMaxPrice(teacherId),
+                    teachesService.getMinPrice(teacherId), teacher.getDescription(), imageService.hasImage(teacherId), rate);
+            teacherCard.add(cardProfile);
+        }
+        teacherCard = teacherCard.stream().sorted(Comparator.comparingDouble(o1 -> (double) o1.getRate())).collect(Collectors.toList());
+        return teacherCard;
     }
 
-
+    @Transactional
     @Override
     public List<CardProfile> filterUsers(String subject) {
-        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, GET_ALL);
+        List<User> filteredUsers = userDao.filterUsers(subject,RAND_ORDER, Integer.MAX_VALUE ,ANY_LEVEL,ANY_RATING ,GET_ALL);
+        List<CardProfile> teacherCard = new ArrayList<>();
+        for (User teacher : filteredUsers) {
+            Long teacherId = teacher.getId();
+            Float rate = ratingService.getRatingById(teacherId).getValue1();
+            CardProfile cardProfile = new CardProfile(teacherId, teacher.getName(), teachesService.getMaxPrice(teacherId),
+                    teachesService.getMinPrice(teacherId), teacher.getDescription(), imageService.hasImage(teacherId), rate);
+            teacherCard.add(cardProfile);
+        }
+        teacherCard = teacherCard.stream().sorted(Comparator.comparingDouble(o1 -> (double) o1.getRate())).collect(Collectors.toList());
+        return teacherCard;
     }
 
     @Override
     public List<CardProfile> filterUsers(String subject, String offset) {
-        return userDao.filterUsers(subject,RAND_ORDER,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING, Integer.parseInt(offset));
+       return filterUsers(subject,RAND_ORDER.toString(), Integer.toString(Integer.MAX_VALUE) ,ANY_LEVEL.toString(),ANY_RATING.toString(),offset);
     }
 
     @Override

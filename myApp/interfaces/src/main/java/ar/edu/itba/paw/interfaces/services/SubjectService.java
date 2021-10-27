@@ -13,4 +13,6 @@ public interface SubjectService {
 
     List<Subject> list();
 
+    List<Subject> getSubjectsMatching(String name);
+
 }

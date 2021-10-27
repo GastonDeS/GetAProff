@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.interfaces.daos;
 
-import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.models.User;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface UserDao {
@@ -17,7 +14,7 @@ public interface UserDao {
      */
     Optional<User> get(Long userId);
 
-    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
+    List<User> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
 
     List<User> getFavourites(Long userId);
 

@@ -1,23 +1,31 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
+import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.SubjectInfo;
-import ar.edu.itba.paw.models.Teaches;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TeachesServiceImpl implements TeachesService {
 
     @Autowired
     private TeachesDao teachesDao;
+
+    @Autowired
+    private SubjectDao subjectDao;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private RatingService ratingService;
 
     @Transactional
     @Override
@@ -46,6 +54,28 @@ public class TeachesServiceImpl implements TeachesService {
     @Override
     public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
         return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
+    }
+
+    @Override
+    public List<Teaches> findUsersTeaching(Subject s){
+        return teachesDao.findUsersTeaching(s);
+    }
+
+    @Override
+    public List<CardProfile> filterTeachingUsers(String subject){
+        List<Subject> subjects = subjectDao.getSubjectsMatching(subject);
+        Map<Long,Teaches> teachingList = new HashMap<>();
+        for(Subject subj : subjects) {
+            for(Teaches t : teachesDao.findUsersTeaching(subj))
+                teachingList.put(t.getTeacher().getId(),t);
+        }
+        List<CardProfile> result = new ArrayList<>();
+        for(Teaches teaches : teachingList.values()){
+            User teacher = teaches.getTeacher();
+            result.add(new CardProfile(teacher.getId(),teacher.getName(), getMaxPrice(teacher.getId()), getMinPrice(teacher.getId()), teacher.getDescription(),
+                    imageService.hasImage(teacher.getId()), ratingService.getRatingById(teacher.getId()).getValue1()));
+        }
+        return result;
     }
 
     @Override

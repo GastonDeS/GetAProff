@@ -27,8 +27,8 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
-        List<CardProfile> cards = new ArrayList<>();
+    public List<User> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
+        List<User> cards = new ArrayList<>();
 
 //        final TypedQuery<CardProfile> query = entityManager.createQuery("from User where",CardProfile.class);
 
@@ -61,8 +61,8 @@ public class UserDaoJpa implements UserDao {
         User student = entityManager.find(User.class, studentId);
         User teacher = entityManager.find(User.class, teacherId);
         if (student != null && teacher != null) {
-           student.getFavourites().remove(teacher);
-           return 1;
+            student.getFavourites().remove(teacher);
+            return 1;
         }
         return 0;
     }
