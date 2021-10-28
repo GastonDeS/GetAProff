@@ -19,9 +19,6 @@ public class TeachesServiceImpl implements TeachesService {
     private TeachesDao teachesDao;
 
     @Autowired
-    private SubjectDao subjectDao;
-
-    @Autowired
     private ImageService imageService;
 
     @Autowired
@@ -57,21 +54,11 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public List<Teaches> findUsersTeaching(Subject s){
-        return teachesDao.findUsersTeaching(s);
-    }
-
-    @Override
     public List<CardProfile> filterTeachingUsers(String subject){
-        List<Subject> subjects = subjectDao.getSubjectsMatching(subject);
-        Map<Long,Teaches> teachingList = new HashMap<>();
-        for(Subject subj : subjects) {
-            for(Teaches t : teachesDao.findUsersTeaching(subj))
-                teachingList.put(t.getTeacher().getId(),t);
-        }
+        List<Teaches> teachersTeachingSubject = teachesDao.filterTeachersTeachingSubject(subject);
         List<CardProfile> result = new ArrayList<>();
-        for(Teaches teaches : teachingList.values()){
-            User teacher = teaches.getTeacher();
+        for (Teaches teachingInfo : teachersTeachingSubject) {
+            User teacher = teachingInfo.getTeacher();
             result.add(new CardProfile(teacher.getId(),teacher.getName(), getMaxPrice(teacher.getId()), getMinPrice(teacher.getId()), teacher.getDescription(),
                     imageService.hasImage(teacher.getId()), ratingService.getRatingById(teacher.getId()).getValue1()));
         }

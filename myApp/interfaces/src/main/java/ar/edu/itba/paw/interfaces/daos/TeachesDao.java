@@ -27,5 +27,5 @@ public interface TeachesDao {
 
     int getMinPrice(Long teacherId);
 
-    List<Teaches> findUsersTeaching(Subject s);
+    List<Teaches> filterTeachersTeachingSubject(String searchedSubject);
 }

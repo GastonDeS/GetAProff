@@ -75,9 +75,11 @@ public class TeachesDaoJpa implements TeachesDao {
     }
 
     @Override
-    public List<Teaches> findUsersTeaching(Subject s) {
-        final TypedQuery<Teaches> query = entityManager.createQuery("SELECT DISTINCT (t) FROM Teaches t WHERE t.subject = :subject",Teaches.class);
-        query.setParameter("subject",s);
+    public List<Teaches> filterTeachersTeachingSubject(String searchedSubject) {
+        final TypedQuery<Teaches> query = entityManager.createQuery("select distinct (t) from Subject s inner join s.teachersTeachingSubject t where LOWER(s.name) LIKE :name", Teaches.class);
+        query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
         return query.getResultList();
     }
+
+
 }

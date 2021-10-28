@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="subject")
@@ -14,6 +15,9 @@ public class Subject {
 
     @Column
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
+    private List<Teaches> teachersTeachingSubject;
 
     public Subject(){
         //For Hibernate

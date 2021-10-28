@@ -23,7 +23,5 @@ public interface TeachesService {
 
     List<Teaches> get(Long teacherId);
 
-    List<Teaches> findUsersTeaching(Subject s);
-
     List<CardProfile> filterTeachingUsers(String subject);
 }
