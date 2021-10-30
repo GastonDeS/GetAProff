@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
-import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,22 +25,8 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public List<User> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
-        List<User> cards = new ArrayList<>();
-
-//        final TypedQuery<CardProfile> query = entityManager.createQuery("from User where",CardProfile.class);
-
-        return cards;
-    }
-
-    @Override
     public List<User> getFavourites(Long userId) {
         return entityManager.getReference(User.class, userId).getFavourites();
-    }
-
-    @Override
-    public Integer getPageQty(String subject, Integer price, Integer level, Integer rating) {
-        return null;
     }
 
     @Override

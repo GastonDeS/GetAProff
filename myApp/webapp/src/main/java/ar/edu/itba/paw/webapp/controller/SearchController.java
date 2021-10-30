@@ -47,20 +47,20 @@ public class SearchController {
     public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @PathVariable String offset) {
         final ModelAndView mav = new ModelAndView("tutors");
         addUserId(mav);
-        Integer pageQty = userService.getPageQty(searchQuery);
+        Integer pageQty = teachesService.getPageQty(searchQuery);
         int offsetToInt = Integer.parseInt(offset);
         if (offsetToInt != 1 && offsetToInt > pageQty) {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
         LOGGER.debug("Teachers found for {}", searchQuery);
-        List<CardProfile> maybeTutors = teachesService.filterTeachingUsers(searchQuery);
+        List<CardProfile> maybeTutors = teachesService.findTeachersTeachingSubject(searchQuery, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
-        mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
+        mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", "?query=" + searchQuery);
         mav.addObject("searchQuery", searchQuery);
         mav.addObject("offset", offset);
-        mav.addObject("pageQty",userService.getPageQty(searchQuery));
+        mav.addObject("pageQty", pageQty);
         return mav;
     }
 
@@ -72,14 +72,14 @@ public class SearchController {
         String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
         addUserId(mav);
         LOGGER.debug("Teachers found for {}", urlParams);
-        List<CardProfile> maybeTutors = userService.filterUsers(searchQuery,order, price, level, rating, offset);
+        List<CardProfile> maybeTutors = teachesService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
-        mav.addObject("maxPrice", userService.mostExpensiveUserFee(searchQuery));
+        mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));
         mav.addObject("urlParams", urlParams);
         mav.addObject("searchQuery", searchQuery);
         mav.addObject("offset", offset);
-        mav.addObject("pageQty",userService.getPageQty(searchQuery, price, level, rating));
+        mav.addObject("pageQty",teachesService.getPageQty(searchQuery, price, level, rating));
         return mav;
     }
 }

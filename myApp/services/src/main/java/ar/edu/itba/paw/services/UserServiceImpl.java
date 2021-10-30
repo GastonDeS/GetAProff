@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -68,59 +67,6 @@ public class UserServiceImpl implements UserService {
         return userDao.get(userId);
     }
 
-    @Override
-    public List<CardProfile> filterUsers(String subject, String order, String price, String level, String rating, String offset) {
-        int lvl = Integer.parseInt(level);
-        if(lvl < 0 || lvl > MAX_LEVEL)
-            lvl = ANY_LEVEL;
-        Integer maxPrice = mostExpensiveUserFee(subject);
-        int intPrice = Integer.parseInt(price);
-        if (intPrice > maxPrice)
-            intPrice = maxPrice;
-        List<User> filteredUsers = userDao.filterUsers(subject,Integer.parseInt(order),intPrice,lvl,Integer.parseInt(rating),Integer.parseInt(offset));
-        List<CardProfile> teacherCard = new ArrayList<>();
-        for (User teacher : filteredUsers) {
-            Long teacherId = teacher.getId();
-            Float rate = ratingService.getRatingById(teacherId).getValue1();
-            CardProfile cardProfile = new CardProfile(teacherId, teacher.getName(), teachesService.getMaxPrice(teacherId),
-                    teachesService.getMinPrice(teacherId), teacher.getDescription(), imageService.hasImage(teacherId), rate);
-            teacherCard.add(cardProfile);
-        }
-        teacherCard = teacherCard.stream().sorted(Comparator.comparingDouble(o1 -> (double) o1.getRate())).collect(Collectors.toList());
-        return teacherCard;
-    }
-
-    @Transactional
-    @Override
-    public List<CardProfile> filterUsers(String subject) {
-        List<User> filteredUsers = userDao.filterUsers(subject,RAND_ORDER, Integer.MAX_VALUE ,ANY_LEVEL,ANY_RATING ,GET_ALL);
-        List<CardProfile> teacherCard = new ArrayList<>();
-        for (User teacher : filteredUsers) {
-            Long teacherId = teacher.getId();
-            Float rate = ratingService.getRatingById(teacherId).getValue1();
-            CardProfile cardProfile = new CardProfile(teacherId, teacher.getName(), teachesService.getMaxPrice(teacherId),
-                    teachesService.getMinPrice(teacherId), teacher.getDescription(), imageService.hasImage(teacherId), rate);
-            teacherCard.add(cardProfile);
-        }
-        teacherCard = teacherCard.stream().sorted(Comparator.comparingDouble(o1 -> (double) o1.getRate())).collect(Collectors.toList());
-        return teacherCard;
-    }
-
-    @Override
-    public List<CardProfile> filterUsers(String subject, String offset) {
-       return filterUsers(subject,RAND_ORDER.toString(), Integer.toString(Integer.MAX_VALUE) ,ANY_LEVEL.toString(),ANY_RATING.toString(),offset);
-    }
-
-    @Override
-    public Integer getPageQty(String subject, String price, String level, String rating) {
-        return userDao.getPageQty( subject,  Integer.parseInt(price),  Integer.parseInt(level),  Integer.parseInt(rating));
-    }
-
-    @Override
-    public Integer getPageQty(String subject) {
-        return userDao.getPageQty(subject,Integer.MAX_VALUE,ANY_LEVEL,ANY_RATING);
-    }
-
     @Transactional
     @Override
     public List<CardProfile> getFavourites(Long userId) {
@@ -134,17 +80,6 @@ public class UserServiceImpl implements UserService {
             teacherCard.add(cardProfile);
         }
         return teacherCard;
-    }
-
-    @Override
-    public Integer mostExpensiveUserFee(String subject) {
-        Optional<CardProfile> mostExpensiveUser;
-        List<CardProfile> users = filterUsers(subject);
-        if(users.isEmpty()) {
-            return 1;
-        }
-        mostExpensiveUser = users.stream().max(Comparator.comparing(CardProfile::getMaxPrice));
-        return mostExpensiveUser.map(CardProfile::getMaxPrice).orElse(1);
     }
 
     @Transactional

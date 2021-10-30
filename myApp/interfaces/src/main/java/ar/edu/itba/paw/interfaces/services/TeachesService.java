@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
@@ -23,5 +22,13 @@ public interface TeachesService {
 
     List<Teaches> get(Long teacherId);
 
-    List<CardProfile> filterTeachingUsers(String subject);
+    List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset);
+
+    List<CardProfile> filterUsers(String searchedSubject, String order, String price, String level, String rating, String offset);
+
+    Integer getMostExpensiveUserFee(String searchedSubject);
+
+    Integer getPageQty(String searchedSubject, String price, String level, String rating);
+
+    Integer getPageQty(String searchedSubject);
 }

@@ -75,11 +75,27 @@ public class TeachesDaoJpa implements TeachesDao {
     }
 
     @Override
-    public List<Teaches> filterTeachersTeachingSubject(String searchedSubject) {
-        final TypedQuery<Teaches> query = entityManager.createQuery("select distinct (t) from Subject s inner join s.teachersTeachingSubject t where LOWER(s.name) LIKE :name", Teaches.class);
+    public List<Teaches> findTeachersTeachingSubject(String searchedSubject) {
+        final TypedQuery<Teaches> query = entityManager.createQuery("select t from Teaches t where LOWER(t.subject.name) LIKE :name", Teaches.class);
         query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
         return query.getResultList();
     }
 
+    @Override
+    public Integer getMostExpensiveUserFee(String searchedSubject) {
+        final TypedQuery<Integer> query = entityManager.createQuery("select max(t.price) from Teaches t where LOWER(t.subject.name) LIKE :name", Integer.class);
+        query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
+        return ((Number) query.getSingleResult()).intValue();
+    }
 
+    @Override
+    public List<Teaches> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel) {
+        final TypedQuery<Teaches> query = entityManager.createQuery("select t from Teaches t where " +
+                "LOWER(t.subject.name) LIKE :name and (t.level between :minLevel and :maxLevel or t.level = 0) and t.price <= :price", Teaches.class);
+        query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%")
+                .setParameter("minLevel", minLevel)
+                .setParameter("maxLevel", maxLevel)
+                .setParameter("price", price);
+        return query.getResultList();
+    }
 }

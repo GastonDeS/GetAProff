@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
+import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
@@ -27,5 +28,14 @@ public interface TeachesDao {
 
     int getMinPrice(Long teacherId);
 
-    List<Teaches> filterTeachersTeachingSubject(String searchedSubject);
+    List<Teaches> findTeachersTeachingSubject(String searchedSubject);
+
+    /**
+     * Retrieves the fee of the most expensive user
+     * @param searchedSubject Subject to search for highest fee
+     * @return Fee of most expensive user
+     */
+    Integer getMostExpensiveUserFee(String searchedSubject);
+
+    List<Teaches> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel);
 }

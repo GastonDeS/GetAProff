@@ -14,11 +14,7 @@ public interface UserDao {
      */
     Optional<User> get(Long userId);
 
-    List<User> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
-
     List<User> getFavourites(Long userId);
-
-    Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
 
     int addFavourite(Long teacherId, Long studentId);
 
