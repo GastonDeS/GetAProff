@@ -858,7 +858,7 @@ input:focus {
 .subjects-info {
     display: table;
     width: 96%;
-    margin: 10px 0px 8px 0px;
+    margin: 10px 0 8px 0;
 }
 
 .section-info > p {
@@ -898,6 +898,35 @@ input:focus {
 
 label:hover {
     color: white;
+}
+
+.class-content {
+    background-color: white;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.file-upload {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+.text-input {
+    width: 80%;
+    height: 50px;
+    margin: 5px;
+    justify-content: start;
+    align-self: initial;
+}
+
+.upload-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 10px;
+    background-color: white;
 }
 
 .profile-img {

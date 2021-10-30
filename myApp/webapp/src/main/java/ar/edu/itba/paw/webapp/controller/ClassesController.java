@@ -170,4 +170,13 @@ public class ClassesController {
         LOGGER.debug("Class rated by student " + myClass.get().getStudent().getId() + " for teacher " + myClass.get().getTeacher().getId());
         return new ModelAndView("redirect:/myClasses");
     }
+
+    @RequestMapping(value = "/class", method = RequestMethod.GET)
+    public ModelAndView getClassMav() {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent())
+            throw new NoUserLoggedException("exception.not.logger.user");
+        return new ModelAndView("class")
+                .addObject("currentUser", maybeUser.get());
+    }
 }
