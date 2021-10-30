@@ -60,7 +60,7 @@ public class TeachesServiceImpl implements TeachesService {
     @Override
     public List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset){
         List<Teaches> teachersTeachingSubject = teachesDao.findTeachersTeachingSubject(searchedSubject);
-        return removeDuplicatedTeachers(teachersTeachingSubject, ANY_RATING.floatValue(), Integer.parseInt(offset));
+        return removeDuplicatedTeachers(teachersTeachingSubject, ANY_RATING.floatValue(), Integer.parseInt(offset), RAND_ORDER);
     }
 
     @Transactional
@@ -76,10 +76,10 @@ public class TeachesServiceImpl implements TeachesService {
         int intPrice = Integer.parseInt(price);
         if (intPrice > maxPrice) intPrice = maxPrice;
         List<Teaches> teachersTeachingSubject = teachesDao.filterUsers(searchedSubject, intPrice, minLevel, maxLevel);
-        return removeDuplicatedTeachers(teachersTeachingSubject, Float.parseFloat(rating), Integer.parseInt(offset));
+        return removeDuplicatedTeachers(teachersTeachingSubject, Float.parseFloat(rating), Integer.parseInt(offset), Integer.parseInt(order));
     }
 
-    private List<CardProfile> removeDuplicatedTeachers(List<Teaches> teachersTeachingSubject, Float rating, Integer offset) {
+    private List<CardProfile> removeDuplicatedTeachers(List<Teaches> teachersTeachingSubject, Float rating, Integer offset, Integer order) {
         Map<Long, CardProfile> teachersResultMap = new HashMap<>();
         for (Teaches teachingInfo : teachersTeachingSubject) {
             User teacher = teachingInfo.getTeacher();
@@ -91,10 +91,28 @@ public class TeachesServiceImpl implements TeachesService {
             }
         }
         List<CardProfile> resultList = new ArrayList<>(teachersResultMap.values());
+        if (order != 0) resultList.sort(cardProfileComparator(order));
         if (offset == 0) return resultList;
         if ((offset * PAGE_SIZE) > resultList.size())
             return resultList.subList((offset - 1) * PAGE_SIZE, resultList.size());
         return resultList.subList((offset - 1) * PAGE_SIZE, offset * PAGE_SIZE);
+    }
+
+    private Comparator<CardProfile> cardProfileComparator(Integer order) {
+        Comparator<CardProfile> priceComparator = Comparator.comparingInt(CardProfile::getMaxPrice);
+        Comparator<CardProfile> rateComparator = (o1, o2) -> Float.compare(o1.getRate(), o2.getRate());
+        switch (order) {
+            case 1:
+                return priceComparator;
+            case 2:
+                return priceComparator.reversed();
+            case 3:
+                return rateComparator;
+            case 4:
+                return rateComparator.reversed();
+            default:
+                return null;
+        }
     }
 
     @Override
