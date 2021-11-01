@@ -94,58 +94,22 @@
                     <li>
                         <h4>Rating</h4>
                         <ul class="filter-ulist">
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-4+"
-                                       value="4"
-                                >
-                                <label class="form-check-label" for="rating-4+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="4"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-3+"
-                                       value="3">
-                                <label class="form-check-label" for="rating-3+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="3"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-2+"
-                                       value="2">
-                                <label class="form-check-label" for="rating-2+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="2"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-1+"
-                                       value="1">
-                                <label class="form-check-label" for="rating-1+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="1"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
+                            <c:forEach begin="0" end="4" var="idx">
+                                <li>
+                                    <input name="rating" type="radio" class="rating-radio" id="rating-${idx}+"
+                                           value="${idx}" ${idx == 0 ? 'checked' : ''}
+                                    >
+                                    <label class="form-check-label" for="rating-${idx}+"
+                                           style="display:flex;align-items: center;">
+                                        <jsp:include page="../components/ratingStars.jsp">
+                                            <jsp:param name="rating" value="${idx}"/>
+                                        </jsp:include>
+                                        <span style="margin-left: 3px; padding-bottom: 2px;"><spring:message
+                                                code="search.filter.ratingExtraText"/></span>
+                                    </label>
 
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-0+"
-                                       value="0" checked>
-                                <label class="form-check-label" for="rating-0+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="0"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </li>
                 </ul>

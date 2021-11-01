@@ -53,6 +53,16 @@ CREATE TABLE IF NOT EXISTS teaches
     PRIMARY KEY (userId, subjectId, level)
 );
 
+CREATE TABLE IF NOT EXISTS user_file
+(
+    userId   INTEGER,
+    fileId   INTEGER,
+    fileName VARCHAR,
+    file     BYTEA,
+    FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (userId, fileId)
+);
+
 CREATE TABLE IF NOT EXISTS classes
 (
     classId   SERIAL PRIMARY KEY,

@@ -49,6 +49,10 @@ public class User {
     @OneToOne
     private Image image;
 
+    @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
+    private List<UserFile> userFilesList;
+
+
     User() {
         //Just for Hibernate
     }
@@ -149,6 +153,14 @@ public class User {
             }
         }
         return false;
+    }
+
+    public void setUserFilesList(List<UserFile> userFilesList) {
+        this.userFilesList = userFilesList;
+    }
+
+    public List<UserFile> getUserFilesList() {
+        return userFilesList;
     }
 
     @Override

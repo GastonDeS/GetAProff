@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.validators.UserFormValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -22,9 +23,11 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProfileController {
@@ -49,6 +52,9 @@ public class ProfileController {
     @Autowired
     private RatingService ratingService;
 
+    @Autowired
+    private UserFileService userFileService;
+
     @InitBinder
     public void initSubjectsBinder(WebDataBinder webDataBinder) {
         Object target = webDataBinder.getTarget();
@@ -68,6 +74,7 @@ public class ProfileController {
             throw new ProfileNotFoundException("exception.profile");
         }
         ModelAndView mav = new ModelAndView("profile").addObject("user", user.get());
+        mav.addObject("userFiles", userFileService.getAllUserFiles(uid));
         if (curr.isPresent()) {
             mav.addObject("currentUser", curr.get());
             if (curr.get().getId().equals(user.get().getId())) {
@@ -140,6 +147,22 @@ public class ProfileController {
     @RequestMapping(value = "/editProfile?teach=true")
     public ModelAndView changeUserRole() {
         return new ModelAndView("redirect:/editProfile");
+    }
+
+    @RequestMapping(value = "/profile/{uid}/{pdfName}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getUserFile(@PathVariable("uid") final Long uid, @PathVariable("pdfName") final String pdfName){
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+
+        headers.add("Content-Disposition", "inline; filename=" + pdfName);
+
+        List<UserFile> userFiles = userFileService.getAllUserFiles(uid);
+        UserFile chosenUserFile = userFiles.stream().
+                filter(userFile -> Objects.equals(userFile.getFileName(), pdfName)).findFirst().orElseThrow(RuntimeException::new);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(chosenUserFile.getFile(), headers, HttpStatus.OK);
     }
 
 }
