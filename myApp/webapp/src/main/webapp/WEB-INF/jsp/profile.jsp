@@ -154,18 +154,19 @@
                                     <h1><spring:message code="profile.schedule"/></h1>
                                     <p><c:out value="${user.schedule}"/></p>
                                 </div>
-                                <div class="profile-desc-sch">
-                                    <h1><spring:message code="profile.certifications"/></h1>
-                                    <ul>
-                                        <c:forEach var="file" items="${userFiles}">
-                                            <li>
-                                                <a href="/profile/${user.id}/${file.fileName}"
-                                                   target="_blank">${file.fileName}</a>
-                                            </li>
-                                        </c:forEach>
-                                    </ul>
-
-                                </div>
+                                <c:if test="${userFiles.size() != 0}">
+                                    <div class="profile-desc-sch">
+                                        <h1><spring:message code="profile.certifications"/></h1>
+                                        <ul>
+                                            <c:forEach var="file" items="${userFiles}">
+                                                <li>
+                                                    <a href="/profile/${user.id}/${file.fileName}"
+                                                       target="_blank">${file.fileName}</a>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
+                                </c:if>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="subjects-info" role="tabpanel" aria-labelledby="subjects-tab">

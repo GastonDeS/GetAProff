@@ -74,9 +74,9 @@ public class ProfileController {
             throw new ProfileNotFoundException("exception.profile");
         }
         ModelAndView mav = new ModelAndView("profile").addObject("user", user.get());
+        mav.addObject("userFiles", userFileService.getAllUserFiles(uid));
         if (curr.isPresent()) {
             mav.addObject("currentUser", curr.get());
-            mav.addObject("userFiles", userFileService.getAllUserFiles(curr.get().getId()));
             if (curr.get().getId().equals(user.get().getId())) {
                 mav.addObject("edit", 1);
             } else if (!user.get().isTeacher() || teachesService.get(user.get().getId()).isEmpty()) {
