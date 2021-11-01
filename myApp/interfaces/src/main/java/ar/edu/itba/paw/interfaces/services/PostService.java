@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostService {
 
-    Post post(Long uploaderId, Long classId, String filename, byte[] file, String message);
+    Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type);
 
     List<Post> retrievePosts(Long classId);
 
