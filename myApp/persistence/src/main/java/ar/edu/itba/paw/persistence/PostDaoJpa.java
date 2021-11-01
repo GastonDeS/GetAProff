@@ -35,4 +35,9 @@ public class PostDaoJpa implements PostDao {
         query.setParameter("class", associatedClass);
         return query.getResultList();
     }
+
+    @Override
+    public Post getPostById(Long postId) {
+        return entityManager.getReference(Post.class, postId);
+    }
 }
