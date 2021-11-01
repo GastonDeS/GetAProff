@@ -9,4 +9,6 @@ public interface PostService {
     Post post(Long uploaderId, Long classId, String filename, byte[] file, String message);
 
     List<Post> retrievePosts(Long classId);
+
+    Post getFileData(Long postId);
 }

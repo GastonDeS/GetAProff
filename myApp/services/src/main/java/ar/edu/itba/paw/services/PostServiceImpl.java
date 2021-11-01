@@ -25,4 +25,9 @@ public class PostServiceImpl implements PostService {
         postList.sort((o1, o2) -> o2.getPostId().compareTo(o1.getPostId()));
         return postList;
     }
+
+    @Override
+    public Post getFileData(Long postId) {
+        return postDao.getPostById(postId);
+    }
 }

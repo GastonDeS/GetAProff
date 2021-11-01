@@ -23,7 +23,9 @@
             <div class="class-row-section-container">
                 <div class="class-content class-side-section">
                     <h6><c:out value="${currentClass.subject.name}"/></h6>
-                    <p><c:out value="${currentClass.teacher.name}"/></p>
+                    <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
+                    <p class="card-text"><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
+                    <p class="card-text"><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
                 </div>
                 <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
                 <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box">
@@ -49,7 +51,7 @@
                     <div class="post-box">
                         <h3><c:out value="${post.uploader.name}"/></h3>
                         <p style="margin: 0"><c:out value="${post.message}"/></p>
-                        <h6 class="class-link"><c:out value="${post.filename}"/></h6>
+                        <a target="_blank" href="/classroom/download/${post.postId}" class="class-link">${post.filename}</a>
                     </div>
                 </c:forEach>
             </div>
