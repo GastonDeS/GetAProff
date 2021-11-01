@@ -53,24 +53,24 @@
                 <div class="profile-info-btn">
                     <c:choose>
                         <c:when test="${edit == 1}">
-                                <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom"
-                                   style="margin-right: 10px">
-                                    <spring:message code="profile.btn.edit"/>
-                                </a>
-                                <c:choose>
-                                    <c:when test="${user.teacher}">
-                                        <a href="${pageContext.request.contextPath}/editSubjects"
-                                           class="btn btn-custom">
-                                            <spring:message code="profile.btn.edit.subjects"/>
-                                        </a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="${pageContext.request.contextPath}/editProfile?teach=true"
-                                           class="btn btn-custom">
-                                            <spring:message code="profile.btn.give.class"/>
-                                        </a>
-                                    </c:otherwise>
-                                </c:choose>
+                            <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom"
+                               style="margin-right: 10px">
+                                <spring:message code="profile.btn.edit"/>
+                            </a>
+                            <c:choose>
+                                <c:when test="${user.teacher}">
+                                    <a href="${pageContext.request.contextPath}/editSubjects"
+                                       class="btn btn-custom">
+                                        <spring:message code="profile.btn.edit.subjects"/>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/editProfile?teach=true"
+                                       class="btn btn-custom">
+                                        <spring:message code="profile.btn.give.class"/>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </c:when>
                         <c:otherwise>
                             <sec:authorize access="isAuthenticated()">
@@ -108,7 +108,8 @@
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${user.teacher}">
-                        <a class="btn btn-custom" style="margin-left: 10px" onclick="copyToClipboard()" ><c:out value="${shareProfile}"/></a>
+                        <a class="btn btn-custom" style="margin-left: 10px" onclick="copyToClipboard()"><c:out
+                                value="${shareProfile}"/></a>
                     </c:if>
                 </div>
             </div>
@@ -152,6 +153,18 @@
                                 <div class="profile-desc-sch">
                                     <h1><spring:message code="profile.schedule"/></h1>
                                     <p><c:out value="${user.schedule}"/></p>
+                                </div>
+                                <div class="profile-desc-sch">
+                                    <h1><spring:message code="profile.certifications"/></h1>
+                                    <ul>
+                                        <c:forEach var="file" items="${userFiles}">
+                                            <li>
+                                                <a href="/profile/${user.id}/${file.fileName}"
+                                                   target="_blank">${file.fileName}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+
                                 </div>
                             </div>
                         </div>
@@ -226,7 +239,9 @@
         x.className = "show";
 
         // After 3 seconds, remove the show class from DIV
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 3000);
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
