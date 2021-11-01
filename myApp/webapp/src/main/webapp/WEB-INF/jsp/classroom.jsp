@@ -18,16 +18,16 @@
         <jsp:param name="uid" value="${currentUser.id}"/>
     </jsp:include>
     <div class="page-container">
-        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="matematica banner">
+        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
         <div class="class-section-container">
             <div class="class-row-section-container">
                 <div class="class-content class-side-section">
                     <h6><c:out value="${currentClass.subject.name}"/></h6>
                     <p><c:out value="${currentClass.teacher.name}"/></p>
                 </div>
-                <c:url value="/classroom/{classId}" var="postURL"/>
-                <form:form name="form" modelAttribute="classUploadForm" action="${postURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box gap-2">
-                    <div class="form-input-container" style="width: 90%">
+                <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
+                <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box">
+                    <div class="form-input-container" style="width: 94%">
                         <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh; resize: none;" path="message" placeholder="${enterMessagePlaceholder}"/>
                         <form:errors path="message" element="p" cssClass="form-error"/>
                     </div>
@@ -43,16 +43,14 @@
                     <p>Lorem ipsum.</p>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-6 posts-big-box">
-                    <c:forEach items="${posts}" var="post">
-                        <div class="post-box">
-                            <h3><c:out value="${post.uploader.name}"/></h3>
-                            <p><c:out value="${post.message}"/></p>
-                            <h6 style="color: blue;text-decoration: underline"><c:out value="${post.filename}"/></h6>
-                        </div>
-                    </c:forEach>
-                </div>
+            <div class="posts-big-box">
+                <c:forEach items="${posts}" var="post">
+                    <div class="post-box">
+                        <h3><c:out value="${post.uploader.name}"/></h3>
+                        <p style="margin: 0"><c:out value="${post.message}"/></p>
+                        <h6 class="class-link"><c:out value="${post.filename}"/></h6>
+                    </div>
+                </c:forEach>
             </div>
         </div>
     </div>

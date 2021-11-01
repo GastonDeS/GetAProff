@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Array;
 import java.util.Arrays;
 
 @Entity
@@ -25,7 +24,7 @@ public class UserFile
         //For Hibernate
     }
 
-    public UserFile(User fileOwner, String fileName, byte[] file ){
+    public UserFile(User fileOwner, String fileName, byte[] file){
         this.fileOwner = fileOwner;
         this.fileId = Arrays.hashCode(file);
         this.fileName = fileName;

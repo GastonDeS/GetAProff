@@ -15,18 +15,14 @@ public class UserFileServiceImpl implements UserFileService {
 
     @Autowired
     private UserFileDao userFileDao;
-    @Autowired
-    private UserDao userDao;
 
     @Override
     public List<UserFile> getAllUserFiles(Long ownerId) {
-        User owner = userDao.get(ownerId).orElseThrow(RuntimeException::new);
-        return userFileDao.getAllUserFiles(owner);
+        return userFileDao.getAllUserFiles(ownerId);
     }
 
     @Override
     public UserFile saveNewFile(byte[] file, String fileName, Long ownerId) {
-        User owner = userDao.get(ownerId).orElseThrow(RuntimeException::new);
-        return userFileDao.saveNewFile(file,fileName,owner);
+        return userFileDao.saveNewFile(file,fileName,ownerId);
     }
 }

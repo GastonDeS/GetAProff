@@ -173,7 +173,7 @@ public class ClassesController {
     }
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
-    public ModelAndView accessClass(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
+    public ModelAndView accessClassroom(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
@@ -190,11 +190,11 @@ public class ClassesController {
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
     public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
                                     final BindingResult errors) throws IOException {
-        if (errors.hasErrors()) return accessClass(classId, form);
+        if (errors.hasErrors()) return accessClassroom(classId, form);
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
         postService.post(maybeUser.get().getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage());
-        return accessClass(classId, new ClassUploadForm());
+        return accessClassroom(classId, form);
     }
 }
