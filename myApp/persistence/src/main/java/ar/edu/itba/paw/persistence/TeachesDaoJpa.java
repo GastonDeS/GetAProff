@@ -14,7 +14,6 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-@Primary
 @Repository
 public class TeachesDaoJpa implements TeachesDao {
 

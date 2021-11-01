@@ -1,3 +1,5 @@
+package ar.edu.itba.paw.persistence;
+
 //package ar.edu.itba.paw.persistence;
 //
 //import ar.edu.itba.paw.interfaces.daos.SubjectDao;
@@ -12,7 +14,7 @@
 //import java.util.*;
 //
 //@Repository
-//public class SubjectDaoJdbc implements SubjectDao {
+public class SubjectDaoJdbc {
 //
 //    private final JdbcTemplate jdbcTemplate;
 //    private SimpleJdbcInsert jdbcInsert;
@@ -51,4 +53,4 @@
 //        final List<Subject> list = jdbcTemplate.query("SELECT * FROM subject", ROW_MAPPER);
 //        return list.isEmpty() ? new ArrayList<>() : list;
 //    }
-//}
+}

@@ -23,7 +23,7 @@
     <div class="page-container">
         <h1 class="error-view">${exception}</h1>
         <c:url value="register" var="registerURL"/>
-        <form:form name="form" modelAttribute="register" action="${registerURL}"  method="post" enctype="multipart/form-data">
+        <form:form name="form" modelAttribute="register" action="${registerURL}" method="post" enctype="multipart/form-data">
             <div class="form-container" style="margin-bottom: 15px">
                 <div class="radio-btn-container">
                     <label class="rad-label">

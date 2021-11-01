@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Primary
 @Repository
 public class RoleDaoJpa implements RoleDao {
 

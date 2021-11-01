@@ -22,7 +22,7 @@
             <p class="form-error"><spring:message code="exception.class"/></p>
         </c:if>
         <div class="classes-separator-container">
-            <c:if test="${isTeacher == 1}">
+            <c:if test="${user.teacher}">
                 <div class="main-tab-container">
                     <ul class="nav nav-tabs flex-column" id="request-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -81,12 +81,13 @@
                                 </c:if>
                                 <c:forEach var="activeClass" items="${activeClasses}">
                                     <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${activeClass.subject}"/>
-                                        <jsp:param name="teacherName" value="${activeClass.teacher}"/>
+                                        <jsp:param name="subjectName" value="${activeClass.subject.name}"/>
+                                        <jsp:param name="teacherName" value="${activeClass.teacher.name}"/>
                                         <jsp:param name="price" value="${activeClass.price}"/>
                                         <jsp:param name="level" value="${activeClass.level}"/>
-                                        <jsp:param name="reply" value="${activeClass.messageReply}"/>
                                         <jsp:param name="cid" value="${activeClass.classId}"/>
+                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
+                                        <jsp:param name="classStatus" value="${activeClass.status}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -102,8 +103,9 @@
                                         <jsp:param name="teacherName" value="${pendingClass.teacher.name}"/>
                                         <jsp:param name="price" value="${pendingClass.price}"/>
                                         <jsp:param name="level" value="${pendingClass.level}"/>
-                                        <jsp:param name="request" value="${pendingClass.messageRequest}"/>
                                         <jsp:param name="cid" value="${pendingClass.classId}"/>
+                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
+                                        <jsp:param name="classStatus" value="${pendingClass.status}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -119,8 +121,9 @@
                                         <jsp:param name="teacherName" value="${finishedClass.teacher.name}"/>
                                         <jsp:param name="price" value="${finishedClass.price}"/>
                                         <jsp:param name="level" value="${finishedClass.level}"/>
-                                        <jsp:param name="finished" value="${finishedClass.status}"/>
+                                        <jsp:param name="classStatus" value="${finishedClass.status}"/>
                                         <jsp:param name="cid" value="${finishedClass.classId}"/>
+                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -168,9 +171,9 @@
                                         <jsp:param name="studentName" value="${teacherActiveClass.student.name}"/>
                                         <jsp:param name="price" value="${teacherActiveClass.price}"/>
                                         <jsp:param name="level" value="${teacherActiveClass.level}"/>
-                                        <jsp:param name="active" value="1"/>
-                                        <jsp:param name="reply" value="${teacherActiveClass.messageReply}"/>
                                         <jsp:param name="cid" value="${teacherActiveClass.classId}"/>
+                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
+                                        <jsp:param name="classStatus" value="${teacherActiveClass.status}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -187,7 +190,8 @@
                                         <jsp:param name="price" value="${teacherPendingClass.price}"/>
                                         <jsp:param name="level" value="${teacherPendingClass.level}"/>
                                         <jsp:param name="cid" value="${teacherPendingClass.classId}"/>
-                                        <jsp:param name="request" value="${teacherPendingClass.messageRequest}"/>
+                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
+                                        <jsp:param name="classStatus" value="${teacherPendingClass.status}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>
@@ -203,8 +207,9 @@
                                         <jsp:param name="studentName" value="${teacherFinishedClass.student.name}"/>
                                         <jsp:param name="price" value="${teacherFinishedClass.price}"/>
                                         <jsp:param name="level" value="${teacherFinishedClass.level}"/>
-                                        <jsp:param name="finished" value="${teacherFinishedClass.status}"/>
+                                        <jsp:param name="classStatus" value="${teacherFinishedClass.status}"/>
                                         <jsp:param name="cid" value="${teacherFinishedClass.classId}"/>
+                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
                                     </jsp:include>
                                 </c:forEach>
                             </div>

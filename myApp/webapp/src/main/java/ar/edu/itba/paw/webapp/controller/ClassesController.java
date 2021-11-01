@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.ClassService;
-import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.RatingService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
@@ -12,6 +9,7 @@ import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
+import ar.edu.itba.paw.webapp.forms.ClassUploadForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +44,9 @@ public class ClassesController {
 
     @Autowired
     private RatingService ratingService;
+
+    @Autowired
+    private PostService postService;
 
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
@@ -78,11 +80,10 @@ public class ClassesController {
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        if (status.equals("STUDENT") || status.equals("TEACHER")){
+        if (status.equals("STUDENT") || status.equals("TEACHER")) {
             if (myClass.get().getDeleted() == 0) {
                 classService.setDeleted(cid, Class.Deleted.valueOf(status).getValue());
-            }
-            else {
+            } else {
                 classService.setDeleted(cid, Class.Deleted.BOTH.getValue());
             }
         } else {
@@ -110,7 +111,7 @@ public class ClassesController {
         if (!student.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        return mav.addObject("student", student.get().getName()).addObject("uid",myClass.get().getTeacher().getId());
+        return mav.addObject("student", student.get().getName()).addObject("uid", myClass.get().getTeacher().getId());
     }
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
@@ -141,7 +142,7 @@ public class ClassesController {
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        Optional<User> teacher = userService.findById((long) myClass.get().getTeacher().getId());
+        Optional<User> teacher = userService.findById(myClass.get().getTeacher().getId());
         if (!teacher.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
@@ -150,7 +151,7 @@ public class ClassesController {
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
     public ModelAndView rate(@PathVariable("cid") final Long cid, @ModelAttribute("rateForm") @Valid final RateForm form,
-                               final BindingResult errors) {
+                             final BindingResult errors) {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
@@ -161,7 +162,7 @@ public class ClassesController {
         classService.setStatus(cid, Class.Status.RATED.getValue());
         myClass.get().setStatus(Class.Status.RATED.getValue());
         //TODO: chequear si se agrego
-        ratingService.addRating(myClass.get().getTeacher().getId(), myClass.get().getStudent().getId(), form.getRating(), form.getReview());
+        ratingService.addRating(myClass.get().getTeacher(), myClass.get().getStudent(), form.getRating().floatValue(), form.getReview());
         try {
             emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());
         } catch (MailNotSentException exception) {
@@ -171,12 +172,29 @@ public class ClassesController {
         return new ModelAndView("redirect:/myClasses");
     }
 
-    @RequestMapping(value = "/class", method = RequestMethod.GET)
-    public ModelAndView getClassMav() {
+    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
+    public ModelAndView accessClass(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
-        return new ModelAndView("class")
-                .addObject("currentUser", maybeUser.get());
+        Optional<Class> maybeClass = classService.findById(classId);
+        if (!maybeClass.isPresent()) {
+            throw new ClassNotFoundException("No class found for class id " + classId);
+        }
+        return new ModelAndView("classroom")
+                .addObject("currentUser", maybeUser.get())
+                .addObject("currentClass", maybeClass.get())
+                .addObject("posts", postService.retrievePosts(classId));
+    }
+
+    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
+    public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
+                                    final BindingResult errors) throws IOException {
+        if (errors.hasErrors()) return accessClass(classId, form);
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent())
+            throw new NoUserLoggedException("exception.not.logger.user");
+        postService.post(maybeUser.get().getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage());
+        return accessClass(classId, new ClassUploadForm());
     }
 }

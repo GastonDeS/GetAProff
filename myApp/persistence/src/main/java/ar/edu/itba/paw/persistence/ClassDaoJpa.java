@@ -13,7 +13,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
-@Primary
 @Repository
 public class ClassDaoJpa implements ClassDao {
 

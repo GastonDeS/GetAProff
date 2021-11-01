@@ -906,11 +906,26 @@ label:hover {
     margin: 10px;
 }
 
-.file-upload {
-    width: 80%;
+.class-side-section{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 25%;
+    height: 100%;
+    padding: 8px;
 }
+
+.file-upload {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 8px;
+    height: fit-content;
+    margin: 5px 0 5px 0;
+}
+
 .text-input {
     width: 80%;
     height: 50px;
@@ -924,9 +939,9 @@ label:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    border-radius: 10px;
-    background-color: white;
+    width: 50%;
+    flex: 0 0 auto;
+    padding: 5px 0 5px 0;
 }
 
 .profile-img {
@@ -1308,4 +1323,71 @@ select {
     background-repeat: no-repeat;
     background-position-x: 100%;
     background-position-y: 5px;
+}
+
+/*Class card style*/
+
+.class-cancel-btn {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+}
+
+.cancel-btn {
+    color: #000;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.class-card-btn-holder {
+    width: fit-content;
+    margin: 0;
+    float: left;
+}
+
+.class-card-active-btn-holder {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*Class style*/
+
+.class-img-header {
+    width: 90%;
+    margin-bottom: 20px;
+    object-fit: cover;
+    border-radius: 10px;
+    height: 200px;
+}
+
+.class-section-container{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.class-row-section-container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.posts-big-box {
+    padding: 0;
+}
+.post-box {
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: white;
 }
