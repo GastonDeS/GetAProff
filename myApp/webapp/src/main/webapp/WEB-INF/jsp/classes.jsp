@@ -42,16 +42,27 @@
                             </button>
                         </li>
                     </c:if>
-<%--                    TODO make thinngs nice --%>
-                    <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown link
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item" href="/myclasses/requested/0">Pending</a></li>
-                            <li><a class="dropdown-item" href="/myclasses/requested/1">Active</a></li>
-                            <li><a class="dropdown-item" href="/myclasses/requested/2">Finished</a></li>
-                        </ul>
+                </ul>
+                <ul class="nav nav-tabs flex-column" id="" role="tablist">
+                    <div style="flex-direction: column" class="price-level-container">
+                        <div >
+                            <p style="margin: 0">Filtrar por: </p>
+                        </div>
+                        <select name="filterby" id="filter" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                            <option value="/myclasses/requested/0">Pendinng</option>
+                            <option value="/myclasses/requested/1">Active</option>
+                            <option value="/myclasses/requested/2">Finished</option>
+                            <option value="/myclasses/requested/3">Any</option>
+                        </select>
+<%--
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">--%>
+<%--                            Dropdown link--%>
+<%--                        </a>--%>
+<%--                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">--%>
+<%--                            <li><a class="dropdown-item" href="/myclasses/requested/0">Pending</a></li>--%>
+<%--                            <li><a class="dropdown-item" href="/myclasses/requested/1">Active</a></li>--%>
+<%--                            <li><a class="dropdown-item" href="/myclasses/requested/2">Finished</a></li>--%>
+<%--                        </ul>--%>
                     </div>
                 </ul>
             </div>
