@@ -28,7 +28,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link nav-link-custom active" style="width: 100%;" id="requested-tab"
                                 data-bs-toggle="tab" data-bs-target="#student-table" type="button"
-                                role="tab" aria-controls="student-table" aria-selected="true">
+                                role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='/myclasses/incoming/0'">
                             <spring:message code="myClasses.requested"/>
                         </button>
                     </li>
@@ -37,12 +37,22 @@
                             <button class="nav-link nav-link-custom" style="width: 100%;" id="offered-tab"
                                     data-bs-toggle="tab"
                                     data-bs-target="#teacher-table" type="button"
-                                    role="tab" aria-controls="teacher-table" aria-selected="false">
+                                    role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='/myclasses/incoming/0'">
                                 <spring:message code="myClasses.incoming"/>
                             </button>
                         </li>
                     </c:if>
-<%--                    TODO: dropdown--%>
+<%--                    TODO make thinngs nice --%>
+                    <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown link
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="/myclasses/requested/0">Pending</a></li>
+                            <li><a class="dropdown-item" href="/myclasses/requested/1">Active</a></li>
+                            <li><a class="dropdown-item" href="/myclasses/requested/2">Finished</a></li>
+                        </ul>
+                    </div>
                 </ul>
             </div>
             <div class="tab-content class-card-holder">
