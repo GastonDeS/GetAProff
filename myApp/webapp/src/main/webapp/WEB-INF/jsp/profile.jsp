@@ -18,7 +18,6 @@
     <spring:message code="profile.add.favorites" var="addFav"/>
     <spring:message code="profile.remove.favorites" var="removeFav"/>
     <spring:message code="profile.share" var="shareProfile"/>
-
 </head>
 <body>
 <jsp:include page="../components/navbar.jsp">
@@ -74,18 +73,6 @@
                         </c:when>
                         <c:otherwise>
                             <sec:authorize access="isAuthenticated()">
-                                <a href="${pageContext.request.contextPath}/contact/${uid}" class="btn btn-custom"
-                                   style="margin-right: 10px">
-                                    <spring:message code="profile.btn.contact"/>
-                                </a>
-                            </sec:authorize>
-                            <sec:authorize access="!isAuthenticated()">
-                                <a href="${pageContext.request.contextPath}/login" class="btn btn-custom"
-                                   style="margin-right: 10px">
-                                    <spring:message code="profile.btn.contact"/>
-                                </a>
-                            </sec:authorize>
-                            <sec:authorize access="isAuthenticated()">
                                 <c:choose>
                                     <c:when test="${!isFaved}">
                                         <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
@@ -115,99 +102,136 @@
             </div>
         </div>
         <c:if test="${user.teacher}">
-            <div class="main-container h-100">
-                <div class="tabs-container">
-                    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-                        <li class="nav-item active" role="presentation">
-                            <button class="nav-link nav-link-custom active" id="personal-info-tab" data-bs-toggle="tab"
-                                    data-bs-target="#personal-info" type="button"
-                                    role="tab" aria-controls="personal-info" aria-selected="true">
-                                <spring:message code="profile.personal.info"/>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab"
-                                    data-bs-target="#subjects-info" type="button"
-                                    role="tab" aria-controls="subjects-info" aria-selected="false">
-                                <spring:message code="profile.subjects"/>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link nav-link-custom" id="reviews-tab" data-bs-toggle="tab"
-                                    data-bs-target="#reviews" type="button"
-                                    role="tab" aria-controls="reviews" aria-selected="false">
-                                <spring:message code="profile.reviews"/>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="classes-container h-100">
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="personal-info" role="tabpanel"
-                             aria-labelledby="personal-info-tab">
-                            <div class="section-info">
-                                <div class="profile-desc-sch">
-                                    <h1><spring:message code="profile.description"/></h1>
-                                    <p><c:out value="${user.description}"/></p>
-                                </div>
-                                <div class="profile-desc-sch">
-                                    <h1><spring:message code="profile.schedule"/></h1>
-                                    <p><c:out value="${user.schedule}"/></p>
-                                </div>
-                                <c:if test="${userFiles.size() != 0}">
-                                    <div class="profile-desc-sch">
-                                        <h1><spring:message code="profile.certifications"/></h1>
-                                        <ul>
-                                            <c:forEach var="file" items="${userFiles}">
-                                                <li>
-                                                    <a href="/profile/${user.id}/${file.fileName}"
-                                                       target="_blank">${file.fileName}</a>
-                                                </li>
-                                            </c:forEach>
-                                        </ul>
-                                    </div>
-                                </c:if>
+        <div class="main-container h-100">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                    <li class="nav-item active" role="presentation">
+                        <button class="nav-link nav-link-custom active" id="personal-info-tab" data-bs-toggle="tab"
+                                data-bs-target="#personal-info" type="button"
+                                role="tab" aria-controls="personal-info" aria-selected="true">
+                            <spring:message code="profile.personal.info"/>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link nav-link-custom" id="subjects-tab" data-bs-toggle="tab"
+                                data-bs-target="#subjects-info" type="button"
+                                role="tab" aria-controls="subjects-info" aria-selected="false">
+                            <spring:message code="profile.subjects"/>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link nav-link-custom" id="reviews-tab" data-bs-toggle="tab"
+                                data-bs-target="#reviews" type="button"
+                                role="tab" aria-controls="reviews" aria-selected="false">
+                            <spring:message code="profile.reviews"/>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="classes-container h-100">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="personal-info" role="tabpanel"
+                         aria-labelledby="personal-info-tab">
+                        <div class="section-info">
+                            <div class="profile-desc-sch">
+                                <h1><spring:message code="profile.description"/></h1>
+                                <p><c:out value="${user.description}"/></p>
                             </div>
+                            <div class="profile-desc-sch">
+                                <h1><spring:message code="profile.schedule"/></h1>
+                                <p><c:out value="${user.schedule}"/></p>
+                            </div>
+                            <c:if test="${userFiles.size() != 0}">
+                                <div class="profile-desc-sch">
+                                    <h1><spring:message code="profile.certifications"/></h1>
+                                    <ul>
+                                        <c:forEach var="file" items="${userFiles}">
+                                            <li>
+                                                <a href="/profile/${user.id}/${file.fileName}"
+                                                   target="_blank">${file.fileName}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:if>
                         </div>
-                        <div class="tab-pane fade" id="subjects-info" role="tabpanel" aria-labelledby="subjects-tab">
-                            <div class="profile-subjects">
-                                <table class="subjects-info">
-                                    <tr class="subjects-row">
-                                        <td class="row-title" style="width: 55%">${tableSubject}</td>
-                                        <td class="row-title" style="width: 15%">${tablePrice}</td>
-                                        <td class="row-title" style="width: 30%">${tableLevel}</td>
-                                    </tr>
-                                    <c:forEach items="${subjectsList}" var="subject">
+                    </div>
+                    <div class="tab-pane fade" id="subjects-info" role="tabpanel" aria-labelledby="subjects-tab">
+                        <div class="profile-subjects">
+                            <table class="subjects-info">
+                                <c:choose>
+                                    <c:when test="${edit == 1}">
                                         <tr class="subjects-row">
+                                            <td class="row-title" style="width: 55%">${tableSubject}</td>
+                                            <td class="row-title" style="width: 15%">${tablePrice}</td>
+                                            <td class="row-title" style="width: 30%">${tableLevel}</td>
+                                        </tr>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr class="subjects-row">
+                                            <td class="row-title" style="width: 20%">${tableSubject}</td>
+                                            <td class="row-title" style="width: 17%">${tablePrice}</td>
+                                            <td class="row-title" style="width: 47%">${tableLevel}</td>
+                                        </tr>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:forEach items="${subjectsList}" var="subject">
+                                <tr class="subjects-row">
+                                    <c:choose>
+                                        <c:when test="${edit == 1}">
                                             <td class="row-info" style="width: 55%"><c:out
                                                     value="${subject.name}"/></td>
                                             <td class="row-info" style="width: 15%">$<c:out
                                                     value="${subject.price}"/>/${tableHour}</td>
                                             <td class="row-info" style="width: 30%"><spring:message
                                                     code="subjects.form.level.${subject.level}"/></td>
-                                        </tr>
-                                    </c:forEach>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                            <div class="section-info">
-                                <c:forEach items="${ratingList}" var="rating">
-                                    <div class="profile-desc-sch">
-                                        <div class="review-title">
-                                            <h4><c:out value="${rating.student.name}"/></h4>
-                                            <jsp:include page="../components/ratingStars.jsp">
-                                                <jsp:param name="rating" value="${rating.rate}"/>
-                                            </jsp:include>
-                                        </div>
-                                        <p><c:out value="${rating.review}"/></p>
-                                    </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td class="row-info" style="width: 22%"><c:out
+                                                    value="${subject.name}"/></td>
+                                            <td class="row-info" style="width: 20%">$<c:out
+                                                    value="${subject.price}"/>/${tableHour}</td>
+                                            <td class="row-info" style="width: 25%"><spring:message
+                                                    code="subjects.form.level.${subject.level}"/></td>
+                                            <td class="remove-btn">
+                                                <sec:authorize access="isAuthenticated()">
+                                                    <a href="${pageContext.request.contextPath}/contact/${uid}"
+                                                       class="btn btn-custom">
+                                                        <spring:message code="profile.btn.contact"/>
+                                                    </a>
+                                                </sec:authorize>
+                                                <sec:authorize access="!isAuthenticated()">
+                                                    <a href="${pageContext.request.contextPath}/login"
+                                                       class="btn btn-custom">
+                                                        <spring:message code="profile.btn.contact"/>
+                                                    </a>
+                                                </sec:authorize>
+                                            </td>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:forEach>
-                            </div>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                        <div class="section-info">
+                            <c:forEach items="${ratingList}" var="rating">
+                                <div class="profile-desc-sch">
+                                    <div class="review-title">
+                                        <h4><c:out value="${rating.student.name}"/></h4>
+                                        <jsp:include page="../components/ratingStars.jsp">
+                                            <jsp:param name="rating" value="${rating.rate}"/>
+                                        </jsp:include>
+                                    </div>
+                                    <p><c:out value="${rating.review}"/></p>
+                                </div>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </c:if>
     </div>
 </div>

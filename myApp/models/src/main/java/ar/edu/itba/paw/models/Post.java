@@ -12,11 +12,11 @@ public class Post {
     private Long postId;
 
     @JoinColumn(name = "classid", referencedColumnName = "classid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Class associatedClass;
 
     @JoinColumn(name = "userid", referencedColumnName = "userid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User uploader;
 
     @Column

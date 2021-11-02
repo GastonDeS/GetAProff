@@ -14,12 +14,12 @@ public class Teaches {
     private int level;
 
     @JoinColumn(name = "userid", referencedColumnName = "userid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private User teacher;
 
     @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private Subject subject;
 
