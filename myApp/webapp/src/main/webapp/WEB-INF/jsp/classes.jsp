@@ -123,6 +123,7 @@
                         <jsp:param name="cid" value="${myClass.classId}"/>
                         <jsp:param name="isTeacher" value="${user.teacher}"/>
                         <jsp:param name="classStatus" value="${myClass.status}"/>
+                        <jsp:param name="isOffered" value="${type == 'offered'}"/>
                     </jsp:include>
                 </c:forEach>
             </div>
