@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.ClassDao;
-import ar.edu.itba.paw.interfaces.daos.SubjectDao;
-import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.ClassService;
 import ar.edu.itba.paw.models.Class;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,41 +16,36 @@ public class ClassServiceImpl implements ClassService {
     @Autowired
     private ClassDao classDao;
 
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private SubjectDao subjectDao;
-
-
     @Override
     public Optional<Class> findById(Long id) {
         return classDao.get(id);
     }
 
     @Override
-    public List<Class> findClassesByStudentId(Long id) {
-        if (!userDao.get(id).isPresent()) {
-            throw new RuntimeException();
+    public List<Class> findClassesByStudentAndStatus(Long studentId, Integer status) {
+        if (status == 3) {
+            return classDao.findClassesByStudentId(studentId);
         }
-        return classDao.findClassesByStudentId(id);
+        else if (status == 2) {
+            return classDao.findClassesByStudentAndMultipleStatus(studentId, status);
+        }
+        return classDao.findClassesByStudentAndStatus(studentId, status);
     }
 
     @Override
-    public List<Class> findClassesByTeacherId(Long id) {
-
-        if (!userDao.get(id).isPresent()) {
-            throw new RuntimeException();
+    public List<Class> findClassesByTeacherAndStatus(Long teacherId, Integer status) {
+        if (status == 3) {
+            return classDao.findClassesByTeacherId(teacherId);
         }
-        return classDao.findClassesByTeacherId(id);
+        else if (status == 2) {
+            return classDao.findClassesByTeacherAndMultipleStatus(teacherId, status);
+        }
+        return classDao.findClassesByTeacherAndStatus(teacherId, status);
     }
 
     @Transactional
     @Override
     public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
-        if (!userDao.get(studentId).isPresent() || !userDao.get(teacherId).isPresent() || !subjectDao.findById(subjectId).isPresent()){
-            throw new RuntimeException();
-        }
         return classDao.create(studentId, teacherId, level, subjectId, price, status, message);
     }
 

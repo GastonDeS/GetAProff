@@ -27,7 +27,7 @@
                             <c:set var="url" value="${pageContext.request.contextPath}/"/>
                          </c:if>
                          <c:if test="${loop.index == 2}">
-                            <c:set var="url" value="${pageContext.request.contextPath}/myClasses"/>
+                            <c:set var="url" value="${pageContext.request.contextPath}/myClasses/requested/3"/>
                          </c:if>
                          <c:if test="${loop.index == 3}">
                              <c:set var="url" value="${pageContext.request.contextPath}/favourites"/>

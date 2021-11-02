@@ -105,7 +105,6 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             String userMail = authentication.getName();
-            System.out.println("SIZE AUTH" + Arrays.toString(authentication.getAuthorities().toArray()));
             return this.findByEmail(userMail);
         }
         return Optional.empty();

@@ -20,10 +20,10 @@ public class PostDaoJpa implements PostDao {
 
     @Transactional
     @Override
-    public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message) {
+    public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
         final User uploader = entityManager.getReference(User.class, uploaderId);
         final Class associatedClass = entityManager.getReference(Class.class, classId);
-        final Post post = new Post(null, associatedClass, uploader, message, filename, file);
+        final Post post = new Post(null, associatedClass, uploader, message, filename, file, type);
         entityManager.persist(post);
         return post;
     }

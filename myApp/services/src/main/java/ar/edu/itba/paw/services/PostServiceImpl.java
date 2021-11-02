@@ -15,8 +15,8 @@ public class PostServiceImpl implements PostService {
     private PostDao postDao;
 
     @Override
-    public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message) {
-        return postDao.post(uploaderId, classId, filename, file, message);
+    public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
+        return postDao.post(uploaderId, classId, filename, file, message, type);
     }
 
     @Override

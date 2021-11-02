@@ -156,7 +156,7 @@ input[type="radio"]:checked + label {
     display: flex;
     width: 80vw;
     justify-content: center;
-    margin-top: 50px;
+    align-items: flex-start;
 }
 
 .empty-classes-title {
@@ -166,8 +166,10 @@ input[type="radio"]:checked + label {
 
 .main-tab-container {
     background: #9eebd6;
-    margin-right: 10px;
-    margin-left: -50px;
+    height: 50vh;
+    width: 13%;
+    margin-right: 8px;
+    border-radius: 10px;
 }
 
 .nav-link-custom {
@@ -1072,11 +1074,8 @@ div.bg-tutors-card-custom {
 
 .search-filters {
     display: flex;
-    /* width: 40vw; */
     flex-direction: column;
-    /* align-items: center; */
     justify-content: flex-start;
-    /* margin-bottom: 15px; */
 }
 
 .filter-item {
@@ -1405,4 +1404,18 @@ select {
     color: blue;
     text-decoration: underline;
     margin-top: 5px;
+}
+
+.class-card-holder {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.class-card {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 10px;
 }

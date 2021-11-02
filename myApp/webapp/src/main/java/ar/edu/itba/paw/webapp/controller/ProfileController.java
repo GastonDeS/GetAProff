@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -104,6 +105,7 @@ public class ProfileController {
         }
         User user = maybeUser.get();
         ModelAndView mav = new ModelAndView("userForm").addObject("user", user);
+        mav.addObject("userFiles", userFileService.getAllUserFiles(user.getId()));
         form.setTeacher(user.isTeacher());
         form.setDescription(user.getDescription());
         form.setSchedule(user.getSchedule());
@@ -160,10 +162,18 @@ public class ProfileController {
 
         List<UserFile> userFiles = userFileService.getAllUserFiles(uid);
         UserFile chosenUserFile = userFiles.stream().
-                filter(userFile -> Objects.equals(userFile.getFileName(), pdfName)).findFirst().orElseThrow(RuntimeException::new);
+                filter(userFile -> Objects.equals(userFile.getFileName(), pdfName)).findFirst().
+                orElseThrow(() -> new OperationFailedException("exception.failed"));
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
         return new ResponseEntity<>(chosenUserFile.getFile(), headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/uploadFile/{uid}")
+    public ModelAndView submit(@PathVariable("uid") final Long uid, @RequestParam("file") MultipartFile file) throws IOException {
+        userFileService.saveNewFile(file.getBytes(), file.getOriginalFilename(), uid);
+        return new ModelAndView("redirect:/editProfile");
+
     }
 
 }

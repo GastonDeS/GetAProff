@@ -1,14 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <html>
     <head>
         <title><spring:message code="myClasses.mainTitle"/></title>
         <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="resources/styles/main.css"/>
+              integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"/>
+        <link rel="stylesheet" type="text/css" href="/resources/styles/main.css"/>
         <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
     </head>
     <body>
@@ -22,200 +23,109 @@
             <p class="form-error"><spring:message code="exception.class"/></p>
         </c:if>
         <div class="classes-separator-container">
-            <c:if test="${user.teacher}">
-                <div class="main-tab-container">
-                    <ul class="nav nav-tabs flex-column" id="request-tab" role="tablist">
+            <div class="main-tab-container">
+                <ul class="nav nav-tabs flex-column" id="request-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <c:choose>
+                            <c:when test="${type == 'requested'}">
+                                <button class="nav-link nav-link-custom active" style="width: 100%;" id="requested-tab"
+                                        data-bs-toggle="tab" data-bs-target="#student-table" type="button"
+                                        role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='/myClasses/requested/${status}'">
+                                    <spring:message code="myClasses.requested"/>
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <button class="nav-link nav-link-custom" style="width: 100%;" id="offered-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#teacher-table" type="button"
+                                        role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='/myClasses/requested/${status}'">
+                                    <spring:message code="myClasses.requested"/>
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
+                    </li>
+                    <c:if test="${user.teacher}">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link nav-link-custom active" style="width: 100%;" id="requested-tab"
-                                    data-bs-toggle="tab" data-bs-target="#student-table" type="button"
-                                    role="tab" aria-controls="student-table" aria-selected="true">
-                                <spring:message code="myClasses.requested"/>
-                            </button>
+                            <c:choose>
+                                <c:when test="${type == 'offered'}">
+                                    <button class="nav-link nav-link-custom active" style="width: 100%;" id="requested-tab"
+                                            data-bs-toggle="tab" data-bs-target="#student-table" type="button"
+                                            role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='/myClasses/offered/${status}'">
+                                        <spring:message code="myClasses.incoming"/>
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="nav-link nav-link-custom" style="width: 100%;" id="offered-tab"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#teacher-table" type="button"
+                                            role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='/myClasses/offered/${status}'">
+                                        <spring:message code="myClasses.incoming"/>
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link nav-link-custom" style="width: 100%;" id="offered-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#teacher-table" type="button"
-                                    role="tab" aria-controls="teacher-table" aria-selected="false">
-                                <spring:message code="myClasses.incoming"/>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </c:if>
-            <div class="tab-content" id="outer-nav-content">
-                <div class="tab-pane fade show active" id="student-table" role="tabpanel" aria-labelledby="requested-tab">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs nav-fill" id="student-nav" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link nav-link-custom" id="student-pending-tab" data-bs-toggle="tab"
-                                        data-bs-target="#student-pending" type="button"
-                                        role="tab" aria-controls="student-pending" aria-selected="false">
-                                    <spring:message code="myClasses.pending"/>
-                                </button>
-                            </li>
-                            <li class="nav-item active" role="presentation">
-                                <button class="nav-link active nav-link-custom" id="student-active-tab" data-bs-toggle="tab"
-                                        data-bs-target="#student-active" type="button"
-                                        role="tab" aria-controls="student-active" aria-selected="true">
-                                    <spring:message code="myClasses.active"/>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link nav-link-custom" id="student-finished-tab" data-bs-toggle="tab"
-                                        data-bs-target="#student-finished" type="button"
-                                        role="tab" aria-controls="student-finished" aria-selected="false">
-                                    <spring:message code="myClasses.finished"/>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="classes-container">
-                        <div class="tab-content" id="student-content">
-                            <div class="tab-pane fade show active" id="student-active" role="tabpanel"
-                                 aria-labelledby="student-active-tab">
-                                <c:if test="${fn:length(activeClasses) == 0}">
-                                    <h3 class="empty-classes-title">
-                                        <spring:message code="myClasses.emptyActiveClasses"/>
-                                    </h3>
-                                </c:if>
-                                <c:forEach var="activeClass" items="${activeClasses}">
-                                    <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${activeClass.subject.name}"/>
-                                        <jsp:param name="teacherName" value="${activeClass.teacher.name}"/>
-                                        <jsp:param name="price" value="${activeClass.price}"/>
-                                        <jsp:param name="level" value="${activeClass.level}"/>
-                                        <jsp:param name="cid" value="${activeClass.classId}"/>
-                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
-                                        <jsp:param name="classStatus" value="${activeClass.status}"/>
-                                    </jsp:include>
-                                </c:forEach>
-                            </div>
-                            <div class="tab-pane fade" id="student-pending" role="tabpanel" aria-labelledby="student-pending-tab">
-                                <c:if test="${fn:length(pendingClasses) == 0}">
-                                    <h3 class="empty-classes-title">
-                                        <spring:message code="myClasses.emptyPendingClasses"/>
-                                    </h3>
-                                </c:if>
-                                <c:forEach var="pendingClass" items="${pendingClasses}">
-                                    <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${pendingClass.subject.name}"/>
-                                        <jsp:param name="teacherName" value="${pendingClass.teacher.name}"/>
-                                        <jsp:param name="price" value="${pendingClass.price}"/>
-                                        <jsp:param name="level" value="${pendingClass.level}"/>
-                                        <jsp:param name="cid" value="${pendingClass.classId}"/>
-                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
-                                        <jsp:param name="classStatus" value="${pendingClass.status}"/>
-                                    </jsp:include>
-                                </c:forEach>
-                            </div>
-                            <div class="tab-pane fade" id="student-finished" role="tabpanel" aria-labelledby="student-finished-tab">
-                                <c:if test="${fn:length(finishedClasses) == 0}">
-                                    <h3 class="empty-classes-title">
-                                        <spring:message code="myClasses.emptyFinishedClasses"/>
-                                    </h3>
-                                </c:if>
-                                <c:forEach var="finishedClass" items="${finishedClasses}">
-                                    <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${finishedClass.subject.name}"/>
-                                        <jsp:param name="teacherName" value="${finishedClass.teacher.name}"/>
-                                        <jsp:param name="price" value="${finishedClass.price}"/>
-                                        <jsp:param name="level" value="${finishedClass.level}"/>
-                                        <jsp:param name="classStatus" value="${finishedClass.status}"/>
-                                        <jsp:param name="cid" value="${finishedClass.classId}"/>
-                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
-                                    </jsp:include>
-                                </c:forEach>
-                            </div>
+                    </c:if>
+                </ul>
+                <ul class="nav nav-tabs flex-column" id="" role="tablist">
+                    <div style="flex-direction: column" class="price-level-container">
+                        <div>
+                            <p style="margin: 0">Filtrar por: </p>
                         </div>
+                        <select name="filterby" id="filter" onchange="this.options[this.selectedIndex].value && (window.location = '/myClasses/${type}/'+this.options[this.selectedIndex].value);">
+                            <c:choose>
+                                <c:when test="${status == 0}">
+                                    <option value="0" selected >Pending</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="0" >Pending</option>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${status == 1}">
+                                    <option value="1" selected>Active</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="1">Active</option>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${status == 2}">
+                                    <option value="2" selected>Finished</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="2">Finished</option>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${status == 3}">
+                                    <option value="3" selected>Any</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="3">Any</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </select>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="teacher-table" role="tabpanel" aria-labelledby="offered-tab">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs nav-fill" id="teacher-nav" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link nav-link-custom" id="teacher-pending-tab" data-bs-toggle="tab"
-                                        data-bs-target="#teacher-pending" type="button"
-                                        role="tab" aria-controls="teacher-pending" aria-selected="false">
-                                    <spring:message code="myClasses.pending"/>
-                                </button>
-                            </li>
-                            <li class="nav-item active" role="presentation">
-                                <button class="nav-link active nav-link-custom" id="teacher-active-tab" data-bs-toggle="tab"
-                                        data-bs-target="#teacher-active" type="button"
-                                        role="tab" aria-controls="teacher-active" aria-selected="true">
-                                    <spring:message code="myClasses.active"/>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link nav-link-custom" id="teacher-finished-tab" data-bs-toggle="tab"
-                                        data-bs-target="#teacher-finished" type="button"
-                                        role="tab" aria-controls="teacher-finished" aria-selected="false">
-                                    <spring:message code="myClasses.finished"/>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="classes-container">
-                        <div class="tab-content" id="teacher-content">
-                            <div class="tab-pane fade show active" id="teacher-active" role="tabpanel"
-                                 aria-labelledby="teacher-active-tab">
-                                <c:if test="${fn:length(teacherActiveClasses) == 0}">
-                                    <h3 class="empty-classes-title">
-                                        <spring:message code="myClasses.emptyActiveClasses"/>
-                                    </h3>
-                                </c:if>
-                                <c:forEach var="teacherActiveClass" items="${teacherActiveClasses}">
-                                    <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${teacherActiveClass.subject.name}"/>
-                                        <jsp:param name="studentName" value="${teacherActiveClass.student.name}"/>
-                                        <jsp:param name="price" value="${teacherActiveClass.price}"/>
-                                        <jsp:param name="level" value="${teacherActiveClass.level}"/>
-                                        <jsp:param name="cid" value="${teacherActiveClass.classId}"/>
-                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
-                                        <jsp:param name="classStatus" value="${teacherActiveClass.status}"/>
-                                    </jsp:include>
-                                </c:forEach>
-                            </div>
-                            <div class="tab-pane fade" id="teacher-pending" role="tabpanel" aria-labelledby="teacher-pending-tab">
-                                <c:if test="${fn:length(teacherPendingClasses) == 0}">
-                                    <h3 class="empty-classes-title">
-                                        <spring:message code="myClasses.emptyPendingClasses"/>
-                                    </h3>
-                                </c:if>
-                                <c:forEach var="teacherPendingClass" items="${teacherPendingClasses}">
-                                    <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${teacherPendingClass.subject.name}"/>
-                                        <jsp:param name="studentName" value="${teacherPendingClass.student.name}"/>
-                                        <jsp:param name="price" value="${teacherPendingClass.price}"/>
-                                        <jsp:param name="level" value="${teacherPendingClass.level}"/>
-                                        <jsp:param name="cid" value="${teacherPendingClass.classId}"/>
-                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
-                                        <jsp:param name="classStatus" value="${teacherPendingClass.status}"/>
-                                    </jsp:include>
-                                </c:forEach>
-                            </div>
-                            <div class="tab-pane fade" id="teacher-finished" role="tabpanel" aria-labelledby="teacher-finished-tab">
-                                <c:if test="${fn:length(teacherFinishedClasses) == 0}">
-                                    <h3 class="empty-classes-title">
-                                        <spring:message code="myClasses.emptyFinishedClasses"/>
-                                    </h3>
-                                </c:if>
-                                <c:forEach var="teacherFinishedClass" items="${teacherFinishedClasses}">
-                                    <jsp:include page="../components/classCard.jsp">
-                                        <jsp:param name="subjectName" value="${teacherFinishedClass.subject.name}"/>
-                                        <jsp:param name="studentName" value="${teacherFinishedClass.student.name}"/>
-                                        <jsp:param name="price" value="${teacherFinishedClass.price}"/>
-                                        <jsp:param name="level" value="${teacherFinishedClass.level}"/>
-                                        <jsp:param name="classStatus" value="${teacherFinishedClass.status}"/>
-                                        <jsp:param name="cid" value="${teacherFinishedClass.classId}"/>
-                                        <jsp:param name="isTeacher" value="${user.teacher}"/>
-                                    </jsp:include>
-                                </c:forEach>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </ul>
+            </div>
+            <div class="tab-content class-card-holder">
+                <c:if test="${fn:length(allClasses) == 0}">
+                    <h3 class="empty-classes-title">
+                        <spring:message code="myClasses.emptyPendingClasses"/>
+                    </h3>
+                </c:if>
+                <c:forEach var="myClass" items="${allClasses}">
+                    <jsp:include page="../components/classCard.jsp">
+                        <jsp:param name="subjectName" value="${myClass.subject.name}"/>
+                        <jsp:param name="teacherName" value="${myClass.teacher.name}"/>
+                        <jsp:param name="price" value="${myClass.price}"/>
+                        <jsp:param name="level" value="${myClass.level}"/>
+                        <jsp:param name="cid" value="${myClass.classId}"/>
+                        <jsp:param name="isTeacher" value="${user.teacher}"/>
+                        <jsp:param name="classStatus" value="${myClass.status}"/>
+                        <jsp:param name="isOffered" value="${type == 'offered'}"/>
+                    </jsp:include>
+                </c:forEach>
             </div>
         </div>
     </div>

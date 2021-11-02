@@ -28,17 +28,21 @@ public class Post {
     @Column
     private byte[] file;
 
+    @Column
+    private String type;
+
     Post() {
         //Just for Hibernate
     }
 
-    public Post(Long postId, Class associatedClass, User uploader, String message, String filename, byte[] file) {
+    public Post(Long postId, Class associatedClass, User uploader, String message, String filename, byte[] file, String type) {
         this.postId = postId;
         this.associatedClass = associatedClass;
         this.uploader = uploader;
         this.message = message;
         this.filename = filename;
         this.file = file;
+        this.type = type;
     }
 
     public Long getPostId() {
@@ -87,5 +91,13 @@ public class Post {
 
     public void setFile(byte[] file) {
         this.file = file;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

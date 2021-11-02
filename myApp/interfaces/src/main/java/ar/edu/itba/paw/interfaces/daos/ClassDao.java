@@ -12,7 +12,15 @@ public interface ClassDao {
 
     List<Class> findClassesByStudentId(Long studentId);
 
+    List<Class> findClassesByStudentAndStatus(Long studentId, Integer status);
+
+    List<Class> findClassesByStudentAndMultipleStatus(Long studentId, Integer status);
+
     List<Class> findClassesByTeacherId(Long teacherId);
+
+    List<Class> findClassesByTeacherAndStatus(Long teacherId, Integer status);
+
+    List<Class> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status);
 
     Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
 
