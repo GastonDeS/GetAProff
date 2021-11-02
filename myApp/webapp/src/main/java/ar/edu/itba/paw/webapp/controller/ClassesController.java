@@ -4,12 +4,9 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
-import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.ClassUploadForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
@@ -28,13 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,39 +51,37 @@ public class ClassesController {
     @Autowired
     private PostService postService;
 
-    @RequestMapping("/myClasses")
-    public ModelAndView myClasses() {
-        final ModelAndView mav = new ModelAndView("classes");
+    @RequestMapping("/myClasses?error=true")
+    public ModelAndView myClassesError() {
+        return myClasses("requested", 3);
+    }
+
+    @RequestMapping(value = "/myClasses/{type}/{status}", method = RequestMethod.GET)
+    public ModelAndView myClasses(@PathVariable("type") String type, @PathVariable("status") Integer status) {
         Optional<User> user = userService.getCurrentUser();
         if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
-        LOGGER.debug("Accessing classes of user with id: " + user.get().getId());
-        mav.addObject("user", user.get());
-        List<Class> allClasses;
-        if (user.get().isTeacher()) {
-            allClasses = classService.findClassesByTeacherId(user.get().getId());
+        if (status < 0 || status > 3) {
+            throw new InvalidParameterException("exception.invalid.parameter");
+        }
+        Long userId = user.get().getId();
+        LOGGER.debug("Accessing classes of user with id: " + userId);
+        final ModelAndView mav = new ModelAndView("classes")
+                .addObject("user", user.get());
+        List<Class> classesList;
+        if (type.equals("requested")) {
+            classesList = classService.findClassesByStudentAndStatus(userId, status);
+            mav.addObject("allClasses", classesList);
+        }
+        else if (type.equals("offered")) {
+            classesList = classService.findClassesByTeacherAndStatus(userId, status);
+            mav.addObject("allClasses", classesList);
         }
         else {
-            allClasses = classService.findClassesByStudentId(user.get().getId());
+            throw new InvalidParameterException("exception.invalid.parameter");
         }
-        System.out.println("SIZE" + allClasses.size());
-        List<Class> teacherClassList = classService.findClassesByTeacherId(user.get().getId());
-        List<Class> classList = classService.findClassesByStudentId(user.get().getId());
-        mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
-        mav.addObject("teacherActiveClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("teacherFinishedClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.TEACHER.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
-        mav.addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
-        mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
-        mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()))
-                .addObject("allClasses", teacherClassList);
         return mav;
-    }
-
-    @RequestMapping("/myClasses?error=true")
-    public ModelAndView myClassesError() {
-        return myClasses();
     }
 
     @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)

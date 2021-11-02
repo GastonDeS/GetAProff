@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface ClassService {
     Optional<Class> findById(Long id);
 
-    List<Class> findClassesByStudentId(Long id);
+    List<Class> findClassesByStudentAndStatus(Long studentId, Integer status);
 
-    List<Class> findClassesByTeacherId(Long id);
+    List<Class> findClassesByTeacherAndStatus(Long teacherId, Integer status);
 
     Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
 
