@@ -29,7 +29,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class ClassesController {
@@ -81,7 +80,7 @@ public class ClassesController {
         else {
             throw new InvalidParameterException("exception.invalid.parameter");
         }
-        return mav;
+        return mav.addObject("type", type).addObject("status", status);
     }
 
     @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
