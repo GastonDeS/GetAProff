@@ -194,11 +194,18 @@
                                             <td class="row-info" style="width: 25%"><spring:message
                                                     code="subjects.form.level.${subject.level}"/></td>
                                             <td class="remove-btn">
-                                                <a href="${pageContext.request.contextPath}/contact/${uid}"
-                                                   class="btn btn-custom"
-                                                   style="margin-right: 10px">
-                                                    <spring:message code="profile.btn.contact"/>
-                                                </a>
+                                                <sec:authorize access="isAuthenticated()">
+                                                    <a href="${pageContext.request.contextPath}/contact/${uid}"
+                                                       class="btn btn-custom">
+                                                        <spring:message code="profile.btn.contact"/>
+                                                    </a>
+                                                </sec:authorize>
+                                                <sec:authorize access="!isAuthenticated()">
+                                                    <a href="${pageContext.request.contextPath}/login"
+                                                       class="btn btn-custom">
+                                                        <spring:message code="profile.btn.contact"/>
+                                                    </a>
+                                                </sec:authorize>
                                             </td>
                                         </c:otherwise>
                                     </c:choose>
