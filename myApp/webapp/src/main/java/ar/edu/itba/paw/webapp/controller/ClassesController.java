@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -66,6 +67,14 @@ public class ClassesController {
         }
         LOGGER.debug("Accessing classes of user with id: " + user.get().getId());
         mav.addObject("user", user.get());
+        List<Class> allClasses;
+        if (user.get().isTeacher()) {
+            allClasses = classService.findClassesByTeacherId(user.get().getId());
+        }
+        else {
+            allClasses = classService.findClassesByStudentId(user.get().getId());
+        }
+        System.out.println("SIZE" + allClasses.size());
         List<Class> teacherClassList = classService.findClassesByTeacherId(user.get().getId());
         List<Class> classList = classService.findClassesByStudentId(user.get().getId());
         mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
@@ -74,7 +83,8 @@ public class ClassesController {
         mav.addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
         mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
         mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
+        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()))
+                .addObject("allClasses", teacherClassList);
         return mav;
     }
 

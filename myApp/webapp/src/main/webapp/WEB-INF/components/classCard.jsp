@@ -9,7 +9,7 @@
 <c:set value="5" var="statusRejected"/>
 <c:set value="6" var="statusRated"/>
 
-<div class="card w-100 mt-3">
+<div class="card class-card">
     <c:if test="${param.classStatus >= statusFinished}">
         <c:choose>
             <c:when test="${param.classStatus > statusFinished && param.classStatus < statusRated}">
