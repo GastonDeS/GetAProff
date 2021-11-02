@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class UserFileServiceImpl implements UserFileService {
         return userFileDao.getAllUserFiles(owner);
     }
 
+    @Transactional
     @Override
     public UserFile saveNewFile(byte[] file, String fileName, Long ownerId) {
         User owner = userDao.get(ownerId).orElseThrow(RuntimeException::new);
