@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface UserFileDao {
 
-    List<UserFile> getAllUserFiles(User owner);
+    List<UserFile> getAllUserFiles(Long ownerId);
 
-    UserFile saveNewFile(byte[] file, String fileName, User owner);
+    UserFile saveNewFile(byte[] file, String fileName, Long ownerId);
 
     //int removeUserFile();
 }

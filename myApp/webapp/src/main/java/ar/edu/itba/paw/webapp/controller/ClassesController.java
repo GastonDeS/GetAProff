@@ -1,21 +1,25 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.ClassService;
-import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.RatingService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.forms.AcceptForm;
+import ar.edu.itba.paw.webapp.forms.ClassUploadForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,8 +28,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,6 +55,9 @@ public class ClassesController {
     @Autowired
     private RatingService ratingService;
 
+    @Autowired
+    private PostService postService;
+
     @RequestMapping("/myClasses")
     public ModelAndView myClasses() {
         final ModelAndView mav = new ModelAndView("classes");
@@ -55,6 +67,14 @@ public class ClassesController {
         }
         LOGGER.debug("Accessing classes of user with id: " + user.get().getId());
         mav.addObject("user", user.get());
+        List<Class> allClasses;
+        if (user.get().isTeacher()) {
+            allClasses = classService.findClassesByTeacherId(user.get().getId());
+        }
+        else {
+            allClasses = classService.findClassesByStudentId(user.get().getId());
+        }
+        System.out.println("SIZE" + allClasses.size());
         List<Class> teacherClassList = classService.findClassesByTeacherId(user.get().getId());
         List<Class> classList = classService.findClassesByStudentId(user.get().getId());
         mav.addObject("teacherPendingClasses", teacherClassList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
@@ -63,7 +83,8 @@ public class ClassesController {
         mav.addObject("isTeacher", user.get().isTeacher() ? 1 : 0);
         mav.addObject("pendingClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.PENDING.getValue()).collect(Collectors.toList()));
         mav.addObject("activeClasses", classList.stream().filter(aClass -> aClass.getStatus() == Class.Status.ACCEPTED.getValue()).collect(Collectors.toList()));
-        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()));
+        mav.addObject("finishedClasses", classList.stream().filter(aClass -> aClass.getStatus() > Class.Status.ACCEPTED.getValue() && aClass.getDeleted() != Class.Deleted.STUDENT.getValue() && aClass.getDeleted() != Class.Deleted.BOTH.getValue()).collect(Collectors.toList()))
+                .addObject("allClasses", teacherClassList);
         return mav;
     }
 
@@ -78,11 +99,10 @@ public class ClassesController {
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        if (status.equals("STUDENT") || status.equals("TEACHER")){
+        if (status.equals("STUDENT") || status.equals("TEACHER")) {
             if (myClass.get().getDeleted() == 0) {
                 classService.setDeleted(cid, Class.Deleted.valueOf(status).getValue());
-            }
-            else {
+            } else {
                 classService.setDeleted(cid, Class.Deleted.BOTH.getValue());
             }
         } else {
@@ -110,7 +130,7 @@ public class ClassesController {
         if (!student.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        return mav.addObject("student", student.get().getName()).addObject("uid",myClass.get().getTeacher().getId());
+        return mav.addObject("student", student.get().getName()).addObject("uid", myClass.get().getTeacher().getId());
     }
 
     @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
@@ -141,7 +161,7 @@ public class ClassesController {
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        Optional<User> teacher = userService.findById((long) myClass.get().getTeacher().getId());
+        Optional<User> teacher = userService.findById(myClass.get().getTeacher().getId());
         if (!teacher.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
@@ -150,7 +170,7 @@ public class ClassesController {
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
     public ModelAndView rate(@PathVariable("cid") final Long cid, @ModelAttribute("rateForm") @Valid final RateForm form,
-                               final BindingResult errors) {
+                             final BindingResult errors) {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
@@ -161,7 +181,7 @@ public class ClassesController {
         classService.setStatus(cid, Class.Status.RATED.getValue());
         myClass.get().setStatus(Class.Status.RATED.getValue());
         //TODO: chequear si se agrego
-        ratingService.addRating(myClass.get().getTeacher().getId(), myClass.get().getStudent().getId(), form.getRating(), form.getReview());
+        ratingService.addRating(myClass.get().getTeacher(), myClass.get().getStudent(), form.getRating().floatValue(), form.getReview());
         try {
             emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());
         } catch (MailNotSentException exception) {
@@ -171,12 +191,42 @@ public class ClassesController {
         return new ModelAndView("redirect:/myClasses");
     }
 
-    @RequestMapping(value = "/class", method = RequestMethod.GET)
-    public ModelAndView getClassMav() {
+    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
+    public ModelAndView accessClassroom(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
-        return new ModelAndView("class")
-                .addObject("currentUser", maybeUser.get());
+        Optional<Class> maybeClass = classService.findById(classId);
+        if (!maybeClass.isPresent()) {
+            throw new ClassNotFoundException("No class found for class id " + classId);
+        }
+        return new ModelAndView("classroom")
+                .addObject("currentUser", maybeUser.get())
+                .addObject("currentClass", maybeClass.get())
+                .addObject("posts", postService.retrievePosts(classId));
     }
+
+    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
+    public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
+                                    final BindingResult errors) throws IOException {
+        if (errors.hasErrors()) return accessClassroom(classId, form);
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent())
+            throw new NoUserLoggedException("exception.not.logger.user");
+        postService.post(maybeUser.get().getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
+        return accessClassroom(classId, new ClassUploadForm());
+    }
+
+    @RequestMapping(value = "/classroom/open/{postId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> openFile(@PathVariable("postId") final Long postId) {
+        Post post = postService.getFileData(postId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(post.getType()));
+        headers.add("Content-Disposition", "inline; filename=" + post.getFilename());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(post.getFile(), headers, HttpStatus.OK);
+    }
+
 }

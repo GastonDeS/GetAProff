@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Array;
 import java.util.Arrays;
 
 @Entity

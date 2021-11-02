@@ -13,7 +13,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
-@Primary
 @Repository
 public class ImageDaoJpa implements ImageDao {
 

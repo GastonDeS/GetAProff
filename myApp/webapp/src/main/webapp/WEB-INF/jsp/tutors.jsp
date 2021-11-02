@@ -33,7 +33,6 @@
                             <option value="2"><spring:message code="tutors.orderby.priceD"/></option>
                             <option value="3"><spring:message code="tutors.orderby.ratingA"/></option>
                             <option value="4"><spring:message code="tutors.orderby.ratingD"/></option>
-
                         </select>
                     </li>
                     <li>

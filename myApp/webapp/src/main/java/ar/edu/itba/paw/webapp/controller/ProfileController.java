@@ -131,6 +131,7 @@ public class ProfileController {
         Long uid = user.getId();
         if (!user.isTeacher()) {
             roleService.addTeacherRole(uid);
+            userService.setTeacherAuthorityToUser();
         }
         if (form.getImageFile() != null && form.getImageFile().getSize() > 0) {
             imageService.createOrUpdate(uid, form.getImageFile().getBytes());

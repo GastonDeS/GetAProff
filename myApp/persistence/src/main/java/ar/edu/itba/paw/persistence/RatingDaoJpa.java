@@ -19,9 +19,7 @@ public class RatingDaoJpa implements RatingDao {
     private EntityManager entityManager;
 
     @Override
-    public Rating addRating(Long teacherId, Long studentId, float rate, String review) {
-        final User teacher = entityManager.getReference(User.class, teacherId);
-        final User student = entityManager.getReference(User.class, studentId);
+    public Rating addRating(User teacher, User student, float rate, String review) {
         final Rating rating = new Rating(rate, review, teacher, student);
         entityManager.persist(rating);
         return rating;
