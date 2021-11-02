@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.daos.ClassDao;
 import ar.edu.itba.paw.models.Class;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -33,10 +32,42 @@ public class ClassDaoJpa implements ClassDao {
     }
 
     @Override
+    public List<Class> findClassesByStudentAndStatus(Long studentId, Integer status) {
+        final User student = entityManager.getReference(User.class, studentId);
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.student = :student and c.status = :status", Class.class);
+        query.setParameter("student", student).setParameter("status", status);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Class> findClassesByStudentAndMultipleStatus(Long studentId, Integer status) {
+        final User student = entityManager.getReference(User.class, studentId);
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.student = :student and c.status >= :status", Class.class);
+        query.setParameter("student", student).setParameter("status", status);
+        return query.getResultList();
+    }
+
+    @Override
     public List<Class> findClassesByTeacherId(Long teacherId) {
         final User teacher = entityManager.getReference(User.class, teacherId);
         final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.teacher = :teacher", Class.class);
         query.setParameter("teacher", teacher);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Class> findClassesByTeacherAndStatus(Long teacherId, Integer status) {
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.teacher = :teacher and c.status = :status", Class.class);
+        query.setParameter("teacher", teacher).setParameter("status", status);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Class> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status) {
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.teacher = :teacher and c.status >= :status", Class.class);
+        query.setParameter("teacher", teacher).setParameter("status", status);
         return query.getResultList();
     }
 

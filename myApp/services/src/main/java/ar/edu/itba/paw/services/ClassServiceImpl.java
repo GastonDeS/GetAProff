@@ -22,13 +22,25 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<Class> findClassesByStudentId(Long id) {
-        return classDao.findClassesByStudentId(id);
+    public List<Class> findClassesByStudentAndStatus(Long studentId, Integer status) {
+        if (status == 3) {
+            return classDao.findClassesByStudentId(studentId);
+        }
+        else if (status == 2) {
+            return classDao.findClassesByStudentAndMultipleStatus(studentId, status);
+        }
+        return classDao.findClassesByStudentAndStatus(studentId, status);
     }
 
     @Override
-    public List<Class> findClassesByTeacherId(Long id) {
-        return classDao.findClassesByTeacherId(id);
+    public List<Class> findClassesByTeacherAndStatus(Long teacherId, Integer status) {
+        if (status == 3) {
+            return classDao.findClassesByTeacherId(teacherId);
+        }
+        else if (status == 2) {
+            return classDao.findClassesByTeacherAndMultipleStatus(teacherId, status);
+        }
+        return classDao.findClassesByTeacherAndStatus(teacherId, status);
     }
 
     @Transactional

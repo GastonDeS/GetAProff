@@ -45,7 +45,8 @@ public class ExceptionHandlingController {
 
     @ExceptionHandler({ProfileNotFoundException.class,
             OperationFailedException.class,
-            InvalidOperationException.class})
+            InvalidOperationException.class,
+            InvalidParameterException.class})
     public ModelAndView errorException(RuntimeException exception) {
         Optional<User> curr = userService.getCurrentUser();
         final ModelAndView mav = new ModelAndView("403");
