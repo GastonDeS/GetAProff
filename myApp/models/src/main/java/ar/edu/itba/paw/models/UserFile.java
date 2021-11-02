@@ -28,6 +28,7 @@ public class UserFile
         this.fileOwner = fileOwner;
         this.fileId = Arrays.hashCode(file);
         this.fileName = fileName;
+        this.file = file;
     }
 
     public User getFileOwner() {
