@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Class;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,6 +50,9 @@ public class ClassesController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private TeachesService teachesService;
+
     @RequestMapping("/myClasses?error=true")
     public ModelAndView myClassesError() {
         return myClasses("requested", 3);
@@ -72,12 +75,10 @@ public class ClassesController {
         if (type.equals("requested")) {
             classesList = classService.findClassesByStudentAndStatus(userId, status);
             mav.addObject("allClasses", classesList);
-        }
-        else if (type.equals("offered")) {
+        } else if (type.equals("offered")) {
             classesList = classService.findClassesByTeacherAndStatus(userId, status);
             mav.addObject("allClasses", classesList);
-        }
-        else {
+        } else {
             throw new InvalidParameterException("exception.invalid.parameter");
         }
         return mav.addObject("type", type).addObject("status", status);
@@ -89,20 +90,12 @@ public class ClassesController {
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        if (status.equals("STUDENT") || status.equals("TEACHER")) {
-            if (myClass.get().getDeleted() == 0) {
-                classService.setDeleted(cid, Class.Deleted.valueOf(status).getValue());
-            } else {
-                classService.setDeleted(cid, Class.Deleted.BOTH.getValue());
-            }
-        } else {
-            classService.setStatus(cid, Class.Status.valueOf(status).getValue());
-            myClass.get().setStatus(Class.Status.valueOf(status).getValue());
-            try {
-                emailService.sendStatusChangeMessage(myClass.get());
-            } catch (MailNotSentException exception) {
-                throw new OperationFailedException("exception.failed");
-            }
+        classService.setStatus(cid, Class.Status.valueOf(status).getValue());
+        myClass.get().setStatus(Class.Status.valueOf(status).getValue());
+        try {
+            emailService.sendStatusChangeMessage(myClass.get());
+        } catch (MailNotSentException exception) {
+            throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Class " + cid + "changed to status " + status);
         return new ModelAndView("redirect:/myClasses");
@@ -134,7 +127,6 @@ public class ClassesController {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
         classService.setStatus(myClass.get().getClassId(), Class.Status.ACCEPTED.getValue());
-        classService.setReply(myClass.get().getClassId(), form.getMessage());
         try {
             emailService.sendAcceptMessage(myClass.get().getStudent().getId(), myClass.get().getTeacher().getId(), (long) 3, form.getMessage());
         } catch (MailNotSentException exception) {
@@ -219,4 +211,23 @@ public class ClassesController {
         return new ResponseEntity<>(post.getFile(), headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/requestClass/{uid}/{subjectId}/{level}", method = RequestMethod.POST)
+    public ModelAndView classesStatusChange(@PathVariable("uid") final Long uid, @PathVariable("subjectId") final Long subjectId, @PathVariable("level") final int level) {
+
+        Optional<User> user = userService.findById(uid);
+        Optional<User> curr = userService.getCurrentUser();
+        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, subjectId, level);
+
+        if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
+            throw new InvalidOperationException("exception.invalid");
+        }
+        Class newClass = classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
+//        try {
+//            emailService.sendContactMessage(user.get().getMail(), curr.get().getName(), subject.get().getName());
+//        } catch (RuntimeException exception) {
+//            throw new OperationFailedException("exception");
+//        }
+        LOGGER.debug("User {} requested class from teacher {}", curr.get().getId(), uid);
+        return new ModelAndView("redirect:/classroom/" + newClass.getClassId().toString());
+    }
 }

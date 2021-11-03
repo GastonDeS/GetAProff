@@ -77,7 +77,7 @@ public class ContactHandlingController {
         if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice(), Class.Status.PENDING.getValue(), form.getMessage());
+        classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
         Optional<Subject> subject = subjectService.findById(Long.parseLong(subjectIdAndLevel[0]));
         if (!subject.isPresent()) {
             throw new OperationFailedException("exception");

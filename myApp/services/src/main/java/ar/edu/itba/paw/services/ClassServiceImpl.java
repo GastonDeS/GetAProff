@@ -45,32 +45,14 @@ public class ClassServiceImpl implements ClassService {
 
     @Transactional
     @Override
-    public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
-        return classDao.create(studentId, teacherId, level, subjectId, price, status, message);
+    public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price) {
+        return classDao.create(studentId, teacherId, level, subjectId, price);
     }
 
     @Transactional
     @Override
     public int setStatus(Long classId, int status) {
         return classDao.setStatus(classId, status);
-    }
-
-    @Transactional
-    @Override
-    public int setDeleted(Long classId, int deleted) {
-        return classDao.setDeleted(classId, deleted);
-    }
-
-    @Transactional
-    @Override
-    public int setRequest(Long classId, String message) {
-        return classDao.setRequest(classId, message);
-    }
-
-    @Transactional
-    @Override
-    public int setReply(Long classId, String message) {
-        return classDao.setReply(classId, message);
     }
 
 }

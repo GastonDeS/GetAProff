@@ -25,27 +25,20 @@ public class Class {
     private Subject subject;
 
     @Column
-    private int level, price, status, deleted;
+    private int level, price, status;
 
-    @Column(name = "request")
-    private String messageRequest;
-
-    @Column(name = "reply")
-    private String messageReply;
 
     Class() {
         //For Hibernate
     }
 
-    public Class(User student, User teacher, Subject subject, int level, int price,String messageRequest) {
+    public Class(User student, User teacher, Subject subject, int level, int price) {
         this.student = student;
         this.teacher = teacher;
         this.subject = subject;
         this.level = level;
         this.price = price;
         this.status = Status.PENDING.value;
-        this.deleted = Deleted.NO.value;
-        this.messageRequest = messageRequest;
     }
 
     public Long getClassId() {
@@ -96,22 +89,6 @@ public class Class {
         this.price = price;
     }
 
-    public String getMessageRequest() {
-        return messageRequest;
-    }
-
-    public void setMessageRequest(String messageRequest) {
-        this.messageRequest = messageRequest;
-    }
-
-    public String getMessageReply() {
-        return messageReply;
-    }
-
-    public void setMessageReply(String messageReply) {
-        this.messageReply = messageReply;
-    }
-
     public enum Status {
         PENDING(0),
         ACCEPTED(1),
@@ -133,36 +110,11 @@ public class Class {
         }
     }
 
-    public enum Deleted {
-        NO(0),
-        STUDENT(1),
-        TEACHER(2),
-        BOTH(3);
-
-        private final int value;
-
-        public int getValue() {
-            return value;
-        }
-
-        Deleted(int value) {
-            this.value = value;
-        }
-    }
-
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public int getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(int deleted) {
-        this.deleted = deleted;
     }
 }

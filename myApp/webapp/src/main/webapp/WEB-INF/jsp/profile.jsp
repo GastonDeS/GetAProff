@@ -195,10 +195,10 @@
                                                     code="subjects.form.level.${subject.level}"/></td>
                                             <td class="remove-btn">
                                                 <sec:authorize access="isAuthenticated()">
-                                                    <a href="${pageContext.request.contextPath}/contact/${uid}"
-                                                       class="btn btn-custom">
-                                                        <spring:message code="profile.btn.contact"/>
-                                                    </a>
+                                                    <form action="<c:url value="/requestClass/${uid}/${subject.subjectId}/${subject.level}"/>" method="post">
+                                                        <input type="submit" class="btn btn-custom"
+                                                               value="<spring:message code="profile.btn.contact"/>">
+                                                    </form>
                                                 </sec:authorize>
                                                 <sec:authorize access="!isAuthenticated()">
                                                     <a href="${pageContext.request.contextPath}/login"
