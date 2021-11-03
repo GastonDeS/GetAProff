@@ -9,7 +9,7 @@
         <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"/>
-        <link rel="stylesheet" type="text/css" href="/resources/styles/main.css"/>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/main.css"/>
         <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
     </head>
     <body>

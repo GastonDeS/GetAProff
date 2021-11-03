@@ -13,4 +13,6 @@ public interface UserFileService {
 
     int deleteFile(Long fileId);
 
+    UserFile getFileById(Long fileId);
+
 }

@@ -27,7 +27,7 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="card-header bg-light text-white">
+                    <div class="card-header bg-light text-dark">
                         <c:choose>
                             <c:when test="${param.classStatus == statusFinished}">
                                 <spring:message code="class.card.finished"/>
@@ -43,12 +43,12 @@
         <c:otherwise>
             <c:choose>
                 <c:when test="${param.classStatus == statusPending}">
-                    <div class="card-header bg-orange text-white">
+                    <div class="card-header text-white" style="background-color: darkorange;">
                         <spring:message code="class.card.pending"/>
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="card-header bg-green text-white">
+                    <div class="card-header bg-success text-white">
                         <spring:message code="class.card.accepted"/>
                     </div>
                 </c:otherwise>

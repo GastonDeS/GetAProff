@@ -12,4 +12,6 @@ public interface UserFileDao {
     UserFile saveNewFile(byte[] file, String fileName, Long ownerId);
 
     int deleteFile(Long fileId);
+
+    UserFile getFileById(Long fileId);
 }

@@ -40,4 +40,9 @@ public class UserFileDaoJpa implements UserFileDao {
         entityManager.remove(uf);
         return 0;
     }
+
+    @Override
+    public UserFile getFileById(Long fileId) {
+        return entityManager.find(UserFile.class,fileId);
+    }
 }
