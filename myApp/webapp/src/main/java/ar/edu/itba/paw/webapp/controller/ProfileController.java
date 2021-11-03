@@ -186,7 +186,7 @@ public class ProfileController {
         User currentUser  = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException(""));
         List<UserFile> currentUserFiles = userFileService.getAllUserFiles(currentUser.getId());
         return new ModelAndView("editCertifications").
-                addObject("userFiles",currentUserFiles);
+                addObject("userFiles",currentUserFiles).addObject("userId",currentUser.getId());
     }
 
     @RequestMapping(value = "/editCertifications", method = RequestMethod.POST, params = "submitFile")
@@ -199,6 +199,7 @@ public class ProfileController {
     }
     @RequestMapping(value = "/editCertifications", method = RequestMethod.POST, params = "deleteFile")
     public ModelAndView deleteUserFile(@ModelAttribute("certificationForm") @Valid final CertificationForm form){
+        System.out.println("ID " + form.getFileToRemove());
         userFileService.deleteFile(form.getFileToRemove());
         return new ModelAndView("redirect:/editCertifications");
 

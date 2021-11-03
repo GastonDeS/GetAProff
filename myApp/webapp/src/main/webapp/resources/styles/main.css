@@ -14,7 +14,6 @@
 .file-container {
     display: flex;
     justify-content: space-between;
-    min-width: 500px;
     margin-bottom: 10px;
     align-items: center;
     background: hsla(185, 96%, 22%, 0.35);

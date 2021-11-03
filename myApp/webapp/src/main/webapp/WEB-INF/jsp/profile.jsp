@@ -50,6 +50,12 @@
                     </div>
                 </div>
                 <div class="profile-info-btn">
+                    <c:if test="${user.teacher}">
+                        <a href="${pageContext.request.contextPath}/editCertifications"
+                           class="btn btn-custom" style="margin-right: 10px">
+                            <spring:message code="profile.btn.editCertifications"/>
+                        </a>
+                    </c:if>
                     <c:choose>
                         <c:when test="${edit == 1}">
                             <a href="${pageContext.request.contextPath}/editProfile" class="btn btn-custom"

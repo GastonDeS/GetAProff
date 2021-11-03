@@ -37,7 +37,6 @@ public class UserFileDaoJpa implements UserFileDao {
         TypedQuery<UserFile> query = entityManager.createQuery("from UserFile u where u.fileId = :file", UserFile.class);
         query.setParameter("file",fileId);
         UserFile uf = query.getSingleResult();
-        System.out.println("Lo lograstw! " + uf.getFileName());
         entityManager.remove(uf);
         return 0;
     }
