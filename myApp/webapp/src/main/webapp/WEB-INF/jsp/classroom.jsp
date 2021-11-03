@@ -129,7 +129,7 @@
                     <div class="post-box">
                         <h3><c:out value="${post.uploader.name}"/></h3>
                         <p style="margin: 0"><c:out value="${post.message}"/></p>
-                        <a target="_blank" href="/classroom/open/${post.postId}" class="class-link">${post.filename}</a>
+                        <a target="_blank" href="${pageContext.request.contextPath}/classroom/open/${post.postId}" class="class-link">${post.filename}</a>
                     </div>
                 </c:forEach>
             </div>
