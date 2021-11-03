@@ -3,10 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.LoginErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +37,7 @@ public class LoginController {
     public ModelAndView defaultRedirect() {
         Optional<User> currentUser = userService.getCurrentUser();
         if (!currentUser.isPresent()) {
-            throw new LoginErrorException("exception.login");
+            throw new UsernameNotFoundException("exception.login");
         }
         if (!imageService.findImageById(currentUser.get().getId()).isPresent()) {
             return new ModelAndView("redirect:/editProfile?image=false");

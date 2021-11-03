@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key.txt")
-    Resource resource;
+    private Resource resource;
 
     @Autowired
     private PawUserDetailsService userDetailsService;
@@ -54,9 +54,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
                     .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
-                    .antMatchers("/editSubjects", "/newSubjectForm/**").hasAuthority("USER_TEACHER")
+                    .antMatchers("/editSubjects/*", "/newSubjectForm/**").hasAuthority("USER_TEACHER")
                     .antMatchers("/editProfile/startTeaching").hasAnyAuthority("USER_STUDENT")
-                    .antMatchers("/editProfile/*", "/myClasses", "/editCertifications" , "/favourites").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
+                    .antMatchers("/myClasses", "/editCertifications" , "/favourites").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
                     .antMatchers("/login", "/register").anonymous()
                     .antMatchers("/**").authenticated()
                 .and().formLogin()

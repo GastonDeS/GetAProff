@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.exceptions.InsertException;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,8 +24,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0;
-
     @Autowired
     private UserDao userDao;
 
@@ -33,9 +32,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
-    
-    @Autowired
-    private UtilsService utilsService;
 
     @Autowired
     private RatingService ratingService;
@@ -45,10 +41,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TeachesService teachesService;
-
-    void setUtilsService(UtilsService utilsService) {
-        this.utilsService = utilsService;
-    }
 
     void setUserDao(UserDao userDao) {
         this.userDao = userDao;
@@ -85,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Optional<User> create(String username, String mail, String password, String description, String schedule, Long userole) {
-        User u = userDao.create(utilsService.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
+        User u = userDao.create(Utility.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
         List<Role> roles = roleService.setUserRoles(u.getId(), userole);
         if (roles.isEmpty()) {
             return Optional.empty();

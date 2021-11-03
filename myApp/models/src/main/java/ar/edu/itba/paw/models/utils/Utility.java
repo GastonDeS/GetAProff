@@ -1,15 +1,12 @@
-package ar.edu.itba.paw.services;
-
-import ar.edu.itba.paw.interfaces.services.UtilsService;
-import org.springframework.stereotype.Service;
+package ar.edu.itba.paw.models.utils;
 
 import java.util.StringTokenizer;
 
-@Service
-public class UtilsServiceImpl implements UtilsService {
+public final class Utility {
 
-    @Override
-    public String capitalizeString(String str) {
+    private Utility() {};
+
+    public static String capitalizeString(String str) {
         StringBuilder stringBuilder = new StringBuilder();
         StringTokenizer tokenizer = new StringTokenizer(str, " ");
         while (tokenizer.hasMoreElements()) {
@@ -18,8 +15,7 @@ public class UtilsServiceImpl implements UtilsService {
         return stringBuilder.substring(0, stringBuilder.length() - 1);
     }
 
-    private String capitalizeFirstLetter(String word) {
-        return word.substring(0, 1).toUpperCase() + word.substring(1);
+    private static String capitalizeFirstLetter(String word) {
+        return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
     }
-
 }
