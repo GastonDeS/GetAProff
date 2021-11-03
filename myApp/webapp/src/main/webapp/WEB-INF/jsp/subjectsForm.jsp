@@ -5,10 +5,10 @@
 <html>
 <head>
     <title><spring:message code="subjects.form.title"/> – GetAProff</title>
-    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
+    <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="<c:url value="resources/styles/main.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>">
     <spring:message code="subjects.form.enter" var="subjectPlaceholder"/>
     <spring:message code="subjects.form.your.subjects" var="yourSubjectPlaceholder"/>
     <spring:message code="subjects.form.price" var="pricePlaceholder"/>
@@ -24,7 +24,7 @@
     <jsp:param name="isMainPage" value="${false}"/>
 </jsp:include>
 <div class="page-container">
-    <c:url value="/editSubjects" var="subjectsURL"/>
+    <c:url value="/editSubjects/${userid}" var="subjectsURL"/>
     <form:form modelAttribute="subjectsForm" action="${subjectsURL}" method="post">
         <div class="form-container">
             <p class="form-title">${subjectPlaceholder}</p>

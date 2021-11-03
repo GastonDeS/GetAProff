@@ -64,7 +64,7 @@
                             </a>
                             <c:choose>
                                 <c:when test="${user.teacher}">
-                                    <a href="${pageContext.request.contextPath}/editSubjects"
+                                    <a href="${pageContext.request.contextPath}/editSubjects/${currentUser.id}"
                                        class="btn btn-custom">
                                         <spring:message code="profile.btn.edit.subjects"/>
                                     </a>

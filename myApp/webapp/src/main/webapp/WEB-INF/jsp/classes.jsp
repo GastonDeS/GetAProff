@@ -86,24 +86,30 @@
                     </div>
                 </ul>
             </div>
-            <div class="tab-content class-card-holder">
-                <c:if test="${fn:length(allClasses) == 0}">
-                    <h3 class="empty-classes-title">
-                        <spring:message code="myClasses.empty.${status}"/>
-                    </h3>
-                </c:if>
-                <c:forEach var="myClass" items="${allClasses}">
-                    <jsp:include page="../components/classCard.jsp">
-                        <jsp:param name="subjectName" value="${myClass.subject.name}"/>
-                        <jsp:param name="teacherName" value="${myClass.teacher.name}"/>
-                        <jsp:param name="price" value="${myClass.price}"/>
-                        <jsp:param name="level" value="${myClass.level}"/>
-                        <jsp:param name="cid" value="${myClass.classId}"/>
-                        <jsp:param name="classStatus" value="${myClass.status}"/>
-                        <jsp:param name="isOffered" value="${type == 'offered'}"/>
-                    </jsp:include>
-                </c:forEach>
-            </div>
+            <c:choose>
+                <c:when test="${fn:length(allClasses) == 0}">
+                    <div class="tab-content class-card-holder" style="align-items: center">
+                        <h3 class="empty-classes-title">
+                            <spring:message code="myClasses.empty.${status}"/>
+                        </h3>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="tab-content class-card-holder">
+                        <c:forEach var="myClass" items="${allClasses}">
+                            <jsp:include page="../components/classCard.jsp">
+                                <jsp:param name="subjectName" value="${myClass.subject.name}"/>
+                                <jsp:param name="teacherName" value="${myClass.teacher.name}"/>
+                                <jsp:param name="price" value="${myClass.price}"/>
+                                <jsp:param name="level" value="${myClass.level}"/>
+                                <jsp:param name="cid" value="${myClass.classId}"/>
+                                <jsp:param name="classStatus" value="${myClass.status}"/>
+                                <jsp:param name="isOffered" value="${type == 'offered'}"/>
+                            </jsp:include>
+                        </c:forEach>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
     <jsp:include page="../components/footer.jsp">

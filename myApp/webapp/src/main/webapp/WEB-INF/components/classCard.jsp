@@ -41,16 +41,18 @@
             </c:choose>
         </c:when>
         <c:otherwise>
-            <c:when test="${param.classStatus == statusPending}">
-                <div class="card-header bg-orange text-white">
-                    <spring:message code="class.card.pending"/>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="card-header bg-green text-white">
-                    <spring:message code="class.card.accepted"/>
-                </div>
-            </c:otherwise>
+            <c:choose>
+                <c:when test="${param.classStatus == statusPending}">
+                    <div class="card-header bg-orange text-white">
+                        <spring:message code="class.card.pending"/>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="card-header bg-green text-white">
+                        <spring:message code="class.card.accepted"/>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </c:otherwise>
     </c:choose>
     <div class="card-body">
@@ -70,8 +72,7 @@
             </c:otherwise>
         </c:choose>
         <p class="card-text">
-            <spring:message code="class.card.price.intro"/> $<c:out value="${param.price}"/>/<spring:message
-                code="class.card.price.outro"/>
+            <spring:message code="class.card.price.intro"/> $<c:out value="${param.price}"/>/<spring:message code="class.card.price.outro"/>
         </p>
         <p class="card-text"><spring:message code="class.card.level.intro"/>
             <spring:message code="subjects.form.level.${param.level}"/>

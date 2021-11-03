@@ -202,7 +202,6 @@ public class ProfileController {
         System.out.println("ID " + form.getFileToRemove());
         userFileService.deleteFile(form.getFileToRemove());
         return new ModelAndView("redirect:/editCertifications");
-
     }
 
 }
