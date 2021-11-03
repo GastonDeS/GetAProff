@@ -59,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendNewClassMessage(String to, String userFrom, String subject) {
         String mailSubject = messageSource.getMessage("mail.subject.new.class", null, LocaleContextHolder.getLocale());
         String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject}, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/offered/0","GetAProff/myClases");
         sendSimpleMessage(to,mailSubject, text);
     }
 
@@ -84,7 +84,7 @@ public class EmailServiceImpl implements EmailService {
                 format = messageSource.getMessage("mail.class.accepted.body", new Object[] {teacher.getName(), mySubject.getName(), teacher.getMail()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.accepted", null, LocaleContextHolder.getLocale());
                 text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/classroom/" + myClass.getClassId().toString(),"GetAProff/myClassroom/");
-                sendSimpleMessage(teacher.getMail(),mailSubject, text);
+                sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 2:
                 format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());

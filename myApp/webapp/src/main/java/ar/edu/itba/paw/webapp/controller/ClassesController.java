@@ -84,8 +84,8 @@ public class ClassesController {
         return mav.addObject("type", type).addObject("status", status);
     }
 
-    @RequestMapping(value = "/myClasses/{cid}/{status}", method = RequestMethod.POST)
-    public ModelAndView classesStatusChange(@PathVariable("cid") final Long cid, @PathVariable final String status) {
+    @RequestMapping(value = "/myClasses/{from}/{cid}/{status}", method = RequestMethod.POST)
+    public ModelAndView classesStatusChange(@PathVariable("from") final int from,@PathVariable("cid") final Long cid, @PathVariable final String status) {
         Optional<Class> myClass = classService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
@@ -100,6 +100,9 @@ public class ClassesController {
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Class " + cid + "changed to status " + status);
+        if (from != 0){
+            return new ModelAndView("redirect:/classroom/" + cid);
+        }
         if (intStatus > 2){
             if (intStatus == 3) {
                 offered = "requested";

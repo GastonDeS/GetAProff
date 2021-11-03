@@ -76,18 +76,20 @@
                             <c:choose>
                                 <c:when test="${currentClass.status == statusPending }">
                                     <div class="class-cancel-btn">
-                                        <form action="<c:url value="/myClasses/${currentClass.classId}/REJECTED"/>" method="post" class="class-card-btn-holder">
+                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/REJECTED"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
                                         </form>
-                                        <a href="${pageContext.request.contextPath}/accept/${currentClass.classId}" class="btn btn-custom"><spring:message code="class.card.accept"/></a>
-                                    </div>
+                                        <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
+                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.accept"/>">
+                                        </form>
+                                        </div>
                                 </c:when>
                                 <c:when test="${currentClass.status == statusAccepted}">
                                     <div class="class-cancel-btn">
-                                        <form action="<c:url value="/myClasses/${currentClass.classId}/CANCELEDT"/>" method="post" class="class-card-btn-holder">
+                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
                                         </form>
-                                        <form action="<c:url value="/myClasses/${currentClass.classId}/FINISHED"/>" method="post" class="class-card-btn-holder">
+                                        <form action="<c:url value="/myClasses/1/${currentClass.classId}/FINISHED"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.finish"/>">
                                         </form>
                                     </div>
@@ -98,14 +100,14 @@
                             <c:choose>
                                 <c:when test="${currentClass.status == statusPending}">
                                     <div class="class-card-active-btn-holder">
-                                        <form action="<c:url value="/myClasses/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
+                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
                                         </form>
                                     </div>
                                 </c:when>
                                 <c:when test="${currentClass.status == statusAccepted}">
                                     <div class="class-card-active-btn-holder">
-                                        <form action="<c:url value="/myClasses/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
+                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
                                         </form>
                                     </div>
