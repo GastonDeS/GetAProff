@@ -69,41 +69,19 @@
                 <ul style="border: 0" class="nav nav-tabs flex-column" id="" role="tablist">
                     <div style="flex-direction: column; padding-right: 5px" class="price-level-container">
                         <div>
-                            <p style="margin: 0">Filtrar por: </p>
+                            <p style="margin: 0"><spring:message code="myClasses.filter"/></p>
                         </div>
                         <select name="filterby" id="filter" onchange="this.options[this.selectedIndex].value && (window.location = '/myClasses/${type}/'+this.options[this.selectedIndex].value);">
-                            <c:choose>
-                                <c:when test="${status == 0}">
-                                    <option value="0" selected >Pending</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="0" >Pending</option>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:choose>
-                                <c:when test="${status == 1}">
-                                    <option value="1" selected>Active</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="1">Active</option>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:choose>
-                                <c:when test="${status == 2}">
-                                    <option value="2" selected>Finished</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="2">Finished</option>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:choose>
-                                <c:when test="${status == 3}">
-                                    <option value="3" selected>Any</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="3">Any</option>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:forEach begin="0" end="3" var="statusLoop">
+                                <c:choose>
+                                    <c:when test="${status == statusLoop}">
+                                        <option value="${statusLoop}" selected><spring:message code="myClasses.status.${statusLoop}"/></option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${statusLoop}"><spring:message code="myClasses.status.${statusLoop}"/></option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
                         </select>
                     </div>
                 </ul>
@@ -111,7 +89,7 @@
             <div class="tab-content class-card-holder">
                 <c:if test="${fn:length(allClasses) == 0}">
                     <h3 class="empty-classes-title">
-                        <spring:message code="myClasses.emptyPendingClasses"/>
+                        <spring:message code="myClasses.empty.${status}"/>
                     </h3>
                 </c:if>
                 <c:forEach var="myClass" items="${allClasses}">
