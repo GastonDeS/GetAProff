@@ -64,7 +64,7 @@ public class ExceptionHandlingController {
     public ModelAndView emailAlreadyExistsException(EmailAlreadyExistsException exception) {
         LOGGER.debug(messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
         ModelAndView mav = new ModelAndView("register");
-        mav.addObject("exception", messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
+        mav.addObject("mailException", messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
         return mav.addObject("register", new RegisterForm());
     }
 

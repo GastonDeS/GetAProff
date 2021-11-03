@@ -61,7 +61,7 @@
                 <div class="form-input-container">
                     <form:input type="text" class="form-control" path="mail" placeholder="${mailPlaceholder}"/>
                     <form:errors path="mail" element="p" cssClass="form-error"/>
-                    <p class="form-error" style="margin-bottom: 0">${exception}</p>
+                    <p class="form-error" style="margin-bottom: 0">${mailException}</p>
                 </div>
                 <div class="form-input-container">
                     <form:input type="password" class="form-control" path="password" placeholder="${passPlaceholder}"/>

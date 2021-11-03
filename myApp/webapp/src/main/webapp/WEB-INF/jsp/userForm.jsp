@@ -5,9 +5,9 @@
 <html>
     <head>
         <title><spring:message code="edit.profile.title"/> – GetAProff</title>
-        <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
+        <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-        <link rel="stylesheet"  type="text/css" href="<c:url value="resources/styles/main.css"/>"/>
+        <link rel="stylesheet"  type="text/css" href="<c:url value="/resources/styles/main.css"/>"/>
         <spring:message code="user.form.description" var="descriptionPlaceholder"/>
         <spring:message code="user.form.schedule" var="schedulePlaceholder"/>
         <spring:message code="register.form.name" var="namePlaceholder"/>
@@ -39,7 +39,7 @@
                         <form:input type="text" class="form-control" path="name" placeholder="${namePlaceholder}"/>
                         <form:errors path="name" element="p" cssClass="form-error"/>
                     </div>
-                    <c:if test="${user.teacher || param.teach != null}">
+                    <c:if test="${user.teacher || startTeaching}">
                         <div class="form-input-container">
                             <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
                             <form:errors path="description" element="p" cssClass="form-error"/>
@@ -60,7 +60,17 @@
                         <a href="${pageContext.request.contextPath}/profile/${user.id}" class="btn btn-custom submit-btn">
                             <spring:message code="form.btn.cancel"/>
                         </a>
-                        <input type="submit" class="btn btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+                        <c:if test="${startTeaching}">
+                            <input type="submit" name="startTeaching" class="btn btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+                        </c:if>
+                        <c:if test="${!startTeaching}">
+                            <c:if test="${user.teacher}">
+                                <input type="submit" name="teacher" class="btn btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+                            </c:if>
+                            <c:if test="${!user.teacher}">
+                                <input type="submit" name="student" class="btn btn-custom submit-btn" value="<spring:message code="form.btn.save"/>"/>
+                            </c:if>
+                        </c:if>
                     </div>
                 </div>
             </form:form>

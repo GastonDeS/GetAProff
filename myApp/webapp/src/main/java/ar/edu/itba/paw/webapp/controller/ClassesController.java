@@ -147,6 +147,7 @@ public class ClassesController {
         if (!maybeClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + classId);
         }
+        System.out.println(form.getMessage() + "HOLA");
         return new ModelAndView("classroom")
                 .addObject("currentUser", maybeUser.get())
                 .addObject("currentClass", maybeClass.get())
@@ -161,7 +162,7 @@ public class ClassesController {
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
         postService.post(maybeUser.get().getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
-        return accessClassroom(classId, new ClassUploadForm());
+        return new ModelAndView("redirect:/classroom/" + classId);
     }
 
     @RequestMapping(value = "/classroom/open/{postId}", method = RequestMethod.GET)

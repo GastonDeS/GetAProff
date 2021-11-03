@@ -1,22 +1,24 @@
 package ar.edu.itba.paw.webapp.forms;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserForm {
 
-    private String description, schedule, name;
+    @NotBlank(groups = {Teacher.class})
+    private String description;
+
+    @NotBlank(groups = {Teacher.class})
+    private String schedule;
+
+    @NotBlank(groups = {Student.class, Teacher.class})
+    private String name;
 
     private MultipartFile imageFile;
 
-    private boolean isTeacher;
+    public interface Teacher {}
 
-    public void setTeacher(boolean teacher) {
-        isTeacher = teacher;
-    }
-
-    public boolean isTeacher() {
-        return isTeacher;
-    }
+    public interface Student {}
 
     public String getName() {
         return name;
