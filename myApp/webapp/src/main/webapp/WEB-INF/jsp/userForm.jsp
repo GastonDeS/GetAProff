@@ -48,13 +48,6 @@
                             <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="schedule" placeholder="${schedulePlaceholder}"/>
                             <form:errors path="schedule" element="p" cssClass="form-error"/>
                         </div>
-                        <ul>
-                            <c:forEach var="file" items="${userFiles}">
-                                <li>${file.fileName}</li>
-                            </c:forEach>
-                        </ul>
-                            <input type="file" name="file" id="file" accept="application/pdf" onchange="document.getElementById('file-submit').click();">
-                            <input type="submit" value="submit" id="file-submit" formaction="/uploadFile/${user.id}" formmethod="post" style="display: none">
                     </c:if>
                     <div class="save-btn-container">
                         <a href="${pageContext.request.contextPath}/profile/${user.id}" class="btn btn-custom submit-btn">

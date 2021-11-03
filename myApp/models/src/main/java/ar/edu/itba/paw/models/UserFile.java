@@ -1,20 +1,20 @@
 package ar.edu.itba.paw.models;
 
+
 import javax.persistence.*;
-import java.util.Arrays;
 
 @Entity
 @Table(name = "user_file")
-@IdClass(UserFileId.class)
 public class UserFile
 {
-    @Id
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "userid")
     private User fileOwner;
 
     @Id
-    private int fileId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_file_fileid_seq")
+    @SequenceGenerator(name = "user_file_fileid_seq", sequenceName = "user_file_fileid_seq", allocationSize = 1)
+    private Long fileId;
 
     private String fileName;
 
@@ -24,11 +24,11 @@ public class UserFile
         //For Hibernate
     }
 
-    public UserFile(User fileOwner, String fileName, byte[] file){
+    public UserFile(User fileOwner, Long fileId, String fileName, byte[] file){
         this.fileOwner = fileOwner;
-        this.fileId = Arrays.hashCode(file);
         this.fileName = fileName;
         this.file = file;
+        this.fileId = fileId;
     }
 
     public User getFileOwner() {
@@ -39,11 +39,11 @@ public class UserFile
         this.fileOwner = fileOwner;
     }
 
-    public int getFileId() {
+    public Long getFileId() {
         return fileId;
     }
 
-    public void setFileId(int fileId) {
+    public void setFileId(Long fileId) {
         this.fileId = fileId;
     }
 
