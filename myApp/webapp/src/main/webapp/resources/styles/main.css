@@ -83,7 +83,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     top: -50%;
 }
 .range-value span {
-    width: 44px;
+    width: fit-content;
     height: 24px;
     line-height: 24px;
     text-align: center;
@@ -95,7 +95,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     left: 50%;
     transform: translate(-50%, 0);
     border-radius: 6px;
+    min-width: 40px;
+
 }
+
 .range-value span:before{
     content: "";
     position: absolute;
