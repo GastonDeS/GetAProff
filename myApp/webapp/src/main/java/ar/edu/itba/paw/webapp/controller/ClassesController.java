@@ -101,41 +101,6 @@ public class ClassesController {
         return new ModelAndView("redirect:/myClasses");
     }
 
-
-    @RequestMapping(value = "/accept/{cid}", method = RequestMethod.GET)
-    public ModelAndView acceptForm(@ModelAttribute("acceptForm") final AcceptForm form, @PathVariable("cid") final Long cid) {
-        final ModelAndView mav = new ModelAndView("acceptForm");
-        Optional<Class> myClass = classService.findById(cid);
-        if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + cid);
-        }
-        Optional<User> student = userService.findById(myClass.get().getStudent().getId());
-        if (!student.isPresent()) {
-            throw new InvalidOperationException("exception.invalid");
-        }
-        return mav.addObject("student", student.get().getName()).addObject("uid", myClass.get().getTeacher().getId());
-    }
-
-    @RequestMapping(value = "/accept/{cid}", method = RequestMethod.POST)
-    public ModelAndView accept(@PathVariable("cid") final Long cid, @ModelAttribute("acceptForm") @Valid final AcceptForm form,
-                               final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return acceptForm(form, cid);
-        }
-        Optional<Class> myClass = classService.findById(cid);
-        if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + cid);
-        }
-        classService.setStatus(myClass.get().getClassId(), Class.Status.ACCEPTED.getValue());
-        try {
-            emailService.sendAcceptMessage(myClass.get().getStudent().getId(), myClass.get().getTeacher().getId(), (long) 3, form.getMessage());
-        } catch (MailNotSentException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        LOGGER.debug("Class accepted by teacher " + myClass.get().getTeacher().getId() + " for stutent " + myClass.get().getStudent().getId());
-        return new ModelAndView("redirect:/myClasses");
-    }
-
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final Long cid) {
         final ModelAndView mav = new ModelAndView("rateForm");

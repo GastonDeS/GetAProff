@@ -69,8 +69,10 @@
                                 <form action="<c:url value="/myClasses/${param.cid}/REJECTED"/>" method="post" class="class-card-btn-holder">
                                     <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
                                 </form>
-                                <a href="${pageContext.request.contextPath}/accept/${param.cid}" class="btn btn-custom"><spring:message code="class.card.accept"/></a>
-                            </div>
+                                <form action="<c:url value="/myClasses/${param.cid}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
+                                    <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.accept"/>">
+                                </form>
+                               </div>
                             <a href="${pageContext.request.contextPath}/classroom/${param.cid}" class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
