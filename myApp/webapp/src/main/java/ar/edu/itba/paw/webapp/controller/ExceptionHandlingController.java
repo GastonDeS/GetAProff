@@ -27,8 +27,7 @@ public class ExceptionHandlingController {
     @Autowired
     private UserService userService;
 
-    @ExceptionHandler({LoginErrorException.class,
-            NoUserLoggedException.class})
+    @ExceptionHandler(NoUserLoggedException.class)
     public ModelAndView loginErrorException(RuntimeException exception) {
         LOGGER.debug("Authentication failed");
         ModelAndView mav = new ModelAndView("login");
@@ -58,14 +57,6 @@ public class ExceptionHandlingController {
     public ModelAndView classNotFoundException(ClassNotFoundException exception) {
         LOGGER.debug(messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
         return new ModelAndView("redirect:/myClasses?error=true");
-    }
-
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ModelAndView emailAlreadyExistsException(EmailAlreadyExistsException exception) {
-        LOGGER.debug(messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
-        ModelAndView mav = new ModelAndView("register");
-        mav.addObject("mailException", messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
-        return mav.addObject("register", new RegisterForm());
     }
 
 }

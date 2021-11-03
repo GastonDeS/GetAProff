@@ -52,21 +52,20 @@
                     </div>
                 </form:form>
                 <div style="padding: 0;background-color: transparent" class="class-content class-side-section">
-
                     <c:choose>
                         <c:when test="${currentClass.status == statusPending }">
-                            <div style="margin: 0; border-radius: 10px; width: 100%; background-color: darkorange; padding: 5px">
-                                <h6 style="color: black ;margin: 0">Pending</h6>
+                            <div class="classroom-status" style="background-color: darkorange">
+                                <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.0"/></h6>
                             </div>
                         </c:when>
                         <c:when test="${currentClass.status == statusAccepted}">
-                            <div style="margin: 0; border-radius: 10px; width: 100%; background-color: green; padding: 5px">
-                                <h6 style="color: black ;margin: 0">Active</h6>
+                            <div class="classroom-status" style="background-color: green">
+                                <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.1"/></h6>
                             </div>
                         </c:when>
                         <c:when test="${currentClass.status == statusFinished}">
-                            <div style="margin: 0; border-radius: 10px; width: 100%; background-color: white; padding: 5px">
-                                <h6 style="color: black ;margin: 0">Finished</h6>
+                            <div class="classroom-status" style="background-color: white">
+                                <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.2"/></h6>
                             </div>
                         </c:when>
                     </c:choose>
@@ -120,7 +119,6 @@
                             </c:choose>
                         </c:otherwise>
                     </c:choose>
-                    
 <%--                    FIN DE BOTONES--%>
                 </div>
             </div>

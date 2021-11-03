@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.LoginErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +25,7 @@ public class PawUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         final Optional<User> user = us.findByEmail(email);
         if (!user.isPresent()) {
-            throw new LoginErrorException("login.error");
+            throw new UsernameNotFoundException("exception.login");
         }
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         for (Role r : user.get().getUserRoles()) {
