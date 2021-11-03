@@ -56,26 +56,11 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendContactMessage(String to, String userFrom, String subject, String message) {
+    public void sendNewClassMessage(String to, String userFrom, String subject) {
         String mailSubject = messageSource.getMessage("mail.subject.new.class", null, LocaleContextHolder.getLocale());
-        String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject, message}, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+        String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject}, LocaleContextHolder.getLocale());
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/offered/0","GetAProff/myClases");
         sendSimpleMessage(to,mailSubject, text);
-    }
-
-    @Override
-    @Async
-    public void sendAcceptMessage(Long toId, Long fromId, Long sid, String message) {
-        String mailSubject = messageSource.getMessage("mail.subject.accept.class", null, LocaleContextHolder.getLocale());
-        Optional<User> to = userService.findById(toId);
-        Optional<User> from = userService.findById(fromId);
-        Optional<Subject> subject = subjectService.findById(sid);
-        if (!to.isPresent() || !from.isPresent() || !subject.isPresent()) {
-            throw new NoSuchElementException();
-        }
-        String toFormat = messageSource.getMessage("mail.subject.accept.class.body", new Object[] {from.get().getName(), subject.get().getName(), message, from.get().getMail()}, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-        sendSimpleMessage(to.get().getMail(),mailSubject, text);
     }
 
     @Override
@@ -96,32 +81,32 @@ public class EmailServiceImpl implements EmailService {
         String format;
         switch (myStatus) {
             case 1:
-                format = messageSource.getMessage("mail.class.accepted.body", new Object[] {student.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
+                format = messageSource.getMessage("mail.class.accepted.body", new Object[] {teacher.getName(), mySubject.getName(), teacher.getMail()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.accepted", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                sendSimpleMessage(teacher.getMail(),mailSubject, text);
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/classroom/" + myClass.getClassId().toString(),"GetAProff/myClassroom/");
+                sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 2:
                 format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/classroom" + myClass.getClassId().toString(),"GetAProff/myClassroom");
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 3:
                 format = messageSource.getMessage("mail.class.student.cancelled.body", new Object[] {student.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
-                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                mailSubject = messageSource.getMessage("mail.class.cancelled", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/offered/2","GetAProff/myClasses");
                 sendSimpleMessage(teacher.getMail(),mailSubject, text);
                 break;
             case 4:
                 format = messageSource.getMessage("mail.class.teacher.cancelled.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/requested/2","GetAProff/myClases");
+                mailSubject = messageSource.getMessage("mail.class.cancelled", null, LocaleContextHolder.getLocale());
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 5:
                 format = messageSource.getMessage("mail.class.rejected.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/requested/2","GetAProff/myClasses");
                 mailSubject = messageSource.getMessage("mail.class.rejected", null, LocaleContextHolder.getLocale());
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
@@ -140,7 +125,7 @@ public class EmailServiceImpl implements EmailService {
         String toFormat = messageSource.getMessage("mail.subject.rated.body", new Object[] {
                 student.get().getName(), mySubject.get().getName(), rating, review}, LocaleContextHolder.getLocale());
         String mailSubject = messageSource.getMessage("mail.subject.rated", null, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ teacher.get().getId(),"GetAProff/misClases");
+        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ teacher.get().getId(),"GetAProff/profile");
         sendSimpleMessage(teacher.get().getMail(),mailSubject, text);
     }
 

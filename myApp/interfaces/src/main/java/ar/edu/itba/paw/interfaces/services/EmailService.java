@@ -5,9 +5,7 @@ import ar.edu.itba.paw.models.Class;
 public interface EmailService {
     void sendSimpleMessage(String to, String subject, String text);
 
-    void sendContactMessage(String to, String userFrom, String subject, String message);
-
-    void sendAcceptMessage(Long toId, Long fromId, Long sid, String message);
+    void sendNewClassMessage(String to, String userFrom, String subject);
 
     void sendStatusChangeMessage(Class myClass);
 

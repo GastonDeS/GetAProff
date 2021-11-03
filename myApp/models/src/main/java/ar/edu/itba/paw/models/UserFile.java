@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class UserFile
 {
     @Id
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "userid")
     private User fileOwner;
 
