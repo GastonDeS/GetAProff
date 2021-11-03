@@ -56,11 +56,11 @@ CREATE TABLE IF NOT EXISTS teaches
 CREATE TABLE IF NOT EXISTS user_file
 (
     userId   INTEGER,
-    fileId   INTEGER,
+    fileId   SERIAL,
     fileName VARCHAR,
     file     BYTEA,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
-    PRIMARY KEY (userId, fileId)
+    PRIMARY KEY (fileId)
 );
 
 CREATE TABLE IF NOT EXISTS classes
