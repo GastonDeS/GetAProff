@@ -3,9 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
-import ar.edu.itba.paw.webapp.validators.RegisterFormValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -33,33 +32,42 @@ public class RegisterController {
     private UserService userService;
 
     @Autowired
-    private RegisterFormValidator registerFormValidator;
-
-    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private ImageService imageService;
-
-    @InitBinder
-    public void initBinder(WebDataBinder webDataBinder){
-        Object target = webDataBinder.getTarget();
-        if (target != null) {
-            if (target.getClass().equals(RegisterForm.class)) {
-                webDataBinder.setValidator(registerFormValidator);
-            }
-        }
-    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView register(@ModelAttribute("register") final RegisterForm form) {
         return new ModelAndView("register");
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("register") @Valid final RegisterForm form, final BindingResult errors) throws IOException {
+    @RequestMapping(value = "/register", method = RequestMethod.POST, params = "teacher")
+    public ModelAndView registerTeacher(@ModelAttribute("register") @Validated(RegisterForm.Teacher.class) final RegisterForm form, final BindingResult errors) throws IOException {
         if (errors.hasErrors()) {
+            if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
             return new ModelAndView("register");
+        }
+
+        commonRegister(form);
+        return new ModelAndView("redirect:/editSubjects");
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST, params = "student")
+    public ModelAndView registerStudent(@ModelAttribute("register") @Validated(RegisterForm.Student.class) final RegisterForm form, final BindingResult errors) throws IOException {
+        if (errors.hasErrors()) {
+            if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
+            return new ModelAndView("register");
+        }
+
+        Long userId = commonRegister(form);
+        String redirect = "redirect:/profile/" + userId;
+        return new ModelAndView(redirect);
+    }
+
+    private Long commonRegister(final RegisterForm form) throws IOException {
+        if (userService.findByEmail(form.getMail()).isPresent()) {
+            throw new EmailAlreadyExistsException("exception.unique.user");
         }
         Optional<User> maybeUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());
         if (!maybeUser.isPresent()) {
@@ -73,10 +81,6 @@ public class RegisterController {
 
         LOGGER.debug("Registered user is {}", user.getId());
 
-        if (form.getUserRole() == 1) {
-            return new ModelAndView("redirect:/editSubjects");
-        }
-        String redirect = "redirect:/profile/" + maybeUser.get().getId();
-        return new ModelAndView(redirect);
+        return user.getId();
     }
 }

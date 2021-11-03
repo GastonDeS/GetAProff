@@ -7,15 +7,13 @@ import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
 import ar.edu.itba.paw.webapp.forms.CertificationForm;
 import ar.edu.itba.paw.webapp.forms.UserForm;
-import ar.edu.itba.paw.webapp.validators.UserFormValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,9 +39,6 @@ public class ProfileController {
     private ImageService imageService;
 
     @Autowired
-    private UserFormValidator userFormValidator;
-
-    @Autowired
     private RoleService roleService;
 
     @Autowired
@@ -51,16 +46,6 @@ public class ProfileController {
 
     @Autowired
     private UserFileService userFileService;
-
-    @InitBinder
-    public void initSubjectsBinder(WebDataBinder webDataBinder) {
-        Object target = webDataBinder.getTarget();
-        if (target != null) {
-            if (target.getClass().equals(UserForm.class)) {
-                webDataBinder.setValidator(userFormValidator);
-            }
-        }
-    }
 
     @RequestMapping("/profile/{uid}")
     public ModelAndView profile(@PathVariable("uid") final Long uid) {
@@ -94,7 +79,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
-    public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form){
+    public ModelAndView editProfile(@ModelAttribute("userForm") final UserForm form) {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
@@ -102,50 +87,82 @@ public class ProfileController {
         User user = maybeUser.get();
         ModelAndView mav = new ModelAndView("userForm").addObject("user", user);
         mav.addObject("userFiles", userFileService.getAllUserFiles(user.getId()));
-        form.setTeacher(user.isTeacher());
         form.setDescription(user.getDescription());
         form.setSchedule(user.getSchedule());
         form.setName(user.getName());
         return mav;
     }
 
-    @RequestMapping("/editProfile?image=false")
-    public ModelAndView noImageFound() {
-        return new ModelAndView("redirect:/editProfile");
+    @RequestMapping(value = "/editProfile/startTeaching", method = RequestMethod.GET)
+    public ModelAndView startTeachingEdit(@ModelAttribute("userForm") final UserForm form) {
+        return editProfile(form).addObject("startTeaching", true);
     }
 
-    @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
-    public ModelAndView userForm(@ModelAttribute("userForm") @Valid final UserForm form,
+    @RequestMapping("/editProfile?image=false")
+    public ModelAndView noImageFound() {
+        return editProfile(new UserForm());
+    }
+
+    @RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "startTeaching")
+    public ModelAndView startTeachingSubmit(@ModelAttribute("userForm") @Validated(UserForm.Teacher.class) final UserForm form,
                                  final BindingResult errors) throws IOException {
-        if (errors.hasErrors())
-            return userForm(form);
+        if (errors.hasErrors()) {
+            return startTeachingEdit(form);
+        }
+        Long userId = commonEditProfile(form);
+        roleService.addTeacherRole(userId);
+        userService.setTeacherAuthorityToUser();
+        return changeUserData(userId, form);
+    }
+
+    @RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "teacher")
+    public ModelAndView editProfileTeacherSubmit(@ModelAttribute("userForm") @Validated(UserForm.Teacher.class) final UserForm form,
+                                 final BindingResult errors) throws IOException {
+        if (errors.hasErrors()){
+            return editProfile(form);
+        }
+        Long userId = commonEditProfile(form);
+        return changeUserData(userId, form);
+    }
+
+    @RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "student")
+    public ModelAndView editProfileStudentSubmit(@ModelAttribute("userForm") @Validated(UserForm.Student.class) final UserForm form,
+                                    final BindingResult errors) throws IOException {
+        if (errors.hasErrors()){
+            return editProfile(form);
+        }
+        Long userId = commonEditProfile(form);
+        int name = userService.setUserName(userId, form.getName());
+        if (name == 0) {
+            throw new OperationFailedException("exception.edit.profile");
+        }
+        LOGGER.debug("Profile edited for user: {}", userId);
+        String redirect = "redirect:/profile/" + userId;
+        return new ModelAndView(redirect);
+    }
+
+    private Long commonEditProfile(final UserForm form) throws IOException {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
-        User user = maybeUser.get();
-        Long uid = user.getId();
-        if (!user.isTeacher()) {
-            roleService.addTeacherRole(uid);
-            userService.setTeacherAuthorityToUser();
-        }
+        Long userId = maybeUser.get().getId();
         if (form.getImageFile() != null && form.getImageFile().getSize() > 0) {
-            imageService.createOrUpdate(uid, form.getImageFile().getBytes());
+            imageService.createOrUpdate(userId, form.getImageFile().getBytes());
         }
-        int desc = userService.setUserDescription(uid, form.getDescription());
-        int sch = userService.setUserSchedule(uid, form.getSchedule());
-        int name = userService.setUserName(uid, form.getName());
+        return userId;
+    }
+
+    private ModelAndView changeUserData(Long userId, final UserForm form) {
+        int desc = userService.setUserDescription(userId, form.getDescription());
+        int sch = userService.setUserSchedule(userId, form.getSchedule());
+        int name = userService.setUserName(userId, form.getName());
         if (desc == 0 || sch == 0 || name == 0) {
             throw new OperationFailedException("exception.edit.profile");
         }
-        LOGGER.debug("Profile edited for user: {}", uid);
-        String redirect = "redirect:/profile/" + uid;
+        LOGGER.debug("Profile edited for user: {}", userId);
+        String redirect = "redirect:/profile/" + userId;
         return new ModelAndView(redirect);
-    }
-
-    @RequestMapping(value = "/editProfile?teach=true")
-    public ModelAndView changeUserRole() {
-        return new ModelAndView("redirect:/editProfile");
     }
 
     @RequestMapping(value = "/profile/{uid}/{pdfName}", method = RequestMethod.GET)

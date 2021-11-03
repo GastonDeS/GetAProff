@@ -56,7 +56,16 @@ public class ExceptionHandlingController {
 
     @ExceptionHandler(ClassNotFoundException.class)
     public ModelAndView classNotFoundException(ClassNotFoundException exception) {
-        LOGGER.debug(exception.getMessage());
+        LOGGER.debug(messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
         return new ModelAndView("redirect:/myClasses?error=true");
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ModelAndView emailAlreadyExistsException(EmailAlreadyExistsException exception) {
+        LOGGER.debug(messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
+        ModelAndView mav = new ModelAndView("register");
+        mav.addObject("mailException", messageSource.getMessage(exception.getMessage(), null, LocaleContextHolder.getLocale()));
+        return mav.addObject("register", new RegisterForm());
+    }
+
 }

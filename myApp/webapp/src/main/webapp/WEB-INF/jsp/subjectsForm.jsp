@@ -36,7 +36,7 @@
                 </form:select>
                 <div class="price-level-container">
                     <p>${pricePlaceholder}</p>
-                    <form:input cssClass="price-form-control" type="number" max="999999999" min="1" path="price"/>
+                    <form:input cssClass="price-form-control" type="number" path="price"/>
                 </div>
                 <form:errors path="price" element="p" cssClass="form-error"/>
                 <div class="price-level-container">
@@ -87,6 +87,12 @@
         </a>
     </div>
 </div>
+<%--<script>--%>
+<%--    function hola() {--%>
+<%--        var items = [[${subjects}]];--%>
+<%--        alert(items.length);--%>
+<%--    }--%>
+<%--</script>--%>
 <jsp:include page="../components/footer.jsp">
     <jsp:param name="" value=""/>
 </jsp:include>

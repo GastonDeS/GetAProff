@@ -101,7 +101,7 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
-    public ModelAndView subjectsForm (@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
+    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
             return subjectsForm(form);
         }

@@ -43,7 +43,7 @@
             <spring:message code="class.card.subject.intro"/> <c:out value="${param.subjectName}"/>
         </h5>
         <c:choose>
-            <c:when test="${!param.isTeacher}">
+            <c:when test="${!param.isOffered}">
                 <p class="card-text">
                     <spring:message code="class.card.teacher.intro"/> <c:out value="${param.teacherName}"/>
                 </p>
@@ -61,59 +61,60 @@
             <spring:message code="subjects.form.level.${param.level}"/>
         </p>
         <c:choose>
-            <c:when test="${param.isTeacher}">
+            <c:when test="${param.isOffered}">
                 <c:choose>
-                    <c:when test="${param.classStatus == statusPending}">
-                        <div class="class-cancel-btn">
-                            <form action="<c:url value="/myClasses/${param.cid}/REJECTED"/>" method="post" class="class-card-btn-holder">
-                                <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
-                            </form>
-                            <a href="${pageContext.request.contextPath}/accept/${param.cid}" class="btn btn-custom"><spring:message code="class.card.accept"/></a>
+                    <c:when test="${param.classStatus == statusPending }">
+                        <div class="class-card-active-btn-holder">
+                            <div class="class-cancel-btn">
+                                <form action="<c:url value="/myClasses/0/${param.cid}/REJECTED"/>" method="post" class="class-card-btn-holder">
+                                    <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
+                                </form>
+                                <form action="<c:url value="/myClasses/1/${param.cid}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
+                                    <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.accept"/>">
+                                </form>
+                               </div>
+                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}" class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
                     <c:when test="${param.classStatus == statusAccepted}">
                         <div class="class-card-active-btn-holder">
                             <div class="class-cancel-btn">
-                                <form action="<c:url value="/myClasses/${param.cid}/CAN CELEDT"/>" method="post" class="class-card-btn-holder">
+                                <form action="<c:url value="/myClasses/0/${param.cid}/CANCELEDT"/>" method="post" class="class-card-btn-holder">
                                     <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
                                 </form>
-                                <form action="<c:url value="/myClasses/${param.cid}/FINISHED"/>" method="post" class="class-card-btn-holder">
+                                <form action="<c:url value="/myClasses/0/${param.cid}/FINISHED"/>" method="post" class="class-card-btn-holder">
                                     <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.finish"/>">
                                 </form>
                             </div>
                             <a href="${pageContext.request.contextPath}/classroom/${param.cid}" class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
-                    <c:otherwise>
-                        <form action="<c:url value="/myClasses/${param.cid}/TEACHER"/>" method="post" class="class-card-btn-holder">
-                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.delete"/>">
-                        </form>
-                    </c:otherwise>
                 </c:choose>
             </c:when>
             <c:otherwise>
                 <c:choose>
                     <c:when test="${param.classStatus == statusPending}">
-                        <form action="<c:url value="/myClasses/${param.cid}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
-                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                        </form>
+                        <div class="class-card-active-btn-holder">
+                            <form action="<c:url value="/myClasses/0/${param.cid}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
+                                <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
+                            </form>
+                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}" class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                        </div>
                     </c:when>
                     <c:when test="${param.classStatus == statusAccepted}">
                         <div class="class-card-active-btn-holder">
-                            <form action="<c:url value="/myClasses/${param.cid}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
+                            <form action="<c:url value="/myClasses/0/${param.cid}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
                                 <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
                             </form>
                             <a href="${pageContext.request.contextPath}/classroom/${param.cid}" class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
                     <c:when test="${param.classStatus == statusFinished}">
-                        <a href="${pageContext.request.contextPath}/rate/${param.cid}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
+                        <div class="class-card-active-btn-holder">
+                            <a href="${pageContext.request.contextPath}/rate/${param.cid}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
+                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}" class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                        </div>
                     </c:when>
-                    <c:otherwise>
-                        <form action="<c:url value="/myClasses/${param.cid}/STUDENT"/>" method="post" class="class-card-btn-holder">
-                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.delete"/>">
-                        </form>
-                    </c:otherwise>
                 </c:choose>
             </c:otherwise>
         </c:choose>

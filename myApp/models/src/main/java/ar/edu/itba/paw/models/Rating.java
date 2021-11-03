@@ -14,12 +14,12 @@ public class Rating {
     private String review;
 
     @JoinColumn(name = "teacherid", referencedColumnName = "userid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private User teacher;
 
     @JoinColumn(name = "userid", referencedColumnName = "userid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private User student;
 

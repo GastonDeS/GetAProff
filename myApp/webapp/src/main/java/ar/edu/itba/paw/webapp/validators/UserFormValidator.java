@@ -19,33 +19,33 @@ public class UserFormValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        UserForm userForm = (UserForm) o;
-        MultipartFile imageFile = userForm.getImageFile();
-        String description = userForm.getDescription();
-        String schedule = userForm.getSchedule();
-        String name = userForm.getName();
-
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "form.field.empty");
-
-        if (!name.isEmpty() && !name.matches("^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")) {
-            errors.rejectValue("name", "form.name.format");
-        }
-
-        if(userForm.isTeacher()) {
-            if (description.isEmpty()) {
-                errors.rejectValue("description", "form.field.empty");
-            }
-
-            if (schedule.isEmpty()) {
-                errors.rejectValue("schedule", "form.field.empty");
-            }
-        }
-
-        if (imageFile != null && imageFile.getSize() > 0) {
-            if(!checkContentType(imageFile.getContentType().toLowerCase())) {
-                errors.rejectValue("imageFile", "form.image.format");
-            }
-        }
+//        UserForm userForm = (UserForm) o;
+//        MultipartFile imageFile = userForm.getImageFile();
+//        String description = userForm.getDescription();
+//        String schedule = userForm.getSchedule();
+//        String name = userForm.getName();
+//
+//        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "form.field.empty");
+//
+//        if (!name.isEmpty() && !name.matches("^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")) {
+//            errors.rejectValue("name", "form.name.format");
+//        }
+//
+//        if(userForm.isTeacher()) {
+//            if (description.isEmpty()) {
+//                errors.rejectValue("description", "form.field.empty");
+//            }
+//
+//            if (schedule.isEmpty()) {
+//                errors.rejectValue("schedule", "form.field.empty");
+//            }
+//        }
+//
+//        if (imageFile != null && imageFile.getSize() > 0) {
+//            if(!checkContentType(imageFile.getContentType().toLowerCase())) {
+//                errors.rejectValue("imageFile", "form.image.format");
+//            }
+//        }
     }
 
     private boolean checkContentType(String contentType) {
