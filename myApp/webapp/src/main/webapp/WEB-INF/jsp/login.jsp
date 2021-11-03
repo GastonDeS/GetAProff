@@ -23,7 +23,7 @@
                 <c:if test="${param.error != null}">
                     <p class="form-error"><spring:message code="login.error"/></p>
                 </c:if>
-                <p class="form-error">${exception}</p>
+                <p class="form-error" style="margin-bottom: 0">${exception}</p>
                 <div class="form-input-container">
                     <input type="text" class="form-control" name="j_email" placeholder="${mailPlaceholder}"/>
                 </div>
@@ -37,7 +37,7 @@
                 <input type="submit" class="btn btn-custom sign-btn" value="<spring:message code="submit.button"/>"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="login.not.registered"/></p>
-                    <a class="account-check-link" href="register">
+                    <a class="account-check-link" href="${pageContext.request.contextPath}/register">
                         <spring:message code="nav.button.register"/>
                     </a>
                 </div>
