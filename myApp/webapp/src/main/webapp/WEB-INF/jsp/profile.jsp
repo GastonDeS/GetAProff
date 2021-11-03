@@ -175,9 +175,9 @@
                                     </c:when>
                                     <c:otherwise>
                                         <tr class="subjects-row">
-                                            <td class="row-title" style="width: 20%">${tableSubject}</td>
+                                            <td class="row-title" style="width: 43%">${tableSubject}</td>
                                             <td class="row-title" style="width: 17%">${tablePrice}</td>
-                                            <td class="row-title" style="width: 47%">${tableLevel}</td>
+                                            <td class="row-title" style="width: 40%">${tableLevel}</td>
                                         </tr>
                                     </c:otherwise>
                                 </c:choose>
@@ -185,30 +185,22 @@
                                 <tr class="subjects-row">
                                     <c:choose>
                                         <c:when test="${edit == 1}">
-                                            <td class="row-info" style="width: 55%"><c:out
-                                                    value="${subject.name}"/></td>
-                                            <td class="row-info" style="width: 15%">$<c:out
-                                                    value="${subject.price}"/>/${tableHour}</td>
-                                            <td class="row-info" style="width: 30%"><spring:message
-                                                    code="subjects.form.level.${subject.level}"/></td>
+                                            <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
+                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                            <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
                                         </c:when>
                                         <c:otherwise>
-                                            <td class="row-info" style="width: 22%"><c:out
-                                                    value="${subject.name}"/></td>
-                                            <td class="row-info" style="width: 20%">$<c:out
-                                                    value="${subject.price}"/>/${tableHour}</td>
-                                            <td class="row-info" style="width: 25%"><spring:message
-                                                    code="subjects.form.level.${subject.level}"/></td>
+                                            <td class="row-info" style="width: 40%"><c:out value="${subject.name}"/></td>
+                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                            <td class="row-info" style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
                                             <td class="remove-btn">
                                                 <sec:authorize access="isAuthenticated()">
                                                     <form action="<c:url value="/requestClass/${uid}/${subject.subjectId}/${subject.level}"/>" method="post">
-                                                        <input type="submit" class="btn btn-custom"
-                                                               value="<spring:message code="profile.btn.contact"/>">
+                                                        <input type="submit" class="btn btn-custom" value="<spring:message code="profile.btn.contact"/>">
                                                     </form>
                                                 </sec:authorize>
                                                 <sec:authorize access="!isAuthenticated()">
-                                                    <a href="${pageContext.request.contextPath}/login"
-                                                       class="btn btn-custom">
+                                                    <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
                                                         <spring:message code="profile.btn.contact"/>
                                                     </a>
                                                 </sec:authorize>

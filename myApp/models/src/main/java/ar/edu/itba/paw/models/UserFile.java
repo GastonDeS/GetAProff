@@ -17,8 +17,10 @@ public class UserFile
     @SequenceGenerator(name = "user_file_fileid_seq", sequenceName = "user_file_fileid_seq", allocationSize = 1)
     private Long fileId;
 
+    @Column
     private String fileName;
 
+    @Column
     private byte[] file;
 
     UserFile() {

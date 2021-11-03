@@ -100,6 +100,7 @@
                             <jsp:include page="../components/classCard.jsp">
                                 <jsp:param name="subjectName" value="${myClass.subject.name}"/>
                                 <jsp:param name="teacherName" value="${myClass.teacher.name}"/>
+                                <jsp:param name="studentName" value="${myClass.student.name}"/>
                                 <jsp:param name="price" value="${myClass.price}"/>
                                 <jsp:param name="level" value="${myClass.level}"/>
                                 <jsp:param name="cid" value="${myClass.classId}"/>

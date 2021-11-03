@@ -16,7 +16,7 @@ public class Subject {
     @Column
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL)
     private List<Teaches> teachersTeachingSubject;
 
     public Subject(){

@@ -75,8 +75,7 @@
                             code="subjects.form.level.${subject.level}"/></td>
                     <form action="<c:url value="/editSubjects/remove/${subject.subjectId}/${subject.level}"/>" method="post">
                         <td class="remove-btn">
-                            <input type="submit" class="btn btn-custom"
-                                   value="<spring:message code="subjects.form.remove"/>">
+                            <input type="submit" class="btn btn-custom" value="<spring:message code="subjects.form.remove"/>">
                         </td>
                     </form>
                 </tr>
