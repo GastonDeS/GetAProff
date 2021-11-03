@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Table(name = "user_file")
 public class UserFile
 {
+
     @ManyToOne
     @JoinColumn(name = "userid")
     private User fileOwner;
