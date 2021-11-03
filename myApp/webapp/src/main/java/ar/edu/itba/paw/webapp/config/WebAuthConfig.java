@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key.txt")
-    Resource resource;
+    private Resource resource;
 
     @Autowired
     private PawUserDetailsService userDetailsService;

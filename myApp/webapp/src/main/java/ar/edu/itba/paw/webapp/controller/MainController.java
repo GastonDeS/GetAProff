@@ -20,9 +20,6 @@ public class MainController {
     @Autowired
     private SubjectService subjectService;
 
-    @Autowired
-    private TeachesService teachesService;
-
     @RequestMapping("/")
     public ModelAndView index() {
         Optional<User> curr = userService.getCurrentUser();

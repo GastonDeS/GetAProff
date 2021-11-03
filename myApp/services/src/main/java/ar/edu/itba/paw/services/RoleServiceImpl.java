@@ -17,7 +17,7 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    RoleDao roleDao;
+    private RoleDao roleDao;
 
     @Override
     public Role create(String role) {

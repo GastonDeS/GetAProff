@@ -19,11 +19,11 @@ import java.util.Optional;
 public class PawUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserService us;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        final Optional<User> user = us.findByEmail(email);
+        final Optional<User> user = userService.findByEmail(email);
         if (!user.isPresent()) {
             throw new UsernameNotFoundException("exception.login");
         }

@@ -24,8 +24,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0;
-
     @Autowired
     private UserDao userDao;
 
