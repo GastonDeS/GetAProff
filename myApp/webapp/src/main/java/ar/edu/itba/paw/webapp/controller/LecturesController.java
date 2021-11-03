@@ -2,11 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
-import ar.edu.itba.paw.webapp.forms.AcceptForm;
 import ar.edu.itba.paw.webapp.forms.ClassUploadForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,15 +29,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class ClassesController {
+public class LecturesController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LecturesController.class);
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private ClassService classService;
+    private LectureService lectureService;
 
     @Autowired
     private EmailService emailService;
@@ -71,13 +69,13 @@ public class ClassesController {
         LOGGER.debug("Accessing classes of user with id: " + userId);
         final ModelAndView mav = new ModelAndView("classes")
                 .addObject("user", user.get());
-        List<Class> classesList;
+        List<Lecture> lecturesList;
         if (type.equals("requested")) {
-            classesList = classService.findClassesByStudentAndStatus(userId, status);
-            mav.addObject("allClasses", classesList);
+            lecturesList = lectureService.findClassesByStudentAndStatus(userId, status);
+            mav.addObject("allLectures", lecturesList);
         } else if (type.equals("offered")) {
-            classesList = classService.findClassesByTeacherAndStatus(userId, status);
-            mav.addObject("allClasses", classesList);
+            lecturesList = lectureService.findClassesByTeacherAndStatus(userId, status);
+            mav.addObject("allLectures", lecturesList);
         } else {
             throw new InvalidParameterException("exception.invalid.parameter");
         }
@@ -86,20 +84,20 @@ public class ClassesController {
 
     @RequestMapping(value = "/myClasses/{from}/{cid}/{status}", method = RequestMethod.POST)
     public ModelAndView classesStatusChange(@PathVariable("from") final int from,@PathVariable("cid") final Long cid, @PathVariable final String status) {
-        Optional<Class> myClass = classService.findById(cid);
+        Optional<Lecture> myClass = lectureService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        int intStatus = Class.Status.valueOf(status).getValue();
+        int intStatus = Lecture.Status.valueOf(status).getValue();
         String offered = "offered";
-        classService.setStatus(cid, intStatus);
+        lectureService.setStatus(cid, intStatus);
         myClass.get().setStatus(intStatus);
         try {
             emailService.sendStatusChangeMessage(myClass.get());
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
-        LOGGER.debug("Class " + cid + "changed to status " + status);
+        LOGGER.debug("Lecture " + cid + "changed to status " + status);
         if (from != 0){
             return new ModelAndView("redirect:/classroom/" + cid);
         }
@@ -115,7 +113,7 @@ public class ClassesController {
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final Long cid) {
         final ModelAndView mav = new ModelAndView("rateForm");
-        Optional<Class> myClass = classService.findById(cid);
+        Optional<Lecture> myClass = lectureService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
@@ -132,12 +130,12 @@ public class ClassesController {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
-        Optional<Class> myClass = classService.findById(cid);
+        Optional<Lecture> myClass = lectureService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        classService.setStatus(cid, Class.Status.RATED.getValue());
-        myClass.get().setStatus(Class.Status.RATED.getValue());
+        lectureService.setStatus(cid, Lecture.Status.RATED.getValue());
+        myClass.get().setStatus(Lecture.Status.RATED.getValue());
         //TODO: chequear si se agrego
         ratingService.addRating(myClass.get().getTeacher(), myClass.get().getStudent(), form.getRating().floatValue(), form.getReview());
         try {
@@ -145,7 +143,7 @@ public class ClassesController {
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
-        LOGGER.debug("Class rated by student " + myClass.get().getStudent().getId() + " for teacher " + myClass.get().getTeacher().getId());
+        LOGGER.debug("Lecture rated by student " + myClass.get().getStudent().getId() + " for teacher " + myClass.get().getTeacher().getId());
         return new ModelAndView("redirect:/myClasses/requested/2");
     }
 
@@ -154,7 +152,7 @@ public class ClassesController {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
-        Optional<Class> maybeClass = classService.findById(classId);
+        Optional<Lecture> maybeClass = lectureService.findById(classId);
         if (!maybeClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + classId);
         }
@@ -198,13 +196,13 @@ public class ClassesController {
         if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        Class newClass = classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
+        Lecture newLecture = lectureService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
         try {
             emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName());
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
         LOGGER.debug("User {} requested class from teacher {}", curr.get().getId(), uid);
-        return new ModelAndView("redirect:/classroom/" + newClass.getClassId().toString());
+        return new ModelAndView("redirect:/classroom/" + newLecture.getClassId().toString());
     }
 }

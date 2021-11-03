@@ -12,12 +12,12 @@
 <div class="card class-card">
     <c:choose>
 
-        <c:when test="${param.classStatus >= statusFinished}">
+        <c:when test="${param.lectureStatus >= statusFinished}">
             <c:choose>
-                <c:when test="${param.classStatus > statusFinished && param.classStatus < statusRated}">
+                <c:when test="${param.lectureStatus > statusFinished && param.lectureStatus < statusRated}">
                     <div class="card-header bg-danger text-white">
                         <c:choose>
-                            <c:when test="${param.classStatus == statusCancelStudent || param.classStatus == statusCancelTeacher}">
+                            <c:when test="${param.lectureStatus == statusCancelStudent || param.lectureStatus == statusCancelTeacher}">
                                 <spring:message code="class.card.canceled"/>
                             </c:when>
                             <c:otherwise>
@@ -29,7 +29,7 @@
                 <c:otherwise>
                     <div class="card-header bg-light text-dark">
                         <c:choose>
-                            <c:when test="${param.classStatus == statusFinished}">
+                            <c:when test="${param.lectureStatus == statusFinished}">
                                 <spring:message code="class.card.finished"/>
                             </c:when>
                             <c:otherwise>
@@ -42,7 +42,7 @@
         </c:when>
         <c:otherwise>
             <c:choose>
-                <c:when test="${param.classStatus == statusPending}">
+                <c:when test="${param.lectureStatus == statusPending}">
                     <div class="card-header text-white" style="background-color: darkorange;">
                         <spring:message code="class.card.pending"/>
                     </div>
@@ -80,7 +80,7 @@
         <c:choose>
             <c:when test="${param.isOffered}">
                 <c:choose>
-                    <c:when test="${param.classStatus == statusPending }">
+                    <c:when test="${param.lectureStatus == statusPending }">
                         <div class="class-card-active-btn-holder">
                             <div class="class-cancel-btn">
                                 <form action="<c:url value="/myClasses/0/${param.cid}/REJECTED"/>" method="post"
@@ -98,7 +98,7 @@
                                class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
-                    <c:when test="${param.classStatus == statusAccepted}">
+                    <c:when test="${param.lectureStatus == statusAccepted}">
                         <div class="class-card-active-btn-holder">
                             <div class="class-cancel-btn">
                                 <form action="<c:url value="/myClasses/0/${param.cid}/CANCELEDT"/>" method="post"
@@ -120,7 +120,7 @@
             </c:when>
             <c:otherwise>
                 <c:choose>
-                    <c:when test="${param.classStatus == statusPending}">
+                    <c:when test="${param.lectureStatus == statusPending}">
                         <div class="class-card-active-btn-holder">
                             <form action="<c:url value="/myClasses/0/${param.cid}/CANCELEDS"/>" method="post"
                                   class="class-card-btn-holder">
@@ -131,7 +131,7 @@
                                class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
-                    <c:when test="${param.classStatus == statusAccepted}">
+                    <c:when test="${param.lectureStatus == statusAccepted}">
                         <div class="class-card-active-btn-holder">
                             <form action="<c:url value="/myClasses/0/${param.cid}/CANCELEDS"/>" method="post"
                                   class="class-card-btn-holder">
@@ -142,7 +142,7 @@
                                class="btn btn-custom"><spring:message code="class.card.enter"/></a>
                         </div>
                     </c:when>
-                    <c:when test="${param.classStatus == statusFinished}">
+                    <c:when test="${param.lectureStatus == statusFinished}">
                         <div class="class-card-active-btn-holder">
                             <a href="${pageContext.request.contextPath}/rate/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.rate"/></a>

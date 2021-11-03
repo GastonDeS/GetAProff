@@ -1343,7 +1343,7 @@ select {
     background-position-y: 5px;
 }
 
-/*Class card style*/
+/*Lecture card style*/
 
 .class-cancel-btn {
     height: fit-content;
@@ -1374,7 +1374,7 @@ select {
     align-items: center;
 }
 
-/*Class style*/
+/*Lecture style*/
 
 .class-img-header {
     width: 90%;

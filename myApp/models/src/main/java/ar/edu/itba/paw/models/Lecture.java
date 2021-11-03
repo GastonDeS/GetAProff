@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "classes")
-public class Class {
+public class Lecture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classes_classid_seq")
@@ -28,14 +28,14 @@ public class Class {
     @Column
     private int level, price, status;
 
-    @OneToMany(mappedBy = "associatedClass", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "associatedLecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> classPosts;
 
-    Class() {
+    Lecture() {
         //For Hibernate
     }
 
-    public Class(User student, User teacher, Subject subject, int level, int price) {
+    public Lecture(User student, User teacher, Subject subject, int level, int price) {
         this.student = student;
         this.teacher = teacher;
         this.subject = subject;

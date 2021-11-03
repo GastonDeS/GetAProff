@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Lecture;
 
 public interface EmailService {
     void sendSimpleMessage(String to, String subject, String text);
 
     void sendNewClassMessage(String to, String userFrom, String subject);
 
-    void sendStatusChangeMessage(Class myClass);
+    void sendStatusChangeMessage(Lecture myLecture);
 
-    void sendRatedMessage(Class myClass, int rating, String review);
+    void sendRatedMessage(Lecture myLecture, int rating, String review);
 
     void sendSubjectRequest(Long uid, String Subject, String message);
 

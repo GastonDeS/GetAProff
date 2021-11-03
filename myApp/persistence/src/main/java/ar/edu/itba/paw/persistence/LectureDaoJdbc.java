@@ -1,22 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.daos.ClassDao;
-
-import ar.edu.itba.paw.models.Class;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.util.*;
-
-public class ClassDaoJdbc  {
+public class LectureDaoJdbc {
 //
 //    private final JdbcTemplate jdbcTemplate;
 //    private final SimpleJdbcInsert jdbcInsert;
-//    private final static RowMapper<Class> ROW_MAPPER = (rs, rowNum) -> new Class(
+//    private final static RowMapper<Lecture> ROW_MAPPER = (rs, rowNum) -> new Lecture(
 //            rs.getLong("classid"), rs.getLong("studentid"), rs.getLong("teacherid"), rs.getInt("level"),
 //            rs.getLong("subjectid"), rs.getInt("price"), rs.getInt("status"), rs.getString("request"), rs.getString("reply"), rs.getInt("deleted"));
 //    private final static RowMapper<ClassInfo> CLASS_INFO_ROW_MAPPER = (rs, rowNum) -> new ClassInfo(
@@ -24,7 +12,7 @@ public class ClassDaoJdbc  {
 //            rs.getString("request"), rs.getInt("price"), rs.getInt("level"), rs.getInt("status"), rs.getInt("classId"), rs.getInt("deleted"));
 //
 //    @Autowired
-//    public ClassDaoJdbc(final DataSource ds) {
+//    public LectureDaoJdbc(final DataSource ds) {
 //        jdbcTemplate = new JdbcTemplate(ds);
 //        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
 //                .withTableName("classes")
@@ -32,8 +20,8 @@ public class ClassDaoJdbc  {
 //    }
 //
 //    @Override
-//    public Optional<Class> get(Long id) {
-//        final List<Class> list = jdbcTemplate.query("SELECT * FROM classes WHERE classid = ?", new Object[]{id}, ROW_MAPPER);
+//    public Optional<Lecture> get(Long id) {
+//        final List<Lecture> list = jdbcTemplate.query("SELECT * FROM classes WHERE classid = ?", new Object[]{id}, ROW_MAPPER);
 //        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
 //    }
 //
@@ -58,7 +46,7 @@ public class ClassDaoJdbc  {
 //    }
 //
 //    @Override
-//    public Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
+//    public Lecture create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message) {
 //        final Map<String, Object> args = new HashMap<>();
 //        args.put("studentid", studentId);
 //        args.put("teacherid", teacherId);
@@ -70,7 +58,7 @@ public class ClassDaoJdbc  {
 //        args.put("reply","");
 //        args.put("deleted",0);
 //        final Number classId = jdbcInsert.executeAndReturnKey(args);
-//        return new Class((long) classId.intValue(), studentId, teacherId, level, subjectId, price, status, message, "",0);
+//        return new Lecture((long) classId.intValue(), studentId, teacherId, level, subjectId, price, status, message, "",0);
 //    }
 //
 //    @Override
