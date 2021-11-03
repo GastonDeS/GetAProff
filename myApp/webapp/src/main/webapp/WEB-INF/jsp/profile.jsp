@@ -153,7 +153,7 @@
                                     <ul>
                                         <c:forEach var="file" items="${userFiles}">
                                             <li>
-                                                <a href="/profile/${user.id}/${file.fileName}"
+                                                <a href="/profile/${user.id}/${file.fileId}"
                                                    target="_blank">${file.fileName}</a>
                                             </li>
                                         </c:forEach>

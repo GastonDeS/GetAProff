@@ -35,4 +35,9 @@ public class UserFileServiceImpl implements UserFileService {
     public int deleteFile(Long fileId){
         return userFileDao.deleteFile(fileId);
     }
+
+    @Override
+    public UserFile getFileById(Long fileId) {
+        return userFileDao.getFileById(fileId);
+    }
 }

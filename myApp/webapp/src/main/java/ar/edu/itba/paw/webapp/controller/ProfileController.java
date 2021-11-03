@@ -165,20 +165,17 @@ public class ProfileController {
         return new ModelAndView(redirect);
     }
 
-    @RequestMapping(value = "/profile/{uid}/{pdfName}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getUserFile(@PathVariable("uid") final Long uid, @PathVariable("pdfName") final String pdfName){
+    @RequestMapping(value = "/profile/{uid}/{fileId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getUserFile(@PathVariable("fileId") final Long fileId){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        UserFile userFile = userFileService.getFileById(fileId);
+        headers.add("Content-Disposition", "inline; filename=" + userFile.getFileName());
 
-        headers.add("Content-Disposition", "inline; filename=" + pdfName);
-        List<UserFile> userFiles = userFileService.getAllUserFiles(uid);
-        UserFile chosenUserFile = userFiles.stream().
-                filter(userFile -> Objects.equals(userFile.getFileName(), pdfName)).findFirst().
-                orElseThrow(() -> new OperationFailedException("exception.failed"));
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
-        return new ResponseEntity<>(chosenUserFile.getFile(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(userFile.getFile(), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/editCertifications", method = RequestMethod.GET)
@@ -199,7 +196,6 @@ public class ProfileController {
     }
     @RequestMapping(value = "/editCertifications", method = RequestMethod.POST, params = "deleteFile")
     public ModelAndView deleteUserFile(@ModelAttribute("certificationForm") @Valid final CertificationForm form){
-        System.out.println("ID " + form.getFileToRemove());
         userFileService.deleteFile(form.getFileToRemove());
         return new ModelAndView("redirect:/editCertifications");
 
