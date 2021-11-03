@@ -27,19 +27,21 @@
                enctype="multipart/form-data">
         <div class="form-container">
             <p class="form-title"><spring:message code="editCertifications.title"/></p>
-            <ul style="list-style: none;">
+            <ul style="list-style: none;width: 90%;padding: 0;">
                 <c:forEach var="file" items="${userFiles}">
                     <li>
                         <div class="file-container">
                             <a>${file.fileName}</a>
                             <div class="delete-file-btn-container">
                                 <label class="btn btn-custom">
-                                    <form:radiobutton path="fileToRemove" value="${file.fileId}" oninput="document.getElementById('deleteFile').click()"
+                                    <form:radiobutton path="fileToRemove" value="${file.fileId}"
+                                                      oninput="document.getElementById('deleteFile').click()"
                                                       cssStyle="display: none;"/>
-                                   Borrar
+                                    <spring:message code="editCertifications.button.deleteFile"/>
                                 </label>
                             </div>
-                            <button type="submit" name="deleteFile" value="deleteFile" id="deleteFile" style="display: none"></button>
+                            <button type="submit" name="deleteFile" value="deleteFile" id="deleteFile"
+                                    style="display: none"></button>
                         </div>
 
                     </li>
@@ -51,10 +53,11 @@
                                 oninput="document.getElementById('submitFile').click()" style="display: none;"/>
                     <spring:message code="editProfile.button.loadFile"/>
                 </label>
+                <a href="${pageContext.request.contextPath}/profile/${userId}" class="btn btn-custom">
+                    <spring:message code="editCertifications.button.goBackToProfile"/>
+                </a>
             </div>
             <button type="submit" name="submitFile" value="submitFile" id="submitFile" style="display: none"></button>
-
-
         </div>
     </form:form>
 </div>
