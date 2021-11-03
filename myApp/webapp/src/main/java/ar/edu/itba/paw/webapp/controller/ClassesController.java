@@ -90,15 +90,23 @@ public class ClassesController {
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
         }
-        classService.setStatus(cid, Class.Status.valueOf(status).getValue());
-        myClass.get().setStatus(Class.Status.valueOf(status).getValue());
+        int intStatus = Class.Status.valueOf(status).getValue();
+        String offered = "offered";
+        classService.setStatus(cid, intStatus);
+        myClass.get().setStatus(intStatus);
         try {
             emailService.sendStatusChangeMessage(myClass.get());
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Class " + cid + "changed to status " + status);
-        return new ModelAndView("redirect:/myClasses");
+        if (intStatus > 2){
+            if (intStatus == 3) {
+                offered = "requested";
+            }
+            intStatus = 2;
+        }
+        return new ModelAndView("redirect:/myClasses/" + offered +"/" + intStatus);
     }
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
@@ -135,7 +143,7 @@ public class ClassesController {
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Class rated by student " + myClass.get().getStudent().getId() + " for teacher " + myClass.get().getTeacher().getId());
-        return new ModelAndView("redirect:/myClasses");
+        return new ModelAndView("redirect:/myClasses/requested/2");
     }
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
@@ -187,11 +195,11 @@ public class ClassesController {
             throw new InvalidOperationException("exception.invalid");
         }
         Class newClass = classService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
-//        try {
-//            emailService.sendContactMessage(user.get().getMail(), curr.get().getName(), subject.get().getName());
-//        } catch (RuntimeException exception) {
-//            throw new OperationFailedException("exception");
-//        }
+        try {
+            emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName());
+        } catch (RuntimeException exception) {
+            throw new OperationFailedException("exception");
+        }
         LOGGER.debug("User {} requested class from teacher {}", curr.get().getId(), uid);
         return new ModelAndView("redirect:/classroom/" + newClass.getClassId().toString());
     }
