@@ -111,7 +111,12 @@
             <div class="tab-content class-card-holder">
                 <c:if test="${fn:length(allClasses) == 0}">
                     <h3 class="empty-classes-title">
-                        <spring:message code="myClasses.emptyPendingClasses"/>
+                        <c:choose>
+                            <c:when test="${status == 0}"><spring:message code="myClasses.emptyPendingClasses"/></c:when>
+                            <c:when test="${status == 1}"><spring:message code="myClasses.emptyActiveClasses"/></c:when>
+                            <c:when test="${status == 2}"><spring:message code="myClasses.emptyFinishedClasses"/></c:when>
+                            <c:otherwise><spring:message code="myClasses.emptyClasses"/></c:otherwise>
+                        </c:choose>
                     </h3>
                 </c:if>
                 <c:forEach var="myClass" items="${allClasses}">
