@@ -1,9 +1,15 @@
 package ar.edu.itba.paw.webapp.forms;
 
 
+import org.hibernate.validator.constraints.Range;
+
 public class SubjectsForm {
 
-    private int price, level;
+    @Range(min = 1, max = 999999999)
+    private int price;
+
+    private int level;
+
     private Long subjectId;
 
     public Long getSubjectId() {
