@@ -1,17 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.daos.RatingDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
+import ar.edu.itba.paw.webapp.forms.CertificationForm;
 import ar.edu.itba.paw.webapp.forms.UserForm;
 import ar.edu.itba.paw.webapp.validators.UserFormValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,15 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class ProfileController {
@@ -98,7 +94,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
-    public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form) {
+    public ModelAndView userForm(@ModelAttribute("userForm") final UserForm form){
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
@@ -159,7 +155,6 @@ public class ProfileController {
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
 
         headers.add("Content-Disposition", "inline; filename=" + pdfName);
-
         List<UserFile> userFiles = userFileService.getAllUserFiles(uid);
         UserFile chosenUserFile = userFiles.stream().
                 filter(userFile -> Objects.equals(userFile.getFileName(), pdfName)).findFirst().
@@ -169,10 +164,26 @@ public class ProfileController {
         return new ResponseEntity<>(chosenUserFile.getFile(), headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/uploadFile/{uid}")
-    public ModelAndView submit(@PathVariable("uid") final Long uid, @RequestParam("file") MultipartFile file) throws IOException {
-        userFileService.saveNewFile(file.getBytes(), file.getOriginalFilename(), uid);
-        return new ModelAndView("redirect:/editProfile");
+    @RequestMapping(value = "/editCertifications", method = RequestMethod.GET)
+    public ModelAndView editCertifications(@ModelAttribute("certificationForm") @Valid final CertificationForm form){
+        User currentUser  = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException(""));
+        List<UserFile> currentUserFiles = userFileService.getAllUserFiles(currentUser.getId());
+        return new ModelAndView("editCertifications").
+                addObject("userFiles",currentUserFiles);
+    }
+
+    @RequestMapping(value = "/editCertifications", method = RequestMethod.POST, params = "submitFile")
+    public ModelAndView submitUserFile(@ModelAttribute("certificationForm") @Valid final CertificationForm form) throws IOException {
+        MultipartFile fileToUpload = form.getUserFileToUpload();
+        User fileOwner  = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("mensaje"));
+        userFileService.saveNewFile(fileToUpload.getBytes(),fileToUpload.getOriginalFilename(), fileOwner.getId());
+        return new ModelAndView("redirect:/editCertifications");
+
+    }
+    @RequestMapping(value = "/editCertifications", method = RequestMethod.POST, params = "deleteFile")
+    public ModelAndView deleteUserFile(@ModelAttribute("certificationForm") @Valid final CertificationForm form){
+        userFileService.deleteFile(form.getFileToRemove());
+        return new ModelAndView("redirect:/editCertifications");
 
     }
 

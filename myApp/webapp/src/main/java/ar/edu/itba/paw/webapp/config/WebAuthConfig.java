@@ -55,7 +55,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                     .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
                     .antMatchers("/editSubjects", "/newSubjectForm/**").hasAuthority("USER_TEACHER")
-                    .antMatchers("/editProfile", "/myClasses", "/favourites").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
+                    .antMatchers("/editProfile", "/myClasses","/editCertifications" ,"/favourites").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
                     .antMatchers("/login", "/register").anonymous()
                     .antMatchers("/**").authenticated()
                 .and().formLogin()

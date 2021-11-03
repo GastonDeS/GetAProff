@@ -27,8 +27,18 @@ public class UserFileDaoJpa implements UserFileDao {
     @Override
     public UserFile saveNewFile(byte[] file, String fileName, Long ownerId) {
         final User owner = entityManager.getReference(User.class, ownerId);
-        final UserFile newFile = new UserFile(owner, fileName, file);
+        final UserFile newFile = new UserFile(owner, null, fileName, file);
         entityManager.persist(newFile);
         return newFile;
+    }
+
+    @Override
+    public int deleteFile(Long fileId) {
+        TypedQuery<UserFile> query = entityManager.createQuery("from UserFile u where u.fileId = :file", UserFile.class);
+        query.setParameter("file",fileId);
+        UserFile uf = query.getSingleResult();
+        System.out.println("Lo lograstw! " + uf.getFileName());
+        entityManager.remove(uf);
+        return 0;
     }
 }
