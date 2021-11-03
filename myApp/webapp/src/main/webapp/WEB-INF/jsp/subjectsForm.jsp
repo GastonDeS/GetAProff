@@ -87,12 +87,6 @@
         </a>
     </div>
 </div>
-<%--<script>--%>
-<%--    function hola() {--%>
-<%--        var items = [[${subjects}]];--%>
-<%--        alert(items.length);--%>
-<%--    }--%>
-<%--</script>--%>
 <jsp:include page="../components/footer.jsp">
     <jsp:param name="" value=""/>
 </jsp:include>

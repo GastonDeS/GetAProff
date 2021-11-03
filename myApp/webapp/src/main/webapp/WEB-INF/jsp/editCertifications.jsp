@@ -23,7 +23,8 @@
     <jsp:param name="isMainPage" value="${false}"/>
 </jsp:include>
 <div class="page-container">
-    <form:form modelAttribute="certificationForm" action="/editCertifications" method="post"
+    <c:url value="/editCertifications" var="editCertificationURL"/>
+    <form:form modelAttribute="certificationForm" action="${editCertificationURL}" method="post"
                enctype="multipart/form-data">
         <div class="form-container">
             <p class="form-title"><spring:message code="editCertifications.title"/></p>
@@ -61,6 +62,8 @@
         </div>
     </form:form>
 </div>
-
+<jsp:include page="../components/footer.jsp">
+    <jsp:param name="" value=""/>
+</jsp:include>
 </body>
 </html>

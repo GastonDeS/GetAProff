@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="profile-info-btn">
-                    <c:if test="${user.teacher}">
+                    <c:if test="${user.teacher && currentUser.id == user.id}">
                         <a href="${pageContext.request.contextPath}/editCertifications"
                            class="btn btn-custom" style="margin-right: 10px">
                             <spring:message code="profile.btn.editCertifications"/>
@@ -153,7 +153,7 @@
                                     <ul>
                                         <c:forEach var="file" items="${userFiles}">
                                             <li>
-                                                <a href="/profile/${user.id}/${file.fileId}"
+                                                <a href="${pageContext.request.contextPath}/profile/${user.id}/${file.fileId}"
                                                    target="_blank">${file.fileName}</a>
                                             </li>
                                         </c:forEach>
