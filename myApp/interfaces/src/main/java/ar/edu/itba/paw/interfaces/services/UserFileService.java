@@ -2,8 +2,6 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.UserFile;
 
-
-import java.io.IOException;
 import java.util.List;
 
 public interface UserFileService {

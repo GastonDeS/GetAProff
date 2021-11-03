@@ -30,7 +30,7 @@
                             <c:when test="${type == 'requested'}">
                                 <button class="nav-link nav-link-custom active" style="width: 100%;" id="requested-tab"
                                         data-bs-toggle="tab" data-bs-target="#student-table" type="button"
-                                        role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='/myClasses/requested/${status}'">
+                                        role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='${pageContext.request.contextPath}/myClasses/requested/${status}'">
                                     <spring:message code="myClasses.requested"/>
                                 </button>
                             </c:when>
@@ -38,7 +38,7 @@
                                 <button class="nav-link nav-link-custom" style="width: 100%;" id="offered-tab"
                                         data-bs-toggle="tab"
                                         data-bs-target="#teacher-table" type="button"
-                                        role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='/myClasses/requested/${status}'">
+                                        role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='${pageContext.request.contextPath}/myClasses/requested/${status}'">
                                     <spring:message code="myClasses.requested"/>
                                 </button>
                             </c:otherwise>
@@ -50,7 +50,7 @@
                                 <c:when test="${type == 'offered'}">
                                     <button class="nav-link nav-link-custom active" style="width: 100%;" id="requested-tab"
                                             data-bs-toggle="tab" data-bs-target="#student-table" type="button"
-                                            role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='/myClasses/offered/${status}'">
+                                            role="tab" aria-controls="student-table" aria-selected="true" onclick="window.location.href='${pageContext.request.contextPath}/myClasses/offered/${status}'">
                                         <spring:message code="myClasses.incoming"/>
                                     </button>
                                 </c:when>
@@ -58,7 +58,7 @@
                                     <button class="nav-link nav-link-custom" style="width: 100%;" id="offered-tab"
                                             data-bs-toggle="tab"
                                             data-bs-target="#teacher-table" type="button"
-                                            role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='/myClasses/offered/${status}'">
+                                            role="tab" aria-controls="teacher-table" aria-selected="false" onclick="window.location.href='${pageContext.request.contextPath}/myClasses/offered/${status}'">
                                         <spring:message code="myClasses.incoming"/>
                                     </button>
                                 </c:otherwise>
@@ -71,7 +71,7 @@
                         <div>
                             <p style="margin: 0"><spring:message code="myClasses.filter"/></p>
                         </div>
-                        <select name="filterby" id="filter" onchange="this.options[this.selectedIndex].value && (window.location = '/myClasses/${type}/'+this.options[this.selectedIndex].value);">
+                        <select name="filterby" id="filter" onchange="this.options[this.selectedIndex].value && (window.location = '${pageContext.request.contextPath}/myClasses/${type}/'+this.options[this.selectedIndex].value);">
                             <c:forEach begin="0" end="3" var="statusLoop">
                                 <c:choose>
                                     <c:when test="${status == statusLoop}">

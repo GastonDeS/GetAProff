@@ -21,7 +21,7 @@ public class RatingDaoJpa implements RatingDao {
     @Override
     public Rating addRating(User teacher, User student, float rate, String review) {
         final Rating rating = new Rating(rate, review, teacher, student);
-        entityManager.persist(rating);
+        entityManager.merge(rating);
         return rating;
     }
 
