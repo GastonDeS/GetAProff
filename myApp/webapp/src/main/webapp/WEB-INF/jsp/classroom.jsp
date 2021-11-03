@@ -51,7 +51,7 @@
                         <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
                     </div>
                 </form:form>
-                <div style="padding: 0;background-color: transparent" class="class-content class-side-section">
+                <div class="class-content class-side-section">
                     <c:choose>
                         <c:when test="${currentClass.status == statusPending }">
                             <div class="classroom-status" style="background-color: darkorange">
