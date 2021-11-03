@@ -7,16 +7,16 @@ import javax.persistence.*;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classfiles_postid_seq")
-    @SequenceGenerator(name = "classfiles_postid_seq", sequenceName = "classfiles_postid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_postid_seq")
+    @SequenceGenerator(name = "posts_postid_seq", sequenceName = "posts_postid_seq", allocationSize = 1)
     private Long postId;
 
     @JoinColumn(name = "classid", referencedColumnName = "classid")
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private Class associatedClass;
 
     @JoinColumn(name = "userid", referencedColumnName = "userid")
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private User uploader;
 
     @Column
