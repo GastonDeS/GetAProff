@@ -110,6 +110,7 @@
                 window.onload = onPageLoad();
                 function onPageLoad() {
                     document.getElementById("r1").checked = true;
+                    document.getElementById("submit").setAttribute("name", "teacher");
                 }
             }
         });

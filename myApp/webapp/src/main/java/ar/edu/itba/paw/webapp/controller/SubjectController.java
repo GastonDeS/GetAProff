@@ -42,19 +42,6 @@ public class SubjectController {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private SubjectsFormValidator subjectsFormValidator;
-
-    @InitBinder
-    public void initSubjectsBinder(WebDataBinder webDataBinder){
-        Object target = webDataBinder.getTarget();
-        if (target != null) {
-            if (target.getClass().equals(SubjectsForm.class)) {
-                webDataBinder.setValidator(subjectsFormValidator);
-            }
-        }
-    }
-
     private User getCurrUser() {
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent()) {
@@ -90,28 +77,29 @@ public class SubjectController {
         return mav;
     }
 
-    @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
-    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
-        Long uid = getCurrUser().getId();
-        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+    @RequestMapping(value = "/editSubjects/{userId}", method = RequestMethod.GET)
+    public ModelAndView subjectsForm(@PathVariable("userId") Long userId, @ModelAttribute("subjectsForm") final SubjectsForm form) {
+        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(userId);
         return new ModelAndView("subjectsForm")
-                .addObject("userid", uid)
+                .addObject("userid", userId)
                 .addObject("given", subjectsGiven)
                 .addObject("subjects", subjectService.list());
     }
 
-    @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
-    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return subjectsForm(form);
+    @RequestMapping(value = "/editSubjects/{userId}", method = RequestMethod.POST)
+    public ModelAndView subjectsForm(@PathVariable("userId") Long userId, @ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
+        if (teachesService.findByUserAndSubjectAndLevel(userId, form.getSubjectId(), form.getLevel()).isPresent()) {
+            errors.rejectValue("level","form.level.invalid");
         }
-        Long uid = getCurrUser().getId();
-        Optional<Teaches> maybe = teachesService.addSubjectToUser(uid, form.getSubjectId(), form.getPrice(), form.getLevel());
+        if (errors.hasErrors()) {
+            return subjectsForm(userId, form);
+        }
+        Optional<Teaches> maybe = teachesService.addSubjectToUser(userId, form.getSubjectId(), form.getPrice(), form.getLevel());
         if (!maybe.isPresent()) {
             throw new OperationFailedException("exception.failed");
         }
-        LOGGER.debug("Subject added for user {}", uid);
-        return subjectsForm(form);
+        LOGGER.debug("Subject added for user {}", userId);
+        return subjectsForm(userId, form);
     }
 
     @RequestMapping(value = "/editSubjects/remove/{sid}/{level}", method = RequestMethod.POST)

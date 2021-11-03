@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "classes")
@@ -27,6 +28,8 @@ public class Class {
     @Column
     private int level, price, status;
 
+    @OneToMany(mappedBy = "associatedClass", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> classPosts;
 
     Class() {
         //For Hibernate
@@ -39,6 +42,14 @@ public class Class {
         this.level = level;
         this.price = price;
         this.status = Status.PENDING.value;
+    }
+
+    public List<Post> getClassPosts() {
+        return classPosts;
+    }
+
+    public void setClassPosts(List<Post> classPosts) {
+        this.classPosts = classPosts;
     }
 
     public Long getClassId() {

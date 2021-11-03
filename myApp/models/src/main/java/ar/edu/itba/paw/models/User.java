@@ -28,7 +28,7 @@ public class User {
     @Column(nullable = false)
     private String mail;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "userroles",
             joinColumns = @JoinColumn(
@@ -37,7 +37,7 @@ public class User {
                     name = "roleid", referencedColumnName = "roleid"))
     private List<Role> userRoles;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "favourites",
             joinColumns = @JoinColumn(

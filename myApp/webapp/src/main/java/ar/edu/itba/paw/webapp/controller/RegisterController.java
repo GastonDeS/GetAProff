@@ -44,22 +44,21 @@ public class RegisterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, params = "teacher")
     public ModelAndView registerTeacher(@ModelAttribute("register") @Validated(RegisterForm.Teacher.class) final RegisterForm form, final BindingResult errors) throws IOException {
+        if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
         if (errors.hasErrors()) {
-            if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
+            System.out.println("ERRORES");
             return new ModelAndView("register");
         }
-
-        commonRegister(form);
-        return new ModelAndView("redirect:/editSubjects");
+        Long userId = commonRegister(form);
+        return new ModelAndView("redirect:/editSubjects/" + userId);
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, params = "student")
     public ModelAndView registerStudent(@ModelAttribute("register") @Validated(RegisterForm.Student.class) final RegisterForm form, final BindingResult errors) throws IOException {
+        if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
         if (errors.hasErrors()) {
-            if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
             return new ModelAndView("register");
         }
-
         Long userId = commonRegister(form);
         String redirect = "redirect:/profile/" + userId;
         return new ModelAndView(redirect);

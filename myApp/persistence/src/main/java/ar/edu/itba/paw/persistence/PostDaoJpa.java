@@ -30,10 +30,9 @@ public class PostDaoJpa implements PostDao {
 
     @Override
     public List<Post> retrievePosts(Long classId) {
-        final Class associatedClass = entityManager.getReference(Class.class, classId);
-        final TypedQuery<Post> query = entityManager.createQuery("from Post p where p.associatedClass = :class", Post.class);
-        query.setParameter("class", associatedClass);
-        return query.getResultList();
+        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.id = :classId", Class.class);
+        query.setParameter("classId", classId);
+        return query.getSingleResult().getClassPosts();
     }
 
     @Override

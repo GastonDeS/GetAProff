@@ -198,7 +198,6 @@ public class ProfileController {
     public ModelAndView deleteUserFile(@ModelAttribute("certificationForm") @Valid final CertificationForm form){
         userFileService.deleteFile(form.getFileToRemove());
         return new ModelAndView("redirect:/editCertifications");
-
     }
 
 }
