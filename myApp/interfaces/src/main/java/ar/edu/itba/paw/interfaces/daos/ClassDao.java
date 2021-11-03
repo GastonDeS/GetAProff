@@ -22,13 +22,7 @@ public interface ClassDao {
 
     List<Class> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status);
 
-    Class create(Long studentId, Long teacherId, int level, Long subjectId, int price, int status, String message);
+    Class create(Long studentId, Long teacherId, int level, Long subjectId, int price);
 
     int setStatus(Long classId, int status);
-
-    int setDeleted(Long classId, int deleted);
-
-    int setRequest(Long classId, String message);
-
-    int setReply(Long classId, String message);
 }

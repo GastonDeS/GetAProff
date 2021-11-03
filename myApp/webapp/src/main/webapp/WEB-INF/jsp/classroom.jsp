@@ -2,6 +2,15 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+<c:set value="0" var="statusPending"/>
+<c:set value="1" var="statusAccepted"/>
+<c:set value="2" var="statusFinished"/>
+<c:set value="3" var="statusCancelStudent"/>
+<c:set value="4" var="statusCancelTeacher"/>
+<c:set value="5" var="statusRejected"/>
+<c:set value="6" var="statusRated"/>
+
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -42,8 +51,75 @@
                         <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
                     </div>
                 </form:form>
-                <div class="class-content class-side-section">
-                    <p>Lorem ipsum.</p>
+                <div style="padding: 0;background-color: transparent" class="class-content class-side-section">
+
+                    <c:choose>
+                        <c:when test="${currentClass.status == statusPending }">
+                            <div style="margin: 0; border-radius: 10px; width: 100%; background-color: darkorange; padding: 5px">
+                                <h6 style="color: black ;margin: 0">Pending</h6>
+                            </div>
+                        </c:when>
+                        <c:when test="${currentClass.status == statusAccepted}">
+                            <div style="margin: 0; border-radius: 10px; width: 100%; background-color: green; padding: 5px">
+                                <h6 style="color: black ;margin: 0">Active</h6>
+                            </div>
+                        </c:when>
+                        <c:when test="${currentClass.status == statusFinished}">
+                            <div style="margin: 0; border-radius: 10px; width: 100%; background-color: white; padding: 5px">
+                                <h6 style="color: black ;margin: 0">Finished</h6>
+                            </div>
+                        </c:when>
+                    </c:choose>
+<%--                    BOTONES--%>
+                    <c:choose>
+                        <c:when test="${currentClass.teacher.id == currentUser.id}">
+                            <c:choose>
+                                <c:when test="${currentClass.status == statusPending }">
+                                    <div class="class-cancel-btn">
+                                        <form action="<c:url value="/myClasses/${currentClass.classId}/REJECTED"/>" method="post" class="class-card-btn-holder">
+                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
+                                        </form>
+                                        <a href="${pageContext.request.contextPath}/accept/${currentClass.classId}" class="btn btn-custom"><spring:message code="class.card.accept"/></a>
+                                    </div>
+                                </c:when>
+                                <c:when test="${currentClass.status == statusAccepted}">
+                                    <div class="class-cancel-btn">
+                                        <form action="<c:url value="/myClasses/${currentClass.classId}/CANCELEDT"/>" method="post" class="class-card-btn-holder">
+                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
+                                        </form>
+                                        <form action="<c:url value="/myClasses/${currentClass.classId}/FINISHED"/>" method="post" class="class-card-btn-holder">
+                                            <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.finish"/>">
+                                        </form>
+                                    </div>
+                                </c:when>
+                            </c:choose>
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${currentClass.status == statusPending}">
+                                    <div class="class-card-active-btn-holder">
+                                        <form action="<c:url value="/myClasses/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
+                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
+                                        </form>
+                                    </div>
+                                </c:when>
+                                <c:when test="${currentClass.status == statusAccepted}">
+                                    <div class="class-card-active-btn-holder">
+                                        <form action="<c:url value="/myClasses/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
+                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
+                                        </form>
+                                    </div>
+                                </c:when>
+                                <c:when test="${currentClass.status == statusFinished}">
+                                    <div class="class-card-active-btn-holder">
+                                        <a href="${pageContext.request.contextPath}/rate/${currentClass.classId}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
+                                    </div>
+                                </c:when>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                    
+<%--                    FIN DE BOTONES--%>
                 </div>
             </div>
             <div class="posts-big-box">

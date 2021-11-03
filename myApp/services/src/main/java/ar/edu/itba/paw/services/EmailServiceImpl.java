@@ -95,6 +95,12 @@ public class EmailServiceImpl implements EmailService {
         String mailSubject;
         String format;
         switch (myStatus) {
+            case 1:
+                format = messageSource.getMessage("mail.class.accepted.body", new Object[] {student.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
+                mailSubject = messageSource.getMessage("mail.class.accepted", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                sendSimpleMessage(teacher.getMail(),mailSubject, text);
+                break;
             case 2:
                 format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
