@@ -23,7 +23,7 @@
             <p class="form-error"><spring:message code="exception.class"/></p>
         </c:if>
         <div class="classes-separator-container">
-            <div class="main-tab-container">
+            <div style="height: fit-content" class="main-tab-container">
                 <ul class="nav nav-tabs flex-column" id="request-tab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <c:choose>
@@ -66,8 +66,8 @@
                         </li>
                     </c:if>
                 </ul>
-                <ul class="nav nav-tabs flex-column" id="" role="tablist">
-                    <div style="flex-direction: column" class="price-level-container">
+                <ul style="border: 0" class="nav nav-tabs flex-column" id="" role="tablist">
+                    <div style="flex-direction: column; padding-right: 5px" class="price-level-container">
                         <div>
                             <p style="margin: 0">Filtrar por: </p>
                         </div>
@@ -121,7 +121,6 @@
                         <jsp:param name="price" value="${myClass.price}"/>
                         <jsp:param name="level" value="${myClass.level}"/>
                         <jsp:param name="cid" value="${myClass.classId}"/>
-                        <jsp:param name="isTeacher" value="${user.teacher}"/>
                         <jsp:param name="classStatus" value="${myClass.status}"/>
                         <jsp:param name="isOffered" value="${type == 'offered'}"/>
                     </jsp:include>
