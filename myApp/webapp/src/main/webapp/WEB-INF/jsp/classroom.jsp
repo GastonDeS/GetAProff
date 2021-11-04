@@ -18,7 +18,7 @@
     <title>Class</title>
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>">
-    <spring:message code="class.enter.message" var="enterMessagePlaceholder"/>
+    <spring:message code="class.enter.message.${currentClass.status}" var="enterMessagePlaceholder"/>
     <spring:message code="class.publish" var="publishPlaceholder"/>
 </head>
 <body>
@@ -27,30 +27,38 @@
         <jsp:param name="uid" value="${currentUser.id}"/>
     </jsp:include>
     <div class="page-container">
-        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
+<%--        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">--%>
         <div class="class-section-container">
             <div class="class-row-section-container">
                 <div class="class-content class-side-section">
-                    <h6><c:out value="${currentClass.subject.name}"/></h6>
+                    <h2>Classroom</h2>
+                    <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
                     <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
-                    <p class="card-text"><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
-                    <p class="card-text"><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
+                    <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
+                    <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
                 </div>
+<%--                UPLOAD POST--%>
                 <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
                 <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box">
                     <div class="form-input-container" style="width: 94%">
-                        <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh; resize: none;" path="message" placeholder="${enterMessagePlaceholder}"/>
+                        <form:textarea type="text" cssClass="form-control"
+                                       cssStyle="height: 20vh; resize: none;" path="message"
+                                       placeholder="${enterMessagePlaceholder}"/>
                         <form:errors path="message" element="p" cssClass="form-error"/>
                     </div>
-                    <div class="file-upload">
-                        <label class="btn btn-custom">
-                            <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file" id="file"/>
-                            <spring:message code="class.upload.file"/>
-                        </label>
-                        <p id="fileName"></p>
+                    <div class="file-upload" style="justify-content: space-between">
+                        <div style="display: flex;flex-direction: row; justify-content: center;align-items: center">
+                            <label class="btn btn-custom">
+                                <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file" id="file"/>
+                                <spring:message code="class.upload.file"/>
+                            </label>
+                            <p style="margin: 0 5px 0" id="fileName"></p>
+                        </div>
                         <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
                     </div>
                 </form:form>
+<%--                FIN DE UPLOAD POST--%>
+<%--                Status fronnt--%>
                 <div class="class-content class-side-section">
                     <c:choose>
                         <c:when test="${currentClass.status == statusPending }">
@@ -81,7 +89,7 @@
                                         <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.accept"/>">
                                         </form>
-                                        </div>
+                                    </div>
                                 </c:when>
                                 <c:when test="${currentClass.status == statusAccepted}">
                                     <div class="class-cancel-btn">
@@ -121,16 +129,22 @@
                     </c:choose>
 <%--                    FIN DE BOTONES--%>
                 </div>
+<%--                Fin de status fronnt--%>
             </div>
+<%--            POSTS--%>
             <div class="posts-big-box">
                 <c:forEach items="${posts}" var="post">
                     <div class="post-box">
-                        <h3><c:out value="${post.uploader.name}"/></h3>
+                        <div class="class-card-active-btn-holder">
+                            <h3><c:out value="${post.uploader.name}"/></h3>
+                            <p style="font-size: 0.8em">5/11/2019 20:53</p>
+                        </div>
                         <p style="margin: 0"><c:out value="${post.message}"/></p>
                         <a target="_blank" href="${pageContext.request.contextPath}/classroom/open/${post.postId}" class="class-link">${post.filename}</a>
                     </div>
                 </c:forEach>
             </div>
+<%--            FIN DE POSTS--%>
         </div>
     </div>
 </body>
