@@ -249,7 +249,7 @@
 </script>
 <script>
     function copyToClipboard() {
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeText(document.location.href);
         showSnackbar();
     }
 </script>
