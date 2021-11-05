@@ -13,7 +13,7 @@ public class Post {
 
     @JoinColumn(name = "classid", referencedColumnName = "classid")
     @ManyToOne(optional = false)
-    private Class associatedClass;
+    private Lecture associatedLecture;
 
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     @ManyToOne(optional = false)
@@ -35,9 +35,9 @@ public class Post {
         //Just for Hibernate
     }
 
-    public Post(Long postId, Class associatedClass, User uploader, String message, String filename, byte[] file, String type) {
+    public Post(Long postId, Lecture associatedLecture, User uploader, String message, String filename, byte[] file, String type) {
         this.postId = postId;
-        this.associatedClass = associatedClass;
+        this.associatedLecture = associatedLecture;
         this.uploader = uploader;
         this.message = message;
         this.filename = filename;
@@ -53,12 +53,12 @@ public class Post {
         this.postId = postId;
     }
 
-    public Class getAssociatedClass() {
-        return associatedClass;
+    public Lecture getAssociatedClass() {
+        return associatedLecture;
     }
 
-    public void setAssociatedClass(Class associatedClass) {
-        this.associatedClass = associatedClass;
+    public void setAssociatedClass(Lecture associatedLecture) {
+        this.associatedLecture = associatedLecture;
     }
 
     public User getUploader() {

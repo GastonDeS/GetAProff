@@ -3,7 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
@@ -65,14 +65,14 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendStatusChangeMessage(Class myClass) {
-        Optional<User> maybeS = userService.findById(myClass.getStudent().getId());
-        Optional<User> maybeT = userService.findById(myClass.getTeacher().getId());
-        Optional<Subject> maybeSub = subjectService.findById(myClass.getSubject().getId());
+    public void sendStatusChangeMessage(Lecture myLecture) {
+        Optional<User> maybeS = userService.findById(myLecture.getStudent().getId());
+        Optional<User> maybeT = userService.findById(myLecture.getTeacher().getId());
+        Optional<Subject> maybeSub = subjectService.findById(myLecture.getSubject().getId());
         if (!maybeS.isPresent() || !maybeT.isPresent() || !maybeSub.isPresent()) {
             throw new NoSuchElementException();
         }
-        int myStatus = myClass.getStatus();
+        int myStatus = myLecture.getStatus();
         Subject mySubject = maybeSub.get();
         User student = maybeS.get();
         User teacher = maybeT.get();
@@ -83,13 +83,13 @@ public class EmailServiceImpl implements EmailService {
             case 1:
                 format = messageSource.getMessage("mail.class.accepted.body", new Object[] {teacher.getName(), mySubject.getName(), teacher.getMail()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.accepted", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/classroom/" + myClass.getClassId().toString(),"GetAProff/myClassroom/");
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/classroom/" + myLecture.getClassId().toString(),"GetAProff/myClassroom/");
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 2:
                 format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/classroom" + myClass.getClassId().toString(),"GetAProff/myClassroom");
+                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses/classroom" + myLecture.getClassId().toString(),"GetAProff/myClassroom");
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 3:
@@ -115,10 +115,10 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendRatedMessage(Class myClass, int rating, String review) {
-        Optional<User> student = userService.findById(myClass.getStudent().getId());
-        Optional<User> teacher = userService.findById(myClass.getTeacher().getId());
-        Optional<Subject> mySubject = subjectService.findById(myClass.getSubject().getId());
+    public void sendRatedMessage(Lecture myLecture, int rating, String review) {
+        Optional<User> student = userService.findById(myLecture.getStudent().getId());
+        Optional<User> teacher = userService.findById(myLecture.getTeacher().getId());
+        Optional<Subject> mySubject = subjectService.findById(myLecture.getSubject().getId());
         if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
             throw new NoSuchElementException();
         }

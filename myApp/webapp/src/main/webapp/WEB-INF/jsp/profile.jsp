@@ -164,52 +164,62 @@
                     </div>
                     <div class="tab-pane fade" id="subjects-info" role="tabpanel" aria-labelledby="subjects-tab">
                         <div class="profile-subjects">
-                            <table class="subjects-info">
-                                <c:choose>
-                                    <c:when test="${edit == 1}">
+                            <c:choose>
+                                <c:when test="${subjectsList.size() != 0}">
+                                    <table class="subjects-info">
+                                        <c:choose>
+                                            <c:when test="${edit == 1}">
+                                                <tr class="subjects-row">
+                                                    <td class="row-title" style="width: 55%">${tableSubject}</td>
+                                                    <td class="row-title" style="width: 15%">${tablePrice}</td>
+                                                    <td class="row-title" style="width: 30%">${tableLevel}</td>
+                                                </tr>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr class="subjects-row">
+                                                    <td class="row-title" style="width: 43%">${tableSubject}</td>
+                                                    <td class="row-title" style="width: 17%">${tablePrice}</td>
+                                                    <td class="row-title" style="width: 40%">${tableLevel}</td>
+                                                </tr>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:forEach items="${subjectsList}" var="subject">
                                         <tr class="subjects-row">
-                                            <td class="row-title" style="width: 55%">${tableSubject}</td>
-                                            <td class="row-title" style="width: 15%">${tablePrice}</td>
-                                            <td class="row-title" style="width: 30%">${tableLevel}</td>
+                                            <c:choose>
+                                                <c:when test="${edit == 1}">
+                                                    <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
+                                                    <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                                    <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <td class="row-info" style="width: 40%"><c:out value="${subject.name}"/></td>
+                                                    <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
+                                                    <td class="row-info" style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
+                                                    <td class="remove-btn">
+                                                        <sec:authorize access="isAuthenticated()">
+                                                            <form action="<c:url value="/requestClass/${uid}/${subject.subjectId}/${subject.level}"/>" method="post">
+                                                                <input type="submit" class="btn btn-custom" value="<spring:message code="profile.btn.contact"/>">
+                                                            </form>
+                                                        </sec:authorize>
+                                                        <sec:authorize access="!isAuthenticated()">
+                                                            <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
+                                                                <spring:message code="profile.btn.contact"/>
+                                                            </a>
+                                                        </sec:authorize>
+                                                    </td>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            </c:forEach>
                                         </tr>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <tr class="subjects-row">
-                                            <td class="row-title" style="width: 43%">${tableSubject}</td>
-                                            <td class="row-title" style="width: 17%">${tablePrice}</td>
-                                            <td class="row-title" style="width: 40%">${tableLevel}</td>
-                                        </tr>
-                                    </c:otherwise>
-                                </c:choose>
-                                <c:forEach items="${subjectsList}" var="subject">
-                                <tr class="subjects-row">
-                                    <c:choose>
-                                        <c:when test="${edit == 1}">
-                                            <td class="row-info" style="width: 55%"><c:out value="${subject.name}"/></td>
-                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
-                                            <td class="row-info" style="width: 30%"><spring:message code="subjects.form.level.${subject.level}"/></td>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <td class="row-info" style="width: 40%"><c:out value="${subject.name}"/></td>
-                                            <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
-                                            <td class="row-info" style="width: 25%"><spring:message code="subjects.form.level.${subject.level}"/></td>
-                                            <td class="remove-btn">
-                                                <sec:authorize access="isAuthenticated()">
-                                                    <form action="<c:url value="/requestClass/${uid}/${subject.subjectId}/${subject.level}"/>" method="post">
-                                                        <input type="submit" class="btn btn-custom" value="<spring:message code="profile.btn.contact"/>">
-                                                    </form>
-                                                </sec:authorize>
-                                                <sec:authorize access="!isAuthenticated()">
-                                                    <a href="${pageContext.request.contextPath}/login" class="btn btn-custom">
-                                                        <spring:message code="profile.btn.contact"/>
-                                                    </a>
-                                                </sec:authorize>
-                                            </td>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:forEach>
-                                </tr>
-                            </table>
+                                    </table>
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="width: 100%;display: flex;height: 300px; justify-content: center;align-items: center">
+                                        <h2><spring:message code="profile.subjects.empty"/></h2>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
                         </div>
                     </div>
                     <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
@@ -225,6 +235,11 @@
                                     <p><c:out value="${rating.review}"/></p>
                                 </div>
                             </c:forEach>
+                            <c:if test="${ratingList.size() == 0}">
+                                <div style="width: 100%;display: flex;height: 300px; justify-content: center;align-items: center">
+                                    <h2><spring:message code="profile.reviews.empty"/></h2>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -249,7 +264,7 @@
 </script>
 <script>
     function copyToClipboard() {
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeText(document.location.href);
         showSnackbar();
     }
 </script>

@@ -87,7 +87,7 @@
                 </ul>
             </div>
             <c:choose>
-                <c:when test="${fn:length(allClasses) == 0}">
+                <c:when test="${fn:length(allLectures) == 0}">
                     <div class="tab-content class-card-holder" style="align-items: center">
                         <h3 class="empty-classes-title">
                             <spring:message code="myClasses.empty.${status}"/>
@@ -96,15 +96,15 @@
                 </c:when>
                 <c:otherwise>
                     <div class="tab-content class-card-holder">
-                        <c:forEach var="myClass" items="${allClasses}">
+                        <c:forEach var="myLecture" items="${allLectures}">
                             <jsp:include page="../components/classCard.jsp">
-                                <jsp:param name="subjectName" value="${myClass.subject.name}"/>
-                                <jsp:param name="teacherName" value="${myClass.teacher.name}"/>
-                                <jsp:param name="studentName" value="${myClass.student.name}"/>
-                                <jsp:param name="price" value="${myClass.price}"/>
-                                <jsp:param name="level" value="${myClass.level}"/>
-                                <jsp:param name="cid" value="${myClass.classId}"/>
-                                <jsp:param name="classStatus" value="${myClass.status}"/>
+                                <jsp:param name="subjectName" value="${myLecture.subject.name}"/>
+                                <jsp:param name="teacherName" value="${myLecture.teacher.name}"/>
+                                <jsp:param name="studentName" value="${myLecture.student.name}"/>
+                                <jsp:param name="price" value="${myLecture.price}"/>
+                                <jsp:param name="level" value="${myLecture.level}"/>
+                                <jsp:param name="cid" value="${myLecture.classId}"/>
+                                <jsp:param name="lectureStatus" value="${myLecture.status}"/>
                                 <jsp:param name="isOffered" value="${type == 'offered'}"/>
                             </jsp:include>
                         </c:forEach>

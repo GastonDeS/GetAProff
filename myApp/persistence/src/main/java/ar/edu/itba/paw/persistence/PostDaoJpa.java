@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.PostDao;
-import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
@@ -22,15 +22,15 @@ public class PostDaoJpa implements PostDao {
     @Override
     public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
         final User uploader = entityManager.getReference(User.class, uploaderId);
-        final Class associatedClass = entityManager.getReference(Class.class, classId);
-        final Post post = new Post(null, associatedClass, uploader, message, filename, file, type);
+        final Lecture associatedLecture = entityManager.getReference(Lecture.class, classId);
+        final Post post = new Post(null, associatedLecture, uploader, message, filename, file, type);
         entityManager.persist(post);
         return post;
     }
 
     @Override
     public List<Post> retrievePosts(Long classId) {
-        final TypedQuery<Class> query = entityManager.createQuery("from Class c where c.id = :classId", Class.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.id = :classId", Lecture.class);
         query.setParameter("classId", classId);
         return query.getSingleResult().getClassPosts();
     }

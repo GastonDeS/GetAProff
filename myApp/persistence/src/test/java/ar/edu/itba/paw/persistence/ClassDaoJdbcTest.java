@@ -1,30 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.Class;
-import ar.edu.itba.paw.models.utils.Pair;
-import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
-
-import javax.sql.DataSource;
-import java.util.List;
-
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(classes = TestConfig.class)
 //public class ClassDaoJdbcTest {
 //
 //    @Autowired
-//    private ClassDaoJdbc classDao;
+//    private LectureDaoJdbc classDao;
 //
 //    @Autowired
 //    private DataSource ds;
@@ -51,7 +33,7 @@ import java.util.List;
 //        jdbcTemplate.update("insert into subject values (1,'matematica')");
 //        jdbcTemplate.update("insert into teaches values (0,1,200,2)");
 //
-//        final Class myClass = classDao.create(1L, 0L,2, 1L, 200, 0, "hola");
+//        final Lecture myClass = classDao.create(1L, 0L,2, 1L, 200, 0, "hola");
 //        Assert.assertNotNull(myClass);
 //        Assert.assertEquals(Long.valueOf(1), myClass.getStudentId());
 //    }
