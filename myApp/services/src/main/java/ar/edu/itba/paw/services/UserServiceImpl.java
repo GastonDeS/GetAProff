@@ -33,15 +33,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private RatingService ratingService;
-
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private TeachesService teachesService;
-
     void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -62,15 +53,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public List<CardProfile> getFavourites(Long userId) {
-        List<User> favourites = userDao.getFavourites(userId);
+        List<Object> favourites = userDao.getFavourites(userId);
         List<CardProfile> teacherCard = new ArrayList<>();
-        for (User teacher : favourites) {
-            Long teacherId = teacher.getId();
-            Float rate = ratingService.getRatingById(teacherId).getValue1();
-            CardProfile cardProfile = new CardProfile(teacherId, teacher.getName(), teachesService.getMaxPrice(teacherId),
-                    teachesService.getMinPrice(teacherId), teacher.getDescription(), imageService.hasImage(teacherId), rate);
-            teacherCard.add(cardProfile);
-        }
+        favourites.forEach((favourite) -> {
+            Object[] cardProfileInfo = (Object[]) favourite;
+            teacherCard.add(
+                    new CardProfile(((Number) cardProfileInfo[0]).longValue(), cardProfileInfo[1].toString(), ((Number) cardProfileInfo[2]).intValue(),
+                            ((Number) cardProfileInfo[3]).intValue(), cardProfileInfo[4].toString(), ((Number) cardProfileInfo[5]).floatValue())
+            );
+        });
         return teacherCard;
     }
 
