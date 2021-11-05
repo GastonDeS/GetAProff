@@ -148,14 +148,14 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"><spring:message
-                            code="tutors.search.resultTitle"/>: ${searchQuery}
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start">
+                        <spring:message code="tutors.search.resultTitle"/>: <c:out value="${searchQuery}"/>
                     </h3>
                 </c:otherwise>
             </c:choose>
-            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%; height: fit-content">
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%">
                 <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                    <div style="margin-top: 30px" class="col">
+                    <div style="margin-top: 30px" class="col tutor-card-container">
                         <jsp:include page="../components/tutorCard.jsp">
                             <jsp:param name="name" value="${tutor.name}"/>
                             <jsp:param name="uid" value="${tutor.userId}"/>
