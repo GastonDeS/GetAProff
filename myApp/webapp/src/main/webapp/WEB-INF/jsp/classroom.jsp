@@ -22,116 +22,123 @@
     <spring:message code="class.publish" var="publishPlaceholder"/>
 </head>
 <body>
-    <jsp:include page="../components/navbar.jsp">
-        <jsp:param name="isMainPage" value="${true}"/>
-        <jsp:param name="uid" value="${currentUser.id}"/>
-    </jsp:include>
-    <div class="page-container">
-<%--        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">--%>
-        <div class="class-section-container">
-            <div class="class-row-section-container">
-                <div class="class-content class-side-section">
-                    <h2>Classroom</h2>
-                    <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
-                    <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
-                    <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
-                    <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
-                </div>
-<%--                UPLOAD POST--%>
-                <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
-                <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box">
-                    <div class="form-input-container" style="width: 94%">
-                        <form:textarea type="text" cssClass="form-control"
-                                       cssStyle="height: 20vh; resize: none;" path="message"
-                                       placeholder="${enterMessagePlaceholder}"/>
-                        <form:errors path="message" element="p" cssClass="form-error"/>
-                    </div>
-                    <div class="file-upload" style="justify-content: space-between">
-                        <div style="display: flex;flex-direction: row; justify-content: center;align-items: center">
-                            <label class="btn btn-custom">
-                                <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file" id="file"/>
-                                <spring:message code="class.upload.file"/>
-                            </label>
-                            <p style="margin: 0 5px 0" id="fileName"></p>
+<jsp:include page="../components/navbar.jsp">
+    <jsp:param name="isMainPage" value="${true}"/>
+    <jsp:param name="uid" value="${currentUser.id}"/>
+</jsp:include>
+<div class="page-container">
+    <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
+    <div class="class-row-section-container">
+        <div class="classroom-status-left-panel">
+          <div class="class-content class-side-section">
+              <h2>Classroom</h2>
+              <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
+              <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
+              <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
+              <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
+          </div>
+            <%--                Status fronnt--%>
+            <div class="class-content class-side-section">
+                <c:choose>
+                    <c:when test="${currentClass.status == statusPending }">
+                        <div class="classroom-status" style="background-color: darkorange">
+                            <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.0"/></h6>
                         </div>
-                        <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
-                    </div>
-                </form:form>
-<%--                FIN DE UPLOAD POST--%>
-<%--                Status fronnt--%>
-                <div class="class-content class-side-section">
-                    <c:choose>
-                        <c:when test="${currentClass.status == statusPending }">
-                            <div class="classroom-status" style="background-color: darkorange">
-                                <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.0"/></h6>
-                            </div>
-                        </c:when>
-                        <c:when test="${currentClass.status == statusAccepted}">
-                            <div class="classroom-status" style="background-color: green">
-                                <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.1"/></h6>
-                            </div>
-                        </c:when>
-                        <c:when test="${currentClass.status == statusFinished}">
-                            <div class="classroom-status" style="background-color: white">
-                                <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.2"/></h6>
-                            </div>
-                        </c:when>
-                    </c:choose>
-<%--                    BOTONES--%>
-                    <c:choose>
-                        <c:when test="${currentClass.teacher.id == currentUser.id}">
-                            <c:choose>
-                                <c:when test="${currentClass.status == statusPending }">
-                                    <div class="class-cancel-btn">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/REJECTED"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
-                                        </form>
-                                        <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.accept"/>">
-                                        </form>
-                                    </div>
-                                </c:when>
-                                <c:when test="${currentClass.status == statusAccepted}">
-                                    <div class="class-cancel-btn">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                                        </form>
-                                        <form action="<c:url value="/myClasses/1/${currentClass.classId}/FINISHED"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.finish"/>">
-                                        </form>
-                                    </div>
-                                </c:when>
-                            </c:choose>
-                        </c:when>
-                        <c:otherwise>
-                            <c:choose>
-                                <c:when test="${currentClass.status == statusPending}">
-                                    <div class="class-card-active-btn-holder">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                                        </form>
-                                    </div>
-                                </c:when>
-                                <c:when test="${currentClass.status == statusAccepted}">
-                                    <div class="class-card-active-btn-holder">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                                        </form>
-                                    </div>
-                                </c:when>
-                                <c:when test="${currentClass.status == statusFinished}">
-                                    <div class="class-card-active-btn-holder">
-                                        <a href="${pageContext.request.contextPath}/rate/${currentClass.classId}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
-                                    </div>
-                                </c:when>
-                            </c:choose>
-                        </c:otherwise>
-                    </c:choose>
-<%--                    FIN DE BOTONES--%>
-                </div>
-<%--                Fin de status fronnt--%>
+                    </c:when>
+                    <c:when test="${currentClass.status == statusAccepted}">
+                        <div class="classroom-status" style="background-color: green">
+                            <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.1"/></h6>
+                        </div>
+                    </c:when>
+                    <c:when test="${currentClass.status == statusFinished}">
+                        <div class="classroom-status" style="background-color: white">
+                            <h6 style="color: black ;margin: 0"><spring:message code="myClasses.status.2"/></h6>
+                        </div>
+                    </c:when>
+                </c:choose>
+                <%--                    BOTONES--%>
+                <c:choose>
+                    <c:when test="${currentClass.teacher.id == currentUser.id}">
+                        <c:choose>
+                            <c:when test="${currentClass.status == statusPending }">
+                                <div class="class-cancel-btn">
+                                    <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                        <jsp:param name="type" value="decline"/>
+                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/REJECTED"/>
+                                    </jsp:include>
+                                    <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
+                                        <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.accept"/>">
+                                    </form>
+                                </div>
+                            </c:when>
+                            <c:when test="${currentClass.status == statusAccepted}">
+                                <div class="class-cancel-btn">
+                                    <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                        <jsp:param name="type" value="cancel"/>
+                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>
+                                    </jsp:include>
+                                    <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                        <jsp:param name="type" value="finish"/>
+                                        <jsp:param name="urlConfirm" value="/myClasses/1/${currentClass.classId}/FINISHED"/>
+                                    </jsp:include>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                    </c:when>
+                    <c:otherwise>
+                        <c:choose>
+                            <c:when test="${currentClass.status == statusPending}">
+                                <div class="class-card-active-btn-holder">
+                                    <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                        <jsp:param name="type" value="cancel"/>
+                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                    </jsp:include>
+                                </div>
+                            </c:when>
+                            <c:when test="${currentClass.status == statusAccepted}">
+                                <div class="class-card-active-btn-holder">
+                                    <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                        <jsp:param name="type" value="cancel"/>
+                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                    </jsp:include>
+                                </div>
+                            </c:when>
+                            <c:when test="${currentClass.status == statusFinished}">
+                                <div class="class-card-active-btn-holder">
+                                    <a href="${pageContext.request.contextPath}/rate/${currentClass.classId}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                    </c:otherwise>
+                </c:choose>
+                <%--                    FIN DE BOTONES--%>
             </div>
-<%--            POSTS--%>
+
+        </div>
+        <div class="classroom-center-panel">
+            <%--                UPLOAD POST--%>
+            <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
+            <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box">
+                <div class="form-input-container" style="width: 94%">
+                    <form:textarea type="text" cssClass="form-control"
+                                   cssStyle="height: 20vh; resize: none;" path="message"
+                                   placeholder="${enterMessagePlaceholder}"/>
+                    <form:errors path="message" element="p" cssClass="form-error"/>
+                </div>
+                <div class="file-upload" style="justify-content: space-between">
+                    <div style="display: flex;flex-direction: row; justify-content: center;align-items: center">
+                        <label class="btn btn-custom">
+                            <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file" id="file"/>
+                            <spring:message code="class.upload.file"/>
+                        </label>
+                        <p style="margin: 0 5px 0" id="fileName"></p>
+                    </div>
+                    <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
+                </div>
+            </form:form>
+            <%--                FIN DE UPLOAD POST--%>
+            <%--                Fin de status fronnt--%>
+            <%--            POSTS--%>
             <div class="posts-big-box">
                 <c:forEach items="${posts}" var="post">
                     <div class="post-box">
@@ -140,16 +147,24 @@
                             <p style="font-size: 0.8em">5/11/2019 20:53</p>
                         </div>
                         <p style="margin: 0"><c:out value="${post.message}"/></p>
-                        <a target="_blank" href="${pageContext.request.contextPath}/classroom/open/${post.postId}" class="class-link">${post.filename}</a>
+                        <a target="_blank" href="${pageContext.request.contextPath}/classroom/open/${post.postId}"
+                           class="class-link">${post.filename}</a>
                     </div>
                 </c:forEach>
             </div>
-<%--            FIN DE POSTS--%>
+            <%--            FIN DE POSTS--%>
+        </div>
+        <div class="classroom-right-panel">
+            <div class="class-content class-side-section">
+                <h2>Archivos</h2>
+            </div>
         </div>
     </div>
+
+</div>
 </body>
 <script>
-    document.getElementById('file').addEventListener('change',function () {
+    document.getElementById('file').addEventListener('change', function () {
         document.getElementById('fileName').innerText = this.files[0].name
     });
 </script>
