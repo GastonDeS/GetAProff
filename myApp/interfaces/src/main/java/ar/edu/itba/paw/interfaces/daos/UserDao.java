@@ -14,7 +14,7 @@ public interface UserDao {
      */
     Optional<User> get(Long userId);
 
-    List<User> getFavourites(Long userId);
+    List<Object> getFavourites(Long userId);
 
     int addFavourite(Long teacherId, Long studentId);
 

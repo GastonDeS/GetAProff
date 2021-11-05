@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.User;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,16 +22,24 @@ public class UserDaoJpa implements UserDao {
         return Optional.ofNullable(entityManager.find(User.class, userId));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<User> getFavourites(Long userId) {
-        return entityManager.getReference(User.class, userId).getFavourites();
+    public List<Object> getFavourites(Long userId) {
+        final Query query = entityManager.createNativeQuery("select a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
+                "min(t.price) as minPrice, a1.description as description from (select u.userid as teacherid, u.name as name, coalesce(u.description, '') as description " +
+                "from users u JOIN favourites f on u.userid = f.teacherid where f.studentid = :userId) as a1 join teaches t on a1.teacherid = t.userid " +
+                "group by a1.teacherid, a1.name, a1.description) as a2 left outer join rating r on r.teacherid = a2.teacherid group by a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description");
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 
     @Override
     public int addFavourite(Long teacherId, Long studentId) {
-        User student = entityManager.find(User.class, studentId);
-        User teacher = entityManager.find(User.class, teacherId);
+        final User student = entityManager.find(User.class, studentId);
+        final User teacher = entityManager.find(User.class, teacherId);
         if (student != null && teacher != null) {
+            if (student.getFavourites().contains(teacher)) return 0;
             student.getFavourites().add(teacher);
             return 1;
         }
@@ -41,9 +48,10 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public int removeFavourite(Long teacherId, Long studentId) {
-        User student = entityManager.find(User.class, studentId);
-        User teacher = entityManager.find(User.class, teacherId);
+        final User student = entityManager.find(User.class, studentId);
+        final User teacher = entityManager.find(User.class, teacherId);
         if (student != null && teacher != null) {
+            if (!student.getFavourites().contains(teacher)) return 0;
             student.getFavourites().remove(teacher);
             return 1;
         }
@@ -52,13 +60,10 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Boolean isFaved(Long teacherId, Long studentId) {
-        User student = entityManager.find(User.class, studentId);
+        final User student = entityManager.find(User.class, studentId);
+        final User teacher = entityManager.find(User.class, teacherId);
         if (student != null) {
-            for (User teacher : student.getFavourites()) {
-                if (teacher.getId().equals(teacherId)) {
-                    return true;
-                }
-            }
+            return student.getFavourites().contains(teacher);
         }
         return false;
     }

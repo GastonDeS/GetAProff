@@ -149,7 +149,7 @@
                 </c:when>
                 <c:otherwise>
                     <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"><spring:message
-                            code="tutors.search.resultTitle"/> ${searchQuery}:
+                            code="tutors.search.resultTitle"/>: ${searchQuery}
                     </h3>
                 </c:otherwise>
             </c:choose>
@@ -157,7 +157,6 @@
                 <c:forEach var="tutor" items="${tutors}" varStatus="loop">
                     <div style="margin-top: 30px" class="col">
                         <jsp:include page="../components/tutorCard.jsp">
-                            <jsp:param name="image" value="${tutor.image}"/>
                             <jsp:param name="name" value="${tutor.name}"/>
                             <jsp:param name="uid" value="${tutor.userId}"/>
                             <jsp:param name="rate" value="${tutor.rate}"/>
@@ -203,7 +202,7 @@
                         <c:otherwise>
                             <li class="page-item">
                                 <a class="page-link"
-                                   href="${pageContext.request.contextPath}/tutors/${offset-1}${urlParams}"
+                                   href="${pageContext.request.contextPath}/tutors/${offset - 1}${urlParams}"
                                    tabindex="-1" aria-disabled="true" style="color: #026670;">Previous</a>
                             </li>
                         </c:otherwise>
@@ -226,14 +225,14 @@
                             </c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test="${offset  - 2 + idx == offset}">
+                                    <c:when test="${offset - 2 + idx == offset}">
                                         <li class="page-item"><a class="page-link custom-active "
                                                                  href="${pageContext.request.contextPath}/tutors/${offset - 2 + idx}${urlParams}">${offset - 2 +  idx}</a>
                                         </li>
                                     </c:when>
                                     <c:otherwise>
                                         <li class="page-item"><a class="page-link"
-                                                                 href="${pageContext.request.contextPath}/tutors/${offset -2 +  idx}${urlParams}">${offset -2 +  idx}</a>
+                                                                 href="${pageContext.request.contextPath}/tutors/${offset - 2 +  idx}${urlParams}">${offset - 2 +  idx}</a>
                                         </li>
                                     </c:otherwise>
                                 </c:choose>

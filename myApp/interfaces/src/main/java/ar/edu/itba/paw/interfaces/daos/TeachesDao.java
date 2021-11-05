@@ -28,8 +28,6 @@ public interface TeachesDao {
 
     int getMinPrice(Long teacherId);
 
-    List<Teaches> findTeachersTeachingSubject(String searchedSubject);
-
     /**
      * Retrieves the fee of the most expensive user
      * @param searchedSubject Subject to search for highest fee
@@ -37,5 +35,5 @@ public interface TeachesDao {
      */
     Integer getMostExpensiveUserFee(String searchedSubject);
 
-    List<Teaches> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel);
+    List<Object> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset);
 }
