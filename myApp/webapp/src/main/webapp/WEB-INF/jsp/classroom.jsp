@@ -27,7 +27,7 @@
         <jsp:param name="uid" value="${currentUser.id}"/>
     </jsp:include>
     <div class="page-container">
-<%--        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">--%>
+        <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
         <div class="class-section-container">
             <div class="class-row-section-container">
                 <div class="class-content class-side-section">
@@ -83,9 +83,10 @@
                             <c:choose>
                                 <c:when test="${currentClass.status == statusPending }">
                                     <div class="class-cancel-btn">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/REJECTED"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.decline"/>">
-                                        </form>
+                                        <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                            <jsp:param name="type" value="decline"/>
+                                            <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/REJECTED"/>
+                                        </jsp:include>
                                         <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
                                             <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.accept"/>">
                                         </form>
@@ -93,12 +94,14 @@
                                 </c:when>
                                 <c:when test="${currentClass.status == statusAccepted}">
                                     <div class="class-cancel-btn">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                                        </form>
-                                        <form action="<c:url value="/myClasses/1/${currentClass.classId}/FINISHED"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom" value="<spring:message code="class.card.finish"/>">
-                                        </form>
+                                        <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                            <jsp:param name="type" value="cancel"/>
+                                            <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>
+                                        </jsp:include>
+                                        <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                            <jsp:param name="type" value="finish"/>
+                                            <jsp:param name="urlConfirm" value="/myClasses/1/${currentClass.classId}/FINISHED"/>
+                                        </jsp:include>
                                     </div>
                                 </c:when>
                             </c:choose>
@@ -107,16 +110,18 @@
                             <c:choose>
                                 <c:when test="${currentClass.status == statusPending}">
                                     <div class="class-card-active-btn-holder">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                                        </form>
+                                        <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                            <jsp:param name="type" value="cancel"/>
+                                            <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                        </jsp:include>
                                     </div>
                                 </c:when>
                                 <c:when test="${currentClass.status == statusAccepted}">
                                     <div class="class-card-active-btn-holder">
-                                        <form action="<c:url value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>" method="post" class="class-card-btn-holder">
-                                            <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.cancel"/>">
-                                        </form>
+                                        <jsp:include page="../components/rejectOrCancelModal.jsp">
+                                            <jsp:param name="type" value="cancel"/>
+                                            <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                        </jsp:include>
                                     </div>
                                 </c:when>
                                 <c:when test="${currentClass.status == statusFinished}">
