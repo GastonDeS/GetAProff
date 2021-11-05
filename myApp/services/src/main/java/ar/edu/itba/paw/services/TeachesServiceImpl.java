@@ -1,9 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.daos.ImageDao;
+import ar.edu.itba.paw.interfaces.daos.RatingDao;
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
+import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +23,6 @@ public class TeachesServiceImpl implements TeachesService {
     @Autowired
     private TeachesDao teachesDao;
 
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private RatingService ratingService;
 
     @Transactional
     @Override
@@ -59,8 +58,9 @@ public class TeachesServiceImpl implements TeachesService {
     @Transactional
     @Override
     public List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset){
-        List<Teaches> teachersTeachingSubject = teachesDao.findTeachersTeachingSubject(searchedSubject);
-        return removeDuplicatedTeachers(teachersTeachingSubject, ANY_RATING.floatValue(), Integer.parseInt(offset), RAND_ORDER);
+        List<Object> teachersTeachingSubjectRaw = teachesDao.filterUsers(searchedSubject,
+                teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, Integer.parseInt(offset));
+        return cardProfileConverter(teachersTeachingSubjectRaw);
     }
 
     @Transactional
@@ -75,44 +75,21 @@ public class TeachesServiceImpl implements TeachesService {
         Integer maxPrice = teachesDao.getMostExpensiveUserFee(searchedSubject);
         int intPrice = Integer.parseInt(price);
         if (intPrice > maxPrice) intPrice = maxPrice;
-        List<Teaches> teachersTeachingSubject = teachesDao.filterUsers(searchedSubject, intPrice, minLevel, maxLevel);
-        return removeDuplicatedTeachers(teachersTeachingSubject, Float.parseFloat(rating), Integer.parseInt(offset), Integer.parseInt(order));
+        List<Object> teachersTeachingSubjectRaw = teachesDao.filterUsers(searchedSubject, intPrice, minLevel, maxLevel,
+                Integer.parseInt(rating), Integer.parseInt(order), Integer.parseInt(offset));
+        return cardProfileConverter(teachersTeachingSubjectRaw);
     }
 
-    private List<CardProfile> removeDuplicatedTeachers(List<Teaches> teachersTeachingSubject, Float rating, Integer offset, Integer order) {
-        Map<Long, CardProfile> teachersResultMap = new HashMap<>();
-        for (Teaches teachingInfo : teachersTeachingSubject) {
-            User teacher = teachingInfo.getTeacher();
-            Float teacherRating = ratingService.getRatingById(teacher.getId()).getValue1();
-            if (teacherRating.compareTo(rating) >= 0 || rating.equals(ANY_RATING.floatValue())) {
-                teachersResultMap.putIfAbsent(teacher.getId(),
-                        new CardProfile(teacher.getId(), teacher.getName(), getMaxPrice(teacher.getId()), getMinPrice(teacher.getId()), teacher.getDescription(),
-                                imageService.hasImage(teacher.getId()), teacherRating));
-            }
-        }
-        List<CardProfile> resultList = new ArrayList<>(teachersResultMap.values());
-        if (order != 0) resultList.sort(cardProfileComparator(order));
-        if (offset == 0) return resultList;
-        if ((offset * PAGE_SIZE) > resultList.size())
-            return resultList.subList((offset - 1) * PAGE_SIZE, resultList.size());
-        return resultList.subList((offset - 1) * PAGE_SIZE, offset * PAGE_SIZE);
-    }
-
-    private Comparator<CardProfile> cardProfileComparator(Integer order) {
-        Comparator<CardProfile> priceComparator = Comparator.comparingInt(CardProfile::getMaxPrice);
-        Comparator<CardProfile> rateComparator = (o1, o2) -> Float.compare(o1.getRate(), o2.getRate());
-        switch (order) {
-            case 1:
-                return priceComparator;
-            case 2:
-                return priceComparator.reversed();
-            case 3:
-                return rateComparator;
-            case 4:
-                return rateComparator.reversed();
-            default:
-                return null;
-        }
+    private static List<CardProfile> cardProfileConverter(List<Object> teachersTeachingSubjectRaw) {
+        List<CardProfile> teachersTeachingSubject = new ArrayList<>();
+        teachersTeachingSubjectRaw.forEach((teaches) -> {
+            Object[] cardProfileInfo = (Object[]) teaches;
+            teachersTeachingSubject.add(
+                    new CardProfile(((Number) cardProfileInfo[0]).longValue(), cardProfileInfo[1].toString(), ((Number) cardProfileInfo[2]).intValue(),
+                            ((Number) cardProfileInfo[3]).intValue(), cardProfileInfo[4].toString(), ((Number) cardProfileInfo[5]).floatValue())
+            );
+        });
+        return teachersTeachingSubject;
     }
 
     @Override

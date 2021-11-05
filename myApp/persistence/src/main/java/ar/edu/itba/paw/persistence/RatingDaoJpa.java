@@ -31,7 +31,7 @@ public class RatingDaoJpa implements RatingDao {
         totalQuery.setParameter("teacherid", teacherId);
         int totalRatings = ((Number) totalQuery.getSingleResult()).intValue();
         if (totalRatings == 0) return new Pair<>(0F, totalRatings);
-        final Query sumQuery = entityManager.createNativeQuery("select sum(r.rate) from Rating r where r.teacherid = :teacherid");
+        final Query sumQuery = entityManager.createNativeQuery("select sum(coalesce(r.rate,0)) from Rating r where r.teacherid = :teacherid");
         sumQuery.setParameter("teacherid", teacherId);
         float sumRatings = ((Number) sumQuery.getSingleResult()).floatValue();
         return new Pair<>(sumRatings/totalRatings, totalRatings);

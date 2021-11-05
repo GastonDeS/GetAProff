@@ -27,7 +27,6 @@
                         <div style="margin-top: 30px" class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
                             <div class="container">
                                 <jsp:include page="../components/tutorCard.jsp">
-                                    <jsp:param name="image" value="${tutor.image}"/>
                                     <jsp:param name="name" value="${tutor.name}"/>
                                     <jsp:param name="uid" value="${tutor.userId}"/>
                                     <jsp:param name="rate" value="${tutor.rate}"/>

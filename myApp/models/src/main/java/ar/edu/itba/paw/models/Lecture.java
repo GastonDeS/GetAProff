@@ -107,8 +107,7 @@ public class Lecture {
         CANCELEDS(3),
         CANCELEDT(4),
         REJECTED(5),
-        RATED(6),
-        ;
+        RATED(6);
 
         private final int value;
 

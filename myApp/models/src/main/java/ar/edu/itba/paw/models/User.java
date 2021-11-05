@@ -41,10 +41,19 @@ public class User {
     @JoinTable(
             name = "favourites",
             joinColumns = @JoinColumn(
+                    name = "studentid", referencedColumnName = "userid"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "teacherid", referencedColumnName = "userid"))
+    private List<User> favourites;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "favourites",
+            joinColumns = @JoinColumn(
                     name = "teacherid", referencedColumnName = "userid"),
             inverseJoinColumns = @JoinColumn(
                     name = "studentid", referencedColumnName = "userid"))
-    private List<User> favourites;
+    private List<User> favouriteOf;
 
     @OneToOne
     private Image image;
@@ -52,6 +61,11 @@ public class User {
     @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
     private List<UserFile> userFilesList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Rating> ratings;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Teaches> subjectsTaughtByUser;
 
     User() {
         //Just for Hibernate
@@ -72,6 +86,38 @@ public class User {
         this.schedule = schedule;
         this.userRoles = new ArrayList<>();
         this.favourites = new ArrayList<>();
+    }
+
+    public List<User> getFavouriteOf() {
+        return favouriteOf;
+    }
+
+    public void setFavouriteOf(List<User> favouriteOf) {
+        this.favouriteOf = favouriteOf;
+    }
+
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+    public List<Teaches> getSubjectsTaughtByUser() {
+        return subjectsTaughtByUser;
+    }
+
+    public void setSubjectsTaughtByUser(List<Teaches> subjectsTaughtByUser) {
+        this.subjectsTaughtByUser = subjectsTaughtByUser;
     }
 
     public List<User> getFavourites() {

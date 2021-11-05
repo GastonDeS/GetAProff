@@ -53,11 +53,11 @@ public class Post {
         this.postId = postId;
     }
 
-    public Lecture getAssociatedClass() {
+    public Lecture getAssociatedLecture() {
         return associatedLecture;
     }
 
-    public void setAssociatedClass(Lecture associatedLecture) {
+    public void setAssociatedLecture(Lecture associatedLecture) {
         this.associatedLecture = associatedLecture;
     }
 

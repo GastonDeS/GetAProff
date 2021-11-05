@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
-import org.springframework.context.annotation.Primary;
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,6 +13,8 @@ import java.util.Optional;
 
 @Repository
 public class TeachesDaoJpa implements TeachesDao {
+
+    private static final Integer PAGE_SIZE = 9;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -74,27 +73,54 @@ public class TeachesDaoJpa implements TeachesDao {
     }
 
     @Override
-    public List<Teaches> findTeachersTeachingSubject(String searchedSubject) {
-        final TypedQuery<Teaches> query = entityManager.createQuery("select t from Teaches t where LOWER(t.subject.name) LIKE :name", Teaches.class);
-        query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
-        return query.getResultList();
-    }
-
-    @Override
     public Integer getMostExpensiveUserFee(String searchedSubject) {
-        final TypedQuery<Integer> query = entityManager.createQuery("select max(t.price) from Teaches t where LOWER(t.subject.name) LIKE :name", Integer.class);
+        final Query query = entityManager.createNativeQuery("select max(t.price) from Teaches t JOIN Subject s ON t.subjectid = s.subjectid  where LOWER(s.name) LIKE :name");
         query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
         return ((Number) query.getSingleResult()).intValue();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<Teaches> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel) {
-        final TypedQuery<Teaches> query = entityManager.createQuery("select t from Teaches t where " +
-                "LOWER(t.subject.name) LIKE :name and (t.level between :minLevel and :maxLevel or t.level = 0) and t.price <= :price", Teaches.class);
-        query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%")
+    public List<Object> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset) {
+        String queryStr = "select teacherid, u.name, maxPrice, minPrice, coalesce(u.description, ''), rate " +
+                "from (select a1.teacherid as teacherid, max(a1.price) as maxPrice, min(a1.price) as minPrice, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
+                "from (select t.userid as teacherid, t.price as price, t.level as level from Teaches t JOIN Subject s " +
+                "on t.subjectid = s.subjectid where s.name like :searchedSubject and t.price <= :price and " +
+                "(t.level between :minLevel and :maxLevel or t.level = 0)) as a1 LEFT OUTER JOIN Rating r on a1.teacherid = r.teacherid " +
+                "group by a1.teacherid) as a2 JOIN users u on a2.teacherid = u.userid where a2.rate >= :rate ";
+        queryStr += checkOrdering(order);
+        final Query query = entityManager.createNativeQuery(queryStr);
+        query.setParameter("price", price)
+                .setParameter("searchedSubject", "%"+searchedSubject.toLowerCase()+"%")
                 .setParameter("minLevel", minLevel)
                 .setParameter("maxLevel", maxLevel)
-                .setParameter("price", price);
+                .setParameter("rate", rate);
+        if (offset > 0) {
+            query.setFirstResult((offset - 1) * PAGE_SIZE)
+                    .setMaxResults(PAGE_SIZE);
+        }
         return query.getResultList();
+    }
+
+    private String checkOrdering(int order){
+        String orderBy;
+        switch (order) {
+            case 1:
+                orderBy= "ORDER BY a2.maxprice ASC ";
+                break;
+            case 2:
+                orderBy= "ORDER BY a2.maxprice DESC ";
+                break;
+            case 3:
+                orderBy= "ORDER BY a2.rate ASC ";
+                break;
+            case 4:
+                orderBy= "ORDER BY a2.rate DESC ";
+                break;
+            default:
+                orderBy = "";
+        }
+        return orderBy;
     }
 }
