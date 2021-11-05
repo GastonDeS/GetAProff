@@ -39,7 +39,7 @@ public class Image {
     }
 
     /*default*/ Image() {
-
+        //Just for hibernate
     }
 
     public byte[] getImage() {
