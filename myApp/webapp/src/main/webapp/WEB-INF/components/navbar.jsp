@@ -56,6 +56,9 @@
                          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile/${param.uid}">
                              <spring:message code="nav.button.profile"/>
                          </a></li>
+                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/myFiles">
+                             <spring:message code="nav.button.myFiles"/>
+                         </a></li>
                          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
                              <spring:message code="nav.button.logout"/>
                          </a></li>

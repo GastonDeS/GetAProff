@@ -29,6 +29,22 @@
 
  }
 
+ .selected-files-options-container {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+ }
+ .file-option {
+     display: flex;
+     align-items: center;
+ }
+
+ .form-body-container {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+ }
+
 .file-container {
     display: flex;
     justify-content: space-between;
@@ -935,9 +951,6 @@ input:focus {
     margin-bottom: 15px;
 }
 
-label:hover {
-    color: white;
-}
 
 .class-content {
     background-color: white;
@@ -1040,6 +1053,13 @@ label:hover {
     width: fit-content;
     font-size: 20px;
     margin: 5px 5px 0 5px;
+}
+
+.selected-files-ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    width: 76%;
+    margin-left: 13px;
 }
 
 .sign-btn {

@@ -200,4 +200,11 @@ public class ProfileController {
         return new ModelAndView("redirect:/editCertifications");
     }
 
+    @RequestMapping(value = "/myFiles", method = RequestMethod.GET)
+    public ModelAndView myFiles(){
+        ModelAndView mav = new ModelAndView("myFiles");
+        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        mav.addObject("user",currUser);
+        return mav;
+    }
 }
