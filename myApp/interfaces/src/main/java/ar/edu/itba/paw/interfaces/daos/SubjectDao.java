@@ -15,4 +15,6 @@ public interface SubjectDao {
     Optional<Subject> findByName(String name);
 
     List<Subject> getSubjectsMatching(String name);
+
+    List<Subject> getHottestSubjects();
 }

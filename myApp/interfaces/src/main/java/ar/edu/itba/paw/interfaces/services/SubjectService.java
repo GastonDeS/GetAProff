@@ -15,4 +15,5 @@ public interface SubjectService {
 
     List<Subject> getSubjectsMatching(String name);
 
+    List<Subject> getHottestSubjects();
 }

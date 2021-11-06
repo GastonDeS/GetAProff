@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.daos.ImageDao;
-import ar.edu.itba.paw.interfaces.daos.RatingDao;
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
-import ar.edu.itba.paw.interfaces.daos.UserDao;
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,6 +95,18 @@ public class TeachesServiceImpl implements TeachesService {
     @Override
     public Integer getPageQty(String searchedSubject) {
         return (int) Math.ceil(findTeachersTeachingSubject(searchedSubject, GET_ALL.toString()).size()/(double) PAGE_SIZE);
+    }
+
+    @Override
+    public List<CardProfile> getTopRatedTeachers() {
+        List<Object> topRatedTeachersRaw = teachesDao.getTopRatedTeachers();
+        return cardProfileConverter(topRatedTeachersRaw);
+    }
+
+    @Override
+    public List<CardProfile> getHottest() {
+        List<Object> hottestTeachersRaw = teachesDao.getHottest();
+        return cardProfileConverter(hottestTeachersRaw);
     }
 
     @Override

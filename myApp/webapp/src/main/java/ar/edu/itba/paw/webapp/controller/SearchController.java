@@ -52,7 +52,6 @@ public class SearchController {
         if (offsetToInt != 1 && offsetToInt > pageQty) {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
-        System.out.println("PRINT OFFSET" +offset);
         LOGGER.debug("Teachers found for {}", searchQuery);
         List<CardProfile> maybeTutors = teachesService.findTeachersTeachingSubject(searchQuery, offset);
         mav.addObject("tutors", maybeTutors);

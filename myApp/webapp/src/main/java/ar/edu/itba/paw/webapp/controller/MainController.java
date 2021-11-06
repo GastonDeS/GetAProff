@@ -20,12 +20,18 @@ public class MainController {
     @Autowired
     private SubjectService subjectService;
 
+    @Autowired
+    private TeachesService teachesService;
+
     @RequestMapping("/")
     public ModelAndView index() {
         Optional<User> curr = userService.getCurrentUser();
         List<Subject> subjectList = subjectService.list();
         final ModelAndView mav = new ModelAndView("index")
-                .addObject("subjects", subjectList);
+                .addObject("subjects", subjectList)
+                .addObject("topRated", teachesService.getTopRatedTeachers())
+                .addObject("hottest", teachesService.getHottest())
+                .addObject("hottestSubjects", subjectService.getHottestSubjects());
         curr.ifPresent(user -> mav.addObject("uid", user.getId()));
         return mav;
     }
