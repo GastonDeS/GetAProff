@@ -144,7 +144,7 @@
                     <div class="post-box">
                         <div class="class-card-active-btn-holder">
                             <h3><c:out value="${post.uploader.name}"/></h3>
-                            <p style="font-size: 0.8em">5/11/2019 20:53</p>
+                            <p style="font-size: 0.8em"><c:out value="${post.time.toLocaleString()}"/></p>
                         </div>
                         <p style="margin: 0"><c:out value="${post.message}"/></p>
                         <a target="_blank" href="${pageContext.request.contextPath}/classroom/open/${post.postId}"

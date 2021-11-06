@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -23,7 +25,7 @@ public class PostDaoJpa implements PostDao {
     public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
         final User uploader = entityManager.getReference(User.class, uploaderId);
         final Lecture associatedLecture = entityManager.getReference(Lecture.class, classId);
-        final Post post = new Post(null, associatedLecture, uploader, message, filename, file, type);
+        final Post post = new Post(null, associatedLecture, uploader, message, filename, file, type, Timestamp.from(Instant.now()));
         entityManager.persist(post);
         return post;
     }
