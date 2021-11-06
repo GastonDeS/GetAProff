@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "posts")
@@ -31,11 +32,14 @@ public class Post {
     @Column
     private String type;
 
+    @Column
+    private Timestamp time;
+
     Post() {
         //Just for Hibernate
     }
 
-    public Post(Long postId, Lecture associatedLecture, User uploader, String message, String filename, byte[] file, String type) {
+    public Post(Long postId, Lecture associatedLecture, User uploader, String message, String filename, byte[] file, String type, Timestamp time) {
         this.postId = postId;
         this.associatedLecture = associatedLecture;
         this.uploader = uploader;
@@ -43,6 +47,15 @@ public class Post {
         this.filename = filename;
         this.file = file;
         this.type = type;
+        this.time = time;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
     public Long getPostId() {

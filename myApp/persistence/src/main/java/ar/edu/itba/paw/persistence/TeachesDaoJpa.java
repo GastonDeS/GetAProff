@@ -76,6 +76,9 @@ public class TeachesDaoJpa implements TeachesDao {
     public Integer getMostExpensiveUserFee(String searchedSubject) {
         final Query query = entityManager.createNativeQuery("select max(t.price) from Teaches t JOIN Subject s ON t.subjectid = s.subjectid  where LOWER(s.name) LIKE :name");
         query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
+        if (query.getSingleResult() == null) {
+           return  ((Number) entityManager.createNativeQuery("select max(t.price) from Teaches t").getSingleResult()).intValue();
+        }
         return ((Number) query.getSingleResult()).intValue();
     }
 
@@ -86,7 +89,7 @@ public class TeachesDaoJpa implements TeachesDao {
                 "from (select a1.teacherid as teacherid, max(a1.price) as maxPrice, min(a1.price) as minPrice, " +
                 "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
                 "from (select t.userid as teacherid, t.price as price, t.level as level from Teaches t JOIN Subject s " +
-                "on t.subjectid = s.subjectid where s.name like :searchedSubject and t.price <= :price and " +
+                "on t.subjectid = s.subjectid where lower(s.name) like '%'||:searchedSubject||'%' and t.price <= :price and " +
                 "(t.level between :minLevel and :maxLevel or t.level = 0)) as a1 LEFT OUTER JOIN Rating r on a1.teacherid = r.teacherid " +
                 "group by a1.teacherid) as a2 JOIN users u on a2.teacherid = u.userid where a2.rate >= :rate ";
         queryStr += checkOrdering(order);
@@ -100,6 +103,35 @@ public class TeachesDaoJpa implements TeachesDao {
             query.setFirstResult((offset - 1) * PAGE_SIZE)
                     .setMaxResults(PAGE_SIZE);
         }
+        System.out.println("SIZEEEE" + query.getResultList().size());
+        return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> getTopRatedTeachers() {
+        String queryStr = "select teacherid, u.name, maxPrice, minPrice, coalesce(u.description, ''), rate " +
+                "from (select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
+                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
+                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid order by rate desc";
+        final Query query = entityManager.createNativeQuery(queryStr).setMaxResults(4);
+        return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> getHottest() {
+        String queryStr = "select a3.teacherid, a3.name, a3.maxPrice, a3.minPrice, a3.description, " +
+                "a3.rate from (select a2.teacherid, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
+                "coalesce(u.description, '') as description, a2.rate as rate from " +
+                "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
+                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
+                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid) as a3 LEFT OUTER JOIN " +
+                "classes c on a3.teacherid = c.teacherid group by a3.teacherid, a3.name, a3.maxPrice," +
+                "a3.minPrice, a3.description, a3.rate order by count(c.classid) desc";
+        final Query query = entityManager.createNativeQuery(queryStr).setMaxResults(4);
         return query.getResultList();
     }
 

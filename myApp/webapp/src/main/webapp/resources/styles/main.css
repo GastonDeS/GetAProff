@@ -382,7 +382,8 @@ input:focus {
     justify-content: space-evenly;
     align-items: center;
     width: 40vw;
-    height: 90px;
+    height: fit-content;
+    flex-direction: column;
 }
 
 .search-bar > form {
@@ -403,10 +404,11 @@ input:focus {
 
 .main-img-container {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    width: 50vw;
-    height: 45vh;
+    width: 90%;
+    height: fit-content;
     margin-top: 20px;
 }
 
@@ -1081,7 +1083,6 @@ input:focus {
     justify-content: flex-start;
     align-items: center;
     align-content: center;
-    margin-left: -40px;
 }
 
 .h-divider {
@@ -1481,4 +1482,53 @@ select {
     border-radius: 10px;
     width: 100%;
     padding: 5px;
+}
+
+.explore-card-container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+.explore-title {
+    font-size: 32px;
+    font-weight: bold;
+    font-family: "Roboto Light", sans-serif;
+    color: #026670;
+    width: 100%;
+    align-items: flex-start;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.tutor-card-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subject-pill {
+    background-color: #026670;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "Roboto Light", sans-serif;
+    margin: 0 5px 0 5px;
+    text-decoration: none;
+}
+
+.subject-pill:hover {
+    background: rgb(49, 133, 140);
+    color: white;
+}
+
+.hottest-subject-container {
+    width: fit-content;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 15px 0 8px 0;
 }

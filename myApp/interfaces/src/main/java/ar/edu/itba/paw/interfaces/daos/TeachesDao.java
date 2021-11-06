@@ -33,4 +33,8 @@ public interface TeachesDao {
     Integer getMostExpensiveUserFee(String searchedSubject);
 
     List<Object> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset);
+
+    List<Object> getTopRatedTeachers();
+
+    List<Object> getHottest();
 }

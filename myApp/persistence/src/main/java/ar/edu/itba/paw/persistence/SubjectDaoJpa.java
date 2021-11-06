@@ -2,11 +2,11 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.models.Subject;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -48,4 +48,14 @@ public class SubjectDaoJpa implements SubjectDao {
         query.setParameter("name", "%"+name.toLowerCase()+"%");
         return query.getResultList();
     }
+
+    @Override
+    public List<Subject> getHottestSubjects() {
+        final TypedQuery<Subject> query =
+                entityManager.createQuery("select s from Subject s order by s.teachersTeachingSubject.size desc", Subject.class)
+                .setMaxResults(5);
+        return query.getResultList();
+    }
+
+
 }

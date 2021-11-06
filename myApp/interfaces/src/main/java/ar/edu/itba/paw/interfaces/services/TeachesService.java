@@ -31,4 +31,8 @@ public interface TeachesService {
     Integer getPageQty(String searchedSubject, String price, String level, String rating);
 
     Integer getPageQty(String searchedSubject);
+
+    List<CardProfile> getTopRatedTeachers();
+
+    List<CardProfile> getHottest();
 }

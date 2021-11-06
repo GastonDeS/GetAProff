@@ -35,4 +35,9 @@ public class SubjectServiceImpl implements SubjectService {
     public List<Subject> getSubjectsMatching(String name) {
         return subjectDao.getSubjectsMatching(name);
     }
+
+    @Override
+    public List<Subject> getHottestSubjects() {
+        return subjectDao.getHottestSubjects();
+    }
 }
