@@ -33,45 +33,56 @@
                 <ul id="selected-files-ul" class="selected-files-ul">
                 </ul>
             </div>
+            <h5 style="margin: 10px 0 10px 0; color: #026670;">Elija en que clases quiere disponiblizar el archivo </h5>
             <div class="selected-files-options-container">
                 <div class="file-option">
-                    <label style="width: 45%;" for="subject-select">Materia:</label>
-                    <select class="form-select" id="subject-select" aria-label="Default select example">
-                        <option selected><spring:message code="myFiles.select.subjectSelectTitle"/></option>
+                    <label class="files-form-label" style="width: 43%;" for="subject-select">Materia:</label>
+                    <select id="subject-select">
+                        <option selected><spring:message code="myFiles.select.anySubject"/></option>
                         <option value="0">Mate 1</option>
                         <option value="1">Mate 2</option>
                         <option value="2">Mate 3</option>
                     </select>
                 </div>
                 <div class="file-option">
-                    <label style="width: 45%;" for="level-select">Nivel:</label>
-                    <select class="form-select" id="level-select" aria-label="Default select example">
-                        <option selected><spring:message code="myFiles.select.levelSelectTitle"/></option>
-                        <option value="0">Todos los niveles</option>
+                    <label class="files-form-label" style="width: 43%;" for="level-select">Nivel:</label>
+                    <select id="level-select">
+                        <option selected><spring:message code="myFiles.select.anyLevel"/></option>
                         <option value="1">Principiante</option>
                         <option value="2">Intermedio</option>
                         <option value="3">Avanzado</option>
                     </select>
                 </div>
             </div>
-            <button class="btn btn-custom" style="align-self:center;" type="submit">Cargar Materias</button>
+            <button class="btn btn-custom" style="align-self:center; margin-top: 10px;" type="submit">Cargar Archivos
+            </button>
         </div>
     </div>
     <div class="form-container" style="margin-top: 15px;">
         <h2 class="form-title">Mis Archivos</h2>
-        <div style="display: flex">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <option value="Mate 1">One</option>
-                <option value="Mate 2">Two</option>
-                <option value="Mate 3">Three</option>
-            </select>
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <option value="Principiante">One</option>
-                <option value="Intermedio">Two</option>
-                <option value="Avanzado">Three</option>
-            </select>
+        <div style="display: flex; width: 90%">
+            <div class="files-filter-container">
+                <label class="files-form-label" for="subject-select-filter" style="margin-right: 10px;">
+                    Materia:
+                </label>
+                <select id="subject-select-filter">
+                    <option selected>Open this select menu</option>
+                    <option value="Mate 1">One</option>
+                    <option value="Mate 2">Two</option>
+                    <option value="Mate 3">Three</option>
+                </select>
+            </div>
+            <div class="files-filter-container">
+                <label class="files-form-label" for="level-select-filter" style="margin-right: 10px;">
+                    Nivel:
+                </label>
+                <select id="level-select-filter">
+                    <option selected>Open this select menu</option>
+                    <option value="Principiante">One</option>
+                    <option value="Intermedio">Two</option>
+                    <option value="Avanzado">Three</option>
+                </select>
+            </div>
         </div>
         <table class="subjects-table">
             <tr class="subjects-row">
@@ -81,8 +92,8 @@
             </tr>
             <c:forEach begin="1" end="3" var="subject">
                 <tr class="subjects-row">
-                    <td class="row-info" style="width: 40%">${subject}</td>
-                    <td class="row-info" style="width: 15%">${subject}</td>
+                    <td class="row-info" style="width: 40%">Archivo ${subject}.pdf</td>
+                    <td class="row-info" style="width: 15%">Mate ${subject}</td>
                     <td class="row-info" style="width: 25%">Avanxado</td>
                 </tr>
             </c:forEach>
@@ -121,7 +132,7 @@
             let btn = document.createElement("button");
             btn.innerHTML = "X";
             btn.className = 'btn btn-custom';
-            btn.onclick = () =>  removeItemFromFilesArray(btn.parentElement.childNodes[0]);
+            btn.onclick = () => removeItemFromFilesArray(btn.parentElement.childNodes[0]);
             li.appendChild(btn);
             li.className = 'subjects-row'
             ul.appendChild(li);
