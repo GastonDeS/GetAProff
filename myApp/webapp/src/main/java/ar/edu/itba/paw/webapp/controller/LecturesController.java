@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.exceptions.MailNotSentException;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.forms.ClassUploadForm;
+import ar.edu.itba.paw.webapp.forms.ContactForm;
 import ar.edu.itba.paw.webapp.forms.RateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,9 @@ public class LecturesController {
 
     @Autowired
     private TeachesService teachesService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     @RequestMapping("/myClasses?error=true")
     public ModelAndView myClassesError() {
@@ -186,13 +190,35 @@ public class LecturesController {
         return new ResponseEntity<>(post.getFile(), headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/requestClass/{uid}/{subjectId}/{level}", method = RequestMethod.POST)
-    public ModelAndView classesStatusChange(@PathVariable("uid") final Long uid, @PathVariable("subjectId") final Long subjectId, @PathVariable("level") final int level) {
+    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
+    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final Long uid) {
+        final ModelAndView mav = new ModelAndView("contactForm");
+        Optional<User> maybeUser = userService.findById(uid);
+        Optional<User> curr = userService.getCurrentUser();
+        if (!curr.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
+        if (!maybeUser.isPresent()) {
+            throw new InvalidOperationException("exception.invalid");
+        }
+        LOGGER.debug("User {} contacting teacher {}", curr.get().getId(), uid);
+        mav.addObject("user", maybeUser.get());
+        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+        mav.addObject("subjects", subjectsGiven);
+        mav.addObject("currentUid", curr.get().getId());
+        return mav;
+    }
 
+    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
+    public ModelAndView contact(@PathVariable("uid") final Long uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
+                                final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return contactForm(form, uid);
+        }
         Optional<User> user = userService.findById(uid);
         Optional<User> curr = userService.getCurrentUser();
-        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, subjectId, level);
-
+        String[] subjectIdAndLevel = form.getSubjectAndLevel().split(",",2);
+        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.parseLong(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
         if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
@@ -202,7 +228,7 @@ public class LecturesController {
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
-        LOGGER.debug("User {} requested class from teacher {}", curr.get().getId(), uid);
+        LOGGER.debug("User {} rewuested class from teacher {}", curr.get().getId(), uid);
         return new ModelAndView("redirect:/classroom/" + newLecture.getClassId().toString());
     }
 }
