@@ -10,19 +10,8 @@ import javax.validation.constraints.Size;
 
 public class ContactForm {
 
-    @Size(max = 256)
-    private String message;
-
     @NotEmpty
     private String subjectAndLevel;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public String getSubjectAndLevel() {
         return subjectAndLevel;

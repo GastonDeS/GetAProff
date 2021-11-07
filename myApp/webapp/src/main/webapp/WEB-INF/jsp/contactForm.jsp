@@ -36,13 +36,6 @@
                     </form:select>
                     <form:errors path="subjectAndLevel" element="p" cssClass="form-error"/>
                 </div>
-                <div class="form-input">
-                    <form:label path="message"><spring:message code="contact.form.message"/></form:label>
-                    <form:textarea cssStyle="height: 150px" type="text" path="message"
-                                   class="form-control"
-                                   placeHolder="${messagePlaceHolder}"/>
-                    <form:errors path="message" element="p" cssClass="form-error"/>
-                </div>
                 <div class="btn-container">
                     <input type="submit" class="btn btn-custom bd-highlight"
                            value="<spring:message code="contact.form.request.button"/>">
