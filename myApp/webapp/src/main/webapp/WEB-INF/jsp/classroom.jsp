@@ -37,7 +37,7 @@
               <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
               <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
           </div>
-            <%--                Status fronnt--%>
+            <%--                Status front--%>
             <div class="class-content class-side-section">
                 <c:choose>
                     <c:when test="${currentClass.status == statusPending }">

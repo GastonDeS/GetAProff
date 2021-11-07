@@ -121,7 +121,7 @@ public class TeachesDaoJpa implements TeachesDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> getHottest() {
+    public List<Object> getMostRequested() {
         String queryStr = "select a3.teacherid, a3.name, a3.maxPrice, a3.minPrice, a3.description, " +
                 "a3.rate from (select a2.teacherid, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
                 "coalesce(u.description, '') as description, a2.rate as rate from " +

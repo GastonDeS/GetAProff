@@ -34,5 +34,5 @@ public interface TeachesService {
 
     List<CardProfile> getTopRatedTeachers();
 
-    List<CardProfile> getHottest();
+    List<CardProfile> getMostRequested();
 }

@@ -30,7 +30,7 @@ public class MainController {
         final ModelAndView mav = new ModelAndView("index")
                 .addObject("subjects", subjectList)
                 .addObject("topRated", teachesService.getTopRatedTeachers())
-                .addObject("hottest", teachesService.getHottest())
+                .addObject("hottest", teachesService.getMostRequested())
                 .addObject("hottestSubjects", subjectService.getHottestSubjects());
         curr.ifPresent(user -> mav.addObject("uid", user.getId()));
         return mav;
