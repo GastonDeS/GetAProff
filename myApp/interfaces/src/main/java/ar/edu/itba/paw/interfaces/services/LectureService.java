@@ -15,4 +15,8 @@ public interface LectureService {
     Lecture create(Long studentId, Long teacherId, int level, Long subjectId, int price);
 
     int setStatus(Long classId, int status);
+
+    Integer getNotificationsCount( Long classId, int role) ;
+
+    void refreshTime(Long classId, int role);
 }

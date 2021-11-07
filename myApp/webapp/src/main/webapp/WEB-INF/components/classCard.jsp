@@ -94,8 +94,22 @@
                                            value="<spring:message code="class.card.accept"/>">
                                 </form>
                             </div>
-                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}"
-                               class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                            <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
+                               class="btn btn-custom"><spring:message code="class.card.enter"/>
+                                <c:if test="${param.notifications > 0}">
+                                    <span style="position: absolute;
+                                              top: -15px;
+                                              right: -15px;
+                                              height: 30;
+                                              width: 30;
+                                              padding: 5px 10px;
+                                              border-radius: 50%;
+                                              background: red;
+                                              color: white;">
+                                            ${param.notifications}
+                                    </span>
+                                </c:if>
+                            </a>
                         </div>
                     </c:when>
                     <c:when test="${param.lectureStatus == statusAccepted}">
@@ -112,8 +126,22 @@
                                            value="<spring:message code="class.card.finish"/>">
                                 </form>
                             </div>
-                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}"
-                               class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                            <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
+                               class="btn btn-custom"><spring:message code="class.card.enter"/>
+                                <c:if test="${param.notifications > 0}">
+                                    <span style="position: absolute;
+                                              top: -15px;
+                                              right: -15px;
+                                              height: 30;
+                                              width: 30;
+                                              padding: 5px 10px;
+                                              border-radius: 50%;
+                                              background: red;
+                                              color: white;">
+                                            ${param.notifications}
+                                    </span>
+                                </c:if>
+                            </a>
                         </div>
                     </c:when>
                 </c:choose>
@@ -127,8 +155,22 @@
                                 <input type="submit" class="btn btn-custom cancel-btn"
                                        value="<spring:message code="class.card.cancel"/>">
                             </form>
-                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}"
-                               class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                            <a style="position: relative" href="${pageContext.request.contextPath}/classroom/${param.cid}"
+                               class="btn btn-custom"><spring:message code="class.card.enter"/>
+                                <c:if test="${param.notifications > 0}">
+                                    <span style="position: absolute;
+                                              top: -15px;
+                                              right: -15px;
+                                              height: 30;
+                                              width: 30;
+                                              padding: 5px 10px;
+                                              border-radius: 50%;
+                                              background: red;
+                                              color: white;">
+                                            ${param.notifications}
+                                    </span>
+                                </c:if>
+                            </a>
                         </div>
                     </c:when>
                     <c:when test="${param.lectureStatus == statusAccepted}">
@@ -138,16 +180,44 @@
                                 <input type="submit" class="btn btn-custom cancel-btn"
                                        value="<spring:message code="class.card.cancel"/>">
                             </form>
-                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}"
-                               class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                            <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
+                               class="btn btn-custom"><spring:message code="class.card.enter"/>
+                                <c:if test="${param.notifications > 0}">
+                                    <span style="position: absolute;
+                                          top: -15px;
+                                          right: -15px;
+                                          height: 30;
+                                          width: 30;
+                                          padding: 5px 10px;
+                                          border-radius: 50%;
+                                          background: red;
+                                          color: white;">
+                                            ${param.notifications}
+                                    </span>
+                                </c:if>
+                            </a>
                         </div>
                     </c:when>
                     <c:when test="${param.lectureStatus == statusFinished}">
                         <div class="class-card-active-btn-holder">
                             <a href="${pageContext.request.contextPath}/rate/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.rate"/></a>
-                            <a href="${pageContext.request.contextPath}/classroom/${param.cid}"
-                               class="btn btn-custom"><spring:message code="class.card.enter"/></a>
+                            <a style="position: relative" href="${pageContext.request.contextPath}/classroom/${param.cid}"
+                                   class="btn btn-custom"><spring:message code="class.card.enter"/>
+                                <c:if test="${param.notifications > 0}">
+                                    <span style="position: absolute;
+                                          top: -15px;
+                                          right: -15px;
+                                          height: 30;
+                                          width: 30;
+                                          padding: 5px 10px;
+                                          border-radius: 50%;
+                                          background: red;
+                                          color: white;">
+                                        ${param.notifications}
+                                    </span>
+                                </c:if>
+                            </a>
                         </div>
                     </c:when>
                 </c:choose>

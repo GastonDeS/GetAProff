@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 @Repository
@@ -76,7 +79,8 @@ public class LectureDaoJpa implements LectureDao {
         final User student = entityManager.getReference(User.class, studentId);
         final User teacher = entityManager.getReference(User.class, teacherId);
         final Subject subject = entityManager.getReference(Subject.class, subjectId);
-        final Lecture newLecture = new Lecture(student, teacher, subject, level, price);
+        final Lecture newLecture = new Lecture(student, teacher, subject, level, price,
+                Timestamp.from(Instant.now()), Timestamp.from(Instant.now()));
         entityManager.persist(newLecture);
         return newLecture;
     }
@@ -87,5 +91,35 @@ public class LectureDaoJpa implements LectureDao {
         query.setParameter("status", status)
                 .setParameter("classId", classId);
         return query.executeUpdate();
+    }
+
+    @Override
+    public Integer getNotificationsCount(Long classId, int role) {
+        final TypedQuery<Post> query;
+        if (role == 0) {
+            query = entityManager.createQuery(
+                    "from Post p\n" +
+                            "    where p.time > p.associatedLecture.teacherLastTime\n" +
+                            "              AND p.associatedLecture.classId = :classId", Post.class);
+        } else {
+            query = entityManager.createQuery(
+                    "from Post p\n" +
+                            "    where p.time > p.associatedLecture.studentLastTime\n" +
+                            "              AND p.associatedLecture.classId = :classId", Post.class);
+        }
+        query.setParameter("classId",classId);
+        return query.getResultList().size();
+    }
+
+    @Override
+    public void refreshTime(Long classId, int role) {
+        final Query query;
+        if (role == 0) {
+            query = entityManager.createQuery("update Lecture set teacherLastTime = CURRENT_TIMESTAMP where classId = :classId");
+        } else {
+            query = entityManager.createQuery("update Lecture set studentLastTime = CURRENT_TIMESTAMP where classId = :classId");
+        }
+        query.setParameter("classId", classId);
+        query.executeUpdate();
     }
 }
