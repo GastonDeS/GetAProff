@@ -105,6 +105,7 @@
                                 <jsp:param name="level" value="${myLecture.level}"/>
                                 <jsp:param name="cid" value="${myLecture.classId}"/>
                                 <jsp:param name="lectureStatus" value="${myLecture.status}"/>
+                                <jsp:param name="notifications" value="${myLecture.notifications}"/>
                                 <jsp:param name="isOffered" value="${type == 'offered'}"/>
                             </jsp:include>
                         </c:forEach>

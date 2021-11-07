@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -28,20 +29,51 @@ public class Lecture {
     @Column
     private int level, price, status;
 
+    @Column
+    private Timestamp studentLastTime, teacherLastTime;
+
     @OneToMany(mappedBy = "associatedLecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> classPosts;
+
+    private Integer notifications;
 
     Lecture() {
         //For Hibernate
     }
 
-    public Lecture(User student, User teacher, Subject subject, int level, int price) {
+    public Lecture(User student, User teacher, Subject subject, int level, int price, Timestamp studentLastTime, Timestamp teacherLastTime) {
         this.student = student;
         this.teacher = teacher;
         this.subject = subject;
         this.level = level;
         this.price = price;
         this.status = Status.PENDING.value;
+        this.studentLastTime = studentLastTime;
+        this.teacherLastTime = teacherLastTime;
+    }
+
+    public Integer getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Integer notifications) {
+        this.notifications = notifications;
+    }
+
+    public Timestamp getStudentLastTime() {
+        return studentLastTime;
+    }
+
+    public void setStudentLastTime(Timestamp studentLastTime) {
+        this.studentLastTime = studentLastTime;
+    }
+
+    public Timestamp getTeacherLastTime() {
+        return teacherLastTime;
+    }
+
+    public void setTeacherLastTime(Timestamp teacherLastTime) {
+        this.teacherLastTime = teacherLastTime;
     }
 
     public List<Post> getClassPosts() {
