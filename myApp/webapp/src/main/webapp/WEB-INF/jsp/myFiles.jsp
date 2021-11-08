@@ -25,36 +25,41 @@
     <div class="form-container">
         <h2 class="form-title">Agregar Archivo</h2>
         <div class="form-body-container">
-            <div style="display: flex;">
-                <label class="btn btn-custom">
-                    Seleccione un archivo
-                    <input type="file" id="file" accept="application/pdf" style="display:none;" multiple>
-                </label>
-                <ul id="selected-files-ul" class="selected-files-ul">
-                </ul>
-            </div>
-            <h5 style="margin: 10px 0 10px 0; color: #026670;">Elija en que clases quiere disponiblizar el archivo </h5>
-            <div class="selected-files-options-container">
-                <div class="file-option">
-                    <label class="files-form-label" style="width: 43%;" for="subject-select">Materia:</label>
-                    <select id="subject-select">
-                        <option selected><spring:message code="myFiles.select.anySubject"/></option>
-                        <option value="0">Mate 1</option>
-                        <option value="1">Mate 2</option>
-                        <option value="2">Mate 3</option>
-                    </select>
+            <form name="subject-files-form" id="subject-files-form" action="${pageContext.request.contextPath}/myFiles"
+                  method="post" enctype="multipart/form-data">
+                <div class="files-input-container">
+                    <label id="label-for-file-input" class="btn btn-custom">
+                        Seleccione un archivo
+                        <input type="file" id="file" name="files" accept="application/pdf" style="display:none;"
+                               multiple>
+                    </label>
+                    <ul id="selected-files-ul" class="selected-files-ul" style="display: none;"></ul>
                 </div>
-                <div class="file-option">
-                    <label class="files-form-label" style="width: 43%;" for="level-select">Nivel:</label>
-                    <select id="level-select">
-                        <option selected><spring:message code="myFiles.select.anyLevel"/></option>
-                        <option value="1">Principiante</option>
-                        <option value="2">Intermedio</option>
-                        <option value="3">Avanzado</option>
-                    </select>
+                <h5 style="margin: 10px 0 10px 0; color: #026670;">Elija en que clases quiere disponiblizar el
+                    archivo </h5>
+                <div class="selected-files-options-container">
+                    <div class="file-option">
+                        <label class="files-form-label" style="width: 43%;" for="subject-select">Materia:</label>
+                        <select id="subject-select" name="subject">
+                            <option selected value="0"><spring:message code="myFiles.select.anySubject"/></option>
+                            <c:forEach var="teaches" items="${userSubjects}">
+                                <option value="${teaches.subject.id}">${teaches.subject.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="file-option">
+                        <label class="files-form-label" style="width: 43%;" for="level-select">Nivel:</label>
+                        <select id="level-select" name="level">
+                            <option selected value="0"><spring:message code="myFiles.select.anyLevel"/></option>
+                            <c:forEach begin="1" end="3" var="idx">
+                                <option value="${idx}"><spring:message code="myFiles.filesTable.level.${idx}"/></option>
+                            </c:forEach>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <button class="btn btn-custom" style="align-self:center; margin-top: 10px;" type="submit">Cargar Archivos
+            </form>
+            <button class="btn btn-custom" form="subject-files-form" style="align-self:center;" type="submit">Cargar
+                Archivos
             </button>
         </div>
     </div>
@@ -86,15 +91,16 @@
         </div>
         <table class="subjects-table">
             <tr class="subjects-row">
-                <td class="row-title" style="width: 43%">Archivo</td>
-                <td class="row-title" style="width: 17%">Materia</td>
-                <td class="row-title" style="width: 40%">Nivel</td>
+                <td class="row-title" style="width: 59%">Archivo</td>
+                <td class="row-title" style="width: 30%">Materia</td>
+                <td class="row-title" style="width: 30%">Nivel</td>
             </tr>
-            <c:forEach begin="1" end="3" var="subject">
+            <c:forEach var="file" items="${userSubjectFiles}">
                 <tr class="subjects-row">
-                    <td class="row-info" style="width: 40%">Archivo ${subject}.pdf</td>
-                    <td class="row-info" style="width: 15%">Mate ${subject}</td>
-                    <td class="row-info" style="width: 25%">Avanxado</td>
+                    <td class="row-info" style="width: 40%">${file.fileName}</td>
+                    <td class="row-info" style="width: 15%">${file.subject.name}</td>
+                    <td class="row-info" style="width: 25%"><spring:message
+                            code="myFiles.filesTable.level${file.level}"/></td>
                 </tr>
             </c:forEach>
         </table>
@@ -106,23 +112,35 @@
 <script>
 
     const removeItemFromFilesArray = (item) => {
-        var files = document.getElementById("file").files;
-        var newFiles = [];
+        const fileInput = document.getElementById("file");
+        const files = fileInput.files;
+        const dataTransfer = new DataTransfer();
         for (var i = 0; i < files.length; i++) {
-            if (files[i].name !== item)
-                newFiles.push(files[i]);
-        }
-        document.getElementById("selected-files-ul").files = newFiles;
-        var ul = document.getElementById("selected-files-ul");
-        ul.querySelectorAll('li').forEach(n => {
-                if (n.childNodes[0] === item) {
-                    n.remove();
-                }
+            console.log(i + ' a ' + item)
+            if (i != item) {
+                dataTransfer.items.add(files[i])
             }
-        );
+        }
+        document.getElementById("file").files = dataTransfer.files;
+        var ul = document.getElementById("selected-files-ul");
+        ul.removeChild(ul.childNodes[item]);
     }
 
-    document.getElementById('file').addEventListener('change', function () {
+    function showUlOfFiles() {
+        var files = document.getElementById("file").files;
+        var ul = document.getElementById("selected-files-ul");
+        if (files.length == 0) {
+            ul.style.display = 'none';
+        } else {
+            ul.style.display = 'block';
+
+        }
+    }
+
+    document.getElementById('label-for-file-input').addEventListener('click', showUlOfFiles);
+
+    document.getElementById('file').addEventListener('input', function () {
+        showUlOfFiles();
         var files = document.getElementById("file").files;
         var ul = document.getElementById("selected-files-ul");
         ul.querySelectorAll('*').forEach(n => n.remove());
@@ -131,8 +149,10 @@
             li.appendChild(document.createTextNode(files[i].name));
             let btn = document.createElement("button");
             btn.innerHTML = "X";
+            btn.value = i;
+            btn.setAttribute("type", "button");
             btn.className = 'btn btn-custom';
-            btn.onclick = () => removeItemFromFilesArray(btn.parentElement.childNodes[0]);
+            btn.onclick = () => removeItemFromFilesArray(btn.value);
             li.appendChild(btn);
             li.className = 'subjects-row'
             ul.appendChild(li);

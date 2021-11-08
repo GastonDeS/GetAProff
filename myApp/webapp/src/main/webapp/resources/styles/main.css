@@ -465,6 +465,12 @@ input:focus {
     width: 100%;
 }
 
+.files-input-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+}
+
 .form-input-container {
     display: flex;
     flex-direction: column;
@@ -1067,10 +1073,8 @@ input:focus {
 }
 
 .selected-files-ul {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    width: 76%;
-    margin-left: 13px;
+    width: 100%;
+    padding-left: 0;
 }
 
 .sign-btn {
