@@ -225,4 +225,12 @@ public class ProfileController {
         subjectFileService.saveMultipleNewSubjectFiles(files,currUser.getId(),subjectForFile,level);
         return new ModelAndView("redirect:/myFiles");
     }
+
+    @RequestMapping(value = "/myFilesDelete/{uid}", method = RequestMethod.POST, params = "deleted-files")
+    public ModelAndView removeSubjectFile(@PathVariable("uid") final Long uid,  @RequestParam (name = "deleted-files") String[] filesIdToDelete) {
+        if(userService.getCurrentUser().orElseThrow(RuntimeException::new).getId().equals(uid))
+            for(String file : filesIdToDelete)
+                subjectFileService.deleteSubjectFile(Long.parseLong(file));
+        return new ModelAndView("redirect:/myFiles");
+    }
 }
