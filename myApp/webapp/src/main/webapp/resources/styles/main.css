@@ -1413,6 +1413,18 @@ select {
     border-color: #ffc107;
 }
 
+.notifications-badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    height: 30px;
+    width: 30px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+}
+
 .class-card-btn-holder {
     width: fit-content;
     margin: 0;

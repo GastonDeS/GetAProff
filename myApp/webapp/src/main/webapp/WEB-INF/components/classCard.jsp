@@ -97,15 +97,7 @@
                             <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.enter"/>
                                 <c:if test="${param.notifications > 0}">
-                                    <span style="position: absolute;
-                                              top: -15px;
-                                              right: -15px;
-                                              height: 30;
-                                              width: 30;
-                                              padding: 5px 10px;
-                                              border-radius: 50%;
-                                              background: red;
-                                              color: white;">
+                                    <span class="notifications-badge">
                                             ${param.notifications}
                                     </span>
                                 </c:if>
@@ -129,15 +121,7 @@
                             <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.enter"/>
                                 <c:if test="${param.notifications > 0}">
-                                    <span style="position: absolute;
-                                              top: -15px;
-                                              right: -15px;
-                                              height: 30;
-                                              width: 30;
-                                              padding: 5px 10px;
-                                              border-radius: 50%;
-                                              background: red;
-                                              color: white;">
+                                    <span class="notifications-badge">
                                             ${param.notifications}
                                     </span>
                                 </c:if>
@@ -158,15 +142,7 @@
                             <a style="position: relative" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.enter"/>
                                 <c:if test="${param.notifications > 0}">
-                                    <span style="position: absolute;
-                                              top: -15px;
-                                              right: -15px;
-                                              height: 30;
-                                              width: 30;
-                                              padding: 5px 10px;
-                                              border-radius: 50%;
-                                              background: red;
-                                              color: white;">
+                                    <span class="notifications-badge">
                                             ${param.notifications}
                                     </span>
                                 </c:if>
@@ -183,15 +159,7 @@
                             <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.enter"/>
                                 <c:if test="${param.notifications > 0}">
-                                    <span style="position: absolute;
-                                          top: -15px;
-                                          right: -15px;
-                                          height: 30;
-                                          width: 30;
-                                          padding: 5px 10px;
-                                          border-radius: 50%;
-                                          background: red;
-                                          color: white;">
+                                    <span class="notifications-badge">
                                             ${param.notifications}
                                     </span>
                                 </c:if>
@@ -205,15 +173,7 @@
                             <a style="position: relative" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                    class="btn btn-custom"><spring:message code="class.card.enter"/>
                                 <c:if test="${param.notifications > 0}">
-                                    <span style="position: absolute;
-                                          top: -15px;
-                                          right: -15px;
-                                          height: 30;
-                                          width: 30;
-                                          padding: 5px 10px;
-                                          border-radius: 50%;
-                                          background: red;
-                                          color: white;">
+                                    <span class="notifications-badge">
                                         ${param.notifications}
                                     </span>
                                 </c:if>
