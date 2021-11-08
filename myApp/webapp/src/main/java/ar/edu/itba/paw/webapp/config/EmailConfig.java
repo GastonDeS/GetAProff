@@ -23,7 +23,6 @@ public class EmailConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
 
         return mailSender;
     }
@@ -32,8 +31,21 @@ public class EmailConfig {
     public SimpleMailMessage simpleMailMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setText(
-                "<p>%s</p>" +
-                        "<a href=\"%s\">%s</a>");
+                "<table align=\"center\" style=\"background-color:#9fedd7; witdh:600px;\">" +
+                        "<tr>" +
+                        "<td align=\"center\">" +
+                        "<h1>%s</h1>" +
+                "<table style=\"background-color:#ffffff;\">" +
+                        "<tr>" +
+                        "<td align=\"center\">" +
+                        "<p>%s</p>" +
+                        "<a href=\"%s\" style=\"color: #ffffff; text-decoration: none; background-color: #026670; text-decoration: none; padding: 15px 25px; display: inline-block;\">%s</a>" +
+                        "</td>" +
+                        "</tr>" +
+                "</table>" +
+                "</td>" +
+                        "</tr>" +
+                        "</table>");
         return message;
     }
 }
