@@ -51,8 +51,8 @@
                         <label class="files-form-label" style="width: 43%;" for="level-select">Nivel:</label>
                         <select id="level-select" name="level">
                             <option selected value="0"><spring:message code="myFiles.select.anyLevel"/></option>
-                            <c:forEach begin="1" end="3" var="idx">
-                                <option value="${idx}"><spring:message code="myFiles.filesTable.level.${idx}"/></option>
+                            <c:forEach var="index" begin="1" end="3">
+                                <option value="${index}"><spring:message code="myFiles.filesTable.level${index}"/></option>
                             </c:forEach>
                         </select>
                     </div>
