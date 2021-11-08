@@ -41,9 +41,8 @@
                         <label class="files-form-label" style="width: 43%;" for="subject-select"><spring:message
                                 code="myFiles.subjectLabel"/>:</label>
                         <select id="subject-select" name="subject" required>
-                            <option selected value="0"><spring:message code="myFiles.select.anySubject"/></option>
-                            <c:forEach var="teaches" items="${userSubjects}">
-                                <option value="${teaches.subject.id}">${teaches.subject.name}</option>
+                            <c:forEach var="subject" items="${userSubjects}">
+                                <option value="${subject.id}">${subject.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -67,30 +66,33 @@
     </div>
     <div class="form-container" style="margin-top: 15px;">
         <h2 class="form-title"><spring:message code="myFiles.title"/></h2>
-        <div style="display: flex; width: 90%">
+        <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
+        <form action="${pageContext.request.contextPath}/myFiles" method="get" style="display: flex; width: 90%">
             <div class="files-filter-container">
                 <label class="files-form-label" for="subject-select-filter" style="margin-right: 10px;">
-                    Materia:
+                    <spring:message code="myFiles.subjectLabel"/>:
                 </label>
-                <select id="subject-select-filter">
-                    <option selected>Open this select menu</option>
-                    <option value="Mate 1">One</option>
-                    <option value="Mate 2">Two</option>
-                    <option value="Mate 3">Three</option>
+                <select name="subject-select-filter" id="subject-select-filter">
+                    <option selected value="0">Seleccione una materia</option>
+                    <c:forEach var="subject" items="${userSubjects}">
+                        <option value="${subject.id}">${subject.name}</option>
+                    </c:forEach>
                 </select>
             </div>
             <div class="files-filter-container">
                 <label class="files-form-label" for="level-select-filter" style="margin-right: 10px;">
-                    Nivel:
+                    <spring:message code="myFiles.levelLabel"/>:
                 </label>
-                <select id="level-select-filter">
-                    <option selected>Open this select menu</option>
-                    <option value="Principiante">One</option>
-                    <option value="Intermedio">Two</option>
-                    <option value="Avanzado">Three</option>
+                <select name="level-select-filter" id="level-select-filter">
+                    <option selected value="0"><spring:message code="myFiles.select.anyLevel"/></option>
+                    <c:forEach var="index" begin="1" end="3">
+                        <option value="${index}"><spring:message
+                                code="myFiles.filesTable.level${index}"/></option>
+                    </c:forEach>
                 </select>
             </div>
-        </div>
+            <button type="submit" id="submit-filter" style="display: none"></button>
+        </form>
 
         <c:choose>
             <c:when test="${userSubjectFiles.size() != 0}">
@@ -99,7 +101,7 @@
                         <td class="row-title" style="width: 40%">Archivo</td>
                         <td class="row-title" style="width: 15%">Materia</td>
                         <td class="row-title" style="width: 25%">Nivel</td>
-                        <td class="row-title" style="width: 4%">
+                        <td style="width: 4%;align-self: center;display: flex;justify-content: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                                  class="bi bi-trash" viewBox="0 0 16 16">
                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
@@ -116,7 +118,7 @@
                                 <td class="row-info" style="width: 15%">${file.subject.name}</td>
                                 <td class="row-info" style="width: 25%"><spring:message
                                         code="myFiles.filesTable.level${file.level}"/></td>
-                                <td style="width: 34px;">
+                                <td style="width: 3%;">
                                     <input type="checkbox" name="deleted-files" class="form-check-input"
                                            value="${file.fileId}">
                                 </td>
@@ -146,6 +148,22 @@
     <jsp:param name="" value=""/>
 </jsp:include>
 <script>
+
+    function keepFiltersSelected() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var selectedSubject = urlParams.get("subject-select-filter");
+        var levelSubject = urlParams.get("level-select-filter");
+        if(selectedSubject !== null)
+            document.getElementById("subject-select-filter").value = urlParams.get("subject-select-filter");
+        if(levelSubject !== null)
+            document.getElementById("level-select-filter").value = urlParams.get("level-select-filter");
+    }
+    function filter() {
+        const btn = document.getElementById('submit-filter');
+        document.getElementById("subject-select-filter").addEventListener("input", () => btn.click());
+        document.getElementById("level-select-filter").addEventListener("input", () => btn.click());
+    }
 
     function showDeleteButton() {
         var checkboxes = document.getElementsByName("deleted-files");
@@ -209,7 +227,8 @@
         }
 
     });
-
+    keepFiltersSelected();
+    filter();
     document.getElementsByName("deleted-files").forEach(n => n.addEventListener('click', showDeleteButton));
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"

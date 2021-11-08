@@ -43,6 +43,12 @@ public class TeachesServiceImpl implements TeachesService {
         return subjectInfoList;
     }
 
+    @Override
+    public List<Subject> getListOfAllSubjectsTeachedByUser(Long userId) {
+        return teachesDao.getListOfAllSubjectsTeachedByUser(userId);
+    }
+
+
     @Transactional
     @Override
     public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {

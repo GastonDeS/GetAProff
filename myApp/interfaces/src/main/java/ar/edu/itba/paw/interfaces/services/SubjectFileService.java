@@ -16,5 +16,7 @@ public interface SubjectFileService {
 
     int deleteSubjectFile(Long fileId);
 
+    List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level);
+
     SubjectFile getSubjectFileById(Long fileId);
 }

@@ -212,7 +212,17 @@ public class ProfileController {
         User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
         List<SubjectFile> userSubjectFiles = subjectFileService.getAllSubjectFilesFromUser(currUser.getId());
         mav.addObject("userSubjectFiles", userSubjectFiles);
-        mav.addObject("userSubjects",teachesService.get(currUser.getId()));
+        mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
+        mav.addObject("user",currUser);
+        return mav;
+    }
+    @RequestMapping(value = "/myFiles", method = RequestMethod.GET, params = {"subject-select-filter", "level-select-filter"})
+    public ModelAndView myFiles(@RequestParam (name = "subject-select-filter") Long subjectId, @RequestParam (name = "level-select-filter") Integer level ){
+        ModelAndView mav = new ModelAndView("myFiles");
+        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        List<SubjectFile> userSubjectFiles = subjectFileService.filterUserSubjectFilesBySubjectAndLevel(currUser.getId(), subjectId, level);
+        mav.addObject("userSubjectFiles", userSubjectFiles);
+        mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
         mav.addObject("user",currUser);
         return mav;
     }

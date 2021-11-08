@@ -47,6 +47,12 @@ public class SubjectFileServiceImpl implements SubjectFileService {
     }
 
     @Override
+    public List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level) {
+        return subjectFileDao.filterUserSubjectFilesBySubjectAndLevel(userId,subjectId,level);
+    }
+
+
+    @Override
     public SubjectFile getSubjectFileById(Long fileId) {
         return subjectFileDao.getSubjectFileById(fileId);
     }
