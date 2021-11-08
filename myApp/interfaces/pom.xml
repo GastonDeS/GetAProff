@@ -29,6 +29,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>models</artifactId>
       <version>${project.parent.version}</version>
