@@ -170,6 +170,7 @@ public class LecturesController {
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
     public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
                                     final BindingResult errors) throws IOException {
+        if (form.getMessage().isEmpty() && form.getFile().isEmpty()) errors.rejectValue("message", "form.upload.empty");
         if (errors.hasErrors()) return accessClassroom(classId, form);
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())

@@ -36,5 +36,5 @@ public interface TeachesDao {
 
     List<Object> getTopRatedTeachers();
 
-    List<Object> getHottest();
+    List<Object> getMostRequested();
 }
