@@ -33,7 +33,14 @@
           <div class="class-content class-side-section">
               <h2>Classroom</h2>
               <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
-              <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
+              <c:choose>
+                  <c:when test="${currentClass.teacher.id == currentUser.id}">
+                      <p><spring:message code="class.card.student.intro"/> <c:out value="${currentClass.student.name}"/></p>
+                  </c:when>
+                  <c:otherwise>
+                      <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
+                  </c:otherwise>
+              </c:choose>
               <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
               <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
           </div>
