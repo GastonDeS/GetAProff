@@ -20,7 +20,6 @@ public class PostDaoJpa implements PostDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
     @Override
     public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
         final User uploader = entityManager.getReference(User.class, uploaderId);

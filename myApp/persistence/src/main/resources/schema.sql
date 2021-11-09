@@ -63,6 +63,19 @@ CREATE TABLE IF NOT EXISTS user_file
     PRIMARY KEY (fileId)
 );
 
+CREATE TABLE IF NOT EXISTS subject_files
+(
+    userId   INTEGER,
+    fileId   SERIAL,
+    fileName VARCHAR,
+    file     BYTEA,
+    subject_id  INTEGER,
+    subject_level INTEGER,
+    FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subject ON DELETE CASCADE,
+    PRIMARY KEY (fileId)
+);
+
 CREATE TABLE IF NOT EXISTS classes
 (
     classId   SERIAL PRIMARY KEY,

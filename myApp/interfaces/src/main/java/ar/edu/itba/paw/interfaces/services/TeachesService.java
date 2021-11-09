@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
@@ -13,6 +14,8 @@ public interface TeachesService {
     int removeSubjectToUser(Long userId, Long subjectId, int level);
 
     List<SubjectInfo> getSubjectInfoListByUser(Long teacherId);
+
+    List<Subject> getListOfAllSubjectsTeachedByUser(Long userId);
 
     Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 
@@ -34,5 +37,6 @@ public interface TeachesService {
 
     List<CardProfile> getTopRatedTeachers();
 
-    List<CardProfile> getHottest();
+    List<CardProfile> getMostRequested();
+
 }

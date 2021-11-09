@@ -51,6 +51,15 @@ public class TeachesDaoJpa implements TeachesDao {
     }
 
     @Override
+    public List<Subject> getListOfAllSubjectsTeachedByUser(Long userId){
+        final User teacher = entityManager.getReference(User.class,userId);
+        final TypedQuery<Subject> query = entityManager.createQuery("SELECT DISTINCT (t.subject) FROM Teaches t where t.teacher = :teacher",Subject.class);
+        query.setParameter("teacher", teacher);
+        return query.getResultList();
+
+    }
+
+    @Override
     public List<Teaches> get(Long teacherId) {
         final User teacher = entityManager.getReference(User.class, teacherId);
         final TypedQuery<Teaches> query = entityManager.createQuery("from Teaches t where t.teacher = :teacher", Teaches.class);
@@ -103,7 +112,6 @@ public class TeachesDaoJpa implements TeachesDao {
             query.setFirstResult((offset - 1) * PAGE_SIZE)
                     .setMaxResults(PAGE_SIZE);
         }
-        System.out.println("SIZEEEE" + query.getResultList().size());
         return query.getResultList();
     }
 
@@ -121,7 +129,7 @@ public class TeachesDaoJpa implements TeachesDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> getHottest() {
+    public List<Object> getMostRequested() {
         String queryStr = "select a3.teacherid, a3.name, a3.maxPrice, a3.minPrice, a3.description, " +
                 "a3.rate from (select a2.teacherid, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
                 "coalesce(u.description, '') as description, a2.rate as rate from " +

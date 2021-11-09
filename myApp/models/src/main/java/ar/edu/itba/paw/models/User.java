@@ -61,6 +61,9 @@ public class User {
     @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
     private List<UserFile> userFilesList;
 
+    @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
+    private List<SubjectFile> subjectsFilesList;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 
@@ -207,6 +210,14 @@ public class User {
 
     public List<UserFile> getUserFilesList() {
         return userFilesList;
+    }
+
+    public List<SubjectFile> getSubjectsFilesList() {
+        return subjectsFilesList;
+    }
+
+    public void setSubjectsFilesList(List<SubjectFile> subjectsFilesList) {
+        this.subjectsFilesList = subjectsFilesList;
     }
 
     @Override

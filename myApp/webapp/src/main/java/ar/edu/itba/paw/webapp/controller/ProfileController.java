@@ -36,6 +36,12 @@ public class ProfileController {
     private TeachesService teachesService;
 
     @Autowired
+    private SubjectFileService subjectFileService;
+
+    @Autowired
+    private SubjectService subjectService;
+
+    @Autowired
     private ImageService imageService;
 
     @Autowired
@@ -204,7 +210,37 @@ public class ProfileController {
     public ModelAndView myFiles(){
         ModelAndView mav = new ModelAndView("myFiles");
         User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        List<SubjectFile> userSubjectFiles = subjectFileService.getAllSubjectFilesFromUser(currUser.getId());
+        mav.addObject("userSubjectFiles", userSubjectFiles);
+        mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
         mav.addObject("user",currUser);
         return mav;
+    }
+    @RequestMapping(value = "/myFiles", method = RequestMethod.GET, params = {"subject-select-filter", "level-select-filter"})
+    public ModelAndView myFiles(@RequestParam (name = "subject-select-filter") Long subjectId, @RequestParam (name = "level-select-filter") Integer level ){
+        ModelAndView mav = new ModelAndView("myFiles");
+        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        List<SubjectFile> userSubjectFiles = subjectFileService.filterUserSubjectFilesBySubjectAndLevel(currUser.getId(), subjectId, level);
+        mav.addObject("userSubjectFiles", userSubjectFiles);
+        mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
+        mav.addObject("user",currUser);
+        return mav;
+    }
+
+    @RequestMapping(value = "/myFiles", method = RequestMethod.POST)
+    public ModelAndView addUserFiles(@RequestParam (name = "files") MultipartFile[] files, @RequestParam (name = "level") Integer level,
+                                     @RequestParam (name = "subject") Long subjectId) throws IOException {
+        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(RuntimeException::new);
+        subjectFileService.saveMultipleNewSubjectFiles(files,currUser.getId(),subjectForFile,level);
+        return new ModelAndView("redirect:/myFiles");
+    }
+
+    @RequestMapping(value = "/myFilesDelete/{uid}", method = RequestMethod.POST, params = "deleted-files")
+    public ModelAndView removeSubjectFile(@PathVariable("uid") final Long uid,  @RequestParam (name = "deleted-files") String[] filesIdToDelete) {
+        if(userService.getCurrentUser().orElseThrow(RuntimeException::new).getId().equals(uid))
+            for(String file : filesIdToDelete)
+                subjectFileService.deleteSubjectFile(Long.parseLong(file));
+        return new ModelAndView("redirect:/myFiles");
     }
 }

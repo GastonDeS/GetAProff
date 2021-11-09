@@ -465,6 +465,12 @@ input:focus {
     width: 100%;
 }
 
+.files-input-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+}
+
 .form-input-container {
     display: flex;
     flex-direction: column;
@@ -1066,11 +1072,15 @@ input:focus {
     margin: 5px 5px 0 5px;
 }
 
+
+.myFiles-main-btn-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .selected-files-ul {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    width: 76%;
-    margin-left: 13px;
+    width: 100%;
+    padding-left: 0;
 }
 
 .sign-btn {
@@ -1411,6 +1421,18 @@ select {
     color: #000;
     background-color: #ffc107;
     border-color: #ffc107;
+}
+
+.notifications-badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    height: 30px;
+    width: 30px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+    color: white;
 }
 
 .class-card-btn-holder {

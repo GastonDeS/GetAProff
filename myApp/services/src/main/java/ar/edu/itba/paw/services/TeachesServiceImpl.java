@@ -43,6 +43,12 @@ public class TeachesServiceImpl implements TeachesService {
         return subjectInfoList;
     }
 
+    @Override
+    public List<Subject> getListOfAllSubjectsTeachedByUser(Long userId) {
+        return teachesDao.getListOfAllSubjectsTeachedByUser(userId);
+    }
+
+
     @Transactional
     @Override
     public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
@@ -104,8 +110,8 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public List<CardProfile> getHottest() {
-        List<Object> hottestTeachersRaw = teachesDao.getHottest();
+    public List<CardProfile> getMostRequested() {
+        List<Object> hottestTeachersRaw = teachesDao.getMostRequested();
         return cardProfileConverter(hottestTeachersRaw);
     }
 
