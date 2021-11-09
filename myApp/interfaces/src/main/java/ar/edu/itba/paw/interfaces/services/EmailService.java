@@ -5,11 +5,11 @@ import ar.edu.itba.paw.models.Lecture;
 public interface EmailService {
     void sendSimpleMessage(String to, String subject, String text);
 
-    void sendNewClassMessage(String to, String userFrom, String subject);
+    void sendNewClassMessage(String to, String userFrom, String subject, String localAddr);
 
-    void sendStatusChangeMessage(Lecture myLecture);
+    void sendStatusChangeMessage(Lecture myLecture, String localAddr);
 
-    void sendRatedMessage(Lecture myLecture, int rating, String review);
+    void sendRatedMessage(Lecture myLecture, int rating, String review, String localAddr);
 
     void sendSubjectRequest(Long uid, String Subject, String message);
 
