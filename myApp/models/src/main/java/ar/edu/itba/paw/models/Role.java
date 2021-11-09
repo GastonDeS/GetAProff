@@ -5,7 +5,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class  Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_roleid_seq")

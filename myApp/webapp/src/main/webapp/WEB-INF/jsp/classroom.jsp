@@ -30,13 +30,15 @@
     <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
     <div class="class-row-section-container">
         <div class="classroom-status-left-panel">
-          <div class="class-content class-side-section">
-              <h2>Classroom</h2>
-              <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
-              <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
-              <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
-              <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
-          </div>
+            <div class="class-content class-side-section">
+                <h2>Classroom</h2>
+                <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
+                <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
+                <p><spring:message code="class.card.price.intro"/> $<c:out
+                        value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
+                <p><spring:message code="class.card.level.intro"/> <spring:message
+                        code="subjects.form.level.${currentClass.level}"/></p>
+            </div>
             <%--                Status front--%>
             <div class="class-content class-side-section">
                 <c:choose>
@@ -64,10 +66,13 @@
                                 <div class="class-cancel-btn">
                                     <jsp:include page="../components/rejectOrCancelModal.jsp">
                                         <jsp:param name="type" value="decline"/>
-                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/REJECTED"/>
+                                        <jsp:param name="urlConfirm"
+                                                   value="/myClasses/0/${currentClass.classId}/REJECTED"/>
                                     </jsp:include>
-                                    <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>" method="post" class="class-card-btn-holder">
-                                        <input type="submit" class="btn btn-custom cancel-btn" value="<spring:message code="class.card.accept"/>">
+                                    <form action="<c:url value="/myClasses/1/${currentClass.classId}/ACCEPTED"/>"
+                                          method="post" class="class-card-btn-holder">
+                                        <input type="submit" class="btn btn-custom cancel-btn"
+                                               value="<spring:message code="class.card.accept"/>">
                                     </form>
                                 </div>
                             </c:when>
@@ -75,11 +80,13 @@
                                 <div class="class-cancel-btn">
                                     <jsp:include page="../components/rejectOrCancelModal.jsp">
                                         <jsp:param name="type" value="cancel"/>
-                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>
+                                        <jsp:param name="urlConfirm"
+                                                   value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>
                                     </jsp:include>
                                     <jsp:include page="../components/rejectOrCancelModal.jsp">
                                         <jsp:param name="type" value="finish"/>
-                                        <jsp:param name="urlConfirm" value="/myClasses/1/${currentClass.classId}/FINISHED"/>
+                                        <jsp:param name="urlConfirm"
+                                                   value="/myClasses/1/${currentClass.classId}/FINISHED"/>
                                     </jsp:include>
                                 </div>
                             </c:when>
@@ -91,7 +98,8 @@
                                 <div class="class-card-active-btn-holder">
                                     <jsp:include page="../components/rejectOrCancelModal.jsp">
                                         <jsp:param name="type" value="cancel"/>
-                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                        <jsp:param name="urlConfirm"
+                                                   value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
                                     </jsp:include>
                                 </div>
                             </c:when>
@@ -99,13 +107,15 @@
                                 <div class="class-card-active-btn-holder">
                                     <jsp:include page="../components/rejectOrCancelModal.jsp">
                                         <jsp:param name="type" value="cancel"/>
-                                        <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                        <jsp:param name="urlConfirm"
+                                                   value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
                                     </jsp:include>
                                 </div>
                             </c:when>
                             <c:when test="${currentClass.status == statusFinished}">
                                 <div class="class-card-active-btn-holder">
-                                    <a href="${pageContext.request.contextPath}/rate/${currentClass.classId}" class="btn btn-custom"><spring:message code="class.card.rate"/></a>
+                                    <a href="${pageContext.request.contextPath}/rate/${currentClass.classId}"
+                                       class="btn btn-custom"><spring:message code="class.card.rate"/></a>
                                 </div>
                             </c:when>
                         </c:choose>
@@ -118,7 +128,8 @@
         <div class="classroom-center-panel">
             <%--                UPLOAD POST--%>
             <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
-            <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post" enctype="multipart/form-data" cssClass="class-content upload-box">
+            <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post"
+                       enctype="multipart/form-data" cssClass="class-content upload-box">
                 <div class="form-input-container" style="width: 94%">
                     <form:textarea type="text" cssClass="form-control"
                                    cssStyle="height: 20vh; resize: none;" path="message"
@@ -128,7 +139,8 @@
                 <div class="file-upload" style="justify-content: space-between">
                     <div style="display: flex;flex-direction: row; justify-content: center;align-items: center">
                         <label class="btn btn-custom">
-                            <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file" id="file"/>
+                            <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file"
+                                        id="file"/>
                             <spring:message code="class.upload.file"/>
                         </label>
                         <p style="margin: 0 5px 0" id="fileName"></p>
@@ -155,8 +167,43 @@
             <%--            FIN DE POSTS--%>
         </div>
         <div class="classroom-right-panel">
-            <div class="class-content class-side-section">
-                <h2>Archivos</h2>
+            <div class="class-content class-side-section" style="min-height: 300px; height: fit-content;">
+                <c:choose>
+                    <c:when test="${currentUser.id == currentClass.student.id}">
+                        <h1>Archivos de la clase</h1>
+                        <ul>
+                            <c:forEach var="file" items="${sharedFiles}">
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                       target="_blank">${file.fileName}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <h2>Mis Archivos</h2>
+                        <form action="${pageContext.request.contextPath}/classroom/${classId}" method="post">
+                            <ul>
+                                <c:forEach var="file" items="${teacherFiles}">
+                                    <li>
+                                        <a href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                           target="_blank">${file.fileName}</a>
+                                        <input type="checkbox" name="sharedFiles" value="${file.fileId}">
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                            <button type="submit">Comparti archivos</button>
+                        </form>
+                    </c:otherwise>
+                </c:choose>
+                <ul>
+                    <c:forEach var="file" items="${sharedFiles}">
+                        <li>
+                            <a href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                               target="_blank">${file.fileName}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
             </div>
         </div>
     </div>

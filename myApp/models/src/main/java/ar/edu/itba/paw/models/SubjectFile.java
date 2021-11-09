@@ -2,6 +2,8 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "subject_files")
@@ -28,6 +30,9 @@ public class SubjectFile {
     @ManyToOne
     @JoinColumn(name = "subjectid")
     private Subject subject;
+
+    @ManyToMany(mappedBy = "sharedFilesByTeacher")
+    private List<Lecture> lecturesWithFileShared;
 
     SubjectFile() {
         //For Hibernate

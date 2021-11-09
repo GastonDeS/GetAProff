@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -121,5 +118,23 @@ public class LectureDaoJpa implements LectureDao {
         }
         query.setParameter("classId", classId);
         query.executeUpdate();
+    }
+
+    @Override
+    public int addSharedFileToLecture(Long subjectFileId, Long lectureId) {
+        final SubjectFile subjectFile = entityManager.find(SubjectFile.class,subjectFileId);
+        final Lecture currentLecture = entityManager.find(Lecture.class, lectureId);
+        if(currentLecture.getSharedFilesByTeacher().contains(subjectFile))
+            return 0;
+        currentLecture.getSharedFilesByTeacher().add(subjectFile);
+        System.out.println("SIZE ADD PERSISTENCE + " + currentLecture.getSharedFilesByTeacher().size());
+        return 1;
+    }
+
+    @Override
+    public List<SubjectFile> getSharedFilesByTeacher(Long lectureId) {
+        final Lecture currentLecture = entityManager.getReference(Lecture.class, lectureId);
+        System.out.println("SIZE PERSISTENCE + " + currentLecture.getSharedFilesByTeacher().size());
+        return currentLecture.getSharedFilesByTeacher();
     }
 }

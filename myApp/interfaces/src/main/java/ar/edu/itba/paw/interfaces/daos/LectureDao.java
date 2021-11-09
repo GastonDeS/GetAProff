@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.daos;
 
 
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.SubjectFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,5 +30,9 @@ public interface LectureDao {
     public Integer getNotificationsCount( Long classId, int role);
 
     void refreshTime(Long classId,int role);
+
+    int addSharedFileToLecture(Long subjectFileId, Long lectureId);
+
+    List<SubjectFile> getSharedFilesByTeacher(Long classId);
 
 }

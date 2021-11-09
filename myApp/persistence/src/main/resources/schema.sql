@@ -76,6 +76,17 @@ CREATE TABLE IF NOT EXISTS subject_files
     PRIMARY KEY (fileId)
 );
 
+CREATE TABLE IF NOT EXISTS shared
+(
+    classId INTEGER,
+    fileId  INTEGER,
+    FOREIGN KEY (classId) REFERENCES classes ON DELETE CASCADE,
+    FOREIGN KEY (fileId) REFERENCES subject_files ON DELETE CASCADE,
+    PRIMARY KEY(classId, fileId)
+
+);
+
+
 CREATE TABLE IF NOT EXISTS classes
 (
     classId   SERIAL PRIMARY KEY,

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.SubjectFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,5 +77,17 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public void refreshTime(Long classId, int role) {
         lectureDao.refreshTime(classId, role);
+    }
+
+    @Transactional
+    @Override
+    public int addSharedFileToLecture(Long subjectFileId, Long lectureId) {
+        return lectureDao.addSharedFileToLecture(subjectFileId, lectureId);
+    }
+
+    @Transactional
+    @Override
+    public List<SubjectFile> getSharedFilesByTeacher(Long classId) {
+        return lectureDao.getSharedFilesByTeacher(classId);
     }
 }

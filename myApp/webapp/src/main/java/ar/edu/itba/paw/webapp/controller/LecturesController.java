@@ -44,6 +44,9 @@ public class LecturesController {
     private EmailService emailService;
 
     @Autowired
+    private SubjectFileService subjectFileService;
+
+    @Autowired
     private RatingService ratingService;
 
     @Autowired
@@ -160,10 +163,13 @@ public class LecturesController {
         if (!maybeClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + classId);
         }
+        System.out.println("SIZE :" + lectureService.getSharedFilesByTeacher(maybeClass.get().getClassId()).size());
         lectureService.refreshTime(maybeClass.get().getClassId(), maybeUser.get().getId().equals(maybeClass.get().getTeacher().getId()) ?0:1);
         return new ModelAndView("classroom")
                 .addObject("currentUser", maybeUser.get())
                 .addObject("currentClass", maybeClass.get())
+                .addObject("sharedFiles",lectureService.getSharedFilesByTeacher(maybeClass.get().getClassId()))
+                .addObject("teacherFiles", subjectFileService.getAllSubjectFilesFromUser(maybeClass.get().getTeacher().getId()))
                 .addObject("posts", postService.retrievePosts(classId));
     }
 
@@ -179,6 +185,19 @@ public class LecturesController {
         return new ModelAndView("redirect:/classroom/" + classId);
     }
 
+    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST, params = "sharedFiles")
+    public ModelAndView shareFile(@PathVariable("classId") final Long classId, Long[] sharedFiles) {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent())
+            throw new NoUserLoggedException("exception.not.logger.user");
+        for(Long fileId : sharedFiles) {
+            System.out.println("File id " + fileId);
+            //TODO chequear errores
+            lectureService.addSharedFileToLecture(fileId,classId);
+        }
+        return new ModelAndView("redirect:/classroom/" + classId);
+    }
+
     @RequestMapping(value = "/classroom/open/{postId}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> openFile(@PathVariable("postId") final Long postId) {
         Post post = postService.getFileData(postId);
@@ -189,6 +208,18 @@ public class LecturesController {
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
         return new ResponseEntity<>(post.getFile(), headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/classFile/{classId}/{fileId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> openTeacherFile(@PathVariable("classId") final Long classId, @PathVariable("fileId") final Long fileId) {
+
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        headers.add("Content-Disposition", "inline; filename=" + subjectFile.getFileName());
+
+        return new ResponseEntity<>(subjectFile.getFile(), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)

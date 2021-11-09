@@ -26,6 +26,15 @@ public class Lecture {
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Subject subject;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "shared",
+            joinColumns = @JoinColumn(
+                    name = "classid", referencedColumnName = "classid"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "fileid", referencedColumnName = "fileid"))
+    private List<SubjectFile> sharedFilesByTeacher;
+
     @Column
     private int level, price, status;
 
@@ -130,6 +139,14 @@ public class Lecture {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public List<SubjectFile> getSharedFilesByTeacher() {
+        return sharedFilesByTeacher;
+    }
+
+    public void setSharedFilesByTeacher(List<SubjectFile> sharedFilesByTeacher) {
+        this.sharedFilesByTeacher = sharedFilesByTeacher;
     }
 
     public enum Status {
