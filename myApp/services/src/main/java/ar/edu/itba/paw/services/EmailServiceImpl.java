@@ -57,11 +57,17 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendNewClassMessage(String to, String userFrom, String subject, String localAddr) {
+        System.out.println("por enviar email 00");
         String mailSubject = messageSource.getMessage("mail.subject.new.class", null, LocaleContextHolder.getLocale());
+        System.out.println("por enviar email 01");
         String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject}, LocaleContextHolder.getLocale());
+        System.out.println("por enviar email 02");
         String button = messageSource.getMessage("mail.subject.new.class.btn",null, LocaleContextHolder.getLocale());
+        System.out.println("por enviar email 03");
         String text = String.format(templateMailMessage.getText(), mailSubject,toFormat, localAddr + "/myClasses/offered/0", button);
+        System.out.println("por enviar email 1");
         sendSimpleMessage(to,mailSubject, text);
+
     }
 
     @Override

@@ -261,7 +261,6 @@ public class LecturesController {
         int index = url.indexOf(path);
         String localAddr = url.substring(0, index);
         try {
-            System.out.println("entre no se porq no se manda");
             emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName(), localAddr);
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
