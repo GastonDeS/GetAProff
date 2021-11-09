@@ -33,6 +33,8 @@ public interface LectureDao {
 
     int addSharedFileToLecture(Long subjectFileId, Long lectureId);
 
+    int stopSharingFileInLecture(Long subjectFileId, Long lectureId);
+
     List<SubjectFile> getSharedFilesByTeacher(Long classId);
 
 }

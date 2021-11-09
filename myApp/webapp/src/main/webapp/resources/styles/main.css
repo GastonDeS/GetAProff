@@ -16,36 +16,40 @@
     flex-direction: column;
     width: 25%;
 }
+
 .classroom-center-panel {
     display: flex;
     flex-direction: column;
     width: 50%;
     align-items: center;
 
-}.classroom-right-panel {
-     display: flex;
-     flex-direction: column;
-     width: 25%;
+}
 
- }
+.classroom-right-panel {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
 
- .selected-files-options-container {
-     display: flex;
-     flex-direction: column;
-     width: 100%;
- }
- .file-option {
-     display: flex;
-     align-items: center;
- }
+}
 
- .form-body-container {
-     display: flex;
-     flex-direction: column;
-     width: 100%;
-     margin-top: 10px;
+.selected-files-options-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 
- }
+.file-option {
+    display: flex;
+    align-items: center;
+}
+
+.form-body-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+
+}
 
 .file-container {
     display: flex;
@@ -75,6 +79,7 @@ input[type=range] {
     margin: 20px 0;
     width: 100%;
 }
+
 input[type=range]:focus {
     outline: none;
 }
@@ -83,7 +88,7 @@ input[type=range]:focus {
     background-color: #026670;
 }
 
-.filter-btn-container{
+.filter-btn-container {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -97,27 +102,32 @@ input[type=range]::-webkit-slider-runnable-track {
     background: #026670;
     border-radius: 25px;
 }
+
 input[type=range]::-webkit-slider-thumb {
     height: 20px;
     width: 20px;
     border-radius: 50%;
     background: #fff;
-    box-shadow: 0 0 4px 0 rgba(0,0,0, 1);
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 1);
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -8px;
 }
+
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #026670;
 }
-.range-wrap{
+
+.range-wrap {
     margin-top: 20px;
     position: relative;
 }
-.range-value{
+
+.range-value {
     position: absolute;
     top: -50%;
 }
+
 .range-value span {
     width: fit-content;
     height: 24px;
@@ -135,7 +145,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 }
 
-.range-value span:before{
+.range-value span:before {
     content: "";
     position: absolute;
     width: 0;
@@ -160,7 +170,9 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     justify-content: flex-start;
 }
 
-.rating-radio { display:none; }
+.rating-radio {
+    display: none;
+}
 
 input[type="radio"]:checked + label {
     font-weight: bold;
@@ -176,6 +188,7 @@ input[type="radio"]:checked + label {
     background: #026670;
     color: white;
 }
+
 .custom-active:hover {
     background: rgb(49, 133, 140);
     color: white;
@@ -865,24 +878,49 @@ input:focus {
 
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
+
 /*end of snackbar*/
 
 .rating-stars {
@@ -975,7 +1013,7 @@ input:focus {
     margin: 10px;
 }
 
-.class-side-section{
+.class-side-section {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1070,6 +1108,13 @@ input:focus {
     width: fit-content;
     font-size: 20px;
     margin: 5px 5px 0 5px;
+}
+
+.shared-files-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
 }
 
 
@@ -1459,7 +1504,7 @@ select {
     height: 200px;
 }
 
-.class-section-container{
+.class-section-container {
     width: 90%;
     display: flex;
     flex-direction: column;
@@ -1482,6 +1527,7 @@ select {
     justify-content: center;
     align-items: center;
 }
+
 .post-box {
     width: 100%;
     padding: 10px 20px 10px 20px;

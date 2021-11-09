@@ -167,43 +167,79 @@
             <%--            FIN DE POSTS--%>
         </div>
         <div class="classroom-right-panel">
-            <div class="class-content class-side-section" style="min-height: 300px; height: fit-content;">
+            <div class="class-content class-side-section" style="min-height: 230px; height: fit-content;">
                 <c:choose>
-                    <c:when test="${currentUser.id == currentClass.student.id}">
-                        <h1>Archivos de la clase</h1>
-                        <ul>
-                            <c:forEach var="file" items="${sharedFiles}">
-                                <li>
-                                    <a href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                       target="_blank">${file.fileName}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
+                    <c:when test="${currentUser.id == currentClass.teacher.id}">
+                        <h2>Mis Archivos</h2>
+                        <c:choose>
+                            <c:when test="${teacherFiles.size() == 0}">
+                                <span style="align-self: center;margin: 8px 0 4px 0;font-size: 20px;">Compartiste todos tus archivos</span>
+                            </c:when>
+                            <c:otherwise>
+                                <h6 style="margin: 2px 0 2px 0;">Selecciona que archivos queres compartir en esta
+                                    clase</h6>
+                                <form action="${pageContext.request.contextPath}/classroom/${classId}"
+                                      class="shared-files-container" method="post">
+                                    <ul style="padding: 0; margin: 0;">
+                                        <c:forEach var="file" items="${teacherFiles}">
+                                            <li class="subjects-row">
+                                                <a style="font-weight: bold;"
+                                                   href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                   target="_blank">${file.fileName}</a>
+                                                <input type="checkbox" name="sharedFiles" class="form-check-input"
+                                                       style="width: 18px;height: 18px;margin-right: 4px;"
+                                                       value="${file.fileId}" onclick="showButton(this.name,'share-button')">
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                    <button type="submit" class="btn btn-custom" id="share-button"
+                                            style="align-self: center; margin-top: 10px; display: none">Comparti archivos
+                                    </button>
+                                </form>
+                            </c:otherwise>
+                        </c:choose>
+                        <h2 style="margin: 2px 0 2px 0;">Archivos compartidos</h2>
+                        <c:choose>
+                            <c:when test="${sharedFiles.size() == 0}">
+                                <span style="align-self: center;margin: 10px 0 4px 0;font-size: 20px;">Aun no compartiste ningun archivo</span>
+                            </c:when>
+                            <c:otherwise>
+                                <form action="${pageContext.request.contextPath}/classroom/${classId}"
+                                      class="shared-files-container" method="post">
+                                    <ul style="padding: 0; margin: 0;">
+                                        <c:forEach var="file" items="${sharedFiles}">
+                                            <li class="subjects-row">
+                                                <a style="font-weight: bold;"
+                                                   href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                   target="_blank">${file.fileName}</a>
+                                                <input type="checkbox" name="filesToStopSharing"
+                                                       class="form-check-input" style="width: 18px;height: 18px;margin-right: 4px;"
+                                                       value="${file.fileId}" onclick="showButton(this.name,'stop-sharing-button')">
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                    <button type="submit" class="btn btn-custom" id="stop-sharing-button"
+                                            style="align-self: center;margin-top: 10px; display: none">Dejar de compartir
+                                    </button>
+                                </form>
+                            </c:otherwise>
+                        </c:choose>
                     </c:when>
                     <c:otherwise>
-                        <h2>Mis Archivos</h2>
-                        <form action="${pageContext.request.contextPath}/classroom/${classId}" method="post">
-                            <ul>
-                                <c:forEach var="file" items="${teacherFiles}">
-                                    <li>
-                                        <a href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                        <h2>Archivos de la clase</h2>
+                        <div class="shared-files-container">
+                            <ul style="padding: 0; margin: 0;">
+                                <c:forEach var="file" items="${sharedFiles}">
+                                    <li class="subjects-row">
+                                        <a style="font-weight: bold;"
+                                           href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                            target="_blank">${file.fileName}</a>
-                                        <input type="checkbox" name="sharedFiles" value="${file.fileId}">
                                     </li>
                                 </c:forEach>
                             </ul>
-                            <button type="submit">Comparti archivos</button>
-                        </form>
+                        </div>
                     </c:otherwise>
                 </c:choose>
-                <ul>
-                    <c:forEach var="file" items="${sharedFiles}">
-                        <li>
-                            <a href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                               target="_blank">${file.fileName}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
             </div>
         </div>
     </div>
@@ -214,6 +250,20 @@
     document.getElementById('file').addEventListener('change', function () {
         document.getElementById('fileName').innerText = this.files[0].name
     });
+
+    function showButton(checkboxName, actionBtnId) {
+        var checkboxes = document.getElementsByName(checkboxName);
+        if (!checkboxes)
+            return;
+        var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+        var deleteBtn = document.getElementById(actionBtnId);
+        if (!deleteBtn)
+            return;
+        if (checkedOne) {
+            deleteBtn.style.display = "block";
+        } else deleteBtn.style.display = "none";
+    }
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
         integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"

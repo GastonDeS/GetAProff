@@ -18,10 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -169,7 +166,7 @@ public class LecturesController {
                 .addObject("currentUser", maybeUser.get())
                 .addObject("currentClass", maybeClass.get())
                 .addObject("sharedFiles",lectureService.getSharedFilesByTeacher(maybeClass.get().getClassId()))
-                .addObject("teacherFiles", subjectFileService.getAllSubjectFilesFromUser(maybeClass.get().getTeacher().getId()))
+                .addObject("teacherFiles", lectureService.getFilesNotSharedInLecture(classId,maybeClass.get().getTeacher().getId()))
                 .addObject("posts", postService.retrievePosts(classId));
     }
 
@@ -195,6 +192,21 @@ public class LecturesController {
             //TODO chequear errores
             lectureService.addSharedFileToLecture(fileId,classId);
         }
+        return new ModelAndView("redirect:/classroom/" + classId);
+    }
+
+    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST, params = "filesToStopSharing")
+    public ModelAndView stopSharingFiles(@PathVariable("classId") final Long classId, @RequestParam("filesToStopSharing") Long[] filesToStopSharing) {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent())
+            throw new NoUserLoggedException("exception.not.logger.user");
+        for(Long fileId : filesToStopSharing) {
+            lectureService.stopSharingFileInLecture(fileId,classId);
+            System.out.println("file unshared" + fileId);
+        }
+
+        for(SubjectFile sf : lectureService.getFilesNotSharedInLecture(classId, maybeUser.get().getId()))
+            System.out.println("aaa " + sf.getFileName() );
         return new ModelAndView("redirect:/classroom/" + classId);
     }
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
+import ar.edu.itba.paw.interfaces.daos.SubjectFileDao;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.SubjectFile;
@@ -18,6 +19,9 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureDao lectureDao;
+
+    @Autowired
+    private SubjectFileDao subjectFileDao;
 
     @Override
     public Optional<Lecture> findById(Long id) {
@@ -83,6 +87,25 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public int addSharedFileToLecture(Long subjectFileId, Long lectureId) {
         return lectureDao.addSharedFileToLecture(subjectFileId, lectureId);
+    }
+
+    @Transactional
+    @Override
+    public int stopSharingFileInLecture(Long subjectFileId, Long lectureId) {
+        return lectureDao.stopSharingFileInLecture(subjectFileId,lectureId);
+    }
+
+    @Transactional
+    @Override
+    public List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId){
+        List<SubjectFile> nonSharedFiles= new ArrayList<>();
+        List<SubjectFile> allFilesForLecture = subjectFileDao.getAllSubjectFilesFromUser(teacherId);
+        List<SubjectFile> sharedFiles  = lectureDao.getSharedFilesByTeacher(lectureId);
+        for(SubjectFile file : allFilesForLecture){
+            if(!sharedFiles.contains(file))
+                nonSharedFiles.add(file);
+        }
+        return nonSharedFiles;
     }
 
     @Transactional

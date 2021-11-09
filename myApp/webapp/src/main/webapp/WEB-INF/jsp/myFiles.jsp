@@ -98,9 +98,9 @@
             <c:when test="${userSubjectFiles.size() != 0}">
                 <table class="subjects-table">
                     <tr class="subjects-row">
-                        <td class="row-title" style="width: 40%">Archivo</td>
-                        <td class="row-title" style="width: 15%">Materia</td>
-                        <td class="row-title" style="width: 25%">Nivel</td>
+                        <td class="row-title" style="width: 40%"><spring:message code="myFiles.rowTitle.file"/></td>
+                        <td class="row-title" style="width: 15%"><spring:message code="myFiles.rowTitle.subject"/></td>
+                        <td class="row-title" style="width: 25%"><spring:message code="myFiles.rowTitle.level"/></td>
                         <td style="width: 4%;align-self: center;display: flex;justify-content: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                                  class="bi bi-trash" viewBox="0 0 16 16">

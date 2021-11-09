@@ -127,7 +127,16 @@ public class LectureDaoJpa implements LectureDao {
         if(currentLecture.getSharedFilesByTeacher().contains(subjectFile))
             return 0;
         currentLecture.getSharedFilesByTeacher().add(subjectFile);
-        System.out.println("SIZE ADD PERSISTENCE + " + currentLecture.getSharedFilesByTeacher().size());
+        return 1;
+    }
+
+    @Override
+    public int stopSharingFileInLecture(Long subjectFileId, Long lectureId) {
+        final SubjectFile subjectFile = entityManager.find(SubjectFile.class,subjectFileId);
+        final Lecture currentLecture = entityManager.find(Lecture.class, lectureId);
+        if(!currentLecture.getSharedFilesByTeacher().contains(subjectFile))
+            return 0;
+        currentLecture.getSharedFilesByTeacher().remove(subjectFile);
         return 1;
     }
 

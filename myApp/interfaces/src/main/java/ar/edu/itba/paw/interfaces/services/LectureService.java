@@ -23,5 +23,9 @@ public interface LectureService {
 
     int addSharedFileToLecture(Long subjectFileId, Long lectureId);
 
+    int stopSharingFileInLecture(Long subjectFileId, Long lectureId);
+
+    List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId);
+
     List<SubjectFile> getSharedFilesByTeacher(Long classId);
 }
