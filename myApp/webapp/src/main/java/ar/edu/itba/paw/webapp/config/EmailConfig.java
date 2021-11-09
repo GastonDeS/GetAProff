@@ -31,18 +31,20 @@ public class EmailConfig {
     public SimpleMailMessage simpleMailMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setText(
-                "<table align=\"center\" style=\"background-color:#9fedd7; witdh:600px;\">" +
+                "<table align=\"center\" style=\"background-color:#9fedd7; border-radius: 10px;\">" +
                         "<tr>" +
                         "<td align=\"center\">" +
-                        "<h1>%s</h1>" +
-                "<table style=\"background-color:#ffffff;\">" +
+                        "<h1 style=\"color:#026670;\">%s</h1>" +
+                "<table style=\"background-color:#ffffff; border-radius: 10px;\">" +
                         "<tr>" +
                         "<td align=\"center\">" +
-                        "<p>%s</p>" +
-                        "<a href=\"%s\" style=\"color: #ffffff; text-decoration: none; background-color: #026670; text-decoration: none; padding: 15px 25px; display: inline-block;\">%s</a>" +
+                        "<pstyle=\"color:black;\">%s</p>" +
                         "</td>" +
                         "</tr>" +
                 "</table>" +
+                        "<form action=\"%s\">" +
+                        "    <input type=\"submit\" style=\" border-radius: 10px; background-color: #026670; color: white; margin-top: 10px; margin-bottom: 10px; width: fit-content; height: 30px; font-size: 16px; border-color: transparent;\" value=\"%s\" />" +
+                        "</form>" +
                 "</td>" +
                         "</tr>" +
                         "</table>");

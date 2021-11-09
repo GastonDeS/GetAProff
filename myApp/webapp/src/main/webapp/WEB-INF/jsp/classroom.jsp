@@ -30,15 +30,20 @@
     <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
     <div class="class-row-section-container">
         <div class="classroom-status-left-panel">
-            <div class="class-content class-side-section">
-                <h2>Classroom</h2>
-                <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
-                <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
-                <p><spring:message code="class.card.price.intro"/> $<c:out
-                        value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
-                <p><spring:message code="class.card.level.intro"/> <spring:message
-                        code="subjects.form.level.${currentClass.level}"/></p>
-            </div>
+          <div class="class-content class-side-section">
+              <h2>Classroom</h2>
+              <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
+              <c:choose>
+                  <c:when test="${currentClass.teacher.id == currentUser.id}">
+                      <p><spring:message code="class.card.student.intro"/> <c:out value="${currentClass.student.name}"/></p>
+                  </c:when>
+                  <c:otherwise>
+                      <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
+                  </c:otherwise>
+              </c:choose>
+              <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
+              <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
+          </div>
             <%--                Status front--%>
             <div class="class-content class-side-section">
                 <c:choose>

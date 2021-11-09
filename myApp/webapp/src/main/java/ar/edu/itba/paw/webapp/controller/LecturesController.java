@@ -21,8 +21,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +90,7 @@ public class LecturesController {
     }
 
     @RequestMapping(value = "/myClasses/{from}/{cid}/{status}", method = RequestMethod.POST)
-    public ModelAndView classesStatusChange(@PathVariable("from") final int from,@PathVariable("cid") final Long cid, @PathVariable final String status) {
+    public ModelAndView classesStatusChange(@PathVariable("from") final int from, @PathVariable("cid") final Long cid, @PathVariable final String status, HttpServletRequest request) throws MalformedURLException {
         Optional<Lecture> myClass = lectureService.findById(cid);
         if (!myClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + cid);
@@ -96,8 +99,19 @@ public class LecturesController {
         String offered = "offered";
         lectureService.setStatus(cid, intStatus);
         myClass.get().setStatus(intStatus);
+        String url;
+        URL requestURL;
         try {
-            emailService.sendStatusChangeMessage(myClass.get());
+            requestURL = new URL(request.getRequestURL().toString());
+        } catch (MalformedURLException exception) {
+            throw new OperationFailedException("urlException");
+        }
+        url = requestURL.toString();
+        String path = "/myClasses";
+        int index = url.indexOf(path);
+        String localAddr = url.substring(0, index);
+        try {
+            emailService.sendStatusChangeMessage(myClass.get(), localAddr);
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
@@ -130,7 +144,7 @@ public class LecturesController {
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
     public ModelAndView rate(@PathVariable("cid") final Long cid, @ModelAttribute("rateForm") @Valid final RateForm form,
-                             final BindingResult errors) {
+                             final BindingResult errors, HttpServletRequest request) throws MalformedURLException {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
@@ -142,8 +156,19 @@ public class LecturesController {
         myClass.get().setStatus(Lecture.Status.RATED.getValue());
         //TODO: chequear si se agrego
         ratingService.addRating(myClass.get().getTeacher(), myClass.get().getStudent(), form.getRating().floatValue(), form.getReview());
+        String url;
+        URL requestURL;
         try {
-            emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview());
+            requestURL = new URL(request.getRequestURL().toString());
+        } catch (MalformedURLException exception) {
+            throw new OperationFailedException("urlException");
+        }
+        url = requestURL.toString();
+        String path = "/rate";
+        int index = url.indexOf(path);
+        String localAddr = url.substring(0, index);
+        try {
+            emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview(), localAddr);
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
@@ -255,7 +280,7 @@ public class LecturesController {
 
     @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
     public ModelAndView contact(@PathVariable("uid") final Long uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
-                                final BindingResult errors) {
+                                final BindingResult errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
             return contactForm(form, uid);
         }
@@ -267,12 +292,23 @@ public class LecturesController {
             throw new InvalidOperationException("exception.invalid");
         }
         Lecture newLecture = lectureService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
+        String url;
+        URL requestURL;
         try {
-            emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName());
+            requestURL = new URL(request.getRequestURL().toString());
+        } catch (MalformedURLException exception) {
+            throw new OperationFailedException("urlException");
+        }
+        url = requestURL.toString();
+        String path = "/contact";
+        int index = url.indexOf(path);
+        String localAddr = url.substring(0, index);
+        try {
+            emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName(), localAddr);
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
-        LOGGER.debug("User {} rewuested class from teacher {}", curr.get().getId(), uid);
+        LOGGER.debug("User {} requested class from teacher {}", curr.get().getId(), uid);
         return new ModelAndView("redirect:/classroom/" + newLecture.getClassId().toString());
     }
 }

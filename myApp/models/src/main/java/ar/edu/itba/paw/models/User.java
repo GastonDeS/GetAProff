@@ -32,27 +32,27 @@ public class User {
     @JoinTable(
             name = "userroles",
             joinColumns = @JoinColumn(
-                    name = "userid", referencedColumnName = "userid"),
+                    name = "userid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "usserroles_userid_fkey")),
             inverseJoinColumns = @JoinColumn(
-                    name = "roleid", referencedColumnName = "roleid"))
+                    name = "roleid", referencedColumnName = "roleid", foreignKey = @ForeignKey(name = "userroles_roleid_fkey")))
     private List<Role> userRoles;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "favourites",
             joinColumns = @JoinColumn(
-                    name = "studentid", referencedColumnName = "userid"),
+                    name = "studentid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "favourites_studentid_fkey")),
             inverseJoinColumns = @JoinColumn(
-                    name = "teacherid", referencedColumnName = "userid"))
+                    name = "teacherid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "favourites_teacherid_fkey")))
     private List<User> favourites;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "favourites",
             joinColumns = @JoinColumn(
-                    name = "teacherid", referencedColumnName = "userid"),
+                    name = "teacherid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "favourites_teacherid_fkey")),
             inverseJoinColumns = @JoinColumn(
-                    name = "studentid", referencedColumnName = "userid"))
+                    name = "studentid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "favourites_studentid_fkey")))
     private List<User> favouriteOf;
 
     @OneToOne

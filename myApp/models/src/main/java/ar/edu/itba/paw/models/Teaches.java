@@ -24,12 +24,12 @@ public class Teaches {
     @Id
     private int level;
 
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    @JoinColumn(name = "userid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "teaches_userid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private User teacher;
 
-    @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
+    @JoinColumn(name = "subjectid", referencedColumnName = "subjectid", foreignKey = @ForeignKey(name = "teaches_subjectid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private Subject subject;

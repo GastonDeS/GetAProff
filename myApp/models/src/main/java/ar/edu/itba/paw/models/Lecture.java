@@ -14,15 +14,15 @@ public class Lecture {
     @SequenceGenerator(name = "classes_classid_seq", sequenceName = "classes_classid_seq", allocationSize = 1)
     private Long classId;
 
-    @JoinColumn(name = "studentid", referencedColumnName = "userid")
+    @JoinColumn(name = "studentid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "classes_studentid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User student;
 
-    @JoinColumn(name = "teacherid", referencedColumnName = "userid")
+    @JoinColumn(name = "teacherid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "classes_teacherid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User teacher;
 
-    @JoinColumn(name = "subjectid", referencedColumnName = "subjectid")
+    @JoinColumn(name = "subjectid", referencedColumnName = "subjectid", foreignKey = @ForeignKey(name = "classes_subjectid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Subject subject;
 
