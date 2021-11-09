@@ -30,20 +30,24 @@
     <img class="class-img-header" src="<c:url value="/resources/images/matematica_banner.png"/>" alt="subject banner">
     <div class="class-row-section-container">
         <div class="classroom-status-left-panel">
-          <div class="class-content class-side-section">
-              <h2>Classroom</h2>
-              <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
-              <c:choose>
-                  <c:when test="${currentClass.teacher.id == currentUser.id}">
-                      <p><spring:message code="class.card.student.intro"/> <c:out value="${currentClass.student.name}"/></p>
-                  </c:when>
-                  <c:otherwise>
-                      <p><spring:message code="class.card.teacher.intro"/> <c:out value="${currentClass.teacher.name}"/></p>
-                  </c:otherwise>
-              </c:choose>
-              <p><spring:message code="class.card.price.intro"/> $<c:out value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
-              <p><spring:message code="class.card.level.intro"/> <spring:message code="subjects.form.level.${currentClass.level}"/></p>
-          </div>
+            <div class="class-content class-side-section">
+                <h2>Classroom</h2>
+                <p><spring:message code="class.card.subject.intro"/> <c:out value="${currentClass.subject.name}"/></p>
+                <c:choose>
+                    <c:when test="${currentClass.teacher.id == currentUser.id}">
+                        <p><spring:message code="class.card.student.intro"/> <c:out
+                                value="${currentClass.student.name}"/></p>
+                    </c:when>
+                    <c:otherwise>
+                        <p><spring:message code="class.card.teacher.intro"/> <c:out
+                                value="${currentClass.teacher.name}"/></p>
+                    </c:otherwise>
+                </c:choose>
+                <p><spring:message code="class.card.price.intro"/> $<c:out
+                        value="${currentClass.price}"/>/<spring:message code="class.card.price.outro"/></p>
+                <p><spring:message code="class.card.level.intro"/> <spring:message
+                        code="subjects.form.level.${currentClass.level}"/></p>
+            </div>
             <%--                Status front--%>
             <div class="class-content class-side-section">
                 <c:choose>
@@ -172,17 +176,18 @@
             <%--            FIN DE POSTS--%>
         </div>
         <div class="classroom-right-panel">
-            <div class="class-content class-side-section" style="min-height: 230px; height: fit-content;">
+            <div class="class-content class-side-section" style="min-height: 120px; height: fit-content;">
                 <c:choose>
                     <c:when test="${currentUser.id == currentClass.teacher.id}">
                         <h2>Mis Archivos</h2>
                         <c:choose>
                             <c:when test="${teacherFiles.size() == 0}">
-                                <span style="align-self: center;margin: 8px 0 4px 0;font-size: 20px;">Compartiste todos tus archivos</span>
+                                <span style="align-self: center;margin: 8px 0 4px 0;font-size: 20px;"><spring:message
+                                        code="myFiles.allFilesShared"/></span>
                             </c:when>
                             <c:otherwise>
-                                <h6 style="margin: 2px 0 2px 0;">Selecciona que archivos queres compartir en esta
-                                    clase</h6>
+                                <h6 style="margin: 2px 0 2px 0;"><spring:message
+                                        code="myFiles.chooseFilesToShareHint"/></h6>
                                 <form action="${pageContext.request.contextPath}/classroom/${classId}"
                                       class="shared-files-container" method="post">
                                     <ul style="padding: 0; margin: 0;">
@@ -193,20 +198,23 @@
                                                    target="_blank">${file.fileName}</a>
                                                 <input type="checkbox" name="sharedFiles" class="form-check-input"
                                                        style="width: 18px;height: 18px;margin-right: 4px;"
-                                                       value="${file.fileId}" onclick="showButton(this.name,'share-button')">
+                                                       value="${file.fileId}"
+                                                       onclick="showButton(this.name,'share-button')">
                                             </li>
                                         </c:forEach>
                                     </ul>
                                     <button type="submit" class="btn btn-custom" id="share-button"
-                                            style="align-self: center; margin-top: 10px; display: none">Comparti archivos
+                                            style="align-self: center; margin-top: 10px; display: none"><spring:message
+                                            code="myFiles.button.share"/>
                                     </button>
                                 </form>
                             </c:otherwise>
                         </c:choose>
-                        <h2 style="margin: 2px 0 2px 0;">Archivos compartidos</h2>
+                        <h2 style="margin: 2px 0 2px 0;"><spring:message code="myFiles.sharedFilesTitle"/></h2>
                         <c:choose>
                             <c:when test="${sharedFiles.size() == 0}">
-                                <span style="align-self: center;margin: 10px 0 4px 0;font-size: 20px;">Aun no compartiste ningun archivo</span>
+                                <span style="align-self: center;margin: 10px 0 4px 0;font-size: 20px;"><spring:message
+                                        code="myFiles.noFilesSharedToStudent"/></span>
                             </c:when>
                             <c:otherwise>
                                 <form action="${pageContext.request.contextPath}/classroom/${classId}"
@@ -218,31 +226,42 @@
                                                    href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                                    target="_blank">${file.fileName}</a>
                                                 <input type="checkbox" name="filesToStopSharing"
-                                                       class="form-check-input" style="width: 18px;height: 18px;margin-right: 4px;"
-                                                       value="${file.fileId}" onclick="showButton(this.name,'stop-sharing-button')">
+                                                       class="form-check-input"
+                                                       style="width: 18px;height: 18px;margin-right: 4px;"
+                                                       value="${file.fileId}"
+                                                       onclick="showButton(this.name,'stop-sharing-button')">
                                             </li>
                                         </c:forEach>
                                     </ul>
                                     <button type="submit" class="btn btn-custom" id="stop-sharing-button"
-                                            style="align-self: center;margin-top: 10px; display: none">Dejar de compartir
+                                            style="align-self: center;margin-top: 10px; display: none"><spring:message
+                                            code="myFiles.button.stopSharing"/>
                                     </button>
                                 </form>
                             </c:otherwise>
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                        <h2>Archivos de la clase</h2>
-                        <div class="shared-files-container">
-                            <ul style="padding: 0; margin: 0;">
-                                <c:forEach var="file" items="${sharedFiles}">
-                                    <li class="subjects-row">
-                                        <a style="font-weight: bold;"
-                                           href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                           target="_blank">${file.fileName}</a>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
+                        <h2><spring:message code="myFiles.classFilesTitle"/></h2>
+                        <c:choose>
+                            <c:when test="${sharedFiles.size() == 0}">
+                                <span style="align-self: center;margin: 10px 0 4px 0;font-size: 20px;"><spring:message
+                                        code="myFiles.noFilesSharedFromTeacher"/></span>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="shared-files-container">
+                                    <ul style="padding: 0; margin: 0;">
+                                        <c:forEach var="file" items="${sharedFiles}">
+                                            <li class="subjects-row">
+                                                <a style="font-weight: bold;"
+                                                   href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                   target="_blank">${file.fileName}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </c:otherwise>
                 </c:choose>
             </div>
