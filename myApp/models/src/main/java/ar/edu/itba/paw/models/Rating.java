@@ -13,12 +13,12 @@ public class Rating {
     @Column
     private String review;
 
-    @JoinColumn(name = "teacherid", referencedColumnName = "userid")
+    @JoinColumn(name = "teacherid", referencedColumnName = "userid",foreignKey = @ForeignKey(name = "rating_teacherid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private User teacher;
 
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    @JoinColumn(name = "userid", referencedColumnName = "userid",foreignKey = @ForeignKey(name = "rating_userid_fkey"))
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @Id
     private User student;

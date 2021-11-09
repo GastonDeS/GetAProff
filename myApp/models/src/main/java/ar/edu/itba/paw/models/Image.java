@@ -13,7 +13,7 @@ public class Image {
     private byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", foreignKey = @ForeignKey(name = "images_userid_fkey"))
     @MapsId
     private User user;
 

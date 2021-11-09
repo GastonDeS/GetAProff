@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class SubjectFile {
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", foreignKey = @ForeignKey(name = "subject_files_userid_fkey"))
     private User fileOwner;
 
     @Id
@@ -26,7 +26,7 @@ public class SubjectFile {
     private Integer level;
 
     @ManyToOne
-    @JoinColumn(name = "subjectid")
+    @JoinColumn(name = "subjectid", foreignKey = @ForeignKey(name = "subject_files_subjectid_fkey"))
     private Subject subject;
 
     SubjectFile() {

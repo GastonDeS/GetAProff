@@ -12,11 +12,11 @@ public class Post {
     @SequenceGenerator(name = "posts_postid_seq", sequenceName = "posts_postid_seq", allocationSize = 1)
     private Long postId;
 
-    @JoinColumn(name = "classid", referencedColumnName = "classid")
+    @JoinColumn(name = "classid", referencedColumnName = "classid", foreignKey = @ForeignKey(name = "posts_classid_fkey"))
     @ManyToOne(optional = false)
     private Lecture associatedLecture;
 
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    @JoinColumn(name = "userid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "posts_userid_fkey"))
     @ManyToOne(optional = false)
     private User uploader;
 

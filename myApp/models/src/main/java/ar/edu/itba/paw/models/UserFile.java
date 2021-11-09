@@ -9,7 +9,7 @@ public class UserFile
 {
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", foreignKey = @ForeignKey(name = "user_file_userid_fkey"))
     private User fileOwner;
 
     @Id
