@@ -73,7 +73,7 @@
                     <spring:message code="myFiles.subjectLabel"/>:
                 </label>
                 <select name="subject-select-filter" id="subject-select-filter">
-                    <option selected value="0">Seleccione una materia</option>
+                    <option selected value="0"><spring:message code="myFiles.filter.anySubjects"/></option>
                     <c:forEach var="subject" items="${userSubjects}">
                         <option value="${subject.id}">${subject.name}</option>
                     </c:forEach>
