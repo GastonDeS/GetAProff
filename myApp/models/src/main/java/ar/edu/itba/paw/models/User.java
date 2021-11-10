@@ -55,7 +55,7 @@ public class User {
                     name = "studentid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "favourites_studentid_fkey")))
     private List<User> favouriteOf;
 
-    @OneToOne
+    @OneToOne(mappedBy = "user")
     private Image image;
 
     @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
