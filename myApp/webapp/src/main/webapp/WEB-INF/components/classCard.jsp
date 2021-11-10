@@ -85,7 +85,7 @@
                             <div class="class-cancel-btn">
                                 <jsp:include page="../components/rejectOrCancelModal.jsp">
                                     <jsp:param name="type" value="decline"/>
-                                    <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/REJECTED"/>
+                                    <jsp:param name="urlConfirm" value="/myClasses/0/${param.classId}/REJECTED"/>
                                 </jsp:include>
                                 <form action="<c:url value="/myClasses/1/${param.cid}/ACCEPTED"/>" method="post"
                                       class="class-card-btn-holder">
@@ -108,11 +108,11 @@
                             <div class="class-cancel-btn">
                                 <jsp:include page="../components/rejectOrCancelModal.jsp">
                                     <jsp:param name="type" value="cancel"/>
-                                    <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDT"/>
+                                    <jsp:param name="urlConfirm" value="/myClasses/0/${param.cid}/CANCELEDT"/>
                                 </jsp:include>
                                 <jsp:include page="../components/rejectOrCancelModal.jsp">
                                     <jsp:param name="type" value="finish"/>
-                                    <jsp:param name="urlConfirm" value="/myClasses/1/${currentClass.classId}/FINISHED"/>
+                                    <jsp:param name="urlConfirm" value="/myClasses/1/${param.cid}/FINISHED"/>
                                 </jsp:include>
                             </div>
                             <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
@@ -133,7 +133,7 @@
                         <div class="class-card-active-btn-holder">
                             <jsp:include page="../components/rejectOrCancelModal.jsp">
                                 <jsp:param name="type" value="cancel"/>
-                                <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                <jsp:param name="urlConfirm" value="/myClasses/0/${param.cid}/CANCELEDS"/>
                             </jsp:include>
                             <a style="position: relative" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.enter"/>
@@ -149,7 +149,7 @@
                         <div class="class-card-active-btn-holder">
                             <jsp:include page="../components/rejectOrCancelModal.jsp">
                                 <jsp:param name="type" value="cancel"/>
-                                <jsp:param name="urlConfirm" value="/myClasses/0/${currentClass.classId}/CANCELEDS"/>
+                                <jsp:param name="urlConfirm" value="/myClasses/0/${param.cid}/CANCELEDS"/>
                             </jsp:include>
                             <a style="position:relative;" href="${pageContext.request.contextPath}/classroom/${param.cid}"
                                class="btn btn-custom"><spring:message code="class.card.enter"/>

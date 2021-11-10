@@ -55,7 +55,7 @@ public class User {
                     name = "studentid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "favourites_studentid_fkey")))
     private List<User> favouriteOf;
 
-    @OneToOne
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Image image;
 
     @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
@@ -69,6 +69,12 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Teaches> subjectsTaughtByUser;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Lecture> classesTakenByStudent;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Lecture> classesGivenByTeacher;
 
     User() {
         //Just for Hibernate
@@ -121,6 +127,22 @@ public class User {
 
     public void setSubjectsTaughtByUser(List<Teaches> subjectsTaughtByUser) {
         this.subjectsTaughtByUser = subjectsTaughtByUser;
+    }
+
+    public List<Lecture> getClassesTakenByStudent() {
+        return classesTakenByStudent;
+    }
+
+    public void setClassesTakenByStudent(List<Lecture> classesTakenByStudent) {
+        this.classesTakenByStudent = classesTakenByStudent;
+    }
+
+    public List<Lecture> getClassesGivenByTeacher() {
+        return classesGivenByTeacher;
+    }
+
+    public void setClassesGivenByTeacher(List<Lecture> classesGivenByTeacher) {
+        this.classesGivenByTeacher = classesGivenByTeacher;
     }
 
     public List<User> getFavourites() {

@@ -2,17 +2,6 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 
-//@SqlResultSetMapping(name = "CardProfile",
-//        entities = @EntityResult( entityClass = User.class,
-//                fields = {
-//                        @FieldResult(name = "userid", column = "userId"),
-//                        @FieldResult(name = "description", column = "description"),
-//                        @FieldResult(name = "name", column = "name")}),
-//        columns = {
-//                @ColumnResult(name = "maxPrice", type = Integer.class),
-//                @ColumnResult(name = "minPrice", type = Integer.class),
-//                @ColumnResult(name = "image", type = Integer.class),
-//                @ColumnResult(name = "rate", type = Float.class)})
 @Entity
 @Table(name = "teaches")
 @IdClass(TeachesId.class)
@@ -25,7 +14,7 @@ public class Teaches {
     private int level;
 
     @JoinColumn(name = "userid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "teaches_userid_fkey"))
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @Id
     private User teacher;
 

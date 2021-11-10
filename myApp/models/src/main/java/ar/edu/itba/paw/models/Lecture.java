@@ -15,15 +15,15 @@ public class Lecture {
     private Long classId;
 
     @JoinColumn(name = "studentid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "classes_studentid_fkey"))
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private User student;
 
     @JoinColumn(name = "teacherid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "classes_teacherid_fkey"))
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private User teacher;
 
     @JoinColumn(name = "subjectid", referencedColumnName = "subjectid", foreignKey = @ForeignKey(name = "classes_subjectid_fkey"))
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private Subject subject;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
