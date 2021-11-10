@@ -10,7 +10,6 @@
     <title>Profile</title>
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>">
-    <script type="text/javascript" src="<c:url value="/resources/js/script.js"/>"></script>
     <spring:message code="subjects.table.subject" var="tableSubject"/>
     <spring:message code="subjects.table.price" var="tablePrice"/>
     <spring:message code="subjects.table.level" var="tableLevel"/>
@@ -244,7 +243,12 @@
 </script>
 <script>
     function copyToClipboard() {
-        navigator.clipboard.writeText(document.location.href);
+        const el = document.createElement('textarea');
+        el.value = document.location.href.toString();
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
         showSnackbar();
     }
 </script>
