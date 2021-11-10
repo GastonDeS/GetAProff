@@ -20,14 +20,13 @@
 </jsp:include>
 <div class="page-container">
     <c:url value="/contact/${uid}" var="contactUrl"/>
-    <h1 class="d-flex justify-content-center mt-4">
-        <spring:message code="contact.form.contact.with"/>
-        <c:out value="${user.name}"/></h1>
     <form:form class="d-flex justify-content-center" modelAttribute="contactForm" action="${contactUrl}" method="post">
-        <div class="form-container">
-            <div class="input-section">
+        <div class="form-container" style="width: 40vw">
+                <p class="form-title">
+                    <spring:message code="contact.form.contact.with"/> <c:out value="${user.name}"/>
+                </p>
                 <div class="form-input">
-                    <form:label path="subjectAndLevel"><spring:message code="contact.form.subject"/></form:label>
+                    <form:label path="subjectAndLevel" cssClass="request-class-label"><spring:message code="contact.form.subject"/></form:label>
                     <form:select path="subjectAndLevel">
                         <c:forEach var="subject" items="${subjects}">
                             <spring:message code="subjects.form.level.${subject.level}" var="level"/>
@@ -36,11 +35,8 @@
                     </form:select>
                     <form:errors path="subjectAndLevel" element="p" cssClass="form-error"/>
                 </div>
-                <div class="btn-container">
-                    <input type="submit" class="btn btn-custom bd-highlight"
+                <input type="submit" class="btn btn-custom bd-highlight"
                            value="<spring:message code="contact.form.request.button"/>">
-                </div>
-            </div>
         </div>
     </form:form>
 </div>

@@ -2,10 +2,10 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface SubjectFileService {
     List<SubjectFile> getAllSubjectFilesFromUser(Long ownerId);
