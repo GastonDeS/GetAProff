@@ -26,8 +26,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class LecturesController {
@@ -273,6 +272,10 @@ public class LecturesController {
         LOGGER.debug("User {} contacting teacher {}", curr.get().getId(), uid);
         mav.addObject("user", maybeUser.get());
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+        List<SubjectInfo> subjectNames = new ArrayList<>(subjectsGiven);
+        Set<String> unique = new HashSet<>();
+        subjectNames.removeIf(e -> !unique.add(e.getName()));
+        mav.addObject("names",subjectNames);
         mav.addObject("subjects", subjectsGiven);
         mav.addObject("currentUid", curr.get().getId());
         return mav;
@@ -286,8 +289,7 @@ public class LecturesController {
         }
         Optional<User> user = userService.findById(uid);
         Optional<User> curr = userService.getCurrentUser();
-        String[] subjectIdAndLevel = form.getSubjectAndLevel().split(",",2);
-        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.parseLong(subjectIdAndLevel[0]), Integer.parseInt(subjectIdAndLevel[1]));
+        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.valueOf(form.getSubject()), Integer.parseInt(form.getLevel())%10);
         if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }

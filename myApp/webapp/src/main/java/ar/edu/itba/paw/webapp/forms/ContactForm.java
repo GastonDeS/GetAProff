@@ -11,13 +11,24 @@ import javax.validation.constraints.Size;
 public class ContactForm {
 
     @NotEmpty
-    private String subjectAndLevel;
+    private String subject;
 
-    public String getSubjectAndLevel() {
-        return subjectAndLevel;
+    @NotEmpty
+    private String level;
+
+    public String getSubject() {
+        return subject;
     }
 
-    public void setSubjectAndLevel(String subjectAndLevel) {
-        this.subjectAndLevel = subjectAndLevel;
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }
