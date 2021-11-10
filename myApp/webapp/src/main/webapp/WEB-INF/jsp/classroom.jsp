@@ -176,9 +176,9 @@
             <%--            FIN DE POSTS--%>
         </div>
         <div class="classroom-right-panel">
-            <div class="class-content class-side-section" style="min-height: 120px; height: fit-content;">
-                <c:choose>
-                    <c:when test="${currentUser.id == currentClass.teacher.id}">
+            <c:choose>
+                <c:when test="${currentUser.id == currentClass.teacher.id}">
+                    <div class="class-content class-side-section" style="min-height: 120px; height: fit-content;">
                         <h2>Mis Archivos</h2>
                         <c:choose>
                             <c:when test="${teacherFiles.size() == 0}">
@@ -210,6 +210,8 @@
                                 </form>
                             </c:otherwise>
                         </c:choose>
+                    </div>
+                    <div class="class-content class-side-section" style="min-height: 120px; height: fit-content;">
                         <h2 style="margin: 2px 0 2px 0;"><spring:message code="myFiles.sharedFilesTitle"/></h2>
                         <c:choose>
                             <c:when test="${sharedFiles.size() == 0}">
@@ -234,14 +236,17 @@
                                         </c:forEach>
                                     </ul>
                                     <button type="submit" class="btn btn-custom" id="stop-sharing-button"
-                                            style="align-self: center;margin-top: 10px; display: none"><spring:message
-                                            code="myFiles.button.stopSharing"/>
+                                            style="align-self: center;margin-top: 10px; display: none">
+                                        <spring:message
+                                                code="myFiles.button.stopSharing"/>
                                     </button>
                                 </form>
                             </c:otherwise>
                         </c:choose>
-                    </c:when>
-                    <c:otherwise>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="class-content class-side-section" style="min-height: 120px; height: fit-content;">
                         <h2><spring:message code="myFiles.classFilesTitle"/></h2>
                         <c:choose>
                             <c:when test="${sharedFiles.size() == 0}">
@@ -262,11 +267,12 @@
                                 </div>
                             </c:otherwise>
                         </c:choose>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
+</div>
 
 </div>
 </body>
