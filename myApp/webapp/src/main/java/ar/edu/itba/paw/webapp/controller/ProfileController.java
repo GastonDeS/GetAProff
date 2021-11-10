@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -232,7 +233,7 @@ public class ProfileController {
                                      @RequestParam (name = "subject") Long subjectId) throws IOException {
         User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
         Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(RuntimeException::new);
-        subjectFileService.saveMultipleNewSubjectFiles(files,currUser.getId(),subjectForFile,level);
+        subjectFileService.saveMultipleNewSubjectFiles(files, currUser.getId(), subjectForFile, level);
         return new ModelAndView("redirect:/myFiles");
     }
 
