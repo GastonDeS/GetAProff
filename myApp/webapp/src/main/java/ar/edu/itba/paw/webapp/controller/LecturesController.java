@@ -104,7 +104,7 @@ public class LecturesController {
         try {
             requestURL = new URL(request.getRequestURL().toString());
         } catch (MalformedURLException exception) {
-            throw new OperationFailedException("urlException");
+            throw new OperationFailedException("exception.failed");
         }
         url = requestURL.toString();
         String path = "/myClasses";
@@ -161,7 +161,7 @@ public class LecturesController {
         try {
             requestURL = new URL(request.getRequestURL().toString());
         } catch (MalformedURLException exception) {
-            throw new OperationFailedException("urlException");
+            throw new OperationFailedException("exception.failed");
         }
         url = requestURL.toString();
         String path = "/rate";
@@ -297,7 +297,7 @@ public class LecturesController {
         try {
             requestURL = new URL(request.getRequestURL().toString());
         } catch (MalformedURLException exception) {
-            throw new OperationFailedException("urlException");
+            throw new OperationFailedException("exception.failed");
         }
         url = requestURL.toString();
         String path = "/contact";
