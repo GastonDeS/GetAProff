@@ -69,7 +69,7 @@
                 </div>
                 <div class="form-input-container">
                     <form:input type="password" class="form-control" path="confirmPass" placeholder="${confirmPassPlaceholder}"/>
-                    <form:errors element="p" cssClass="form-error"/>
+                    <form:errors element="p" path="confirmPass" cssClass="form-error"/>
                 </div>
                 <div id="description" class="form-input-container">
                     <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
