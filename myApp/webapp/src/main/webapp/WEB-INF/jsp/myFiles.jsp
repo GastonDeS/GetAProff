@@ -15,34 +15,98 @@
     <jsp:param name="uid" value="${user.id}"/>
 </jsp:include>
 <div class="page-container">
-    <div class="form-container">
-        <h2 class="form-title"><spring:message code="myFiles.addFileTitle"/></h2>
-        <div class="form-body-container">
-            <form name="subject-files-form" id="subject-files-form" action="${pageContext.request.contextPath}/myFiles"
-                  method="post" enctype="multipart/form-data">
-                <div class="files-input-container">
-                    <label id="label-for-file-input" class="btn btn-custom">
-                        <spring:message code="myFiles.button.chooseFiles"/>
-                        <input type="file" id="file" name="files" accept="application/pdf" style="display:none;"
-                               multiple required>
-                    </label>
-                    <ul id="selected-files-ul" class="selected-files-ul" style="display: none;"></ul>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="form-title"><spring:message code="myFiles.addFileTitle"/></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.addFileHelp"/></h5>
-                <div class="selected-files-options-container">
-                    <div class="file-option">
-                        <label class="files-form-label" style="width: 43%;" for="subject-select"><spring:message
-                                code="myFiles.subjectLabel"/>:</label>
-                        <select id="subject-select" name="subject" required>
+                <div class="modal-body" style="background-color: #9fedd7;padding: 10px 20px 5px 20px;">
+                    <div class="form-container" style="width: 100%;">
+                        <div class="form-body-container">
+                            <form name="subject-files-form" id="subject-files-form"
+                                  action="${pageContext.request.contextPath}/myFiles"
+                                  method="post" enctype="multipart/form-data"
+                                  style="display: flex; flex-direction: column; margin: 0">
+                                <h3 style="align-self: center; color: #026670;"><spring:message
+                                        code="myFiles.addFileHelp"/></h3>
+                                <div class="selected-files-options-container">
+                                    <div class="files-filter-container">
+                                        <label class="files-form-label" style="margin-right: 10px;"
+                                               for="subject-select"><spring:message
+                                                code="myFiles.subjectLabel"/>:</label>
+                                        <select id="subject-select" name="subject" onchange="showAndHide()" required>
+                                            <c:forEach var="subject" items="${userSubjects}">
+                                                <option value="${subject.id}">${subject.name}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="files-filter-container">
+                                        <label class="files-form-label" style="margin-right: 10px;"
+                                               for="level-select"><spring:message
+                                                code="myFiles.levelLabel"/>:</label>
+                                        <select id="level-select" name="level" required>
+                                            <option selected value="0"><spring:message
+                                                    code="myFiles.select.anyLevel"/></option>
+                                            <c:forEach var="subject" items="${userSubjectInfo}">
+                                                <option value="${subject.subjectId}${subject.level}"><spring:message
+                                                        code="myFiles.filesTable.level${subject.level}"/></option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="files-input-container">
+                                    <ul id="selected-files-ul" class="selected-files-ul"
+                                        style="display: none;margin-top: 20px"></ul>
+                                </div>
+                                <label id="label-for-file-input" class="btn btn-custom"
+                                       style="align-self: center; margin-top: 12px;">
+                                    <spring:message code="myFiles.button.loadFiles"/>
+                                    <input type="file" id="file" name="files" accept="application/pdf"
+                                           style="display:none;" onclose="showUlOfFiles()"
+                                           multiple required>
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-custom" style="background: #848e8b;" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-custom" form="subject-files-form" style="align-self:center;"
+                            type="submit">
+                        Guardar cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-container" style="margin-top: 15px;">
+        <h2 class="form-title"><spring:message code="myFiles.title"/></h2>
+        <c:choose>
+            <c:when test="${userSubjectFiles.size() != 0}">
+                <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
+                <form action="${pageContext.request.contextPath}/myFiles" method="get"
+                      style="display: flex; width: 90%">
+                    <div class="files-filter-container">
+                        <label class="files-form-label" for="subject-select-filter" style="margin-right: 10px;">
+                            <spring:message code="myFiles.subjectLabel"/>:
+                        </label>
+                        <select name="subject-select-filter" id="subject-select-filter">
+                            <option selected value="0"><spring:message code="myFiles.filter.anySubjects"/></option>
                             <c:forEach var="subject" items="${userSubjects}">
                                 <option value="${subject.id}">${subject.name}</option>
                             </c:forEach>
                         </select>
                     </div>
-                    <div class="file-option">
-                        <label class="files-form-label" style="width: 43%;" for="level-select"><spring:message
-                                code="myFiles.levelLabel"/>:</label>
-                        <select id="level-select" name="level" required>
+                    <div class="files-filter-container">
+                        <label class="files-form-label" for="level-select-filter" style="margin-right: 10px;">
+                            <spring:message code="myFiles.levelLabel"/>:
+                        </label>
+                        <select name="level-select-filter" id="level-select-filter">
                             <option selected value="0"><spring:message code="myFiles.select.anyLevel"/></option>
                             <c:forEach var="index" begin="1" end="3">
                                 <option value="${index}"><spring:message
@@ -50,58 +114,15 @@
                             </c:forEach>
                         </select>
                     </div>
-                </div>
-            </form>
-            <button class="btn btn-custom" form="subject-files-form" style="align-self:center;" type="submit">
-                <spring:message code="myFiles.button.loadFiles"/>
-            </button>
-        </div>
-    </div>
-    <div class="form-container" style="margin-top: 15px;">
-        <h2 class="form-title"><spring:message code="myFiles.title"/></h2>
-        <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
-        <form action="${pageContext.request.contextPath}/myFiles" method="get" style="display: flex; width: 90%">
-            <div class="files-filter-container">
-                <label class="files-form-label" for="subject-select-filter" style="margin-right: 10px;">
-                    <spring:message code="myFiles.subjectLabel"/>:
-                </label>
-                <select name="subject-select-filter" id="subject-select-filter">
-                    <option selected value="0"><spring:message code="myFiles.filter.anySubjects"/></option>
-                    <c:forEach var="subject" items="${userSubjects}">
-                        <option value="${subject.id}">${subject.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-            <div class="files-filter-container">
-                <label class="files-form-label" for="level-select-filter" style="margin-right: 10px;">
-                    <spring:message code="myFiles.levelLabel"/>:
-                </label>
-                <select name="level-select-filter" id="level-select-filter">
-                    <option selected value="0"><spring:message code="myFiles.select.anyLevel"/></option>
-                    <c:forEach var="index" begin="1" end="3">
-                        <option value="${index}"><spring:message
-                                code="myFiles.filesTable.level${index}"/></option>
-                    </c:forEach>
-                </select>
-            </div>
-            <button type="submit" id="submit-filter" style="display: none"></button>
-        </form>
+                    <button type="submit" id="submit-filter" style="display: none"></button>
+                </form>
 
-        <c:choose>
-            <c:when test="${userSubjectFiles.size() != 0}">
                 <table class="subjects-table">
                     <tr class="subjects-row">
                         <td class="row-title" style="width: 40%"><spring:message code="myFiles.rowTitle.file"/></td>
                         <td class="row-title" style="width: 15%"><spring:message code="myFiles.rowTitle.subject"/></td>
                         <td class="row-title" style="width: 25%"><spring:message code="myFiles.rowTitle.level"/></td>
-                        <td style="width: 4%;align-self: center;display: flex;justify-content: center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                                 class="bi bi-trash" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
-                                <path fill-rule="evenodd"
-                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
-                            </svg>
-                        </td>
+                        <td class="row-title" style="width: 11%"><spring:message code="myFiles.rowTitle.selection"/></td>
                     </tr>
                     <form name="delete-form" id="delete-form"
                           action="${pageContext.request.contextPath}/myFilesDelete/${user.id}" method="post">
@@ -110,8 +131,8 @@
                                 <td class="row-info" style="width: 40%">${file.fileName}</td>
                                 <td class="row-info" style="width: 15%">${file.subject.name}</td>
                                 <td class="row-info" style="width: 25%"><spring:message
-                                        code="myFiles.filesTable.level${file.level}"/></td>
-                                <td style="width: 3%;">
+                                        code="subjects.form.level.${file.level}"/></td>
+                                <td style="width: 11%;padding-left: 4.5%;">
                                     <input type="checkbox" name="deleted-files" class="form-check-input"
                                            value="${file.fileId}">
                                 </td>
@@ -121,51 +142,98 @@
                 </table>
             </c:when>
             <c:otherwise>
-                <h4><spring:message code="myFiles.noFilesYet"/></h4>
+                <h4 style="margin: 10px 0 20px 0;">
+                    <spring:message code="myFiles.noFilesYet"/></h4>
             </c:otherwise>
         </c:choose>
         <div class="myFiles-main-btn-container">
-            <button class="btn btn-custom" id="delete-btn" style="display: none; margin-bottom: 5px;align-self: center;" form="delete-form"
+            <button class="btn btn-custom" id="delete-btn" style="display: none; margin-bottom: 5px;align-self: center;"
+                    form="delete-form"
                     type="submit">
                 <spring:message code="myFiles.button.deleteSelected"/>
+                <button type="button" class="btn btn-custom" style="display: none;background: #848e8b"
+                        id="unmark-delete-button" onclick="cleanDeleteCheckbox()"><spring:message code="myFiles.button.cancelSelection"/>
+                </button>
             </button>
-            <a href="${pageContext.request.contextPath}/profile/${user.id}" class="btn btn-custom submit-btn">
-                <spring:message code="form.btn.save"/>
-            </a>
         </div>
+        <button type="button" id="upload-button" class="btn btn-custom" style="align-self: center"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop">
+            <spring:message code="myFiles.button.addFile"/>
+        </button>
     </div>
-
-
+    <div id="hidden" style="display: none">
+    </div>
 </div>
 <jsp:include page="../components/footer.jsp">
     <jsp:param name="" value=""/>
 </jsp:include>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
+
+    $(document).ready(showAndHide);
+
+    function showAndHide() {
+        var ids = $("#subject-select").val();
+        $("#hidden").children().each(function () {
+            $("#level-select").append($(this).clone());
+            $(this).remove();
+        });
+        $("#level-select").children().each(function () {
+            if ($(this).val() == (ids + '0') || $(this).val() == (ids + '1') || $(this).val() == (ids + '2') || $(this).val() == (ids + '3')) {
+                $(this).show();
+            } else {
+                $("#hidden").append($(this).clone());
+                $(this).remove();
+            }
+        });
+    }
+
 
     function keepFiltersSelected() {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         var selectedSubject = urlParams.get("subject-select-filter");
         var levelSubject = urlParams.get("level-select-filter");
-        if(selectedSubject !== null)
+        if (selectedSubject !== null)
             document.getElementById("subject-select-filter").value = urlParams.get("subject-select-filter");
-        if(levelSubject !== null)
+        if (levelSubject !== null)
             document.getElementById("level-select-filter").value = urlParams.get("level-select-filter");
     }
+
     function filter() {
         const btn = document.getElementById('submit-filter');
         document.getElementById("subject-select-filter").addEventListener("input", () => btn.click());
         document.getElementById("level-select-filter").addEventListener("input", () => btn.click());
     }
 
+
     function showDeleteButton() {
         var checkboxes = document.getElementsByName("deleted-files");
         var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
 
         var deleteBtn = document.getElementById("delete-btn");
+        var cancelDeleteBtn = document.getElementById("unmark-delete-button");
+        var uploadBtn = document.getElementById("upload-button");
+
         if (checkedOne) {
             deleteBtn.style.display = "block";
-        } else deleteBtn.style.display = "none";
+            cancelDeleteBtn.style.display = "block";
+            uploadBtn.style.display = "none"
+
+        } else {
+            deleteBtn.style.display = "none";
+            cancelDeleteBtn.style.display = "none";
+            uploadBtn.style.display = "block"
+        }
+    }
+
+    function cleanDeleteCheckbox() {
+        const checkboxes = document.getElementsByName("deleted-files");
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        });
+        showDeleteButton();
     }
 
     const removeItemFromFilesArray = (item) => {
@@ -185,12 +253,14 @@
                 }
             }
         );
+        if(ul.childNodes.length === 0)
+            ul.style.display = 'none';
     }
 
     function showUlOfFiles() {
         var files = document.getElementById("file").files;
         var ul = document.getElementById("selected-files-ul");
-        if (files.length === 0) {
+        if (files.length === 0 || ul.childNodes.length === 0) {
             ul.style.display = 'none';
         } else {
             ul.style.display = 'block';

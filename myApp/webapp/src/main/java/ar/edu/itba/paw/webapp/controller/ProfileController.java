@@ -212,8 +212,10 @@ public class ProfileController {
         ModelAndView mav = new ModelAndView("myFiles");
         User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
         List<SubjectFile> userSubjectFiles = subjectFileService.getAllSubjectFilesFromUser(currUser.getId());
+        List<Subject> userSubject = teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId());
         mav.addObject("userSubjectFiles", userSubjectFiles);
-        mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
+        mav.addObject("userSubjectInfo",teachesService.getSubjectInfoListByUser(currUser.getId()));
+        mav.addObject("userSubjects",userSubject);
         mav.addObject("user",currUser);
         return mav;
     }
@@ -221,9 +223,11 @@ public class ProfileController {
     public ModelAndView myFiles(@RequestParam (name = "subject-select-filter") Long subjectId, @RequestParam (name = "level-select-filter") Integer level ){
         ModelAndView mav = new ModelAndView("myFiles");
         User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        List<Subject> userSubject = teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId());
         List<SubjectFile> userSubjectFiles = subjectFileService.filterUserSubjectFilesBySubjectAndLevel(currUser.getId(), subjectId, level);
         mav.addObject("userSubjectFiles", userSubjectFiles);
-        mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
+        mav.addObject("userSubjectInfo",teachesService.getSubjectInfoListByUser(currUser.getId()));
+        mav.addObject("userSubjects",userSubject);
         mav.addObject("user",currUser);
         return mav;
     }
@@ -233,7 +237,9 @@ public class ProfileController {
                                      @RequestParam (name = "subject") Long subjectId) throws IOException {
         User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
         Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(RuntimeException::new);
-        subjectFileService.saveMultipleNewSubjectFiles(files, currUser.getId(), subjectForFile, level);
+        for (MultipartFile file : files) {
+            subjectFileService.saveNewSubjectFile(file.getBytes(), file.getOriginalFilename(), currUser.getId(), subjectForFile, level%10);
+        }
         return new ModelAndView("redirect:/myFiles");
     }
 

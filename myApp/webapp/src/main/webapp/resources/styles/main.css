@@ -34,7 +34,7 @@
 
 .selected-files-options-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
 }
 
@@ -1120,7 +1120,9 @@ input:focus {
 
 .myFiles-main-btn-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 350px;
 }
 
 .selected-files-ul {
