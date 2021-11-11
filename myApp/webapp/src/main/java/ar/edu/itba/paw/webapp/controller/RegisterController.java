@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.UserRoleService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Roles;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserRole;
 import ar.edu.itba.paw.webapp.exceptions.RegisterErrorException;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import org.slf4j.Logger;
@@ -35,6 +38,9 @@ public class RegisterController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView register(@ModelAttribute("register") final RegisterForm form) {

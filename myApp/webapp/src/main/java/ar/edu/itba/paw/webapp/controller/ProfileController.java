@@ -46,7 +46,7 @@ public class ProfileController {
     private ImageService imageService;
 
     @Autowired
-    private RoleService roleService;
+    private UserRoleService userRoleService;
 
     @Autowired
     private RatingService ratingService;
@@ -117,7 +117,9 @@ public class ProfileController {
             return startTeachingEdit(form);
         }
         Long userId = commonEditProfile(form);
-        roleService.addTeacherRole(userId);
+        if (!userRoleService.addRoleToUser(userId, Roles.TEACHER.getId())) {
+            throw new OperationFailedException("exception.failed");
+        }
         userService.setTeacherAuthorityToUser();
         return changeUserData(userId, form);
     }
@@ -224,7 +226,7 @@ public class ProfileController {
         List<SubjectFile> userSubjectFiles = subjectFileService.filterUserSubjectFilesBySubjectAndLevel(currUser.getId(), subjectId, level);
         mav.addObject("userSubjectFiles", userSubjectFiles);
         mav.addObject("userSubjects",teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId()));
-        mav.addObject("user",currUser);
+        mav.addObject("user", currUser);
         return mav;
     }
 

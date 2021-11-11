@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.Roles;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,9 +28,10 @@ public class PawUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("exception.login");
         }
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role r : user.get().getUserRoles()) {
-            authorities.add(new SimpleGrantedAuthority(r.getRole()));
+        if (user.get().isTeacher()) {
+            authorities.add(new SimpleGrantedAuthority(Roles.TEACHER.getName()));
         }
+        authorities.add(new SimpleGrantedAuthority(Roles.STUDENT.getName()));
         return new org.springframework.security.core.userdetails.User(email, user.get().getPassword(), authorities);
     }
 }

@@ -23,19 +23,13 @@ public class User {
     private Long userid;
 
     @Column(nullable = false, length = 160)
-    private String password; //Por default toma nombre de columna password
+    private String password;
 
     @Column(nullable = false)
     private String mail;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "userroles",
-            joinColumns = @JoinColumn(
-                    name = "userid", referencedColumnName = "userid", foreignKey = @ForeignKey(name = "usserroles_userid_fkey")),
-            inverseJoinColumns = @JoinColumn(
-                    name = "roleid", referencedColumnName = "roleid", foreignKey = @ForeignKey(name = "userroles_roleid_fkey")))
-    private List<Role> userRoles;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<UserRole> userRoles;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -93,7 +87,6 @@ public class User {
         this.userid = id;
         this.description = description;
         this.schedule = schedule;
-        this.userRoles = new ArrayList<>();
         this.favourites = new ArrayList<>();
     }
 
@@ -209,17 +202,17 @@ public class User {
         this.userid = id;
     }
 
-    public void setUserRoles(List<Role> userRoles) {
-        this.userRoles = userRoles;
-    }
-
-    public List<Role> getUserRoles() {
+    public List<UserRole> getUserRoles() {
         return userRoles;
     }
 
+    public void setUserRoles(List<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
     public boolean isTeacher() {
-        for (Role role : userRoles) {
-            if (role.getRole().equals("USER_TEACHER")) {
+        for (UserRole role : userRoles) {
+            if (role.getRoleid().equals(Roles.TEACHER.getId())) {
                 return true;
             }
         }

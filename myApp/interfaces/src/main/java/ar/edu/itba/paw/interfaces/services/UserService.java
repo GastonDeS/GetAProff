@@ -17,7 +17,7 @@ public interface UserService {
 
     boolean isFaved(Long teacherId, Long studentId);
 
-    Optional<User> create(String username, String mail, String password, String description, String schedule, Long userole);
+    Optional<User> create(String username, String mail, String password, String description, String schedule, Long roleid);
 
     Optional<User> findByEmail(String mail);
 

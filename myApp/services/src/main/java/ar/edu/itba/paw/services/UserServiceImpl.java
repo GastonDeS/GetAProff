@@ -2,10 +2,8 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.InsertException;
-import ar.edu.itba.paw.models.Role;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -30,9 +28,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleService roleService;
-
     void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -41,9 +36,9 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
+//    void setRoleService(RoleService roleService) {
+//        this.roleService = roleService;
+//    }
 
     @Override
     public Optional<User> findById(Long userId) {
@@ -67,14 +62,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password, String description, String schedule, Long userole) {
-        User u = userDao.create(Utility.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
-        List<Role> roles = roleService.setUserRoles(u.getId(), userole);
-        if (roles.isEmpty()) {
-            return Optional.empty();
+    public Optional<User> create(String username, String mail, String password, String description, String schedule, Long roleid) {
+        User user = userDao.create(Utility.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
+        List<UserRole> userRoles = new ArrayList<>();
+        if (roleid.equals(Roles.TEACHER.getId())) {
+            userRoles.add(new UserRole(Roles.TEACHER.getId(), user));
         }
-        u.setUserRoles(roles);
-        return Optional.of(u);
+        userRoles.add(new UserRole(Roles.STUDENT.getId(), user));
+        user.setUserRoles(userRoles);
+        return Optional.of(user);
     }
 
     @Transactional
@@ -138,7 +134,7 @@ public class UserServiceImpl implements UserService {
     public void setTeacherAuthorityToUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
-        updatedAuthorities.add(new SimpleGrantedAuthority("USER_TEACHER"));
+        updatedAuthorities.add(new SimpleGrantedAuthority(Roles.TEACHER.getName()));
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
 
