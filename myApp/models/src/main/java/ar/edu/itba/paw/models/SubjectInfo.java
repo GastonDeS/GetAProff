@@ -44,4 +44,15 @@ public class SubjectInfo {
     public void setLevel(int level) {
         this.level = level;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof SubjectInfo)) return false;
+        SubjectInfo aux = (SubjectInfo) object;
+        return aux.name.equals(this.name) &&
+                aux.subjectId.equals(this.subjectId) &&
+                aux.price == this.price &&
+                aux.level == this.level;
+    }
 }

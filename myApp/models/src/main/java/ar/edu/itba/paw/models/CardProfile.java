@@ -38,4 +38,17 @@ public class CardProfile {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof CardProfile)) return false;
+        CardProfile aux = (CardProfile) object;
+        return aux.userId.equals(this.userId) &&
+                aux.name.equals(this.name) &&
+                aux.maxPrice == this.maxPrice &&
+                aux.minPrice == this.minPrice &&
+                aux.description.equals(this.description) &&
+                aux.rate == this.rate;
+    }
 }

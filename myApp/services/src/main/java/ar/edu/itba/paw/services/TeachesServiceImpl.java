@@ -12,7 +12,7 @@ import java.util.*;
 @Service
 public class TeachesServiceImpl implements TeachesService {
 
-    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0,MAX_LEVEL = 3, GET_ALL = 0, PAGE_SIZE = 9;
+    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, MAX_LEVEL = 3, GET_ALL = 0, PAGE_SIZE = 9;
 
     @Autowired
     private TeachesDao teachesDao;
@@ -30,7 +30,6 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.removeSubjectToUser(userId, subjectId, level);
     }
 
-    //TODO: TEST
     @Transactional
     @Override
     public List<SubjectInfo> getSubjectInfoListByUser(Long teacherId) {
@@ -57,7 +56,7 @@ public class TeachesServiceImpl implements TeachesService {
 
     @Transactional
     @Override
-    public List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset){
+    public List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset) {
         List<Object> teachersTeachingSubjectRaw = teachesDao.filterUsers(searchedSubject,
                 teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, Integer.parseInt(offset));
         return cardProfileConverter(teachersTeachingSubjectRaw);

@@ -1,21 +1,16 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sun.security.ssl.SunJSSE;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -24,13 +19,11 @@ import static org.mockito.Mockito.when;
 public class TeachesServiceImplTest {
 
     private static final String USERNAME = "John Doe";
-    private static final String USER_MAIL = "John@Doe.com";
-    private static final String USER_PASS = "1234";
     private static final String DESCRIPTION = "soy un muy buen profesor de la facultad ITBA";
-    private static final String SCHEDULE = "todos los dias habiles de 8 a 16";
-    private static final Long USER_ID = 1L;
-    private static final String SUBJECT_ONE = "MATE";
-    private static final String SUBJECT_TWO = "FRANCES";
+    private static final Long USER_ID_ONE = 1L;
+    private static final Long USER_ID_TWO = 2L;
+    private static final String SUBJECT_ONE = "MATE 1";
+    private static final String SUBJECT_TWO = "MATE 2";
     private static final Long SUBJECT_ID_ONE = 1L;
     private static final Long SUBJECT_ID_TWO = 2L;
     private static final Integer PRICE = 500;
@@ -38,6 +31,7 @@ public class TeachesServiceImplTest {
     private static final Integer MAXPRICE = 1400;
     private static final Integer MINPRICE = 550;
     private static final float RATE = 3.99f ;
+    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, MAX_LEVEL = 3, GET_ALL = 0, OVER_PRICE = 1500;
 
     @InjectMocks
     private TeachesServiceImpl teachesService = new TeachesServiceImpl();
@@ -45,60 +39,63 @@ public class TeachesServiceImplTest {
     @Mock
     private TeachesDao mockDao;
 
-    private final User user = new User(USERNAME, USER_PASS, USER_ID, USER_MAIL, DESCRIPTION,SCHEDULE);
-    private final Subject subjectOne = new Subject(SUBJECT_ONE, SUBJECT_ID_ONE);
-    private final Subject subjectTwo = new Subject(SUBJECT_TWO, SUBJECT_ID_TWO);
-    private final Teaches teachesOne = new Teaches(user, subjectOne, PRICE, LEVEL);
-    private final Teaches teachesTwo = new Teaches(user, subjectTwo, PRICE, LEVEL);
-
     @Test
-    public void testAddSubjectToUser() {
+    public void  testGetSubjectInfoListByUser() {
         //1. Setup - precondiciones
-        when(mockDao.addSubjectToUser(eq(USER_ID), eq(SUBJECT_ID_ONE), eq(PRICE), eq(LEVEL))).thenReturn(teachesOne);
+        final List<Object> subjectInfoRaw = new ArrayList<>();
+        subjectInfoRaw.add(new Object[] {SUBJECT_ID_ONE, SUBJECT_ONE, PRICE, LEVEL});
+        subjectInfoRaw.add(new Object[] {SUBJECT_ID_TWO, SUBJECT_TWO, PRICE, LEVEL});
+        when(mockDao.getSubjectInfoListByUser(eq(USER_ID_ONE))).thenReturn(subjectInfoRaw);
 
         //2. Ejercito la class under test una unica linea
-        final Optional<Teaches> maybeTeaches = teachesService.addSubjectToUser(USER_ID, SUBJECT_ID_ONE, PRICE, LEVEL);
+        final List<SubjectInfo> maybeSubjectInfoList = teachesService.getSubjectInfoListByUser(USER_ID_ONE);
 
         //3. Asserts - postcondiciones
-        Assert.assertTrue(maybeTeaches.isPresent());
-        Assert.assertEquals(teachesOne, maybeTeaches.get());
+        final List<SubjectInfo> subjectInfoList = new ArrayList<>();
+        subjectInfoList.add(new SubjectInfo(SUBJECT_ID_ONE, SUBJECT_ONE, PRICE, LEVEL));
+        subjectInfoList.add(new SubjectInfo(SUBJECT_ID_TWO, SUBJECT_TWO, PRICE, LEVEL));
+        Assert.assertEquals(subjectInfoList, maybeSubjectInfoList);
     }
 
     @Test
-    public void testRemoveSubjectToUser() {
+    public void testFindTeachersTeachingSubject() {
         //1. Setup - precondiciones
-        when(mockDao.removeSubjectToUser(eq(USER_ID), eq(SUBJECT_ID_ONE), eq(LEVEL))).thenReturn(1);
+        final List<Object> teachersTeachingSubjectRaw = new ArrayList<>();
+        teachersTeachingSubjectRaw.add(new Object[] {USER_ID_ONE, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE});
+        teachersTeachingSubjectRaw.add(new Object[] {USER_ID_TWO, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE});
+        when(mockDao.getMostExpensiveUserFee(eq(SUBJECT_ONE))).thenReturn(MAXPRICE);
+        when(mockDao.filterUsers(eq(SUBJECT_ONE), eq(MAXPRICE), eq(ANY_LEVEL), eq(MAX_LEVEL), eq(ANY_RATING),
+                eq(RAND_ORDER), eq(GET_ALL))).thenReturn(teachersTeachingSubjectRaw);
 
         //2. Ejercito la class under test una unica linea
-        final int rowsModified = teachesService.removeSubjectToUser(USER_ID, SUBJECT_ID_ONE, LEVEL);
+        final List<CardProfile> maybeCardProfileList = teachesService.findTeachersTeachingSubject(SUBJECT_ONE, GET_ALL.toString());
 
         //3. Asserts - postcondiciones
-        Assert.assertEquals(1, rowsModified);
+        final List<CardProfile> cardProfileList = new ArrayList<>();
+        cardProfileList.add(new CardProfile(USER_ID_ONE, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE));
+        cardProfileList.add(new CardProfile(USER_ID_TWO, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE));
+        Assert.assertEquals(cardProfileList, maybeCardProfileList);
     }
 
     @Test
-    public void testGetListOfAllSubjectsTeachedByUser() {
+    public void testFilterUsers() {
         //1. Setup - precondiciones
-        when(mockDao.getListOfAllSubjectsTeachedByUser(eq(USER_ID))).thenReturn(Arrays.asList(subjectOne, subjectTwo));
+        final List<Object> teachersTeachingSubjectRaw = new ArrayList<>();
+        teachersTeachingSubjectRaw.add(new Object[] {USER_ID_ONE, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE});
+        teachersTeachingSubjectRaw.add(new Object[] {USER_ID_TWO, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE});
+        when(mockDao.getMostExpensiveUserFee(eq(SUBJECT_ONE))).thenReturn(MAXPRICE);
+        when(mockDao.filterUsers(eq(SUBJECT_ONE), eq(MAXPRICE), eq(ANY_LEVEL), eq(MAX_LEVEL), eq(ANY_RATING),
+                eq(RAND_ORDER), eq(GET_ALL))).thenReturn(teachersTeachingSubjectRaw);
 
         //2. Ejercito la class under test una unica linea
-        final List<Subject> subjects = teachesService.getListOfAllSubjectsTeachedByUser(USER_ID);
+        final List<CardProfile> maybeCardProfileList = teachesService.filterUsers(SUBJECT_ONE, RAND_ORDER.toString(), OVER_PRICE.toString(),
+                ANY_LEVEL.toString(), ANY_RATING.toString(), GET_ALL.toString());
 
         //3. Asserts - postcondiciones
-        Assert.assertEquals(Arrays.asList(subjectOne, subjectTwo), subjects);
-    }
-
-    @Test
-    public void testFindByUserAndSubjectAndLevel() {
-        //1. Setup - precondiciones
-        when(mockDao.findByUserAndSubjectAndLevel(eq(USER_ID), eq(SUBJECT_ID_ONE), eq(LEVEL))).thenReturn(Optional.of(teachesOne));
-
-        //2. Ejercito la class under test una unica linea
-        final Optional<Teaches> maybeTeaches = teachesService.findByUserAndSubjectAndLevel(USER_ID, SUBJECT_ID_ONE, LEVEL);
-
-        //3. Asserts - postcondiciones
-        Assert.assertTrue(maybeTeaches.isPresent());
-        Assert.assertEquals(teachesOne, maybeTeaches.get());
+        final List<CardProfile> cardProfileList = new ArrayList<>();
+        cardProfileList.add(new CardProfile(USER_ID_ONE, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE));
+        cardProfileList.add(new CardProfile(USER_ID_TWO, USERNAME, MAXPRICE, MINPRICE, DESCRIPTION, RATE));
+        Assert.assertEquals(cardProfileList, maybeCardProfileList);
     }
 
 }
