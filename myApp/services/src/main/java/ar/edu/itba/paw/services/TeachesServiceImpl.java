@@ -30,16 +30,17 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.removeSubjectToUser(userId, subjectId, level);
     }
 
+    //TODO: TEST
     @Transactional
     @Override
     public List<SubjectInfo> getSubjectInfoListByUser(Long teacherId) {
-        List<Teaches> teachesList = teachesDao.get(teacherId);
         List<SubjectInfo> subjectInfoList = new ArrayList<>();
-        for(Teaches teaches : teachesList) {
-            Subject subject = teaches.getSubject();
-            SubjectInfo subjectInfo = new SubjectInfo(subject.getId(), subject.getName(), teaches.getPrice(), teaches.getLevel());
-            subjectInfoList.add(subjectInfo);
-        }
+        List<Object> subjectInfoListRaw = teachesDao.getSubjectInfoListByUser(teacherId);
+        subjectInfoListRaw.forEach((subjectInfoRaw) -> {
+            Object[] subjectInfo = (Object[]) subjectInfoRaw;
+            subjectInfoList.add(new SubjectInfo(((Number) subjectInfo[0]).longValue(), subjectInfo[1].toString(),
+                    ((Number) subjectInfo[2]).intValue(), ((Number) subjectInfo[3]).intValue()));
+        });
         return subjectInfoList;
     }
 
@@ -47,7 +48,6 @@ public class TeachesServiceImpl implements TeachesService {
     public List<Subject> getListOfAllSubjectsTeachedByUser(Long userId) {
         return teachesDao.getListOfAllSubjectsTeachedByUser(userId);
     }
-
 
     @Transactional
     @Override

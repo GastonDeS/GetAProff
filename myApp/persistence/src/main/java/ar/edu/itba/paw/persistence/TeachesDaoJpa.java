@@ -56,7 +56,6 @@ public class TeachesDaoJpa implements TeachesDao {
         final TypedQuery<Subject> query = entityManager.createQuery("SELECT DISTINCT (t.subject) FROM Teaches t where t.teacher = :teacher",Subject.class);
         query.setParameter("teacher", teacher);
         return query.getResultList();
-
     }
 
     @Override
@@ -162,5 +161,14 @@ public class TeachesDaoJpa implements TeachesDao {
                 orderBy = "";
         }
         return orderBy;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> getSubjectInfoListByUser(Long teacherId) {
+        String queryStr = "select s.subjectid, s.name, t.price, t.level from teaches t join subject s on t.subjectid = s.subjectid where t.userid = :teacherId";
+        final Query query = entityManager.createNativeQuery(queryStr)
+                .setParameter("teacherId", teacherId);
+        return query.getResultList();
     }
 }

@@ -49,7 +49,8 @@ public class Subject {
         if (this == object) return true;
         if (!(object instanceof Subject)) return false;
         Subject aux = (Subject) object;
-        return aux.subjectId.equals(this.subjectId);
+        return aux.subjectId.equals(this.subjectId)
+                && aux.name.equals(this.name);
     }
 
     @Override
