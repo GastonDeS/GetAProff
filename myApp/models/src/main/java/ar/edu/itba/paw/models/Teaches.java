@@ -66,6 +66,16 @@ public class Teaches {
         this.subject = subject;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Teaches)) return false;
+        Teaches aux = (Teaches) object;
+        if (!aux.teacher.equals(teacher)) return false;
+        if (!aux.subject.equals(subject)) return false;
+        return aux.level == level;
+    }
+
     public enum Level {
         NONE,
         PRIMARY,

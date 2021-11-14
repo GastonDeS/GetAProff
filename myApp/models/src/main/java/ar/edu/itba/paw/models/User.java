@@ -236,6 +236,14 @@ public class User {
     }
 
     @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof User)) return false;
+        User aux = (User) object;
+        return aux.userid.equals(this.userid);
+    }
+
+    @Override
     public String toString() {
         return String.format("Id: %d - Name: %s - Mail: %s\n", userid, name, mail);
     }

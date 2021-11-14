@@ -45,6 +45,14 @@ public class Subject {
     }
 
     @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Subject)) return false;
+        Subject aux = (Subject) object;
+        return aux.subjectId.equals(this.subjectId);
+    }
+
+    @Override
     public String toString() {
         return String.format("%s\n", name);
     }
