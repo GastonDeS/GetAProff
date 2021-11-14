@@ -19,10 +19,10 @@
             <pattern>${defaultPattern:-}</pattern>
         </encoder>
     </appender>
-    <root level="WARN">
+    <root level="ERROR">
         <appender-ref ref="root-appender" />
     </root>
-    <logger name="ar.edu.itba.paw" level="DEBUG" additivity="false">
+    <logger name="ar.edu.itba.paw" level="ERROR" additivity="false">
         <appender-ref ref="paw-appender"/>
     </logger>
 </configuration>
