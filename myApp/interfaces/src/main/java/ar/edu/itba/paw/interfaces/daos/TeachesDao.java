@@ -25,10 +25,6 @@ public interface TeachesDao {
      */
     List<Teaches> get(Long teacherId);
 
-    int getMaxPrice(Long teacherId);
-
-    int getMinPrice(Long teacherId);
-
     /**
      * Retrieves the fee of the most expensive user
      * @param searchedSubject Subject to search for highest fee
