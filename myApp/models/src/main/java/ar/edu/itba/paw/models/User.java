@@ -91,6 +91,15 @@ public class User {
         this.favourites = new ArrayList<>();
     }
 
+    private User(Builder builder) {
+        this.mail = builder.mail;
+        this.password = builder.password;
+        this.name = builder.name;
+        this.userid = builder.userId;
+        this.description = builder.description;
+        this.schedule = builder.schedule;
+    }
+
     public List<User> getFavouriteOf() {
         return favouriteOf;
     }
@@ -264,16 +273,46 @@ public class User {
         return Objects.hash(name, description, schedule, userid, password, mail, userRoles, favourites, favouriteOf, image, userFilesList, subjectsFilesList, ratings, subjectsTaughtByUser, classesTakenByStudent, classesGivenByTeacher);
     }
 
-//    @Override
-//    public boolean equals(Object object) {
-//        if (this == object) return true;
-//        if (!(object instanceof User)) return false;
-//        User aux = (User) object;
-//        return aux.userid.equals(this.userid);
-//    }
-
     @Override
     public String toString() {
         return String.format("Id: %d - Name: %s - Mail: %s\n", userid, name, mail);
+    }
+
+    public static class Builder
+    {
+        private Long userId;
+        private final String mail;
+        private String name;
+        private String description;
+        private String schedule;
+        private String password;
+
+        public Builder(String mail) {
+            this.mail = mail;
+        }
+        public Builder userId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        public Builder schedule(String schedule) {
+            this.schedule = schedule;
+            return this;
+        }
+        public Builder password(String password) {
+            this.description = password;
+            return this;
+        }
+        //Return the finally consrcuted User object
+        public User build() {
+            return new User(this);
+        }
     }
 }
