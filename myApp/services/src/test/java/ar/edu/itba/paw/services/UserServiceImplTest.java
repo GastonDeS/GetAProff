@@ -45,10 +45,6 @@ public class UserServiceImplTest {
     private UserDao mockDao;
     @Mock
     private PasswordEncoder passwordEncoder;
-//    @Mock
-//    private RoleService roleService;
-//    @Mock
-//    private UtilsService utilsService;
 
     private final User userMocked = new User(USERNAME,USER_PASS, (long) USER_ID,USER_MAIL,DESCRIPTION,SCHEDULE);
 
@@ -76,7 +72,7 @@ public class UserServiceImplTest {
 
 //        2 ejercito la class under test una unica linea
 
-        final Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,(long) USER_ROLE);
+        userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,(long) USER_ROLE);
 
 //        3 Asserts - postcondiciones
 
@@ -105,7 +101,7 @@ public class UserServiceImplTest {
     public void testAddFavourite() {
         when(mockDao.addFavourite(eq(USER_ID),eq(2L)/* second id*/)).thenThrow(InsertException.class);
 
-        final int result = userService.addFavourite(USER_ID,2L/* second id*/);
+        userService.addFavourite(USER_ID,2L/* second id*/);
 
         Assert.fail("Duplicate key should have thrown");
     }
