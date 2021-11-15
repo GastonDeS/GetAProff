@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.User;
 
 public interface EmailService {
 
@@ -12,4 +13,5 @@ public interface EmailService {
 
     void sendSubjectRequest(Long uid, String Subject, String message);
 
+    void sendNewPostMessage(User user, Lecture myLecture, String localAddr);
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
@@ -39,6 +40,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private LectureService lectureService;
 
 
     private void sendSimpleMessage(String to, String subject, String text) {
@@ -144,6 +148,29 @@ public class EmailServiceImpl implements EmailService {
         String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {subject}, LocaleContextHolder.getLocale());
         String text = messageSource.getMessage("mail.subject.request.body", new Object[] {subject, message}, LocaleContextHolder.getLocale());
         sendSimpleMessage("getaproff@gmail.com", mailSubject,text);
+    }
+
+    @Override
+    @Async
+    public void sendNewPostMessage(User poster, Lecture lecture, String localAddr) {
+        String to;
+        String toFormat;
+        int status = 1;
+        if (lecture.getStudent().equals(poster)) {
+            to = lecture.getTeacher().getMail();
+            status = 0;
+        } else {
+            to = lecture.getStudent().getMail();
+        }
+        String mailSubject = messageSource.getMessage("mail.class.new.post.subject", null, LocaleContextHolder.getLocale());
+        if (status == 0){
+            toFormat = messageSource.getMessage("mail.class.new.student.post.body", new Object[] {poster.getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
+        } else  {
+            toFormat = messageSource.getMessage("mail.class.new.teacher.post.body", new Object[] {poster.getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
+        }
+        String button = messageSource.getMessage("mail.class.new.post.btn",null, LocaleContextHolder.getLocale());
+        String text = String.format(templateMailMessage.getText(), mailSubject,toFormat, localAddr + "/classroom/" + lecture.getClassId(), button);
+        sendSimpleMessage(to,mailSubject, text);
     }
 
 }
