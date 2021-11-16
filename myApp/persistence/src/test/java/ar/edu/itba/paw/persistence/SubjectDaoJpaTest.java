@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence.providers;
+package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.models.Subject;
