@@ -93,6 +93,7 @@ public class User {
         this.userid = builder.userId;
         this.description = builder.description;
         this.schedule = builder.schedule;
+        this.favourites = builder.favourites;
     }
 
     public List<User> getFavouriteOf() {
@@ -281,6 +282,7 @@ public class User {
         private String description;
         private String schedule;
         private String password;
+        private List<User> favourites;
 
         public Builder(String mail) {
             this.mail = mail;
@@ -299,6 +301,10 @@ public class User {
         }
         public Builder schedule(String schedule) {
             this.schedule = schedule;
+            return this;
+        }
+        public Builder favourites(List<User> favourites) {
+            this.favourites = favourites;
             return this;
         }
         public Builder password(String password) {

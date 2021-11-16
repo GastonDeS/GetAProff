@@ -38,7 +38,7 @@ public class InstanceProvider {
 
     public static User getUser() {
         return new User.Builder(USER_MAIL).description(DESCRIPTION)
-                .schedule(SCHEDULE).name(USERNAME).password(USER_PASS).build();
+                .schedule(SCHEDULE).name(USERNAME).password(USER_PASS).favourites(new ArrayList<>()).build();
     }
 
     public static Subject getSubject() {
@@ -48,14 +48,14 @@ public class InstanceProvider {
     public static User getNewUser(int number) {
         String name = "user " + number;
         String mail = "user" + number + "@mail.com";
-        return new User.Builder(mail).name(name).password(USER_PASS).build();
+        return new User.Builder(mail).name(name).password(USER_PASS).favourites(new ArrayList<>()).build();
     }
 
     public static Subject getNewSubject(int number) {
         return new Subject("Mate " + number, null);
     }
 
-    public static Teaches getNewTeacher(User user, Subject subject) {
+    public static Teaches getNewTeaches(User user, Subject subject) {
         return new Teaches(user, subject, PRICE, ANY_LEVEL);
     }
 

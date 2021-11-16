@@ -187,7 +187,7 @@ public class LectureDaoJpaTest {
 //
 //        Assert.assertEquals(1, rowsModified);
 //        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classes",
-//                "classid = " + expectedLecture.getClassId() + " and teacherlasttime = " + new Timestamp(calendar.getTime().getTime())));
+//                "classid = " + expectedLecture.getClassId() + " and teacherlasttime = " + Date.from(Calendar.getInstance())));
     }
 
     @Test

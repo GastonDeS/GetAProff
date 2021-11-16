@@ -105,7 +105,7 @@ public class TeachesDaoJpaTest {
         final Subject subjectExtra = InstanceProvider.getNewSubject(2);
         entityManager.persist(subjectExtra);
         entityManager.persist(teaches);
-        entityManager.persist(InstanceProvider.getNewTeacher(user, subjectExtra));
+        entityManager.persist(InstanceProvider.getNewTeaches(user, subjectExtra));
         final List<Subject> subjects = teachesDao.getListOfAllSubjectsTeachedByUser(user.getId());
 
         final List<Subject> expectedSubjects = new ArrayList<>();
@@ -121,7 +121,7 @@ public class TeachesDaoJpaTest {
         final Subject subjectExtra = InstanceProvider.getNewSubject(2);
         entityManager.persist(subjectExtra);
         entityManager.persist(teaches);
-        final Teaches teachesExtra = InstanceProvider.getNewTeacher(user, subjectExtra);
+        final Teaches teachesExtra = InstanceProvider.getNewTeaches(user, subjectExtra);
         entityManager.persist(teachesExtra);
         final List<Teaches> teachesList = teachesDao.get(user.getId());
 
@@ -187,7 +187,7 @@ public class TeachesDaoJpaTest {
             final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
                     InstanceProvider.getNewLowRating(userExtra, user);
             entityManager.persist(rating);
-            entityManager.persist(InstanceProvider.getNewTeacher(userExtra, subject));
+            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
         }
         final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
 
@@ -208,7 +208,7 @@ public class TeachesDaoJpaTest {
                 final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
                 entityManager.persist(lectureExtra);
             }
-            entityManager.persist(InstanceProvider.getNewTeacher(userExtra, subject));
+            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
         }
         final List<Object> mostRequested = teachesDao.getMostRequested();
 

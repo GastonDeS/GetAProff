@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
-
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import ar.edu.itba.paw.persistence.providers.InstanceProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,22 +30,6 @@ import java.util.Optional;
 @Transactional
 public class UserDaoJPATest {
 
-    private static final String USERNAME = "John Doe";
-    private static final String USER_MAIL = "John@Doe.com";
-    private static final String USER_PASS = "1234";
-    private static final String DESCRIPTION = "soy un muy buen profesor de la facultad ITBA";
-    private static final String SCHEDULE = "todos los dias habiles de 8 a 16";
-    private static final int USER_ID = 1;
-    private static final int USER_ROLE = 1;
-    private static final String SUBJECT = "MATE";
-    private static final Integer PRICE = 500;
-    private static final Integer LEVEL = 3;
-    private static final Integer MAXPRICE = 1400;
-    private static final Integer MINPRICE = 550;
-    private static final float RATE = 3.99f ;
-    private static final String SUBJECT_ONE = "MATE 1";
-
-
     @Autowired
     private UserDao userDao;
 
@@ -58,7 +42,7 @@ public class UserDaoJPATest {
     private JdbcTemplate jdbcTemplate;
 
     private User user;
-    private User user2;
+    private User userExtra;
     private Teaches teaches;
     private Subject subject;
 
@@ -71,11 +55,11 @@ public class UserDaoJPATest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"favourites");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"subject");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"teaches");
-        user = new User(USERNAME, USER_PASS, null, USER_MAIL, DESCRIPTION, SCHEDULE);
-        user2 = new User(USERNAME, USER_PASS, null, USER_MAIL, DESCRIPTION, SCHEDULE);
-        subject = new Subject(SUBJECT_ONE, null);
+        user = InstanceProvider.getUser();
+        userExtra = InstanceProvider.getNewUser(2);
+        subject = InstanceProvider.getSubject();
         entityManager.persist(subject);
-        teaches = new Teaches(user,subject,500,0);
+        teaches = InstanceProvider.getNewTeaches(user, subject);
     }
 
     @Test
@@ -92,7 +76,7 @@ public class UserDaoJPATest {
     @Test
     @Rollback
     public void testCreate() {
-        User userCreated = userDao.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE);
+        userDao.create(user.getName(),user.getMail(), user.getPassword(), user.getDescription(), user.getSchedule());
         entityManager.flush();
 
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,"users"));
@@ -104,10 +88,10 @@ public class UserDaoJPATest {
         entityManager.persist(user);
         List<User> faves = new ArrayList<>();
         faves.add(user);
-        user2.setFavourites(faves);
-        entityManager.persist(user2);
+        userExtra.setFavourites(faves);
+        entityManager.persist(userExtra);
 
-        Boolean faved = userDao.isFaved(user.getId(),user2.getId());
+        Boolean faved = userDao.isFaved(user.getId(), userExtra.getId());
 
         Assert.assertEquals(true,faved);
     }
@@ -116,13 +100,13 @@ public class UserDaoJPATest {
     @Rollback
     public void testAddFavourite() {
         entityManager.persist(user);
-        entityManager.persist(user2);
+        entityManager.persist(userExtra);
 
-        int added = userDao.addFavourite(user.getId(), user2.getId());
+        userDao.addFavourite(user.getId(), userExtra.getId());
         entityManager.flush();
 
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "favourites","teacherid = "+user.getId()+" AND studentid = "+user2.getId()));
+                "favourites","teacherid = " + user.getId() + " AND studentid = " + userExtra.getId()));
     }
 
     @Test
@@ -131,16 +115,15 @@ public class UserDaoJPATest {
         entityManager.persist(user);
         List<User> faves = new ArrayList<>();
         faves.add(user);
-        user2.setFavourites(faves);
-        entityManager.persist(user2);
+        userExtra.setFavourites(faves);
+        entityManager.persist(userExtra);
 
-        int added = userDao.removeFavourite(user.getId(), user2.getId());
+        int added = userDao.removeFavourite(user.getId(), userExtra.getId());
         entityManager.flush();
-
 
         Assert.assertEquals(1,added);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "favourites","teacherid = "+user.getId()+" AND studentid = "+user2.getId()));
+                "favourites","teacherid = " + user.getId() + " AND studentid = " + userExtra.getId()));
     }
 
     @Test
@@ -149,15 +132,14 @@ public class UserDaoJPATest {
         entityManager.persist(user);
         List<User> faves = new ArrayList<>();
         faves.add(user);
-        user2.setFavourites(faves);
-        entityManager.persist(user2);
+        userExtra.setFavourites(faves);
+        entityManager.persist(userExtra);
         entityManager.persist(teaches);
 
-        List<Object> favourites = userDao.getFavourites(user2.getId());
+        List<Object> favourites = userDao.getFavourites(userExtra.getId());
 
-        final Object expectedId = (Object) user.getId();
         Assert.assertEquals(1,favourites.size());
-        Assert.assertEquals( ((Number) expectedId).longValue()
+        Assert.assertEquals( (long) user.getId()
                 ,((Number)((Object[])favourites.get(0))[0]).longValue());
     }
 
@@ -180,8 +162,8 @@ public class UserDaoJPATest {
         int valid = userDao.setUserDescription(user.getId(), "New Description");
         entityManager.flush();
 
-        Assert.assertEquals(1,valid);
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"users","description = "+"\'New Description\'"));
+        Assert.assertEquals(1, valid);
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"users","description = "+"\'New Description\'"));
     }
 
     @Test
@@ -208,7 +190,5 @@ public class UserDaoJPATest {
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"users","schedule = "+"\'NEWSCHEDULE\'"));
 
     }
-
-
 
 }
