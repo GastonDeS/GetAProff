@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
-import ar.edu.itba.paw.models.Rating;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import ar.edu.itba.paw.persistence.providers.InstanceProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,26 +27,7 @@ import java.util.*;
 public class TeachesDaoJpaTest {
 
     private static final double DELTA = 1e-15;
-    private static final String USERNAME = "John Doe";
-    private static final String USER_MAIL = "John@Doe.com";
-    private static final String USERNAME_EXTRA = "Jane Doe";
-    private static final String USER_MAIL_EXTRA = "jane@doe.com";
-    private static final String USER_PASS = "1234";
-    private static final String DESCRIPTION = "soy un muy buen profesor de la facultad ITBA";
-    private static final String SCHEDULE = "todos los dias habiles de 8 a 16";
-    private static final String REVIEW = "Muy buen profesor";
-    private static final Long USER_ID = 1L;
-    private static final String SUBJECT_ONE = "MATE 1";
-    private static final String SUBJECT_TWO = "MATE 2";
-    private static final Long SUBJECT_ID_ONE = 1L;
-    private static final Integer PRICE = 500;
-    private static final Integer MAX_LEVEL = 3;
-    private static final Integer MIN_LEVEL = 1;
-    private static final Integer MAXPRICE = 1400;
-    private static final Integer MINPRICE = 550;
-    private static final Integer RATE = 4;
-    private static final Integer FILTER_RATE = 3;
-    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, GET_ALL = 0;
+    private static final Integer FILTER_RATE = 3, RAND_ORDER = 0, GET_ALL = 0, FILTER_PRICE = 10000;
 
     @Autowired
     private TeachesDao teachesDao;
@@ -72,35 +51,40 @@ public class TeachesDaoJpaTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"subject");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"teaches");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"rating");
-        user = new User(USERNAME, USER_PASS, null, USER_MAIL, DESCRIPTION, SCHEDULE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,"classes");
+        user = InstanceProvider.getUser();
         entityManager.persist(user);
-        subject = new Subject(SUBJECT_ONE, null);
+        subject = InstanceProvider.getSubject();
         entityManager.persist(subject);
-        teaches = new Teaches(user, subject, PRICE, MAX_LEVEL);
+        teaches = InstanceProvider.getNewHighLevelTeaches(user, subject);
     }
 
     @Test
     @Rollback
     public void testAddSubjectToUser() {
-        final Teaches maybeTeaches = teachesDao.addSubjectToUser(USER_ID, SUBJECT_ID_ONE, PRICE, MAX_LEVEL);
+        final Teaches maybeTeaches = teachesDao.addSubjectToUser(teaches.getTeacher().getId(), subject.getId(), teaches.getPrice(), teaches.getLevel());
+
+        entityManager.flush();
 
         Assert.assertNotNull(maybeTeaches);
         Assert.assertEquals(teaches, maybeTeaches);
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "teaches"));
     }
 
     @Test
     @Rollback
     public void testRemoveSubjectToUser() {
         entityManager.persist(teaches);
-        final int rowsModified = teachesDao.removeSubjectToUser(USER_ID, SUBJECT_ID_ONE, MAX_LEVEL);
+        final int rowsModified = teachesDao.removeSubjectToUser(teaches.getTeacher().getId(), subject.getId(), teaches.getLevel());
 
         Assert.assertEquals(1, rowsModified);
+        Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "teaches"));
     }
 
     @Test
     @Rollback
     public void testRemoveSubjectToUserFalse() {
-        final int rowsModified = teachesDao.removeSubjectToUser(USER_ID, SUBJECT_ID_ONE, MAX_LEVEL);
+        final int rowsModified = teachesDao.removeSubjectToUser(teaches.getTeacher().getId(), subject.getId(), teaches.getLevel());
 
         Assert.assertEquals(0, rowsModified);
     }
@@ -109,7 +93,7 @@ public class TeachesDaoJpaTest {
     @Rollback
     public void testFindByUserAndSubjectAndLevel() {
         entityManager.persist(teaches);
-        final Optional<Teaches> maybeTeaches = teachesDao.findByUserAndSubjectAndLevel(USER_ID, SUBJECT_ID_ONE, MAX_LEVEL);
+        final Optional<Teaches> maybeTeaches = teachesDao.findByUserAndSubjectAndLevel(teaches.getTeacher().getId(), subject.getId(), teaches.getLevel());
 
         Assert.assertTrue(maybeTeaches.isPresent());
         Assert.assertEquals(teaches, maybeTeaches.get());
@@ -118,12 +102,11 @@ public class TeachesDaoJpaTest {
     @Test
     @Rollback
     public void testGetListOfAllSubjectsTeachedByUser() {
-        final Subject subjectExtra = new Subject(SUBJECT_TWO, null);
+        final Subject subjectExtra = InstanceProvider.getNewSubject(2);
         entityManager.persist(subjectExtra);
         entityManager.persist(teaches);
-        final Teaches teachesExtra = new Teaches(user, subjectExtra, PRICE, MAX_LEVEL);
-        entityManager.persist(teachesExtra);
-        final List<Subject> subjects = teachesDao.getListOfAllSubjectsTeachedByUser(USER_ID);
+        entityManager.persist(InstanceProvider.getNewTeacher(user, subjectExtra));
+        final List<Subject> subjects = teachesDao.getListOfAllSubjectsTeachedByUser(user.getId());
 
         final List<Subject> expectedSubjects = new ArrayList<>();
         expectedSubjects.add(subject);
@@ -135,12 +118,12 @@ public class TeachesDaoJpaTest {
     @Test
     @Rollback
     public void testGet() {
-        final Subject subjectExtra = new Subject(SUBJECT_TWO, null);
+        final Subject subjectExtra = InstanceProvider.getNewSubject(2);
         entityManager.persist(subjectExtra);
         entityManager.persist(teaches);
-        final Teaches teachesExtra = new Teaches(user, subjectExtra, PRICE, MAX_LEVEL);
+        final Teaches teachesExtra = InstanceProvider.getNewTeacher(user, subjectExtra);
         entityManager.persist(teachesExtra);
-        final List<Teaches> teachesList = teachesDao.get(USER_ID);
+        final List<Teaches> teachesList = teachesDao.get(user.getId());
 
         final List<Teaches> expectedTeachesList = new ArrayList<>();
         expectedTeachesList.add(teaches);
@@ -153,58 +136,36 @@ public class TeachesDaoJpaTest {
     @Test
     @Rollback
     public void testGetNone() {
-        final List<Teaches> teachesList = teachesDao.get(USER_ID);
+        final List<Teaches> teachesList = teachesDao.get(user.getId());
 
         Assert.assertEquals(0, teachesList.size());
     }
 
     @Test
     @Rollback
-    public void testGetMaxPrice() {
-        entityManager.persist(teaches);
-        final Teaches teachesExtra = new Teaches(user, subject, MAXPRICE, ANY_LEVEL);
-        entityManager.persist(teachesExtra);
-        final Integer maxPrice = teachesDao.getMaxPrice(USER_ID);
-
-        Assert.assertEquals(MAXPRICE, maxPrice);
-    }
-
-    @Test
-    @Rollback
-    public void testGetMinPrice() {
-        entityManager.persist(teaches);
-        final Teaches teachesExtra = new Teaches(user, subject, MAXPRICE, ANY_LEVEL);
-        entityManager.persist(teachesExtra);
-        final int minPrice = teachesDao.getMinPrice(USER_ID);
-
-        Assert.assertEquals(teaches.getPrice(), minPrice);
-    }
-
-    @Test
-    @Rollback
     public void testGetMostExpensiveUserFee() {
-        final User userExtra = new User(USERNAME_EXTRA, USER_PASS, null, USER_MAIL_EXTRA, DESCRIPTION, SCHEDULE);
+        final User userExtra = InstanceProvider.getNewUser(1);
         entityManager.persist(userExtra);
-        final Teaches teachesExtra = new Teaches(userExtra, subject, MAXPRICE, ANY_LEVEL);
+        final Teaches teachesExtra = InstanceProvider.getNewHighPriceTeaches(userExtra, subject);
         entityManager.persist(teachesExtra);
-        final Integer maxFee = teachesDao.getMostExpensiveUserFee("Mat");
+        final int maxFee = teachesDao.getMostExpensiveUserFee("Mat");
 
-        Assert.assertEquals(MAXPRICE, maxFee);
+        Assert.assertEquals(teachesExtra.getPrice(), maxFee);
     }
 
     @Test
     @Rollback
     public void testFilterUsers() {
         entityManager.persist(teaches);
-        final User userExtra = new User(USERNAME_EXTRA, USER_PASS, null, USER_MAIL_EXTRA, DESCRIPTION, SCHEDULE);
+        final User userExtra = InstanceProvider.getNewUser(1);
         entityManager.persist(userExtra);
-        final Rating rating = new Rating(RATE.floatValue(), REVIEW, user, userExtra);
+        final Rating rating = InstanceProvider.getNewHighRating(user, userExtra);
         entityManager.persist(rating);
-        final Teaches teachesExtra = new Teaches(userExtra, subject, MAXPRICE, MIN_LEVEL);
+        final Teaches teachesExtra = InstanceProvider.getNewLowLevelTeaches(userExtra, subject);
         entityManager.persist(teachesExtra);
-        final List<Object> teachersFiltered = teachesDao.filterUsers(SUBJECT_ONE, MAXPRICE, MAX_LEVEL, MAX_LEVEL, FILTER_RATE, RAND_ORDER, GET_ALL);
+        final List<Object> teachersFiltered = teachesDao.filterUsers(teaches.getSubject().getName(), FILTER_PRICE, teaches.getLevel(), teaches.getLevel(), FILTER_RATE, RAND_ORDER, GET_ALL);
 
-        final Object[] expectedTeacherInfo = new Object[] {USER_ID, USERNAME, teaches.getPrice(), teaches.getPrice(), DESCRIPTION, RATE};
+        final Object[] expectedTeacherInfo = new Object[] {user.getId(), user.getName(), teaches.getPrice(), teaches.getPrice(), user.getDescription(), rating.getRate()};
 
         teachersFiltered.forEach((teacherInfo) -> {
             Object[] teacherInfoRaw = (Object[]) teacherInfo;
@@ -220,24 +181,57 @@ public class TeachesDaoJpaTest {
     @Test
     @Rollback
     public void testGetTopRatedTeachers() {
-//        for (int i = 1; i <= 6; i++) {
-//            final User userExtra = new InstanceProvider().getNewUser(i);
-//            entityManager.persist(userExtra);
-//            final Rating rating;
-//            if (i < 6) {
-//                rating = new Rating(5f, REVIEW, userExtra, user);
-//            }
-//            else {
-//                rating = new Rating(1f, REVIEW, userExtra, user);
-//            }
-//            entityManager.persist(rating);
-//        }
-//        final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
-//
-//        for (int i = 0; i < 5; i++) {
-//            Object[] teacherInfoRaw = (Object[]) topRatedTeachers.get(i);
-//            Assert.assertEquals((long) i + 1, ((Number) teacherInfoRaw[0]).longValue());
-//        }
+        for (int i = 1; i < 6; i++) {
+            final User userExtra = InstanceProvider.getNewUser(i);
+            entityManager.persist(userExtra);
+            final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
+                    InstanceProvider.getNewLowRating(userExtra, user);
+            entityManager.persist(rating);
+            entityManager.persist(InstanceProvider.getNewTeacher(userExtra, subject));
+        }
+        final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
+
+        Assert.assertEquals(4, topRatedTeachers.size());
+        for (int i = 0; i < 4; i++) {
+            Object[] teacherInfoRaw = (Object[]) topRatedTeachers.get(i);
+            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
+        }
+    }
+
+    @Test
+    @Rollback
+    public void testGetMostRequested() {
+        for (int i = 1; i < 6; i++) {
+            final User userExtra = InstanceProvider.getNewUser(i);
+            entityManager.persist(userExtra);
+            if (i < 5) {
+                final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
+                entityManager.persist(lectureExtra);
+            }
+            entityManager.persist(InstanceProvider.getNewTeacher(userExtra, subject));
+        }
+        final List<Object> mostRequested = teachesDao.getMostRequested();
+
+        Assert.assertEquals(4, mostRequested.size());
+        for (int i = 0; i < 4; i++) {
+            Object[] teacherInfoRaw = (Object[]) mostRequested.get(i);
+            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
+        }
+    }
+
+    @Test
+    @Rollback
+    public void testGetSubjectInfoListByUser() {
+        entityManager.persist(teaches);
+        final List<Object> subjectInfoList = teachesDao.getSubjectInfoListByUser(user.getId());
+
+        Object[] subjectInfo = (Object[]) subjectInfoList.get(0);
+
+        Assert.assertEquals(1, subjectInfoList.size());
+        Assert.assertEquals((long) subject.getId(), ((Number) subjectInfo[0]).longValue());
+        Assert.assertEquals(subject.getName(), subjectInfo[1].toString());
+        Assert.assertEquals(teaches.getPrice(), ((Number) subjectInfo[2]).intValue());
+        Assert.assertEquals(teaches.getLevel(), ((Number) subjectInfo[3]).intValue());
     }
 
 }

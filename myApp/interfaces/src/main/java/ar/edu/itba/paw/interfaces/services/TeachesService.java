@@ -19,10 +19,6 @@ public interface TeachesService {
 
     Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 
-    int getMaxPrice(Long teacherId);
-
-    int getMinPrice(Long teacherId);
-
     List<Teaches> get(Long teacherId);
 
     List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset);

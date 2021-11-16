@@ -75,16 +75,11 @@ public class User {
         //Just for Hibernate
     }
 
-    // For testing
-    public User(String name, String mail, String password) {
+    // For creating user
+    public User(String name, String password, Long id, String mail, String description, String schedule){
         this.name = name;
         this.mail = mail;
         this.password = password;
-    }
-
-    // For creating user (empty description and schedule)
-    public User(String name, String password, Long id, String mail, String description, String schedule){
-        this(name, mail, password);
         this.userid = id;
         this.description = description;
         this.schedule = schedule;
@@ -307,7 +302,7 @@ public class User {
             return this;
         }
         public Builder password(String password) {
-            this.description = password;
+            this.password = password;
             return this;
         }
         //Return the finally consrcuted User object

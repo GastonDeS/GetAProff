@@ -120,16 +120,6 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
-    public int getMaxPrice(Long teacherId) {
-        return teachesDao.getMaxPrice(teacherId);
-    }
-
-    @Override
-    public int getMinPrice(Long teacherId) {
-        return teachesDao.getMinPrice(teacherId);
-    }
-
-    @Override
     public List<Teaches> get(Long teacherId) {
         return teachesDao.get(teacherId);
     }
