@@ -4,6 +4,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "classes")
@@ -186,6 +187,20 @@ public class Lecture {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Lecture)) return false;
+        Lecture aux = (Lecture) object;
+        return aux.subject.equals(this.subject)
+                && aux.student.equals(this.student)
+                && aux.teacher.equals(this.teacher)
+                && aux.classId.equals(this.classId)
+                && aux.status == this.status
+                && aux.level == this.level
+                && aux.price == this.price;
     }
 
     public static class Builder

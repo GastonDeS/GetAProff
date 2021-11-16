@@ -24,6 +24,7 @@ public class InstanceProvider {
     private static final Integer MINPRICE = 550;
     private static final Float HIGH_RATE = 5f;
     private static final Float LOW_RATE = 1f;
+    private static final Integer STATUS = 1;
     private static final Float FILTER_RATE = 3f;
     private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, GET_ALL = 0;
 
@@ -76,6 +77,10 @@ public class InstanceProvider {
 
     public static Lecture getNewLecture(User teacher, User student, Subject subject) {
         return new Lecture.Builder(teacher, student, subject).build();
+    }
+
+    public static Lecture getNewStatusLecture(User teacher, User student, Subject subject) {
+        return new Lecture.Builder(teacher, student, subject).status(STATUS).build();
     }
 
 }
