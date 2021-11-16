@@ -1,9 +1,10 @@
-package ar.edu.itba.paw.persistence.config;
+package ar.edu.itba.paw.persistence.providers;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
