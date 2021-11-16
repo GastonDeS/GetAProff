@@ -28,20 +28,28 @@ public class Subject {
         this.name = name;
     }
 
-    public Long getId() {
-        return subjectId;
-    }
-
-    public void setId(Long id) {
-        this.subjectId = id;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public List<Teaches> getTeachersTeachingSubject() {
+        return teachersTeachingSubject;
+    }
+
+    public void setTeachersTeachingSubject(List<Teaches> teachersTeachingSubject) {
+        this.teachersTeachingSubject = teachersTeachingSubject;
     }
 
     @Override
