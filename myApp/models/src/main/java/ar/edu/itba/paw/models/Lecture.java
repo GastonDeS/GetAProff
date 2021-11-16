@@ -4,6 +4,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "classes")
@@ -59,6 +60,17 @@ public class Lecture {
         this.status = Status.PENDING.value;
         this.studentLastTime = studentLastTime;
         this.teacherLastTime = teacherLastTime;
+    }
+
+    private Lecture(Builder builder) {
+        this.teacher = builder.teacher;
+        this.student = builder.student;
+        this.subject = builder.subject;
+        this.level = builder.level;
+        this.price = builder.price;
+        this.status = builder.status;
+        this.studentLastTime = builder.studentLastTime;
+        this.teacherLastTime = builder.teacherLastTime;
     }
 
     public Integer getNotifications() {
@@ -175,5 +187,69 @@ public class Lecture {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Lecture)) return false;
+        Lecture aux = (Lecture) object;
+        return aux.subject.equals(this.subject)
+                && aux.student.equals(this.student)
+                && aux.teacher.equals(this.teacher)
+                && aux.classId.equals(this.classId)
+                && aux.status == this.status
+                && aux.level == this.level
+                && aux.price == this.price;
+    }
+
+    public static class Builder
+    {
+        private User teacher, student;
+        private Subject subject;
+        private int level, price, status;
+        private Timestamp studentLastTime, teacherLastTime;
+
+        public Builder(User teacher, User student, Subject subject) {
+            this.teacher = teacher;
+            this.student = student;
+            this.subject = subject;
+        }
+        public Builder teacher(User teacher) {
+            this.teacher = teacher;
+            return this;
+        }
+        public Builder student(User student) {
+            this.student = student;
+            return this;
+        }
+        public Builder subject(Subject subject) {
+            this.subject = subject;
+            return this;
+        }
+        public Builder level(int level) {
+            this.level = level;
+            return this;
+        }
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+        public Builder status(int status) {
+            this.status = status;
+            return this;
+        }
+        public Builder studentLastTime(Timestamp studentLastTime) {
+            this.studentLastTime = studentLastTime;
+            return this;
+        }
+        public Builder teacherLastTime(Timestamp teacherLastTime) {
+            this.teacherLastTime = teacherLastTime;
+            return this;
+        }
+        //Return the finally consrcuted User object
+        public Lecture build() {
+            return new Lecture(this);
+        }
     }
 }

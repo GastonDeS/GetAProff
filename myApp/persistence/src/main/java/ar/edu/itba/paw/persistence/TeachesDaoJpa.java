@@ -67,20 +67,6 @@ public class TeachesDaoJpa implements TeachesDao {
     }
 
     @Override
-    public int getMaxPrice(Long teacherId) {
-        final Query query = entityManager.createNativeQuery("select max(t.price) from Teaches t where t.userid = :userid group by t.userid");
-        query.setParameter("userid", teacherId);
-        return ((Number) query.getSingleResult()).intValue();
-    }
-
-    @Override
-    public int getMinPrice(Long teacherId) {
-        final Query query = entityManager.createNativeQuery("select min(t.price) from Teaches t where t.userid = :userid group by t.userid");
-        query.setParameter("userid", teacherId);
-        return ((Number) query.getSingleResult()).intValue();
-    }
-
-    @Override
     public Integer getMostExpensiveUserFee(String searchedSubject) {
         final Query query = entityManager.createNativeQuery("select max(t.price) from Teaches t JOIN Subject s ON t.subjectid = s.subjectid  where LOWER(s.name) LIKE :name");
         query.setParameter("name", "%"+searchedSubject.toLowerCase()+"%");
