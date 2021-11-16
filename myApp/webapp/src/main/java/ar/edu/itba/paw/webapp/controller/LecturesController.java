@@ -312,7 +312,7 @@ public class LecturesController {
         if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        Lecture newLecture = lectureService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
+        Lecture newLecture = lectureService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getSubjectId(), t.get().getPrice());
         String url;
         URL requestURL;
         try {
