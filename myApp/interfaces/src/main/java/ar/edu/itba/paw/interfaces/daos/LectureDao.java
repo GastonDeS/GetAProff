@@ -27,9 +27,9 @@ public interface LectureDao {
 
     int setStatus(Long classId, int status);
 
-    public Integer getNotificationsCount( Long classId, int role);
+    Integer getNotificationsCount( Long classId, int role);
 
-    void refreshTime(Long classId,int role);
+    int refreshTime(Long classId,int role);
 
     int addSharedFileToLecture(Long subjectFileId, Long lectureId);
 

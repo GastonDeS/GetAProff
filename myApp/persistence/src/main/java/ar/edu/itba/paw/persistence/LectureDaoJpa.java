@@ -109,7 +109,7 @@ public class LectureDaoJpa implements LectureDao {
     }
 
     @Override
-    public void refreshTime(Long classId, int role) {
+    public int refreshTime(Long classId, int role) {
         final Query query;
         if (role == 0) {
             query = entityManager.createQuery("update Lecture set teacherLastTime = CURRENT_TIMESTAMP where classId = :classId");
@@ -117,7 +117,7 @@ public class LectureDaoJpa implements LectureDao {
             query = entityManager.createQuery("update Lecture set studentLastTime = CURRENT_TIMESTAMP where classId = :classId");
         }
         query.setParameter("classId", classId);
-        query.executeUpdate();
+        return query.executeUpdate();
     }
 
     @Override
@@ -143,7 +143,6 @@ public class LectureDaoJpa implements LectureDao {
     @Override
     public List<SubjectFile> getSharedFilesByTeacher(Long lectureId) {
         final Lecture currentLecture = entityManager.getReference(Lecture.class, lectureId);
-        System.out.println("SIZE PERSISTENCE + " + currentLecture.getSharedFilesByTeacher().size());
         return currentLecture.getSharedFilesByTeacher();
     }
 }

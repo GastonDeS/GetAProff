@@ -184,8 +184,7 @@ public class LecturesController {
         if (!maybeClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + classId);
         }
-        System.out.println("SIZE :" + lectureService.getSharedFilesByTeacher(maybeClass.get().getClassId()).size());
-        lectureService.refreshTime(maybeClass.get().getClassId(), maybeUser.get().getId().equals(maybeClass.get().getTeacher().getId()) ?0:1);
+        lectureService.refreshTime(maybeClass.get().getClassId(), maybeUser.get().getId().equals(maybeClass.get().getTeacher().getId()) ? 0  : 1);
         return new ModelAndView("classroom")
                 .addObject("currentUser", maybeUser.get())
                 .addObject("currentClass", maybeClass.get())

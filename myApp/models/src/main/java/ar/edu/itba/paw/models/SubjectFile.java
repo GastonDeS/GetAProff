@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,6 +46,15 @@ public class SubjectFile {
         this.fileId = fileId;
         this.level = level;
         this.subject = subject;
+    }
+
+    private SubjectFile(Builder builder) {
+        this.fileOwner = builder.fileOwner;
+        this.fileName = builder.fileName;
+        this.subject = builder.subject;
+        this.level = builder.level;
+        this.fileId = builder.fileId;
+        this.file = builder.file;
     }
 
     public User getFileOwner() {
@@ -93,6 +103,46 @@ public class SubjectFile {
 
     public void setFile(byte[] file) {
         this.file = file;
+    }
+
+    public static class Builder
+    {
+        private User fileOwner;
+        private Subject subject;
+        private Long fileId;
+        private String fileName;
+        private byte[] file;
+        private Integer level;
+
+        public Builder() {
+        }
+        public Builder fileOwner(User fileOwner) {
+            this.fileOwner = fileOwner;
+            return this;
+        }
+        public Builder subject(Subject subject) {
+            this.subject = subject;
+            return this;
+        }
+        public Builder fileId(Long fileId) {
+            this.fileId = fileId;
+            return this;
+        }
+        public Builder fileName(String fileName) {
+            this.fileName = fileName;
+            return this;
+        }
+        public Builder file(byte[] file) {
+            this.file = file;
+            return this;
+        }
+        public Builder level(Integer level) {
+            this.level = level;
+            return this;
+        }
+        public SubjectFile build() {
+            return new SubjectFile(this);
+        }
     }
 }
 

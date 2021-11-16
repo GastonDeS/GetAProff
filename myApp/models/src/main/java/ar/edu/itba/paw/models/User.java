@@ -305,7 +305,6 @@ public class User {
             this.password = password;
             return this;
         }
-        //Return the finally consrcuted User object
         public User build() {
             return new User(this);
         }
