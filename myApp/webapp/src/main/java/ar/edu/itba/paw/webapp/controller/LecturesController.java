@@ -196,13 +196,33 @@ public class LecturesController {
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
     public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
-                                    final BindingResult errors) throws IOException {
+                                    final BindingResult errors, HttpServletRequest request) throws IOException {
         if (form.getMessage().isEmpty() && form.getFile().isEmpty()) errors.rejectValue("message", "form.upload.empty");
         if (errors.hasErrors()) return accessClassroom(classId, form);
         Optional<User> maybeUser = userService.getCurrentUser();
         if (!maybeUser.isPresent())
             throw new NoUserLoggedException("exception.not.logger.user");
         postService.post(maybeUser.get().getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
+        String url;
+        URL requestURL;
+        try {
+            requestURL = new URL(request.getRequestURL().toString());
+        } catch (MalformedURLException exception) {
+            throw new OperationFailedException("exception.failed");
+        }
+        url = requestURL.toString();
+        String path = "/classroom";
+        int index = url.indexOf(path);
+        String localAddr = url.substring(0, index);
+        Optional<Lecture> myLecture = lectureService.findById(classId);
+        if (!myLecture.isPresent()) {
+            throw new ClassNotFoundException("No class found for class id " + classId);
+        }
+        try {
+            emailService.sendNewPostMessage(maybeUser.get(), myLecture.get(), localAddr);
+        } catch (RuntimeException exception) {
+            throw new OperationFailedException("exception");
+        }
         return new ModelAndView("redirect:/classroom/" + classId);
     }
 
