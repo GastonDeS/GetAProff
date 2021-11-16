@@ -145,7 +145,7 @@ public class LectureDaoJpaTest {
     @Rollback
     public void testCreate() {
         final Lecture expectedLecture = InstanceProvider.getNewStatusLecture(teacher, student, subject);
-        lectureDao.create(student.getId(), teacher.getId(), expectedLecture.getLevel(), subject.getId(), expectedLecture.getPrice());
+        lectureDao.create(student.getId(), teacher.getId(), expectedLecture.getLevel(), subject.getSubjectId(), expectedLecture.getPrice());
         entityManager.flush();
 
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,"classes"));
