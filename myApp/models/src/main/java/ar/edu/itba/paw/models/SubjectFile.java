@@ -19,8 +19,8 @@ public class SubjectFile {
     @Column
     private byte[] file;
 
-    @ManyToOne(targetEntity = Teaches.class)
-    @JoinColumns({
+    @ManyToOne(targetEntity = Teaches.class, fetch = FetchType.LAZY)
+    @JoinColumns(value = {
         @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),
         @JoinColumn(name = "subjectLevel", referencedColumnName = "level"),
         @JoinColumn(name = "userid", referencedColumnName = "userid")
