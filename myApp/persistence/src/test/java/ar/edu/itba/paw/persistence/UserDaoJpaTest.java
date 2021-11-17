@@ -28,7 +28,7 @@ import java.util.Optional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class UserDaoJPATest {
+public class UserDaoJpaTest {
 
     @Autowired
     private UserDao userDao;

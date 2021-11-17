@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.providers;
 import ar.edu.itba.paw.models.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -23,6 +24,7 @@ public class InstanceProvider {
     private static final Float LOW_RATE = 1f;
     private static final Integer STATUS = 1;
     private static final Integer ANY_LEVEL = 0;
+    private static final String FILENAME = "FILENAME";
 
     public InstanceProvider() {
         //
@@ -72,18 +74,29 @@ public class InstanceProvider {
     }
 
     public static Lecture getNewLecture(User teacher, User student, Subject subject) {
-        return new Lecture.Builder(teacher, student, subject).sharedFilesByTeacher(new ArrayList<>()).build();
+        return new Lecture.Builder(teacher, student, subject).sharedFilesByTeacher(new ArrayList<>())
+                .price(PRICE).level(ANY_LEVEL)
+                .studentLastTime(Timestamp.from(Instant.now()))
+                .teacherLastTime(Timestamp.from(Instant.now()))
+                .build();
     }
 
     public static Lecture getNewStatusLecture(User teacher, User student, Subject subject) {
-        return new Lecture.Builder(teacher, student, subject).status(STATUS).build();
+        return new Lecture.Builder(teacher, student, subject).status(STATUS)
+                .price(PRICE).level(ANY_LEVEL)
+                .studentLastTime(Timestamp.from(Instant.now()))
+                .teacherLastTime(Timestamp.from(Instant.now()))
+                .build();
     }
 
     public static Lecture getNewTimeLecture(User teacher, User student, Subject subject) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, -1);
         Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
-        return new Lecture.Builder(teacher, student, subject).teacherLastTime(timestamp).build();
+        return new Lecture.Builder(teacher, student, subject).teacherLastTime(timestamp)
+                .price(PRICE).level(ANY_LEVEL)
+                .studentLastTime(Timestamp.from(Instant.now()))
+                .build();
     }
 
     public static Post getNewPost(User uploader, Lecture lecture) {
@@ -94,7 +107,10 @@ public class InstanceProvider {
     }
 
     public static SubjectFile getNewSubjectFile(Teaches teachesInfo) {
-        return new SubjectFile.Builder().teachesInfo(teachesInfo).build();
+        return new SubjectFile.Builder().teachesInfo(teachesInfo)
+                .file(new byte[]{})
+                .fileName(FILENAME)
+                .build();
     }
 
 }
