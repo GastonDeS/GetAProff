@@ -50,6 +50,18 @@ public class Post {
         this.time = time;
     }
 
+    private Post(Builder builder) {
+        this.postId = builder.postId;
+        this.associatedLecture = builder.associatedLecture;
+        this.uploader = builder.uploader;
+        this.message = builder.message;
+        this.filename = builder.filename;
+        this.file = builder.file;
+        this.type = builder.type;
+        this.time = builder.time;
+    }
+
+
     public Timestamp getTime() {
         return time;
     }
@@ -112,5 +124,53 @@ public class Post {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public static class Builder
+    {
+        private User uploader;
+        private Lecture associatedLecture;
+        private Long postId;
+        private Timestamp time;
+        private String message, filename, type;
+        private byte[] file;
+
+        public Builder() {
+        }
+        public Builder uploader(User uploader) {
+            this.uploader = uploader;
+            return this;
+        }
+        public Builder associatedLecture(Lecture associatedLecture) {
+            this.associatedLecture = associatedLecture;
+            return this;
+        }
+        public Builder postId(Long postId) {
+            this.postId = postId;
+            return this;
+        }
+        public Builder message(String message) {
+            this.message = message;
+            return this;
+        }
+        public Builder filename(String filename) {
+            this.filename = filename;
+            return this;
+        }
+        public Builder type(String type) {
+            this.type = type;
+            return this;
+        }
+        public Builder file(byte[] file) {
+            this.file = file;
+            return this;
+        }
+        public Builder time(Timestamp time) {
+            this.time = time;
+            return this;
+        }
+        public Post build() {
+            return new Post(this);
+        }
     }
 }

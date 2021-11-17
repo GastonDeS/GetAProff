@@ -39,7 +39,7 @@ public class LectureServiceImpl implements LectureService {
         } else {
             lectureList.addAll(lectureDao.findClassesByStudentAndStatus(studentId, status));
         }
-        lectureList.forEach((e) -> e.setNotifications(getNotificationsCount(e.getClassId(),1)));
+        lectureList.forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),1)));
         Collections.reverse(lectureList);
         return lectureList;
     }
@@ -55,15 +55,15 @@ public class LectureServiceImpl implements LectureService {
         }else {
             lectureList.addAll(lectureDao.findClassesByTeacherAndStatus(teacherId, status));
         }
-        lectureList.forEach((e) -> {e.setNotifications(getNotificationsCount(e.getClassId(),0));});
+        lectureList.forEach((e) -> {e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),0));});
         Collections.reverse(lectureList);
         return lectureList;
     }
 
     @Transactional
     @Override
-    public Lecture create(Long studentId, Long teacherId, int level, Long subjectId, int price) {
-        return lectureDao.create(studentId, teacherId, level, subjectId, price);
+    public Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price) {
+        return Optional.ofNullable(lectureDao.create(studentId, teacherId, level, subjectId, price));
     }
 
     @Transactional
@@ -72,15 +72,10 @@ public class LectureServiceImpl implements LectureService {
         return lectureDao.setStatus(classId, status);
     }
 
-    @Override
-    public Integer getNotificationsCount( Long classId, int role) {
-        return lectureDao.getNotificationsCount( classId, role);
-    }
-
     @Transactional
     @Override
-    public void refreshTime(Long classId, int role) {
-        lectureDao.refreshTime(classId, role);
+    public int refreshTime(Long classId, int role) {
+        return lectureDao.refreshTime(classId, role);
     }
 
     @Transactional

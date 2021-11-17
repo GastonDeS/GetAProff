@@ -54,9 +54,6 @@ public class LecturesController {
     @Autowired
     private TeachesService teachesService;
 
-    @Autowired
-    private SubjectService subjectService;
-
     @RequestMapping("/myClasses?error=true")
     public ModelAndView myClassesError() {
         return myClasses("requested", 3);
@@ -64,17 +61,14 @@ public class LecturesController {
 
     @RequestMapping(value = "/myClasses/{type}/{status}", method = RequestMethod.GET)
     public ModelAndView myClasses(@PathVariable("type") String type, @PathVariable("status") Integer status) {
-        Optional<User> user = userService.getCurrentUser();
-        if (!user.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user");
-        }
+        User currentUser = checkCurrentUser();
         if (status < 0 || status > 3) {
             throw new InvalidParameterException("exception.invalid.parameter");
         }
-        Long userId = user.get().getId();
+        Long userId = currentUser.getId();
         LOGGER.debug("Accessing classes of user with id: " + userId);
         final ModelAndView mav = new ModelAndView("classes")
-                .addObject("user", user.get());
+                .addObject("user", currentUser);
         List<Lecture> lecturesList;
         if (type.equals("requested")) {
             lecturesList = lectureService.findClassesByStudentAndStatus(userId, status);
@@ -90,32 +84,19 @@ public class LecturesController {
 
     @RequestMapping(value = "/myClasses/{from}/{cid}/{status}", method = RequestMethod.POST)
     public ModelAndView classesStatusChange(@PathVariable("from") final int from, @PathVariable("cid") final Long cid, @PathVariable final String status, HttpServletRequest request) throws MalformedURLException {
-        Optional<Lecture> myClass = lectureService.findById(cid);
-        if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + cid);
-        }
+        Lecture currentLecture = checkLectureExistence(cid);
         int intStatus = Lecture.Status.valueOf(status).getValue();
         String offered = "offered";
         lectureService.setStatus(cid, intStatus);
-        myClass.get().setStatus(intStatus);
-        String url;
-        URL requestURL;
+        currentLecture.setStatus(intStatus);
+        String localAddress = localAddress(request, "/myClasses");
         try {
-            requestURL = new URL(request.getRequestURL().toString());
-        } catch (MalformedURLException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        url = requestURL.toString();
-        String path = "/myClasses";
-        int index = url.indexOf(path);
-        String localAddr = url.substring(0, index);
-        try {
-            emailService.sendStatusChangeMessage(myClass.get(), localAddr);
+            emailService.sendStatusChangeMessage(currentLecture, localAddress);
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Lecture " + cid + "changed to status " + status);
-        if (from != 0){
+        if (from != 0) {
             return new ModelAndView("redirect:/classroom/" + cid);
         }
         if (intStatus > 2){
@@ -124,17 +105,14 @@ public class LecturesController {
             }
             intStatus = 2;
         }
-        return new ModelAndView("redirect:/myClasses/" + offered +"/" + intStatus);
+        return new ModelAndView("redirect:/myClasses/" + offered + "/" + intStatus);
     }
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final Long cid) {
         final ModelAndView mav = new ModelAndView("rateForm");
-        Optional<Lecture> myClass = lectureService.findById(cid);
-        if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + cid);
-        }
-        Optional<User> teacher = userService.findById(myClass.get().getTeacher().getId());
+        Lecture currentLecture = checkLectureExistence(cid);
+        Optional<User> teacher = userService.findById(currentLecture.getTeacher().getId());
         if (!teacher.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
@@ -147,50 +125,33 @@ public class LecturesController {
         if (errors.hasErrors()) {
             return rateForm(form, cid);
         }
-        Optional<Lecture> myClass = lectureService.findById(cid);
-        if (!myClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + cid);
-        }
+        Lecture currentLecture = checkLectureExistence(cid);
         lectureService.setStatus(cid, Lecture.Status.RATED.getValue());
-        myClass.get().setStatus(Lecture.Status.RATED.getValue());
-        //TODO: chequear si se agrego
-        ratingService.addRating(myClass.get().getTeacher(), myClass.get().getStudent(), form.getRating().floatValue(), form.getReview());
-        String url;
-        URL requestURL;
+        currentLecture.setStatus(Lecture.Status.RATED.getValue());
+        Optional<Rating> newRating = ratingService.addRating(currentLecture.getTeacher(), currentLecture.getStudent(), form.getRating().floatValue(), form.getReview());
+        if (!newRating.isPresent()) throw new OperationFailedException("exception.failed");
+        String localAddress = localAddress(request, "/rate");
         try {
-            requestURL = new URL(request.getRequestURL().toString());
-        } catch (MalformedURLException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        url = requestURL.toString();
-        String path = "/rate";
-        int index = url.indexOf(path);
-        String localAddr = url.substring(0, index);
-        try {
-            emailService.sendRatedMessage(myClass.get(), form.getRating(), form.getReview(), localAddr);
+            emailService.sendRatedMessage(currentLecture, form.getRating(), form.getReview(), localAddress);
         } catch (MailNotSentException exception) {
             throw new OperationFailedException("exception.failed");
         }
-        LOGGER.debug("Lecture rated by student " + myClass.get().getStudent().getId() + " for teacher " + myClass.get().getTeacher().getId());
+        LOGGER.debug("Lecture rated by student " + currentLecture.getStudent().getId() + " for teacher " + currentLecture.getTeacher().getId());
         return new ModelAndView("redirect:/myClasses/requested/2");
     }
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
     public ModelAndView accessClassroom(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
-        Optional<User> maybeUser = userService.getCurrentUser();
-        if (!maybeUser.isPresent())
-            throw new NoUserLoggedException("exception.not.logger.user");
-        Optional<Lecture> maybeClass = lectureService.findById(classId);
-        if (!maybeClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + classId);
-        }
-        System.out.println("SIZE :" + lectureService.getSharedFilesByTeacher(maybeClass.get().getClassId()).size());
-        lectureService.refreshTime(maybeClass.get().getClassId(), maybeUser.get().getId().equals(maybeClass.get().getTeacher().getId()) ?0:1);
+        Lecture currentLecture = checkLectureExistence(classId);
+        User currentUser = checkCurrentUser();
+        checkAccessToClassroom(currentUser, currentLecture);
+        if (currentLecture.getStatus() >= 3) throw new ClassNotFoundException("No class found for class id " + classId);
+        lectureService.refreshTime(currentLecture.getClassId(), currentUser.getId().equals(currentLecture.getTeacher().getId()) ? 0  : 1);
         return new ModelAndView("classroom")
-                .addObject("currentUser", maybeUser.get())
-                .addObject("currentClass", maybeClass.get())
-                .addObject("sharedFiles",lectureService.getSharedFilesByTeacher(maybeClass.get().getClassId()))
-                .addObject("teacherFiles", lectureService.getFilesNotSharedInLecture(classId,maybeClass.get().getTeacher().getId()))
+                .addObject("currentUser", currentUser)
+                .addObject("currentClass", currentLecture)
+                .addObject("sharedFiles",lectureService.getSharedFilesByTeacher(currentLecture.getClassId()))
+                .addObject("teacherFiles", lectureService.getFilesNotSharedInLecture(classId, currentLecture.getTeacher().getId()))
                 .addObject("posts", postService.retrievePosts(classId));
     }
 
@@ -199,10 +160,21 @@ public class LecturesController {
                                     final BindingResult errors, HttpServletRequest request) throws IOException {
         if (form.getMessage().isEmpty() && form.getFile().isEmpty()) errors.rejectValue("message", "form.upload.empty");
         if (errors.hasErrors()) return accessClassroom(classId, form);
-        Optional<User> maybeUser = userService.getCurrentUser();
-        if (!maybeUser.isPresent())
-            throw new NoUserLoggedException("exception.not.logger.user");
-        postService.post(maybeUser.get().getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
+        Lecture currentLecture = checkLectureExistence(classId);
+        User currentUser = checkCurrentUser();
+        checkAccessToClassroom(currentUser, currentLecture);
+        Optional<Post> maybePost = postService.post(currentUser.getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
+        if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
+        String localAddress = localAddress(request, "/classroom");
+        try {
+            emailService.sendNewPostMessage(currentUser, currentLecture, localAddress);
+        } catch (RuntimeException exception) {
+            throw new OperationFailedException("exception");
+        }
+        return new ModelAndView("redirect:/classroom/" + classId);
+    }
+
+    private String localAddress(HttpServletRequest request, String path) {
         String url;
         URL requestURL;
         try {
@@ -211,29 +183,37 @@ public class LecturesController {
             throw new OperationFailedException("exception.failed");
         }
         url = requestURL.toString();
-        String path = "/classroom";
         int index = url.indexOf(path);
-        String localAddr = url.substring(0, index);
-        Optional<Lecture> myLecture = lectureService.findById(classId);
-        if (!myLecture.isPresent()) {
+        return url.substring(0, index);
+    }
+
+    private User checkCurrentUser() {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent())
+            throw new NoUserLoggedException("exception.not.logger.user");
+        return maybeUser.get();
+    }
+
+    private Lecture checkLectureExistence(Long classId) {
+        Optional<Lecture> maybeClass = lectureService.findById(classId);
+        if (!maybeClass.isPresent()) {
             throw new ClassNotFoundException("No class found for class id " + classId);
         }
-        try {
-            emailService.sendNewPostMessage(maybeUser.get(), myLecture.get(), localAddr);
-        } catch (RuntimeException exception) {
-            throw new OperationFailedException("exception");
+        return maybeClass.get();
+    }
+
+    private void checkAccessToClassroom(User currentUser, Lecture lecture) {
+        if (!(currentUser.getId().equals(lecture.getTeacher().getId()) || currentUser.getId().equals(lecture.getStudent().getId()))) {
+            throw new ClassNotFoundException("No class found for class id " + lecture.getClassId());
         }
-        return new ModelAndView("redirect:/classroom/" + classId);
     }
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST, params = "sharedFiles")
     public ModelAndView shareFile(@PathVariable("classId") final Long classId, Long[] sharedFiles) {
-        Optional<User> maybeUser = userService.getCurrentUser();
-        if (!maybeUser.isPresent())
-            throw new NoUserLoggedException("exception.not.logger.user");
+        User currentUser = checkCurrentUser();
+        Lecture currentLecture = checkLectureExistence(classId);
+        checkAccessToClassroom(currentUser, currentLecture);
         for(Long fileId : sharedFiles) {
-            System.out.println("File id " + fileId);
-            //TODO chequear errores
             lectureService.addSharedFileToLecture(fileId,classId);
         }
         return new ModelAndView("redirect:/classroom/" + classId);
@@ -241,16 +221,12 @@ public class LecturesController {
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST, params = "filesToStopSharing")
     public ModelAndView stopSharingFiles(@PathVariable("classId") final Long classId, @RequestParam("filesToStopSharing") Long[] filesToStopSharing) {
-        Optional<User> maybeUser = userService.getCurrentUser();
-        if (!maybeUser.isPresent())
-            throw new NoUserLoggedException("exception.not.logger.user");
+        User currentUser = checkCurrentUser();
+        Lecture currentLecture = checkLectureExistence(classId);
+        checkAccessToClassroom(currentUser, currentLecture);
         for(Long fileId : filesToStopSharing) {
-            lectureService.stopSharingFileInLecture(fileId,classId);
-            System.out.println("file unshared" + fileId);
+            lectureService.stopSharingFileInLecture(fileId, classId);
         }
-
-        for(SubjectFile sf : lectureService.getFilesNotSharedInLecture(classId, maybeUser.get().getId()))
-            System.out.println("aaa " + sf.getFileName() );
         return new ModelAndView("redirect:/classroom/" + classId);
     }
 
@@ -268,7 +244,6 @@ public class LecturesController {
 
     @RequestMapping(value = "/classFile/{classId}/{fileId}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> openTeacherFile(@PathVariable("classId") final Long classId, @PathVariable("fileId") final Long fileId) {
-
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -282,22 +257,19 @@ public class LecturesController {
     public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final Long uid) {
         final ModelAndView mav = new ModelAndView("contactForm");
         Optional<User> maybeUser = userService.findById(uid);
-        Optional<User> curr = userService.getCurrentUser();
-        if (!curr.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user");
-        }
-        if (!maybeUser.isPresent()) {
+        User currentUser = checkCurrentUser();
+        if (!maybeUser.isPresent() || maybeUser.get().getId().equals(currentUser.getId())) {
             throw new InvalidOperationException("exception.invalid");
         }
-        LOGGER.debug("User {} contacting teacher {}", curr.get().getId(), uid);
+        LOGGER.debug("User {} contacting teacher {}", currentUser.getId(), uid);
         mav.addObject("user", maybeUser.get());
         List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
         List<SubjectInfo> subjectNames = new ArrayList<>(subjectsGiven);
         Set<String> unique = new HashSet<>();
         subjectNames.removeIf(e -> !unique.add(e.getName()));
-        mav.addObject("names",subjectNames);
+        mav.addObject("names", subjectNames);
         mav.addObject("subjects", subjectsGiven);
-        mav.addObject("currentUid", curr.get().getId());
+        mav.addObject("currentUid", currentUser.getId());
         return mav;
     }
 
@@ -307,30 +279,21 @@ public class LecturesController {
         if (errors.hasErrors()) {
             return contactForm(form, uid);
         }
+        User currentUser = checkCurrentUser();
         Optional<User> user = userService.findById(uid);
-        Optional<User> curr = userService.getCurrentUser();
         Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.valueOf(form.getSubject()), Integer.parseInt(form.getLevel())%10);
-        if (!t.isPresent() || !user.isPresent() || !curr.isPresent()) {
+        if (!t.isPresent() || !user.isPresent() || user.get().getId().equals(currentUser.getId())) {
             throw new InvalidOperationException("exception.invalid");
         }
-        Lecture newLecture = lectureService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getId(), t.get().getPrice());
-        String url;
-        URL requestURL;
+        Optional<Lecture> newLecture = lectureService.create(currentUser.getId(), uid, t.get().getLevel(), t.get().getSubject().getSubjectId(), t.get().getPrice());
+        if (!newLecture.isPresent()) throw new OperationFailedException("exception.failed");
+        String localAddress = localAddress(request, "/contact");
         try {
-            requestURL = new URL(request.getRequestURL().toString());
-        } catch (MalformedURLException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        url = requestURL.toString();
-        String path = "/contact";
-        int index = url.indexOf(path);
-        String localAddr = url.substring(0, index);
-        try {
-            emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName(), localAddr);
+            emailService.sendNewClassMessage(user.get().getMail(), currentUser.getName(), t.get().getSubject().getName(), localAddress);
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
-        LOGGER.debug("User {} requested class from teacher {}", curr.get().getId(), uid);
-        return new ModelAndView("redirect:/classroom/" + newLecture.getClassId().toString());
+        LOGGER.debug("User {} requested class from teacher {}", currentUser.getId(), uid);
+        return new ModelAndView("redirect:/classroom/" + newLecture.get().getClassId().toString());
     }
 }

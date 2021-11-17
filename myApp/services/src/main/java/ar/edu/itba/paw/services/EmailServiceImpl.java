@@ -74,7 +74,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendStatusChangeMessage(Lecture myLecture, String localAddr) {
         Optional<User> maybeS = userService.findById(myLecture.getStudent().getId());
         Optional<User> maybeT = userService.findById(myLecture.getTeacher().getId());
-        Optional<Subject> maybeSub = subjectService.findById(myLecture.getSubject().getId());
+        Optional<Subject> maybeSub = subjectService.findById(myLecture.getSubject().getSubjectId());
         if (!maybeS.isPresent() || !maybeT.isPresent() || !maybeSub.isPresent()) {
             throw new NoSuchElementException();
         }
@@ -130,7 +130,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendRatedMessage(Lecture myLecture, int rating, String review, String localAddr) {
         Optional<User> student = userService.findById(myLecture.getStudent().getId());
         Optional<User> teacher = userService.findById(myLecture.getTeacher().getId());
-        Optional<Subject> mySubject = subjectService.findById(myLecture.getSubject().getId());
+        Optional<Subject> mySubject = subjectService.findById(myLecture.getSubject().getSubjectId());
         if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
             throw new NoSuchElementException();
         }

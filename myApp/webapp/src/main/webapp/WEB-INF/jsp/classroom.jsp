@@ -136,27 +136,31 @@
         </div>
         <div class="classroom-center-panel">
             <%--                UPLOAD POST--%>
-            <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
-            <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post"
-                       enctype="multipart/form-data" cssClass="class-content upload-box">
-                <div class="form-input-container" style="width: 94%">
-                    <form:textarea type="text" cssClass="form-control"
-                                   cssStyle="height: 20vh; resize: none;" path="message"
-                                   placeholder="${enterMessagePlaceholder}"/>
-                    <form:errors path="message" element="p" cssClass="form-error"/>
-                </div>
-                <div class="file-upload" style="justify-content: space-between">
-                    <div style="display: flex;flex-direction: row; justify-content: center;align-items: center">
-                        <label class="btn btn-custom">
-                            <form:input type="file" accept="image/*,.pdf" name="file" style="display: none" path="file"
-                                        id="file"/>
-                            <spring:message code="class.upload.file"/>
-                        </label>
-                        <p style="margin: 0 5px 0" id="fileName"></p>
+            <c:if test="${currentClass.status != statusFinished}">
+                <c:url value="/classroom/${currentClass.classId}" var="classroomURL"/>
+                <form:form name="form" modelAttribute="classUploadForm" action="${classroomURL}" method="post"
+                           enctype="multipart/form-data" cssClass="class-content upload-box">
+                    <div class="form-input-container" style="width: 94%">
+                        <form:textarea type="text" cssClass="form-control"
+                                       cssStyle="height: 20vh; resize: none;" path="message"
+                                       placeholder="${enterMessagePlaceholder}"/>
+                        <form:errors path="message" element="p" cssClass="form-error"/>
                     </div>
-                    <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
-                </div>
-            </form:form>
+                    <div class="file-upload" style="justify-content: space-between">
+                        <div style="display: flex;flex-direction: row; justify-content: center;align-items: center">
+                            <label class="btn btn-custom">
+                                <form:input type="file" accept="image/*,.pdf" name="file" style="display: none"
+                                            path="file"
+                                            id="file"/>
+                                <spring:message code="class.upload.file"/>
+                            </label>
+                            <p style="margin: 0 5px 0" id="fileName"></p>
+                        </div>
+                        <input type="submit" class="btn btn-custom" value=${publishPlaceholder}>
+                    </div>
+                </form:form>
+            </c:if>
+
             <%--                FIN DE UPLOAD POST--%>
             <%--                Fin de status fronnt--%>
             <%--            POSTS--%>

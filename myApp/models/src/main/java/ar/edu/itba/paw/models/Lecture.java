@@ -3,8 +3,8 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "classes")
@@ -60,9 +60,11 @@ public class Lecture {
         this.status = Status.PENDING.value;
         this.studentLastTime = studentLastTime;
         this.teacherLastTime = teacherLastTime;
+        this.sharedFilesByTeacher = new ArrayList<>();
     }
 
     private Lecture(Builder builder) {
+        this.classId = builder.classId;
         this.teacher = builder.teacher;
         this.student = builder.student;
         this.subject = builder.subject;
@@ -71,6 +73,7 @@ public class Lecture {
         this.status = builder.status;
         this.studentLastTime = builder.studentLastTime;
         this.teacherLastTime = builder.teacherLastTime;
+        this.sharedFilesByTeacher = builder.sharedFilesByTeacher;
     }
 
     public Integer getNotifications() {
@@ -209,11 +212,17 @@ public class Lecture {
         private Subject subject;
         private int level, price, status;
         private Timestamp studentLastTime, teacherLastTime;
+        private List<SubjectFile> sharedFilesByTeacher;
+        private Long classId;
 
         public Builder(User teacher, User student, Subject subject) {
             this.teacher = teacher;
             this.student = student;
             this.subject = subject;
+        }
+        public Builder classId(Long classId) {
+            this.classId = classId;
+            return this;
         }
         public Builder teacher(User teacher) {
             this.teacher = teacher;
@@ -243,11 +252,14 @@ public class Lecture {
             this.studentLastTime = studentLastTime;
             return this;
         }
+        public Builder sharedFilesByTeacher(List<SubjectFile> sharedFilesByTeacher) {
+            this.sharedFilesByTeacher = sharedFilesByTeacher;
+            return this;
+        }
         public Builder teacherLastTime(Timestamp teacherLastTime) {
             this.teacherLastTime = teacherLastTime;
             return this;
         }
-        //Return the finally consrcuted User object
         public Lecture build() {
             return new Lecture(this);
         }

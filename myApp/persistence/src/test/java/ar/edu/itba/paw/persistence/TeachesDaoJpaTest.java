@@ -62,7 +62,7 @@ public class TeachesDaoJpaTest {
     @Test
     @Rollback
     public void testAddSubjectToUser() {
-        final Teaches maybeTeaches = teachesDao.addSubjectToUser(teaches.getTeacher().getId(), subject.getId(), teaches.getPrice(), teaches.getLevel());
+        final Teaches maybeTeaches = teachesDao.addSubjectToUser(teaches.getTeacher().getId(), subject.getSubjectId(), teaches.getPrice(), teaches.getLevel());
 
         entityManager.flush();
 
@@ -75,7 +75,7 @@ public class TeachesDaoJpaTest {
     @Rollback
     public void testRemoveSubjectToUser() {
         entityManager.persist(teaches);
-        final int rowsModified = teachesDao.removeSubjectToUser(teaches.getTeacher().getId(), subject.getId(), teaches.getLevel());
+        final int rowsModified = teachesDao.removeSubjectToUser(teaches.getTeacher().getId(), subject.getSubjectId(), teaches.getLevel());
 
         Assert.assertEquals(1, rowsModified);
         Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "teaches"));
@@ -84,7 +84,7 @@ public class TeachesDaoJpaTest {
     @Test
     @Rollback
     public void testRemoveSubjectToUserFalse() {
-        final int rowsModified = teachesDao.removeSubjectToUser(teaches.getTeacher().getId(), subject.getId(), teaches.getLevel());
+        final int rowsModified = teachesDao.removeSubjectToUser(teaches.getTeacher().getId(), subject.getSubjectId(), teaches.getLevel());
 
         Assert.assertEquals(0, rowsModified);
     }
@@ -93,7 +93,7 @@ public class TeachesDaoJpaTest {
     @Rollback
     public void testFindByUserAndSubjectAndLevel() {
         entityManager.persist(teaches);
-        final Optional<Teaches> maybeTeaches = teachesDao.findByUserAndSubjectAndLevel(teaches.getTeacher().getId(), subject.getId(), teaches.getLevel());
+        final Optional<Teaches> maybeTeaches = teachesDao.findByUserAndSubjectAndLevel(teaches.getTeacher().getId(), subject.getSubjectId(), teaches.getLevel());
 
         Assert.assertTrue(maybeTeaches.isPresent());
         Assert.assertEquals(teaches, maybeTeaches.get());
@@ -105,7 +105,7 @@ public class TeachesDaoJpaTest {
         final Subject subjectExtra = InstanceProvider.getNewSubject(2);
         entityManager.persist(subjectExtra);
         entityManager.persist(teaches);
-        entityManager.persist(InstanceProvider.getNewTeacher(user, subjectExtra));
+        entityManager.persist(InstanceProvider.getNewTeaches(user, subjectExtra));
         final List<Subject> subjects = teachesDao.getListOfAllSubjectsTeachedByUser(user.getId());
 
         final List<Subject> expectedSubjects = new ArrayList<>();
@@ -121,7 +121,7 @@ public class TeachesDaoJpaTest {
         final Subject subjectExtra = InstanceProvider.getNewSubject(2);
         entityManager.persist(subjectExtra);
         entityManager.persist(teaches);
-        final Teaches teachesExtra = InstanceProvider.getNewTeacher(user, subjectExtra);
+        final Teaches teachesExtra = InstanceProvider.getNewTeaches(user, subjectExtra);
         entityManager.persist(teachesExtra);
         final List<Teaches> teachesList = teachesDao.get(user.getId());
 
@@ -187,7 +187,7 @@ public class TeachesDaoJpaTest {
             final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
                     InstanceProvider.getNewLowRating(userExtra, user);
             entityManager.persist(rating);
-            entityManager.persist(InstanceProvider.getNewTeacher(userExtra, subject));
+            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
         }
         final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
 
@@ -208,7 +208,7 @@ public class TeachesDaoJpaTest {
                 final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
                 entityManager.persist(lectureExtra);
             }
-            entityManager.persist(InstanceProvider.getNewTeacher(userExtra, subject));
+            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
         }
         final List<Object> mostRequested = teachesDao.getMostRequested();
 
@@ -228,7 +228,7 @@ public class TeachesDaoJpaTest {
         Object[] subjectInfo = (Object[]) subjectInfoList.get(0);
 
         Assert.assertEquals(1, subjectInfoList.size());
-        Assert.assertEquals((long) subject.getId(), ((Number) subjectInfo[0]).longValue());
+        Assert.assertEquals((long) subject.getSubjectId(), ((Number) subjectInfo[0]).longValue());
         Assert.assertEquals(subject.getName(), subjectInfo[1].toString());
         Assert.assertEquals(teaches.getPrice(), ((Number) subjectInfo[2]).intValue());
         Assert.assertEquals(teaches.getLevel(), ((Number) subjectInfo[3]).intValue());

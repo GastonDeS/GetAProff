@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.Teaches;
+import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.providers.InstanceProvider;
@@ -22,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -51,9 +49,9 @@ public class LectureDaoJpaTest {
         jdbcTemplate = new JdbcTemplate(ds);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"users");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"subject");
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,"teaches");
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,"rating");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,"posts");
         JdbcTestUtils.deleteFromTables(jdbcTemplate,"classes");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,"subject_files");
         teacher = InstanceProvider.getNewUser(1);
         student = InstanceProvider.getNewUser(2);
         subject = InstanceProvider.getSubject();
@@ -80,7 +78,8 @@ public class LectureDaoJpaTest {
         entityManager.persist(expectedLecture);
 
         final List<Lecture> lectureList = lectureDao.findClassesByStudentId(student.getId());
-        final List<Lecture> expectedList = new ArrayList<>(Arrays.asList(expectedLecture));
+        final List<Lecture> expectedList = new ArrayList<>();
+        expectedList.add(expectedLecture);
 
         Assert.assertEquals(1, lectureList.size());
         Assert.assertEquals(expectedList, lectureList);
@@ -93,7 +92,8 @@ public class LectureDaoJpaTest {
         entityManager.persist(expectedLecture);
 
         final List<Lecture> lectureList = lectureDao.findClassesByStudentAndStatus(student.getId(), expectedLecture.getStatus());
-        final List<Lecture> expectedList = new ArrayList<>(Arrays.asList(expectedLecture));
+        final List<Lecture> expectedList = new ArrayList<>();
+        expectedList.add(expectedLecture);
 
         Assert.assertEquals(1, lectureList.size());
         Assert.assertEquals(expectedList, lectureList);
@@ -106,7 +106,8 @@ public class LectureDaoJpaTest {
         entityManager.persist(expectedLecture);
 
         final List<Lecture> lectureList = lectureDao.findClassesByStudentAndMultipleStatus(student.getId(), expectedLecture.getStatus());
-        final List<Lecture> expectedList = new ArrayList<>(Arrays.asList(expectedLecture));
+        final List<Lecture> expectedList = new ArrayList<>();
+        expectedList.add(expectedLecture);
 
         Assert.assertEquals(1, lectureList.size());
         Assert.assertEquals(expectedList, lectureList);
@@ -119,7 +120,8 @@ public class LectureDaoJpaTest {
         entityManager.persist(expectedLecture);
 
         final List<Lecture> lectureList = lectureDao.findClassesByTeacherId(teacher.getId());
-        final List<Lecture> expectedList = new ArrayList<>(Arrays.asList(expectedLecture));
+        final List<Lecture> expectedList = new ArrayList<>();
+        expectedList.add(expectedLecture);
 
         Assert.assertEquals(1, lectureList.size());
         Assert.assertEquals(expectedList, lectureList);
@@ -132,7 +134,8 @@ public class LectureDaoJpaTest {
         entityManager.persist(expectedLecture);
 
         final List<Lecture> lectureList = lectureDao.findClassesByTeacherAndMultipleStatus(teacher.getId(), expectedLecture.getStatus());
-        final List<Lecture> expectedList = new ArrayList<>(Arrays.asList(expectedLecture));
+        final List<Lecture> expectedList = new ArrayList<>();
+        expectedList.add(expectedLecture);
 
         Assert.assertEquals(1, lectureList.size());
         Assert.assertEquals(expectedList, lectureList);
@@ -141,10 +144,94 @@ public class LectureDaoJpaTest {
     @Test
     @Rollback
     public void testCreate() {
-//        final Lecture expectedLecture = InstanceProvider.getNewStatusLecture(teacher, student, subject);
-//
-//        final Lecture lecture = lectureDao.create(student.getId(), teacher.getId(), expectedLecture.getLevel(), subject.getId(), expectedLecture.getPrice());
-//
-//        Assert.assertEquals(expectedLecture, lecture);
+        final Lecture expectedLecture = InstanceProvider.getNewStatusLecture(teacher, student, subject);
+        lectureDao.create(student.getId(), teacher.getId(), expectedLecture.getLevel(), subject.getSubjectId(), expectedLecture.getPrice());
+        entityManager.flush();
+
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,"classes"));
     }
+
+    @Test
+    @Rollback
+    public void testSetStatus() {
+        final Lecture expectedLecture = InstanceProvider.getNewStatusLecture(teacher, student, subject);
+        entityManager.persist(expectedLecture);
+
+        final int rowsModified = lectureDao.setStatus(expectedLecture.getClassId(), 2);
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classes",
+                "status = " + 2));
+        Assert.assertEquals(1, rowsModified);
+    }
+
+    @Test
+    @Rollback
+    public void testGetNotificationsCount() {
+        final Lecture expectedLecture = InstanceProvider.getNewTimeLecture(teacher, student, subject);
+        entityManager.persist(expectedLecture);
+        entityManager.persist(InstanceProvider.getNewPost(student, expectedLecture));
+
+        final int notifications = lectureDao.getNotificationsCount(expectedLecture.getClassId(), 0);
+
+        Assert.assertEquals(1, notifications);
+    }
+
+    @Test
+    @Rollback
+    public void testRefreshTime() {
+//        final Lecture expectedLecture = InstanceProvider.getNewTimeLecture(teacher, student, subject);
+//        entityManager.persist(expectedLecture);
+//
+//        final int rowsModified = lectureDao.refreshTime(expectedLecture.getClassId(), 0);
+//        Calendar calendar = Calendar.getInstance();
+//
+//        Assert.assertEquals(1, rowsModified);
+//        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classes",
+//                "classid = " + expectedLecture.getClassId() + " and teacherlasttime = " + Date.from(Calendar.getInstance())));
+    }
+
+    @Test
+    @Rollback
+    public void testAddSharedFileToLecture() {
+        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teacher, subject);
+        entityManager.persist(subjectFile);
+        final Lecture expectedLecture = InstanceProvider.getNewLecture(teacher, student, subject);
+        entityManager.persist(expectedLecture);
+
+        final int ret = lectureDao.addSharedFileToLecture(subjectFile.getFileId(), expectedLecture.getClassId());
+
+        Assert.assertEquals(1, ret);
+    }
+
+    @Test
+    @Rollback
+    public void testStopSharingFileInLecture() {
+        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teacher, subject);
+        entityManager.persist(subjectFile);
+        final Lecture expectedLecture = InstanceProvider.getNewLecture(teacher, student, subject);
+        entityManager.persist(expectedLecture);
+        expectedLecture.getSharedFilesByTeacher().add(subjectFile);
+
+        final int ret = lectureDao.stopSharingFileInLecture(subjectFile.getFileId(), expectedLecture.getClassId());
+
+        Assert.assertEquals(1, ret);
+    }
+
+    @Test
+    @Rollback
+    public void testGetSharedFilesByTeacher() {
+        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teacher, subject);
+        entityManager.persist(subjectFile);
+        final Lecture expectedLecture = InstanceProvider.getNewLecture(teacher, student, subject);
+        entityManager.persist(expectedLecture);
+        expectedLecture.getSharedFilesByTeacher().add(subjectFile);
+
+        final List<SubjectFile> subjectFiles = lectureDao.getSharedFilesByTeacher(expectedLecture.getClassId());
+        final List<SubjectFile> expectedSubjectFiles = new ArrayList<>();
+        expectedSubjectFiles.add(subjectFile);
+
+        Assert.assertEquals(1, subjectFiles.size());
+        Assert.assertEquals(expectedSubjectFiles, subjectFiles);
+    }
+
 }

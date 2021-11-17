@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ public class FavouritesController {
         if (!user.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
+        if (user.get().getId().equals(tutorId)) throw new InvalidOperationException("exception.invalid");
         int added = userService.addFavourite(tutorId, user.get().getId());
         if (added == 0) {
             throw new OperationFailedException("exception.failed");
@@ -57,7 +59,7 @@ public class FavouritesController {
     public ModelAndView removeFavourite(@PathVariable("tutorId") final Long tutorId) {
         Optional<User> user = userService.getCurrentUser();
         if (!user.isPresent()) {
-            throw new NoUserLoggedException("exception.not.logger.user"); //mandar a login
+            throw new NoUserLoggedException("exception.not.logger.user");
         }
         int removed = userService.removeFavourite(tutorId, user.get().getId());
         if (removed == 0) {

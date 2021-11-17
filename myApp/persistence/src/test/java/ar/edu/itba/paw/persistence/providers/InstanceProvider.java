@@ -2,6 +2,10 @@ package ar.edu.itba.paw.persistence.providers;
 
 import ar.edu.itba.paw.models.*;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class InstanceProvider {
 
     private static final double DELTA = 1e-15;
@@ -34,7 +38,7 @@ public class InstanceProvider {
 
     public static User getUser() {
         return new User.Builder(USER_MAIL).description(DESCRIPTION)
-                .schedule(SCHEDULE).name(USERNAME).password(USER_PASS).build();
+                .schedule(SCHEDULE).name(USERNAME).password(USER_PASS).favourites(new ArrayList<>()).build();
     }
 
     public static Subject getSubject() {
@@ -44,14 +48,14 @@ public class InstanceProvider {
     public static User getNewUser(int number) {
         String name = "user " + number;
         String mail = "user" + number + "@mail.com";
-        return new User.Builder(mail).name(name).password(USER_PASS).build();
+        return new User.Builder(mail).name(name).password(USER_PASS).favourites(new ArrayList<>()).build();
     }
 
     public static Subject getNewSubject(int number) {
         return new Subject("Mate " + number, null);
     }
 
-    public static Teaches getNewTeacher(User user, Subject subject) {
+    public static Teaches getNewTeaches(User user, Subject subject) {
         return new Teaches(user, subject, PRICE, ANY_LEVEL);
     }
 
@@ -76,11 +80,29 @@ public class InstanceProvider {
     }
 
     public static Lecture getNewLecture(User teacher, User student, Subject subject) {
-        return new Lecture.Builder(teacher, student, subject).build();
+        return new Lecture.Builder(teacher, student, subject).sharedFilesByTeacher(new ArrayList<>()).build();
     }
 
     public static Lecture getNewStatusLecture(User teacher, User student, Subject subject) {
         return new Lecture.Builder(teacher, student, subject).status(STATUS).build();
+    }
+
+    public static Lecture getNewTimeLecture(User teacher, User student, Subject subject) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -1);
+        Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+        return new Lecture.Builder(teacher, student, subject).teacherLastTime(timestamp).build();
+    }
+
+    public static Post getNewPost(User uploader, Lecture lecture) {
+        Calendar calendar = Calendar.getInstance();
+        Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+        return new Post.Builder().uploader(uploader).associatedLecture(lecture)
+                .time(timestamp).build();
+    }
+
+    public static SubjectFile getNewSubjectFile(User fileOwner, Subject subject) {
+        return new SubjectFile.Builder().fileOwner(fileOwner).subject(subject).build();
     }
 
 }

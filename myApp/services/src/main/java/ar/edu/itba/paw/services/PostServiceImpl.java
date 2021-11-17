@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -17,8 +18,8 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public Post post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
-        return postDao.post(uploaderId, classId, filename, file, message, type);
+    public Optional<Post> post(Long uploaderId, Long classId, String filename, byte[] file, String message, String type) {
+        return Optional.ofNullable(postDao.post(uploaderId, classId, filename, file, message, type));
     }
 
     @Transactional
