@@ -52,13 +52,12 @@ public class RegisterController {
         if (errors.hasErrors()) {
             return new ModelAndView("register");
         }
-        Long userId;
         try {
-            userId = commonRegister(form);
+            commonRegister(form);
         } catch (Exception exception) {
             throw new RegisterErrorException("exception.register");
         }
-        return new ModelAndView("redirect:/editSubjects/" + userId);
+        return new ModelAndView("redirect:/editSubjects");
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, params = "student")

@@ -76,10 +76,10 @@
                                 </c:when>
                                 <c:otherwise>
                                     <div class="no-subjects-container">
-                                        <h3 style="color:#026670;">Aun no das ninguna materia</h3>
-                                        <a href="${pageContext.request.contextPath}/editSubjects/${user.id}"
+                                        <h3 style="color:#026670;"><spring:message code="myFiles.no.subject.given"/></h3>
+                                        <a href="${pageContext.request.contextPath}/editSubjects"
                                            class="btn btn-custom submit-btn">
-                                            Agregar materias
+                                            <spring:message code="myFiles.add.subject"/>
                                         </a>
                                     </div>
                                 </c:otherwise>

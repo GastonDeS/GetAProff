@@ -15,11 +15,13 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+@EnableTransactionManagement
 @ComponentScan ( {"ar.edu.itba.paw.persistence"})
 @Configuration
 public class TestConfig {
@@ -49,7 +51,7 @@ public class TestConfig {
 
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dp = new ResourceDatabasePopulator();
-        dp.addScript(hsqldb);
+        //dp.addScript(hsqldb);
         return dp;
     }
 
