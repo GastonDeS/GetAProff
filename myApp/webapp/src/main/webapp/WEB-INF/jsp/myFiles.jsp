@@ -76,7 +76,8 @@
                                 </c:when>
                                 <c:otherwise>
                                     <div class="no-subjects-container">
-                                        <h3 style="color:#026670;"><spring:message code="myFiles.no.subject.given"/></h3>
+                                        <h3 style="color:#026670;"><spring:message
+                                                code="myFiles.no.subject.given"/></h3>
                                         <a href="${pageContext.request.contextPath}/editSubjects"
                                            class="btn btn-custom submit-btn">
                                             <spring:message code="myFiles.add.subject"/>
@@ -101,9 +102,6 @@
     </div>
     <div class="form-container" style="margin-top: 15px;">
         <h2 class="form-title"><spring:message code="myFiles.title"/></h2>
-        <h3 style="color: #026670;"><spring:message code="myFiles.description.1"/>
-            <br>
-            <spring:message code="myFiles.description.2"/></h3>
         <c:choose>
             <c:when test="${userSubjectFiles.size() != 0}">
                 <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
@@ -192,9 +190,13 @@
                     <a style="" href="${pageContext.request.contextPath}/myFiles"><spring:message
                             code="myFiles.cleanFilter"/></a>
                 </div>
-
             </c:when>
             <c:otherwise>
+                <h3 style="color: #026670; text-align: center">
+                    <spring:message code="myFiles.description.1"/>
+                    <br>
+                    <spring:message code="myFiles.description.2"/>
+                </h3>
                 <h4 style="margin: 10px 0 20px 0;">
                     <spring:message code="myFiles.noFilesYet"/></h4>
             </c:otherwise>
