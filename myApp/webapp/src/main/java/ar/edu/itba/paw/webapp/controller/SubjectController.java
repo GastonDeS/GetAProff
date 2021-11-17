@@ -75,35 +75,38 @@ public class SubjectController {
         return mav;
     }
 
-    @RequestMapping(value = "/editSubjects/{userId}", method = RequestMethod.GET)
-    public ModelAndView subjectsForm(@PathVariable("userId") Long userId, @ModelAttribute("subjectsForm") final SubjectsForm form) {
-        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(userId);
+    @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
+    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") final SubjectsForm form) {
+        User currentUser = getCurrUser();
+        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(currentUser.getId());
         return new ModelAndView("subjectsForm")
-                .addObject("userid", userId)
+                .addObject("userid", currentUser.getId())
                 .addObject("given", subjectsGiven)
                 .addObject("subjects", subjectService.list());
     }
 
-    @RequestMapping(value = "/editSubjects/{userId}", method = RequestMethod.POST)
-    public ModelAndView subjectsForm(@PathVariable("userId") Long userId, @ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
+    @RequestMapping(value = "/editSubjects", method = RequestMethod.POST)
+    public ModelAndView subjectsForm(@ModelAttribute("subjectsForm") @Valid final SubjectsForm form, final BindingResult errors) {
+        Long userId = getCurrUser().getId();
         if (teachesService.findByUserAndSubjectAndLevel(userId, form.getSubjectId(), form.getLevel()).isPresent()) {
             errors.rejectValue("level","form.level.invalid");
         }
         if (errors.hasErrors()) {
-            return subjectsForm(userId, form);
+            return subjectsForm(form);
         }
         Optional<Teaches> maybe = teachesService.addSubjectToUser(userId, form.getSubjectId(), form.getPrice(), form.getLevel());
         if (!maybe.isPresent()) {
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Subject added for user {}", userId);
-        return subjectsForm(userId, form);
+        return subjectsForm(form);
     }
 
     @RequestMapping(value = "/editSubjects/remove/{sid}/{level}", method = RequestMethod.POST)
     public ModelAndView removeSubject(@PathVariable("sid") final Long sid, @PathVariable("level") final int level) {
         Long uid = getCurrUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid, level) == 0 ) {
+            System.out.println("ERROR add subject");
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Subject removed for user {}",uid);

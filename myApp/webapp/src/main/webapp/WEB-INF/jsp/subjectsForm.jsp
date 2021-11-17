@@ -24,7 +24,7 @@
     <jsp:param name="isMainPage" value="${false}"/>
 </jsp:include>
 <div class="page-container">
-    <c:url value="/editSubjects/${userid}" var="subjectsURL"/>
+    <c:url value="/editSubjects" var="subjectsURL"/>
     <form:form modelAttribute="subjectsForm" action="${subjectsURL}" method="post">
         <div class="form-container">
             <p class="form-title">${subjectPlaceholder}</p>

@@ -2,8 +2,6 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
