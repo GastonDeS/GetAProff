@@ -84,12 +84,12 @@
                                 </a>
                                 <c:choose>
                                     <c:when test="${!isFaved}">
-                                        <form action="<c:url value="/addFavourite/${user.id}"/>" method="post">
+                                        <form action="<c:url value="${pageContext.request.contextPath}/addFavourite/${user.id}"/>" method="post">
                                             <input type="submit" class="btn btn-custom" value="${addFav}"/>
                                         </form>
                                     </c:when>
                                     <c:otherwise>
-                                        <form action="<c:url value="/removeFavourite/${user.id}"/>" method="post">
+                                        <form action="<c:url value="${pageContext.request.contextPath}/removeFavourite/${user.id}"/>" method="post">
                                             <input type="submit" class="btn btn-custom" value="${removeFav}"/>
                                         </form>
                                     </c:otherwise>

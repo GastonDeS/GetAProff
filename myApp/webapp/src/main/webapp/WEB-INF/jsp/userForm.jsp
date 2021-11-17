@@ -29,7 +29,7 @@
                         <img src="${pageContext.request.contextPath}/image/${user.id}" class="profile-img" id="img-preview" alt="teacherImg">
                         <div class="edit-btn-container">
                             <label class="btn btn-custom">
-                                <form:input type="file" accept="image" name="file" style="display: none" id="photo" path="imageFile"/>
+                                <form:input type="file" accept="image/*" name="file" style="display: none" id="photo" path="imageFile"/>
                                 <spring:message code="user.form.choose.image"/>
                             </label>
                         </div>
