@@ -187,17 +187,17 @@
                 </form>
                 <div class="no-files-found-filtering">
                     <h3 style="color: #026670;"><spring:message code="myFiles.noFilesFound.filtering"/></h3>
-                    <a style="" href="${pageContext.request.contextPath}/myFiles"><spring:message
+                    <a style="font-weight: bold; color: #026670" href="${pageContext.request.contextPath}/myFiles"><spring:message
                             code="myFiles.cleanFilter"/></a>
                 </div>
             </c:when>
             <c:otherwise>
-                <h3 style="color: #026670; text-align: center">
+                <h4 style="color: #026670; text-align: center; width: 400px;">
                     <spring:message code="myFiles.description.1"/>
                     <br>
                     <spring:message code="myFiles.description.2"/>
-                </h3>
-                <h4 style="margin: 10px 0 20px 0;">
+                </h4>
+                <h4 style="margin: 10px 0 20px 0; color: #026670">
                     <spring:message code="myFiles.noFilesYet"/></h4>
             </c:otherwise>
         </c:choose>
