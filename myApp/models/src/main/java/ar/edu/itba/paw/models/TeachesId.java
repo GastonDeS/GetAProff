@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class TeachesId implements Serializable {
     private Long teacher, subject;
@@ -39,5 +40,18 @@ public class TeachesId implements Serializable {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TeachesId teachesId = (TeachesId) o;
+        return level == teachesId.level && Objects.equals(teacher, teachesId.teacher) && Objects.equals(subject, teachesId.subject);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teacher, subject, level);
     }
 }
