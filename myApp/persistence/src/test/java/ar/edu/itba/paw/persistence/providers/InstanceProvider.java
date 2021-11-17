@@ -8,29 +8,21 @@ import java.util.Calendar;
 
 public class InstanceProvider {
 
-    private static final double DELTA = 1e-15;
     private static final String USERNAME = "John Doe";
     private static final String USER_MAIL = "John@Doe.com";
-    private static final String USERNAME_EXTRA = "Jane Doe";
-    private static final String USER_MAIL_EXTRA = "jane@doe.com";
     private static final String USER_PASS = "1234";
     private static final String DESCRIPTION = "soy un muy buen profesor de la facultad ITBA";
     private static final String SCHEDULE = "todos los dias habiles de 8 a 16";
     private static final String REVIEW = "Muy buen profesor";
-    private static final Long USER_ID = 1L;
     private static final String SUBJECT = "MATE 1";
-    private static final String SUBJECT_TWO = "MATE 2";
-    private static final Long SUBJECT_ID_ONE = 1L;
     private static final Integer PRICE = 500;
     private static final Integer MAX_LEVEL = 3;
     private static final Integer MIN_LEVEL = 1;
     private static final Integer MAXPRICE = 1400;
-    private static final Integer MINPRICE = 550;
     private static final Float HIGH_RATE = 5f;
     private static final Float LOW_RATE = 1f;
     private static final Integer STATUS = 1;
-    private static final Float FILTER_RATE = 3f;
-    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, GET_ALL = 0;
+    private static final Integer ANY_LEVEL = 0;
 
     public InstanceProvider() {
         //
