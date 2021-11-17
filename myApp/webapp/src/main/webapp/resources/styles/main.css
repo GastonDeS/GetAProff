@@ -1116,7 +1116,12 @@ input:focus {
     width: 100%;
     margin-top: 10px;
 }
-
+.no-files-found-filtering {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 13px;
+}
 
 .myFiles-main-btn-container {
     display: flex;

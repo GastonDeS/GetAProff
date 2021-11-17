@@ -69,10 +69,10 @@ CREATE TABLE IF NOT EXISTS subject_files
     fileId   SERIAL,
     fileName VARCHAR,
     file     BYTEA,
-    subject_id  INTEGER,
-    subject_level INTEGER,
+    subjectid  INTEGER,
+    subjectlevel INTEGER,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
-    FOREIGN KEY (subject_id) REFERENCES subject ON DELETE CASCADE,
+    FOREIGN KEY (subjectid) REFERENCES subject ON DELETE CASCADE,
     PRIMARY KEY (fileId)
 );
 
