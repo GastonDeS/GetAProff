@@ -51,7 +51,7 @@ public class TestConfig {
 
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dp = new ResourceDatabasePopulator();
-        dp.addScript(hsqldb);
+        //dp.addScript(hsqldb);
         return dp;
     }
 
@@ -73,8 +73,6 @@ public class TestConfig {
         final Properties jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-        jpaProperties.setProperty("hibernate.show_sql", "true");
-        jpaProperties.setProperty("format_sql", "true");
 
         factoryBean.setJpaProperties(jpaProperties);
 
