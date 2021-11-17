@@ -9,7 +9,7 @@ public class Image {
     @Id
     private Long userid;
 
-    @Column
+    @Column(nullable = false)
     private byte[] image;
 
     @OneToOne

@@ -32,7 +32,7 @@ public class Post {
     @Column
     private String type;
 
-    @Column
+    @Column(nullable = false)
     private Timestamp time;
 
     Post() {

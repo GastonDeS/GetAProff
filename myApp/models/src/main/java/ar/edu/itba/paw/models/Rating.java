@@ -7,10 +7,10 @@ import javax.persistence.*;
 @IdClass(RatingId.class)
 public class Rating {
 
-    @Column
+    @Column(nullable = false)
     private Float rate;
 
-    @Column
+    @Column(nullable = false)
     private String review;
 
     @JoinColumn(name = "teacherid", referencedColumnName = "userid",foreignKey = @ForeignKey(name = "rating_teacherid_fkey"))

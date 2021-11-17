@@ -13,7 +13,7 @@ public class Subject {
     @SequenceGenerator(name = "subject_subjectid_seq", sequenceName = "subject_subjectid_seq", allocationSize = 1)
     private Long subjectId;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL)

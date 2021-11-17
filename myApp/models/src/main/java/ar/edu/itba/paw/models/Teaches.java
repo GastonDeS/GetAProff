@@ -8,9 +8,10 @@ import java.util.List;
 @IdClass(TeachesId.class)
 public class Teaches {
 
-    @Column
+    @Column(nullable = false)
     private int price;
 
+    @Column(nullable = false)
     @Id
     private int level;
 
