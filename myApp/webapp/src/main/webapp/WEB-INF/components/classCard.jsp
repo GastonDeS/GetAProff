@@ -85,7 +85,7 @@
                             <div class="class-cancel-btn">
                                 <jsp:include page="../components/rejectOrCancelModal.jsp">
                                     <jsp:param name="type" value="decline"/>
-                                    <jsp:param name="urlConfirm" value="/myClasses/0/${param.classId}/REJECTED"/>
+                                    <jsp:param name="urlConfirm" value="/myClasses/0/${param.cid}/REJECTED"/>
                                 </jsp:include>
                                 <form action="<c:url value="/myClasses/1/${param.cid}/ACCEPTED"/>" method="post"
                                       class="class-card-btn-holder">
