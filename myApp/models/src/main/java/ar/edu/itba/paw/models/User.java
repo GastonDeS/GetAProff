@@ -56,9 +56,6 @@ public class User {
     @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
     private List<UserFile> userFilesList;
 
-    @OneToMany(mappedBy = "fileOwner", cascade = CascadeType.ALL)
-    private List<SubjectFile> subjectsFilesList;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 
@@ -233,13 +230,6 @@ public class User {
         return userFilesList;
     }
 
-    public List<SubjectFile> getSubjectsFilesList() {
-        return subjectsFilesList;
-    }
-
-    public void setSubjectsFilesList(List<SubjectFile> subjectsFilesList) {
-        this.subjectsFilesList = subjectsFilesList;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -257,7 +247,6 @@ public class User {
                 Objects.equals(favouriteOf, user.favouriteOf) &&
                 Objects.equals(image, user.image) &&
                 Objects.equals(userFilesList, user.userFilesList) &&
-                Objects.equals(subjectsFilesList, user.subjectsFilesList) &&
                 Objects.equals(ratings, user.ratings) &&
                 Objects.equals(subjectsTaughtByUser, user.subjectsTaughtByUser) &&
                 Objects.equals(classesTakenByStudent, user.classesTakenByStudent) &&
@@ -266,7 +255,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, schedule, userid, password, mail, userRoles, favourites, favouriteOf, image, userFilesList, subjectsFilesList, ratings, subjectsTaughtByUser, classesTakenByStudent, classesGivenByTeacher);
+        return Objects.hash(name, description, schedule, userid, password, mail, userRoles, favourites, favouriteOf, image, userFilesList, ratings, subjectsTaughtByUser, classesTakenByStudent, classesGivenByTeacher);
     }
 
     @Override

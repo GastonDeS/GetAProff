@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.SubjectFile;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.providers.InstanceProvider;
 import org.junit.Assert;
@@ -43,7 +40,7 @@ public class LectureDaoJpaTest {
 
     private User student, teacher;
     private Subject subject;
-
+    private Teaches teachesInfo;
     @Before
     public void setUp(){
         jdbcTemplate = new JdbcTemplate(ds);
@@ -193,7 +190,7 @@ public class LectureDaoJpaTest {
     @Test
     @Rollback
     public void testAddSharedFileToLecture() {
-        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teacher, subject);
+        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teachesInfo);
         entityManager.persist(subjectFile);
         final Lecture expectedLecture = InstanceProvider.getNewLecture(teacher, student, subject);
         entityManager.persist(expectedLecture);
@@ -206,7 +203,7 @@ public class LectureDaoJpaTest {
     @Test
     @Rollback
     public void testStopSharingFileInLecture() {
-        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teacher, subject);
+        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teachesInfo);
         entityManager.persist(subjectFile);
         final Lecture expectedLecture = InstanceProvider.getNewLecture(teacher, student, subject);
         entityManager.persist(expectedLecture);
@@ -220,7 +217,7 @@ public class LectureDaoJpaTest {
     @Test
     @Rollback
     public void testGetSharedFilesByTeacher() {
-        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teacher, subject);
+        final SubjectFile subjectFile = InstanceProvider.getNewSubjectFile(teachesInfo);
         entityManager.persist(subjectFile);
         final Lecture expectedLecture = InstanceProvider.getNewLecture(teacher, student, subject);
         entityManager.persist(expectedLecture);
