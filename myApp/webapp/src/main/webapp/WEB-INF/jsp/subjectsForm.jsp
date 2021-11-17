@@ -53,7 +53,7 @@
             <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
             <div class="account-check-container">
                 <p class="account-check-text"><spring:message code="subject.not.registered"/></p>
-                <a class="account-check-link" href="/newSubjectForm/${userid}">
+                <a class="account-check-link" href="/newSubjectForm">
                     <spring:message code="subject.register"/>
                 </a>
             </div>

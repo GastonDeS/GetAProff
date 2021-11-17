@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS rating
 (
-    teacherId INTEGER,
-    userId INTEGER NOT NULL,
+    teacherId bigint,
+    userId bigint NOT NULL,
     rate float check (rate <= 5),
     review varchar(256),
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS rating
 
 CREATE TABLE IF NOT EXISTS favourites
 (
-    teacherId INTEGER,
-    studentId INTEGER NOT NULL,
+    teacherId bigint,
+    studentId bigint NOT NULL,
     FOREIGN KEY (studentId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
     PRIMARY KEY (teacherId,studentId)
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS favourites
 
 CREATE TABLE IF NOT EXISTS images
 (
-    userId INTEGER,
+    userId bigint,
     image  bytea,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
     PRIMARY KEY (userId)
@@ -44,10 +44,10 @@ CREATE TABLE IF NOT EXISTS subject
 
 CREATE TABLE IF NOT EXISTS teaches
 (
-    userId    INTEGER,
-    subjectId INTEGER,
-    price     INTEGER,
-    level     INTEGER,
+    userId    bigint,
+    subjectId bigint,
+    price     bigint,
+    level     bigint,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (subjectId) REFERENCES subject ON DELETE CASCADE,
     PRIMARY KEY (userId, subjectId, level)
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS teaches
 
 CREATE TABLE IF NOT EXISTS user_file
 (
-    userId   INTEGER,
+    userId   bigint,
     fileId   SERIAL,
     fileName VARCHAR,
     file     BYTEA,
@@ -65,19 +65,19 @@ CREATE TABLE IF NOT EXISTS user_file
 
 CREATE TABLE IF NOT EXISTS subject_files
 (
-    userId   INTEGER,
+    userId   bigint,
     fileId   SERIAL PRIMARY KEY,
     fileName VARCHAR,
     file     BYTEA,
-    subjectid  INTEGER,
+    subjectid  bigint,
     subjectlevel INTEGER,
     FOREIGN KEY (userid,subjectid,subjectlevel) REFERENCES teaches(userId, subjectId, level) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS shared
 (
-    classId INTEGER,
-    fileId  INTEGER,
+    classId bigint,
+    fileId  bigint,
     FOREIGN KEY (classId) REFERENCES classes ON DELETE CASCADE,
     FOREIGN KEY (fileId) REFERENCES subject_files ON DELETE CASCADE,
     PRIMARY KEY(classId, fileId)
@@ -86,15 +86,13 @@ CREATE TABLE IF NOT EXISTS shared
 CREATE TABLE IF NOT EXISTS classes
 (
     classId   SERIAL PRIMARY KEY,
-    studentId INTEGER NOT NULL,
-    teacherId INTEGER NOT NULL,
+    studentId bigint NOT NULL,
+    teacherId bigint NOT NULL,
     level     INTEGER NOT NULL,
-    subjectId INTEGER NOT NULL,
+    subjectId bigint NOT NULL,
     price     INTEGER NOT NULL,
     status    INTEGER NOT NULL,
     deleted INTEGER default 0 NOT NULL,
-    request varchar(256) default '',
-    reply    varchar(256) default '',
     FOREIGN KEY (studentId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (teacherId) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (subjectId) REFERENCES subject ON DELETE CASCADE
