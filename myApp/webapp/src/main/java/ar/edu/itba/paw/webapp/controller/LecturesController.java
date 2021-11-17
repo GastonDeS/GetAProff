@@ -111,12 +111,13 @@ public class LecturesController {
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.GET)
     public ModelAndView rateForm(@ModelAttribute("rateForm") final RateForm form, @PathVariable("cid") final Long cid) {
         final ModelAndView mav = new ModelAndView("rateForm");
+        User currentUser = checkCurrentUser();
         Lecture currentLecture = checkLectureExistence(cid);
         Optional<User> teacher = userService.findById(currentLecture.getTeacher().getId());
         if (!teacher.isPresent()) {
             throw new InvalidOperationException("exception.invalid");
         }
-        return mav.addObject("teacher", teacher.get().getName());
+        return mav.addObject("teacher", teacher.get().getName()).addObject("userid", currentUser.getId());
     }
 
     @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)

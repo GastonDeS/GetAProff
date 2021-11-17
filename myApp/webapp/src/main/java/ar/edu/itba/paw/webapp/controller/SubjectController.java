@@ -54,7 +54,7 @@ public class SubjectController {
         if (!maybeUser.isPresent()) {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
-        return new ModelAndView("newSubjectForm");
+        return new ModelAndView("newSubjectForm").addObject("userid", maybeUser.get().getId());
     }
 
     @RequestMapping(value = "/newSubjectForm", method = RequestMethod.POST)
