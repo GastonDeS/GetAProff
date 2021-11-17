@@ -31,7 +31,7 @@
             <div class="subject-form-container">
                 <form:select path="subjectId">
                     <c:forEach items="${subjects}" var="subject">
-                        <form:option value="${subject.id}" label="${subject.name}"/>
+                        <form:option value="${subject.subjectId}" label="${subject.name}"/>
                     </c:forEach>
                 </form:select>
                 <div class="price-level-container">
