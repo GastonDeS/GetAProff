@@ -135,8 +135,8 @@
                     <tr class="subjects-row">
                         <td class="row-title" style="width: 40%"><spring:message code="myFiles.rowTitle.file"/></td>
                         <td class="row-title" style="width: 15%"><spring:message code="myFiles.rowTitle.subject"/></td>
-                        <td class="row-title" style="width: 25%"><spring:message code="myFiles.rowTitle.level"/></td>
-                        <td class="row-title" style="width: 11%"><spring:message
+                        <td class="row-title" style="width: 26%"><spring:message code="myFiles.rowTitle.level"/></td>
+                        <td class="row-title" style="width: auto"><spring:message
                                 code="myFiles.rowTitle.selection"/></td>
                     </tr>
                     <form name="delete-form" id="delete-form"

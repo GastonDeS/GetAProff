@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -27,7 +25,7 @@ public class SubjectFileDaoJpa implements SubjectFileDao {
 
     @Override
     public SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Subject subject, Integer level) {
-        final TeachesId teachesId = new TeachesId(ownerId,subject.getSubjectId(),level);
+        final TeachesId teachesId = new TeachesId(ownerId, subject.getSubjectId(), level);
         final Teaches teaches = entityManager.find(Teaches.class, teachesId);
         final SubjectFile newSubjectFile = new SubjectFile( null, fileName, file, teaches);
         entityManager.persist(newSubjectFile);

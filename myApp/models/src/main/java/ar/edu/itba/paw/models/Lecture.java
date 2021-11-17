@@ -31,9 +31,9 @@ public class Lecture {
     @JoinTable(
             name = "shared",
             joinColumns = @JoinColumn(
-                    name = "classid", referencedColumnName = "classid"),
+                    name = "classid", referencedColumnName = "classid", foreignKey = @ForeignKey(name = "shared_classid_fkey")),
             inverseJoinColumns = @JoinColumn(
-                    name = "fileid", referencedColumnName = "fileid"))
+                    name = "fileid", referencedColumnName = "fileid", foreignKey = @ForeignKey(name = "shared_fileid_fkey")))
     private List<SubjectFile> sharedFilesByTeacher;
 
     @Column(nullable = false)
