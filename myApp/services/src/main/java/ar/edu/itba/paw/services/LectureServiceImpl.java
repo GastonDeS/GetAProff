@@ -62,8 +62,8 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public Lecture create(Long studentId, Long teacherId, int level, Long subjectId, int price) {
-        return lectureDao.create(studentId, teacherId, level, subjectId, price);
+    public Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price) {
+        return Optional.ofNullable(lectureDao.create(studentId, teacherId, level, subjectId, price));
     }
 
     @Transactional
