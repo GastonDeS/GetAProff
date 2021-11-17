@@ -101,6 +101,7 @@
     </div>
     <div class="form-container" style="margin-top: 15px;">
         <h2 class="form-title"><spring:message code="myFiles.title"/></h2>
+        <h3 style="color: #026670;"><spring:message code="myFiles.description"/></h3>
         <c:choose>
             <c:when test="${userSubjectFiles.size() != 0}">
                 <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
