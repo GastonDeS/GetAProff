@@ -26,59 +26,74 @@
                 <div class="modal-body" style="background-color: #9fedd7;padding: 10px 20px 5px 20px;">
                     <div class="form-container" style="width: 100%;">
                         <div class="form-body-container">
-                            <form name="subject-files-form" id="subject-files-form"
-                                  action="${pageContext.request.contextPath}/myFiles"
-                                  method="post" enctype="multipart/form-data"
-                                  style="display: flex; flex-direction: column; margin: 0">
-                                <h3 style="align-self: center; color: #026670;"><spring:message
-                                        code="myFiles.addFileHelp"/></h3>
-                                <div class="selected-files-options-container">
-                                    <div class="files-filter-container">
-                                        <label class="files-form-label" style="margin-right: 10px;"
-                                               for="subject-select"><spring:message
-                                                code="myFiles.subjectLabel"/>:</label>
-                                        <select id="subject-select" name="subject" onchange="showAndHide()" required>
-                                            <c:forEach var="subject" items="${userSubjects}">
-                                                <option value="${subject.id}">${subject.name}</option>
-                                            </c:forEach>
-                                        </select>
+                            <c:choose>
+                                <c:when test="${userSubjects.size() != 0}">
+                                    <form name="subject-files-form" id="subject-files-form"
+                                          action="${pageContext.request.contextPath}/myFiles"
+                                          method="post" enctype="multipart/form-data"
+                                          style="display: flex; flex-direction: column; margin: 0">
+                                        <h3 style="align-self: center; color: #026670;"><spring:message
+                                                code="myFiles.addFileHelp"/></h3>
+                                        <div class="selected-files-options-container">
+                                            <div class="files-filter-container">
+                                                <label class="files-form-label" style="margin-right: 10px;"
+                                                       for="subject-select"><spring:message
+                                                        code="myFiles.subjectLabel"/>:</label>
+                                                <select id="subject-select" name="subject" onchange="showAndHide()"
+                                                        required>
+                                                    <c:forEach var="subject" items="${userSubjects}">
+                                                        <option value="${subject.subjectId}">${subject.name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="files-filter-container">
+                                                <label class="files-form-label" style="margin-right: 10px;"
+                                                       for="level-select"><spring:message
+                                                        code="myFiles.levelLabel"/>:</label>
+                                                <select id="level-select" name="level" required>
+                                                    <option selected value="0"><spring:message
+                                                            code="myFiles.select.anyLevel"/></option>
+                                                    <c:forEach var="subject" items="${userSubjectInfo}">
+                                                        <option value="${subject.subjectId}${subject.level}">
+                                                            <spring:message
+                                                                    code="myFiles.filesTable.level${subject.level}"/></option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="files-input-container">
+                                            <ul id="selected-files-ul" class="selected-files-ul"
+                                                style="display: none;margin-top: 20px"></ul>
+                                        </div>
+                                        <label id="label-for-file-input" class="btn btn-custom"
+                                               style="align-self: center; margin-top: 12px;">
+                                            <spring:message code="myFiles.button.loadFiles"/>
+                                            <input type="file" id="file" name="files" accept="application/pdf"
+                                                   style="display:none;" onclose="showUlOfFiles()"
+                                                   multiple required>
+                                        </label>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="no-subjects-container">
+                                        <h3 style="color:#026670;">Aun no das ninguna materia</h3>
+                                        <a href="${pageContext.request.contextPath}/editSubjects/${user.id}"
+                                           class="btn btn-custom submit-btn">
+                                            Agregar materias
+                                        </a>
                                     </div>
-                                    <div class="files-filter-container">
-                                        <label class="files-form-label" style="margin-right: 10px;"
-                                               for="level-select"><spring:message
-                                                code="myFiles.levelLabel"/>:</label>
-                                        <select id="level-select" name="level" required>
-                                            <option selected value="0"><spring:message
-                                                    code="myFiles.select.anyLevel"/></option>
-                                            <c:forEach var="subject" items="${userSubjectInfo}">
-                                                <option value="${subject.subjectId}${subject.level}"><spring:message
-                                                        code="myFiles.filesTable.level${subject.level}"/></option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="files-input-container">
-                                    <ul id="selected-files-ul" class="selected-files-ul"
-                                        style="display: none;margin-top: 20px"></ul>
-                                </div>
-                                <label id="label-for-file-input" class="btn btn-custom"
-                                       style="align-self: center; margin-top: 12px;">
-                                    <spring:message code="myFiles.button.loadFiles"/>
-                                    <input type="file" id="file" name="files" accept="application/pdf"
-                                           style="display:none;" onclose="showUlOfFiles()"
-                                           multiple required>
-                                </label>
-                            </form>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-custom" style="background: #848e8b;" data-bs-dismiss="modal">
-                        Cancelar
+                        <spring:message code="myFiles.button.cancelModal"/>
                     </button>
                     <button class="btn btn-custom" form="subject-files-form" style="align-self:center;"
                             type="submit">
-                        Guardar cambios
+                        <spring:message code="myFiles.button.saveChanges"/>
                     </button>
                 </div>
             </div>
@@ -90,7 +105,7 @@
             <c:when test="${userSubjectFiles.size() != 0}">
                 <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
                 <form action="${pageContext.request.contextPath}/myFiles" method="get"
-                      style="display: flex; width: 90%">
+                      style="display: flex; width: 90%" id="filter-form" name="filter-form">
                     <div class="files-filter-container">
                         <label class="files-form-label" for="subject-select-filter" style="margin-right: 10px;">
                             <spring:message code="myFiles.subjectLabel"/>:
@@ -98,7 +113,7 @@
                         <select name="subject-select-filter" id="subject-select-filter">
                             <option selected value="0"><spring:message code="myFiles.filter.anySubjects"/></option>
                             <c:forEach var="subject" items="${userSubjects}">
-                                <option value="${subject.id}">${subject.name}</option>
+                                <option value="${subject.subjectId}">${subject.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -114,7 +129,6 @@
                             </c:forEach>
                         </select>
                     </div>
-                    <button type="submit" id="submit-filter" style="display: none"></button>
                 </form>
 
                 <table class="subjects-table">
@@ -122,7 +136,8 @@
                         <td class="row-title" style="width: 40%"><spring:message code="myFiles.rowTitle.file"/></td>
                         <td class="row-title" style="width: 15%"><spring:message code="myFiles.rowTitle.subject"/></td>
                         <td class="row-title" style="width: 25%"><spring:message code="myFiles.rowTitle.level"/></td>
-                        <td class="row-title" style="width: 11%"><spring:message code="myFiles.rowTitle.selection"/></td>
+                        <td class="row-title" style="width: 11%"><spring:message
+                                code="myFiles.rowTitle.selection"/></td>
                     </tr>
                     <form name="delete-form" id="delete-form"
                           action="${pageContext.request.contextPath}/myFilesDelete/${user.id}" method="post">
@@ -141,6 +156,41 @@
                     </form>
                 </table>
             </c:when>
+            <c:when test="${filtering && userSubjectFiles.size() == 0}">
+                <h5 style="margin: 10px 0 10px 0; color: #026670;"><spring:message code="myFiles.filterTitle"/></h5>
+                <form action="${pageContext.request.contextPath}/myFiles" method="get"
+                      style="display: flex; width: 90%" id="filter-form" name="filter-form">
+                    <div class="files-filter-container">
+                        <label class="files-form-label" for="subject-select-filter" style="margin-right: 10px;">
+                            <spring:message code="myFiles.subjectLabel"/>:
+                        </label>
+                        <select name="subject-select-filter" id="subject-select-filter">
+                            <option selected value="0"><spring:message code="myFiles.filter.anySubjects"/></option>
+                            <c:forEach var="subject" items="${userSubjects}">
+                                <option value="${subject.subjectId}">${subject.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="files-filter-container">
+                        <label class="files-form-label" for="level-select-filter" style="margin-right: 10px;">
+                            <spring:message code="myFiles.levelLabel"/>:
+                        </label>
+                        <select name="level-select-filter" id="level-select-filter">
+                            <option selected value="0"><spring:message code="myFiles.select.anyLevel"/></option>
+                            <c:forEach var="index" begin="1" end="3">
+                                <option value="${index}"><spring:message
+                                        code="myFiles.filesTable.level${index}"/></option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </form>
+                <div class="no-files-found-filtering">
+                    <h3 style="color: #026670;"><spring:message code="myFiles.noFilesFound.filtering"/></h3>
+                    <a style="" href="${pageContext.request.contextPath}/myFiles"><spring:message
+                            code="myFiles.cleanFilter"/></a>
+                </div>
+
+            </c:when>
             <c:otherwise>
                 <h4 style="margin: 10px 0 20px 0;">
                     <spring:message code="myFiles.noFilesYet"/></h4>
@@ -152,7 +202,8 @@
                     type="submit">
                 <spring:message code="myFiles.button.deleteSelected"/>
                 <button type="button" class="btn btn-custom" style="display: none;background: #848e8b"
-                        id="unmark-delete-button" onclick="cleanDeleteCheckbox()"><spring:message code="myFiles.button.cancelSelection"/>
+                        id="unmark-delete-button" onclick="cleanDeleteCheckbox()"><spring:message
+                        code="myFiles.button.cancelSelection"/>
                 </button>
             </button>
         </div>
@@ -162,6 +213,7 @@
             <spring:message code="myFiles.button.addFile"/>
         </button>
     </div>
+    <button type="submit" id="submit-filter" form="filter-form" style="display: none"></button>
     <div id="hidden" style="display: none">
     </div>
 </div>
@@ -253,7 +305,7 @@
                 }
             }
         );
-        if(ul.childNodes.length === 0)
+        if (ul.childNodes.length === 0)
             ul.style.display = 'none';
     }
 
@@ -271,7 +323,6 @@
     document.getElementById('label-for-file-input').addEventListener('click', showUlOfFiles);
 
     document.getElementById('file').addEventListener('input', function () {
-        showUlOfFiles();
         var files = document.getElementById("file").files;
         var ul = document.getElementById("selected-files-ul");
         ul.querySelectorAll('*').forEach(n => n.remove());
@@ -288,7 +339,7 @@
             li.className = 'subjects-row'
             ul.appendChild(li);
         }
-
+        showUlOfFiles();
     });
     keepFiltersSelected();
     filter();
