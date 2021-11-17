@@ -48,31 +48,41 @@ public class SubjectController {
         return maybeUser.get();
     }
 
-    @RequestMapping(value = "/newSubjectForm/{uid}", method = RequestMethod.GET)
-    public ModelAndView newSubjectForm(@ModelAttribute("newSubjectForm") final NewSubjectForm form, @PathVariable("uid") final Long uid) {
+    @RequestMapping(value = "/newSubjectForm", method = RequestMethod.GET)
+    public ModelAndView newSubjectForm(@ModelAttribute("newSubjectForm") final NewSubjectForm form) {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
         return new ModelAndView("newSubjectForm");
     }
 
-    @RequestMapping(value = "/newSubjectForm/{uid}", method = RequestMethod.POST)
-    public ModelAndView newSubject(@PathVariable("uid") final Long uid, @ModelAttribute("newSubjectForm") @Valid final NewSubjectForm form,
+    @RequestMapping(value = "/newSubjectForm", method = RequestMethod.POST)
+    public ModelAndView newSubject(@ModelAttribute("newSubjectForm") @Valid final NewSubjectForm form,
                                final BindingResult errors) {
         if (errors.hasErrors()) {
-            return newSubjectForm(form, uid);
+            return newSubjectForm(form);
+        }
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
         }
         try {
-            emailService.sendSubjectRequest(uid, form.getSubject(), form.getMessage());
+            emailService.sendSubjectRequest(maybeUser.get().getId(), form.getSubject(), form.getMessage());
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception.failed");
         }
-        LOGGER.debug("Subject request sent for {}", uid);
-        return new ModelAndView("redirect:/newSubjectFormSent/" + uid);
+        LOGGER.debug("Subject request sent for {}", maybeUser.get().getId());
+        return new ModelAndView("redirect:/newSubjectFormSent");
     }
 
-    @RequestMapping("/newSubjectFormSent/{uid}")
-    public ModelAndView classRequestSent(@PathVariable("uid")final Long uid) {
-        final ModelAndView mav = new ModelAndView("subjectRequestSent");
-        mav.addObject("uid", uid);
-        return mav;
+    @RequestMapping("/newSubjectFormSent")
+    public ModelAndView classRequestSent() {
+        Optional<User> maybeUser = userService.getCurrentUser();
+        if (!maybeUser.isPresent()) {
+            throw new NoUserLoggedException("exception.not.logger.user");
+        }
+        return new ModelAndView("subjectRequestSent").addObject("uid", maybeUser.get().getId());
     }
 
     @RequestMapping(value = "/editSubjects", method = RequestMethod.GET)
@@ -106,7 +116,6 @@ public class SubjectController {
     public ModelAndView removeSubject(@PathVariable("sid") final Long sid, @PathVariable("level") final int level) {
         Long uid = getCurrUser().getId();
         if (teachesService.removeSubjectToUser(uid, sid, level) == 0 ) {
-            System.out.println("ERROR add subject");
             throw new OperationFailedException("exception.failed");
         }
         LOGGER.debug("Subject removed for user {}",uid);
