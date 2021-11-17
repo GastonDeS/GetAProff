@@ -26,7 +26,7 @@
     </h1>
     <form:form class="d-flex justify-content-center" modelAttribute="newSubjectForm" action="${newSubjectUrl}" method="post">
         <div class="form-container">
-            <div class="input-section">
+            <div class="input-section" style="align-items: center">
                 <div class="form-input">
                     <form:label path="subject"><spring:message code="new.subject.form.subject"/></form:label>
                     <form:input type="text" cssClass="form-control" placeHolder="${subjectPlaceHolder}" path="subject"/>
