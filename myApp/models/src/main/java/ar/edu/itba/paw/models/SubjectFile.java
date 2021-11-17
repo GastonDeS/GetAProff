@@ -8,10 +8,6 @@ import java.util.List;
 @Table(name = "subject_files")
 public class SubjectFile {
 
-    @ManyToOne
-    @JoinColumn(name = "userid", foreignKey = @ForeignKey(name = "subject_files_userid_fkey"))
-    private User fileOwner;
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subject_files_fileid_seq")
     @SequenceGenerator(name = "subject_files_fileid_seq", sequenceName = "subject_files_fileid_seq", allocationSize = 1)
@@ -23,12 +19,13 @@ public class SubjectFile {
     @Column
     private byte[] file;
 
-    @Column
-    private Integer level;
-
-    @ManyToOne
-    @JoinColumn(name = "subjectid", foreignKey = @ForeignKey(name = "subject_files_subjectid_fkey"))
-    private Subject subject;
+    @ManyToOne(targetEntity = Teaches.class)
+    @JoinColumns({
+        @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),
+        @JoinColumn(name = "subjectLevel", referencedColumnName = "level"),
+        @JoinColumn(name = "userid", referencedColumnName = "userid")
+    })
+    private Teaches teachesInfo;
 
     @ManyToMany(mappedBy = "sharedFilesByTeacher")
     private List<Lecture> lecturesWithFileShared;
@@ -37,31 +34,20 @@ public class SubjectFile {
         //For Hibernate
     }
 
-    public SubjectFile(User fileOwner, Long fileId, String fileName, byte[] file, Integer level, Subject subject){
-        this.fileOwner = fileOwner;
+    public SubjectFile(Long fileId, String fileName, byte[] file, Teaches teachesInfo){
         this.fileName = fileName;
         this.file = file;
         this.fileId = fileId;
-        this.level = level;
-        this.subject = subject;
+        this.teachesInfo = teachesInfo;
     }
 
     private SubjectFile(Builder builder) {
-        this.fileOwner = builder.fileOwner;
         this.fileName = builder.fileName;
-        this.subject = builder.subject;
-        this.level = builder.level;
+        this.teachesInfo = builder.teachesInfo;
         this.fileId = builder.fileId;
         this.file = builder.file;
     }
 
-    public User getFileOwner() {
-        return fileOwner;
-    }
-
-    public void setFileOwner(User fileOwner) {
-        this.fileOwner = fileOwner;
-    }
 
     public Long getFileId() {
         return fileId;
@@ -71,20 +57,12 @@ public class SubjectFile {
         this.fileId = fileId;
     }
 
-    public Integer getLevel() {
-        return level;
+    public Teaches getTeachesInfo() {
+        return teachesInfo;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setTeachesInfo(Teaches teachesInfo) {
+        this.teachesInfo = teachesInfo;
     }
 
     public String getFileName() {
@@ -105,21 +83,15 @@ public class SubjectFile {
 
     public static class Builder
     {
-        private User fileOwner;
-        private Subject subject;
+        private Teaches teachesInfo;
         private Long fileId;
         private String fileName;
         private byte[] file;
-        private Integer level;
 
         public Builder() {
         }
-        public Builder fileOwner(User fileOwner) {
-            this.fileOwner = fileOwner;
-            return this;
-        }
-        public Builder subject(Subject subject) {
-            this.subject = subject;
+        public Builder teachesInfo(Teaches teachesInfo) {
+            this.teachesInfo = teachesInfo;
             return this;
         }
         public Builder fileId(Long fileId) {
@@ -134,10 +106,7 @@ public class SubjectFile {
             this.file = file;
             return this;
         }
-        public Builder level(Integer level) {
-            this.level = level;
-            return this;
-        }
+
         public SubjectFile build() {
             return new SubjectFile(this);
         }

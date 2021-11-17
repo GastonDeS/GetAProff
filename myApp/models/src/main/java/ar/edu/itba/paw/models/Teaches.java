@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "teaches")
@@ -23,6 +24,9 @@ public class Teaches {
     @Id
     private Subject subject;
 
+    @OneToMany(mappedBy = "teachesInfo", cascade = CascadeType.ALL)
+    private List<SubjectFile> subjectsFilesList;
+
     Teaches() {
         //Just for hibernate
     }
@@ -32,6 +36,14 @@ public class Teaches {
         this.subject = subject;
         this.price = price;
         this.level = level;
+    }
+
+    public List<SubjectFile> getSubjectsFilesList() {
+        return subjectsFilesList;
+    }
+
+    public void setSubjectsFilesList(List<SubjectFile> subjectsFilesList) {
+        this.subjectsFilesList = subjectsFilesList;
     }
 
     public int getLevel() {

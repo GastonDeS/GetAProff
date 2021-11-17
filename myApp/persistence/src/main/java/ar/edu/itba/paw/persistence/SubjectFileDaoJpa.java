@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectFileDao;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.SubjectFile;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,15 +20,16 @@ public class SubjectFileDaoJpa implements SubjectFileDao {
     @Override
     public List<SubjectFile> getAllSubjectFilesFromUser(Long ownerId) {
         final User owner = entityManager.getReference(User.class, ownerId);
-        TypedQuery<SubjectFile> query = entityManager.createQuery("from SubjectFile sf where sf.fileOwner = :owner", SubjectFile.class);
+        TypedQuery<SubjectFile> query = entityManager.createQuery("from SubjectFile sf where sf.teachesInfo.teacher = :owner", SubjectFile.class);
         query.setParameter("owner", owner);
         return query.getResultList();
     }
 
     @Override
     public SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Subject subject, Integer level) {
-        final User owner = entityManager.getReference(User.class, ownerId);
-        final SubjectFile newSubjectFile = new SubjectFile(owner, null, fileName, file, level, subject);
+        final TeachesId teachesId = new TeachesId(ownerId,subject.getSubjectId(),level);
+        final Teaches teaches = entityManager.find(Teaches.class, teachesId);
+        final SubjectFile newSubjectFile = new SubjectFile( null, fileName, file, teaches);
         entityManager.persist(newSubjectFile);
         return newSubjectFile;
     }
@@ -44,13 +45,17 @@ public class SubjectFileDaoJpa implements SubjectFileDao {
 
     @Override
     public List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level) {
-        String mainQuery = "FROM SubjectFile sf WHERE sf.fileOwner = :user ";
+        String mainQuery = "SELECT sf FROM SubjectFile sf WHERE sf.teachesInfo in ( from Teaches t where t.teacher =:user ";
         Subject selectedSubject = entityManager.find(Subject.class, subjectId);
         User mayBeOwner = entityManager.find(User.class, userId);
+
         if (subjectId > 0)
-            mainQuery += "AND sf.subject =:subject ";
+            mainQuery += "AND t.subject =:subject ";
         if (level > 0)
-            mainQuery += "AND sf.level =:level ";
+            mainQuery += "AND t.level =:level ";
+
+        mainQuery += " )";
+
         TypedQuery<SubjectFile> query = entityManager.createQuery(mainQuery, SubjectFile.class);
         if (subjectId > 0)
             query.setParameter("subject", selectedSubject);

@@ -11,6 +11,12 @@ public class TeachesId implements Serializable {
         //Just for hibernate
     }
 
+    public TeachesId(Long teacher, Long subject, int level) {
+        this.teacher = teacher;
+        this.subject = subject;
+        this.level = level;
+    }
+
     public Long getTeacher() {
         return teacher;
     }

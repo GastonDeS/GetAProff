@@ -93,8 +93,8 @@ public class InstanceProvider {
                 .time(timestamp).build();
     }
 
-    public static SubjectFile getNewSubjectFile(User fileOwner, Subject subject) {
-        return new SubjectFile.Builder().fileOwner(fileOwner).subject(subject).build();
+    public static SubjectFile getNewSubjectFile(Teaches teachesInfo) {
+        return new SubjectFile.Builder().teachesInfo(teachesInfo).build();
     }
 
 }

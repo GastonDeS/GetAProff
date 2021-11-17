@@ -71,8 +71,7 @@ CREATE TABLE IF NOT EXISTS subject_files
     file     BYTEA,
     subjectid  INTEGER,
     subjectlevel INTEGER,
-    FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
-    FOREIGN KEY (subjectid) REFERENCES subject ON DELETE CASCADE,
+    FOREIGN KEY (userid,subjectid,subjectlevel) REFERENCES teaches(userId, subjectId, level) ON DELETE CASCADE,
     PRIMARY KEY (fileId)
 );
 

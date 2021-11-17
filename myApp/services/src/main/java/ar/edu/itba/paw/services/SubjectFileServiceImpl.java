@@ -15,6 +15,7 @@ public class SubjectFileServiceImpl implements SubjectFileService {
     @Autowired
     SubjectFileDao subjectFileDao;
 
+    @Transactional
     @Override
     public List<SubjectFile> getAllSubjectFilesFromUser(Long ownerId) {
         return subjectFileDao.getAllSubjectFilesFromUser(ownerId);
@@ -32,6 +33,7 @@ public class SubjectFileServiceImpl implements SubjectFileService {
         return subjectFileDao.deleteSubjectFile(fileId);
     }
 
+    @Transactional
     @Override
     public List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level) {
         return subjectFileDao.filterUserSubjectFilesBySubjectAndLevel(userId,subjectId,level);

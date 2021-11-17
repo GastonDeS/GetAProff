@@ -144,9 +144,9 @@
                         <c:forEach var="file" items="${userSubjectFiles}">
                             <tr class="subjects-row">
                                 <td class="row-info" style="width: 40%">${file.fileName}</td>
-                                <td class="row-info" style="width: 15%">${file.subject.name}</td>
+                                <td class="row-info" style="width: 15%">${file.teachesInfo.subject.name}</td>
                                 <td class="row-info" style="width: 25%"><spring:message
-                                        code="subjects.form.level.${file.level}"/></td>
+                                        code="subjects.form.level.${file.teachesInfo.level}"/></td>
                                 <td style="width: 11%;padding-left: 4.5%;">
                                     <input type="checkbox" name="deleted-files" class="form-check-input"
                                            value="${file.fileId}">
