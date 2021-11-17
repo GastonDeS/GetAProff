@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.exceptions.ProfileNotFoundException;
@@ -212,20 +213,21 @@ public class ProfileController {
     @RequestMapping(value = "/myFiles", method = RequestMethod.GET)
     public ModelAndView myFiles(){
         ModelAndView mav = new ModelAndView("myFiles");
-        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
         List<SubjectFile> userSubjectFiles = subjectFileService.getAllSubjectFilesFromUser(currUser.getId());
         List<Subject> userSubject = teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId());
         mav.addObject("userSubjectFiles", userSubjectFiles);
-        mav.addObject("userSubjectInfo",teachesService.getSubjectInfoListByUser(currUser.getId()));
-        mav.addObject("userSubjects",userSubject);
-        mav.addObject("user",currUser);
+        mav.addObject("userSubjectInfo", teachesService.getSubjectInfoListByUser(currUser.getId()));
+        mav.addObject("userSubjects", userSubject);
+        mav.addObject("user", currUser);
         mav.addObject("filtering",false);
         return mav;
     }
+
     @RequestMapping(value = "/myFiles", method = RequestMethod.GET, params = {"subject-select-filter", "level-select-filter"})
     public ModelAndView myFiles(@RequestParam (name = "subject-select-filter") Long subjectId, @RequestParam (name = "level-select-filter") Integer level ){
         ModelAndView mav = new ModelAndView("myFiles");
-        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
+        User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
         List<Subject> userSubject = teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId());
         List<SubjectFile> userSubjectFiles = subjectFileService.filterUserSubjectFilesBySubjectAndLevel(currUser.getId(), subjectId, level);
         mav.addObject("userSubjectFiles", userSubjectFiles);
@@ -239,8 +241,8 @@ public class ProfileController {
     @RequestMapping(value = "/myFiles", method = RequestMethod.POST)
     public ModelAndView addUserFiles(@RequestParam (name = "files") MultipartFile[] files, @RequestParam (name = "level") Integer level,
                                      @RequestParam (name = "subject") Long subjectId) throws IOException {
-        User currUser = userService.getCurrentUser().orElseThrow(RuntimeException::new);
-        Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(RuntimeException::new);
+        User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
+        Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(() -> new OperationFailedException("exception.failed"));
         for (MultipartFile file : files) {
             subjectFileService.saveNewSubjectFile(file.getBytes(), file.getOriginalFilename(), currUser.getId(), subjectForFile, level%10);
         }
@@ -249,9 +251,12 @@ public class ProfileController {
 
     @RequestMapping(value = "/myFilesDelete/{uid}", method = RequestMethod.POST, params = "deleted-files")
     public ModelAndView removeSubjectFile(@PathVariable("uid") final Long uid,  @RequestParam (name = "deleted-files") String[] filesIdToDelete) {
-        if(userService.getCurrentUser().orElseThrow(RuntimeException::new).getId().equals(uid))
-            for(String file : filesIdToDelete)
-                subjectFileService.deleteSubjectFile(Long.parseLong(file));
+        User currentUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
+        if (!currentUser.getId().equals(uid)) {
+            throw new InvalidOperationException("exception.invalid");
+        }
+        for(String file : filesIdToDelete)
+            subjectFileService.deleteSubjectFile(Long.parseLong(file));
         return new ModelAndView("redirect:/myFiles");
     }
 }
