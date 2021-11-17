@@ -95,17 +95,7 @@ public class LecturesController {
         String offered = "offered";
         lectureService.setStatus(cid, intStatus);
         myClass.get().setStatus(intStatus);
-        String url;
-        URL requestURL;
-        try {
-            requestURL = new URL(request.getRequestURL().toString());
-        } catch (MalformedURLException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        url = requestURL.toString();
-        String path = "/myClasses";
-        int index = url.indexOf(path);
-        String localAddr = url.substring(0, index);
+        String localAddr = localAddress(request, "/myClasses");
         try {
             emailService.sendStatusChangeMessage(myClass.get(), localAddr);
         } catch (MailNotSentException exception) {
@@ -308,19 +298,9 @@ public class LecturesController {
             throw new InvalidOperationException("exception.invalid");
         }
         Lecture newLecture = lectureService.create(curr.get().getId(), uid, t.get().getLevel(), t.get().getSubject().getSubjectId(), t.get().getPrice());
-        String url;
-        URL requestURL;
+        String localAddress = localAddress(request, "/contact");
         try {
-            requestURL = new URL(request.getRequestURL().toString());
-        } catch (MalformedURLException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        url = requestURL.toString();
-        String path = "/contact";
-        int index = url.indexOf(path);
-        String localAddr = url.substring(0, index);
-        try {
-            emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName(), localAddr);
+            emailService.sendNewClassMessage(user.get().getMail(), curr.get().getName(), t.get().getSubject().getName(), localAddress);
         } catch (RuntimeException exception) {
             throw new OperationFailedException("exception");
         }
