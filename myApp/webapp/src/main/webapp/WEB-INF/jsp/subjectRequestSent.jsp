@@ -14,6 +14,7 @@
 <body>
 <jsp:include page="../components/navbar.jsp">
   <jsp:param name="isMainPage" value="${true}"/>
+  <jsp:param name="uid" value="${uid}"/>
 </jsp:include>
 <div class="page-container">
   <div class="form-container">

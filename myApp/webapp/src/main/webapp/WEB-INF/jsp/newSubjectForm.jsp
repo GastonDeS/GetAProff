@@ -18,6 +18,7 @@
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
+    <jsp:param name="uid" value="${userid}"/>
 </jsp:include>
 <div class="page-container">
     <c:url value="/newSubjectForm" var="newSubjectUrl"/>
