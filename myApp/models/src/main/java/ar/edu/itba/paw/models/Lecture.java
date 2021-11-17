@@ -36,11 +36,20 @@ public class Lecture {
                     name = "fileid", referencedColumnName = "fileid"))
     private List<SubjectFile> sharedFilesByTeacher;
 
-    @Column
-    private int level, price, status;
+    @Column(nullable = false)
+    private int level;
 
-    @Column
-    private Timestamp studentLastTime, teacherLastTime;
+    @Column(nullable = false)
+    private int price;
+
+    @Column(nullable = false)
+    private int status;
+
+    @Column(nullable = false)
+    private Timestamp studentLastTime;
+
+    @Column(nullable = false)
+    private Timestamp teacherLastTime;
 
     @OneToMany(mappedBy = "associatedLecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> classPosts;

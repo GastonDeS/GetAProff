@@ -66,13 +66,12 @@ CREATE TABLE IF NOT EXISTS user_file
 CREATE TABLE IF NOT EXISTS subject_files
 (
     userId   INTEGER,
-    fileId   SERIAL,
+    fileId   SERIAL PRIMARY KEY,
     fileName VARCHAR,
     file     BYTEA,
     subjectid  INTEGER,
     subjectlevel INTEGER,
-    FOREIGN KEY (userid,subjectid,subjectlevel) REFERENCES teaches(userId, subjectId, level) ON DELETE CASCADE,
-    PRIMARY KEY (fileId)
+    FOREIGN KEY (userid,subjectid,subjectlevel) REFERENCES teaches(userId, subjectId, level) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS shared
@@ -82,9 +81,7 @@ CREATE TABLE IF NOT EXISTS shared
     FOREIGN KEY (classId) REFERENCES classes ON DELETE CASCADE,
     FOREIGN KEY (fileId) REFERENCES subject_files ON DELETE CASCADE,
     PRIMARY KEY(classId, fileId)
-
 );
-
 
 CREATE TABLE IF NOT EXISTS classes
 (

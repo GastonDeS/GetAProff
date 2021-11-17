@@ -13,14 +13,14 @@ public class SubjectFile {
     @SequenceGenerator(name = "subject_files_fileid_seq", sequenceName = "subject_files_fileid_seq", allocationSize = 1)
     private Long fileId;
 
-    @Column
+    @Column(nullable = false)
     private String fileName;
 
-    @Column
+    @Column(nullable = false)
     private byte[] file;
 
-    @ManyToOne(targetEntity = Teaches.class)
-    @JoinColumns({
+    @ManyToOne(targetEntity = Teaches.class, fetch = FetchType.LAZY)
+    @JoinColumns(value = {
         @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),
         @JoinColumn(name = "subjectLevel", referencedColumnName = "level"),
         @JoinColumn(name = "userid", referencedColumnName = "userid")
