@@ -72,10 +72,6 @@ public class LectureServiceImpl implements LectureService {
         return lectureDao.setStatus(classId, status);
     }
 
-    private Integer getNotificationsCount(Long classId, int role) {
-        return lectureDao.getNotificationsCount( classId, role);
-    }
-
     @Transactional
     @Override
     public int refreshTime(Long classId, int role) {
