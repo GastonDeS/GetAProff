@@ -145,6 +145,7 @@ public class LecturesController {
         Lecture currentLecture = checkLectureExistence(classId);
         User currentUser = checkCurrentUser();
         checkAccessToClassroom(currentUser, currentLecture);
+        if (currentLecture.getStatus() >= 3) throw new ClassNotFoundException("No class found for class id " + classId);
         lectureService.refreshTime(currentLecture.getClassId(), currentUser.getId().equals(currentLecture.getTeacher().getId()) ? 0  : 1);
         return new ModelAndView("classroom")
                 .addObject("currentUser", currentUser)
