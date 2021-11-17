@@ -31,12 +31,6 @@ public class UserServiceImplTest {
     private static final String SCHEDULE = "todos los dias habiles de 8 a 16";
     private static final Long USER_ID = 1L;
     private static final Long USER_ROLE = 1L;
-    private static final String SUBJECT = "MATE";
-    private static final Integer PRICE = 500;
-    private static final Integer LEVEL = 3;
-    private static final Integer MAXPRICE = 1400;
-    private static final Integer MINPRICE = 550;
-    private static final float RATE = 3.99f ;
 
     @InjectMocks
     private  UserServiceImpl userService = new UserServiceImpl();
@@ -53,7 +47,6 @@ public class UserServiceImplTest {
 //        1 setup - precondiciones
         when(passwordEncoder.encode(USER_PASS)).thenReturn(USER_PASS);
         when(mockDao.create(eq(Utility.capitalizeString(USERNAME)),eq(USER_MAIL),eq(USER_PASS),eq(DESCRIPTION),eq(SCHEDULE))).thenReturn(userMocked);
-
 
 //        2 ejercito la class under test una unica linea
         Optional<User> user = userService.create(USERNAME,USER_MAIL,USER_PASS,DESCRIPTION,SCHEDULE,USER_ROLE);

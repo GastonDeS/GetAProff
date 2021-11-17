@@ -64,6 +64,7 @@ public class Lecture {
     }
 
     private Lecture(Builder builder) {
+        this.classId = builder.classId;
         this.teacher = builder.teacher;
         this.student = builder.student;
         this.subject = builder.subject;
@@ -212,11 +213,16 @@ public class Lecture {
         private int level, price, status;
         private Timestamp studentLastTime, teacherLastTime;
         private List<SubjectFile> sharedFilesByTeacher;
+        private Long classId;
 
         public Builder(User teacher, User student, Subject subject) {
             this.teacher = teacher;
             this.student = student;
             this.subject = subject;
+        }
+        public Builder classId(Long classId) {
+            this.classId = classId;
+            return this;
         }
         public Builder teacher(User teacher) {
             this.teacher = teacher;

@@ -39,7 +39,7 @@ public class LectureServiceImpl implements LectureService {
         } else {
             lectureList.addAll(lectureDao.findClassesByStudentAndStatus(studentId, status));
         }
-        lectureList.forEach((e) -> e.setNotifications(getNotificationsCount(e.getClassId(),1)));
+        lectureList.forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),1)));
         Collections.reverse(lectureList);
         return lectureList;
     }
@@ -55,7 +55,7 @@ public class LectureServiceImpl implements LectureService {
         }else {
             lectureList.addAll(lectureDao.findClassesByTeacherAndStatus(teacherId, status));
         }
-        lectureList.forEach((e) -> {e.setNotifications(getNotificationsCount(e.getClassId(),0));});
+        lectureList.forEach((e) -> {e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),0));});
         Collections.reverse(lectureList);
         return lectureList;
     }
@@ -72,8 +72,7 @@ public class LectureServiceImpl implements LectureService {
         return lectureDao.setStatus(classId, status);
     }
 
-    @Override
-    public Integer getNotificationsCount( Long classId, int role) {
+    private Integer getNotificationsCount(Long classId, int role) {
         return lectureDao.getNotificationsCount( classId, role);
     }
 

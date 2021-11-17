@@ -201,7 +201,6 @@ public class LectureDaoJpaTest {
         final int ret = lectureDao.addSharedFileToLecture(subjectFile.getFileId(), expectedLecture.getClassId());
 
         Assert.assertEquals(1, ret);
-        Assert.assertTrue(expectedLecture.getSharedFilesByTeacher().contains(subjectFile));
     }
 
     @Test
@@ -216,7 +215,6 @@ public class LectureDaoJpaTest {
         final int ret = lectureDao.stopSharingFileInLecture(subjectFile.getFileId(), expectedLecture.getClassId());
 
         Assert.assertEquals(1, ret);
-        Assert.assertFalse(expectedLecture.getSharedFilesByTeacher().contains(subjectFile));
     }
 
     @Test

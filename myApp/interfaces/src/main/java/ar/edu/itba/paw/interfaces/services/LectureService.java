@@ -17,8 +17,6 @@ public interface LectureService {
 
     int setStatus(Long classId, int status);
 
-    Integer getNotificationsCount( Long classId, int role) ;
-
     int refreshTime(Long classId, int role);
 
     int addSharedFileToLecture(Long subjectFileId, Long lectureId);
