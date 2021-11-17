@@ -197,8 +197,6 @@
                     <br>
                     <spring:message code="myFiles.description.2"/>
                 </h4>
-                <h4 style="margin: 10px 0 20px 0; color: #026670">
-                    <spring:message code="myFiles.noFilesYet"/></h4>
             </c:otherwise>
         </c:choose>
         <div class="myFiles-main-btn-container">

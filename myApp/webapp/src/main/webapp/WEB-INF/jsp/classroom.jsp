@@ -18,7 +18,7 @@
     <title>Class</title>
     <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>">
-    <spring:message code="class.enter.message.${currentClass.status}" var="enterMessagePlaceholder"/>
+    <spring:message code="class.enter.message.${currentClass.status}.${currentUser.id==currentClass.teacher.id}" var="enterMessagePlaceholder"/>
     <spring:message code="class.publish" var="publishPlaceholder"/>
 </head>
 <body>
