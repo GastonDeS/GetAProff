@@ -219,6 +219,7 @@ public class ProfileController {
         mav.addObject("userSubjectInfo",teachesService.getSubjectInfoListByUser(currUser.getId()));
         mav.addObject("userSubjects",userSubject);
         mav.addObject("user",currUser);
+        mav.addObject("filtering",false);
         return mav;
     }
     @RequestMapping(value = "/myFiles", method = RequestMethod.GET, params = {"subject-select-filter", "level-select-filter"})
@@ -231,6 +232,7 @@ public class ProfileController {
         mav.addObject("userSubjectInfo",teachesService.getSubjectInfoListByUser(currUser.getId()));
         mav.addObject("userSubjects",userSubject);
         mav.addObject("user",currUser);
+        mav.addObject("filtering",true);
         return mav;
     }
 
