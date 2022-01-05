@@ -1,0 +1,11 @@
+{
+  "navbar": {
+    "explore": "Explorar",
+    "myClasses": "Mis clases",
+    "myFavourites": "Mis favoritos",
+    "myAccount": "Mi cuenta",
+    "myProfile": "Mi perfil",
+    "myFiles": "Mis archivos",
+    "logout": "Cerrar sesión"
+  }
+}

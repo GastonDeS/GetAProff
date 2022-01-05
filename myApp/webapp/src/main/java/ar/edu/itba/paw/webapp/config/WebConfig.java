@@ -16,6 +16,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
@@ -29,7 +30,7 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-@EnableWebMvc
+@EnableScheduling
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services",
         "ar.edu.itba.paw.persistence"})
 @Configuration
@@ -39,14 +40,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("classpath:schema.sql")
     private Resource schema;
 
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/jsp/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
+//    @Bean
+//    public ViewResolver viewResolver() {
+//        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+//        viewResolver.setViewClass(JstlView.class);
+//        viewResolver.setPrefix("/WEB-INF/jsp/");
+//        viewResolver.setSuffix(".jsp");
+//        return viewResolver;
+//    }
 
     @Bean
     public DataSource dataSource() {
