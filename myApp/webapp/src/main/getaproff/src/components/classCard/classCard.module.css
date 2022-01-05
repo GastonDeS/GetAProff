@@ -1,0 +1,11 @@
+.Card {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+}
+
+.Header {
+    text-align: start;
+    font-size: 18px;
+    font-family: "Roboto Light", sans-serif;
+}

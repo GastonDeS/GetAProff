@@ -10,7 +10,7 @@ import styles from './navbarCust.module.css'
 import Logo from '../../assets/img/logo_green.png'
 import i18next from "i18next";
 
-const MyNav = () => {
+const NavbarCust = () => {
     return (
         <div>
             <div className="w-100">
@@ -56,6 +56,6 @@ const MyNav = () => {
     );
 };
 
-MyNav.propTypes = {};
+NavbarCust.propTypes = {};
 
-export default MyNav;
+export default NavbarCust;
