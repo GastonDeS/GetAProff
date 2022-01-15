@@ -5,12 +5,13 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Optional;
 
-@Path("users")
+@Path("api/users")
 @Component
 public class UserController {
     @Autowired
