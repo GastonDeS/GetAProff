@@ -1,18 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './classCard.module.css';
-import {Card} from 'react-bootstrap';
+import {Card, Container} from 'react-bootstrap';
+import CustomButton from '../customButton/customButton';
+import '../../index.css';
 
 const ClassCard = () => {
   return (
     <Card className={styles.Card}>
-      <Card.Header className={styles.Header}>Header</Card.Header>
-      <Card.Body>
-        <Card.Title>Primary Card Title</Card.Title>
-        <Card.Text>
-          Some quick example text to build on the card title and make up the bulk
-          of the card's content.
-        </Card.Text>
+      <Container className={styles.Subject}>
+        <Card.Text className={styles.SubjectText}>Subject</Card.Text>
+        <Card.Title className={styles.Title}>Programación Imperativa</Card.Title>
+      </Container>
+      <Card.Body className={styles.Body}>
+        <Container className={styles.BodyMain}>
+          <Card.Text className={styles.Teacher}>Teacher: John Doe</Card.Text>
+          <Card.Text className={styles.Text}>Level: Secondary</Card.Text>
+          <Card.Text className={styles.Text}>Price: 800/hour</Card.Text>
+        </Container>
+        <Container className={styles.Buttons}>
+          <CustomButton text="Finish" color="red"/>
+          <CustomButton text="Enter classroom"/>
+        </Container>
       </Card.Body>
     </Card>
   );

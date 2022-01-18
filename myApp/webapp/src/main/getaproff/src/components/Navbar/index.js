@@ -21,19 +21,19 @@ const Navbar = ({ empty }) => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setLoading(true)
-    fetch("api/users/88")
-      .then( res => res.json())
-      .then( data => {
-        setUser(data)
-        setLoading(false)
-        console.log(data)
-      })
-      .catch(err => {
-        setError(true)
-        setLoading(false)})
-  }, [])
+  // useEffect(() => {
+  //   setLoading(true)
+  //   fetch("api/users/88")
+  //     .then( res => res.json())
+  //     .then( data => {
+  //       setUser(data)
+  //       setLoading(false)
+  //       console.log(data)
+  //     })
+  //     .catch(err => {
+  //       setError(true)
+  //       setLoading(false)})
+  // }, [])
 
   return (
     <Wrapper>

@@ -17,7 +17,7 @@ const Wrapper = styled.button`
   }
 `;
 
-const Button = ({ text, callback, color }) => {
+const Button = ({ text, callback, color, type }) => {
   return (
     <Wrapper onClick={callback} style={{backgroundColor: color}}>
       {text}
@@ -28,7 +28,8 @@ const Button = ({ text, callback, color }) => {
 Button.propTypes = {
   text: PropTypes.string,
   color: PropTypes.string,
-  callback: PropTypes.func
+  callback: PropTypes.func,
+  type: PropTypes.string,
 };
 
 Button.defaultProps = {

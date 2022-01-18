@@ -14,7 +14,7 @@ const Register = () => {
 
   return (
     <Wrapper>
-      <Navbar empty='true'/>
+      <Navbar empty={true}/>
       <MainContainer>
         <FormContainer>
           <TabContainer>

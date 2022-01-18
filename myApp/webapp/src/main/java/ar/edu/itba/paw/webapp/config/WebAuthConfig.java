@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.config.filter.JWTAuthorizationFilter;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
@@ -50,14 +53,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.sessionManagement()
+        http.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement()
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
-                    .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
-                    .antMatchers("/editSubjects/*", "/newSubjectForm", "/newSubjectFormSent").hasAuthority("USER_TEACHER")
-                    .antMatchers("/editProfile/startTeaching").hasAnyAuthority("USER_STUDENT")
-                    .antMatchers("/myClasses", "/editCertifications", "/favourites", "/classroom/*", "/contact/*").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
-                    .antMatchers("/login", "/register").anonymous()
+                    .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+//                    .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
+//                    .antMatchers("/editSubjects/*", "/newSubjectForm", "/newSubjectFormSent").hasAuthority("USER_TEACHER")
+//                    .antMatchers("/editProfile/startTeaching").hasAnyAuthority("USER_STUDENT")
+//                    .antMatchers("/myClasses", "/editCertifications", "/favourites", "/classroom/*", "/contact/*").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
+//                    .antMatchers("/login", "/register").anonymous()
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .usernameParameter("j_email")
