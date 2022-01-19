@@ -5,11 +5,11 @@ import Profile from '../../assets/img/profile.png'
 import RatingStar from '../RatingStar'
 import axios from "axios"
 
-const TutorCard = ({ name, description, rating, minPrice, maxPrice }) => {
+const TutorCard = ({ name, description, rating, minPrice, maxPrice, image }) => {
 
   return (
     <Card>
-      <TutorImg variant="top" src={Profile} alt='tutorImage'/> 
+      <TutorImg variant="top" src={image} alt='tutorImage'/> 
       <CardBody>
         <Name>{name}</Name>
         <Description>{description}</Description>

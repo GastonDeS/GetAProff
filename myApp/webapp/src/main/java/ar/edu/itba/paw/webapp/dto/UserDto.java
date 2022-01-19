@@ -7,8 +7,8 @@ import javax.ws.rs.core.UriInfo;
 
 public class UserDto {
 
-    @Value("${spring.data.rest.basePath}")
-    private static String apiBaseUrl;
+//    @Value("${spring.data.rest.basePath}")
+//    private static String apiBaseUrl;
 
     private String url;
 

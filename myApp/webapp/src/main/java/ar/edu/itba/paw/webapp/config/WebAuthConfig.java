@@ -58,6 +58,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/images/*").permitAll()
 //                    .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
 //                    .antMatchers("/editSubjects/*", "/newSubjectForm", "/newSubjectFormSent").hasAuthority("USER_TEACHER")
 //                    .antMatchers("/editProfile/startTeaching").hasAnyAuthority("USER_STUDENT")
