@@ -11,14 +11,14 @@ export const Wrapper = styled.div`
   width: 100%;
 
   img {
-    width: 28px;
+    width: 25px;
     @media screen and (max-width: 1200px) {
-      width: 1.25vw;
+      width: 1.75vw;
     }
   }
 
   input {
-    font-size: var(--fontMed);
+    font-size: var(--fontSmall);
     padding: 0.5em;
     border: 0;
     width: 95%;
