@@ -14,6 +14,34 @@ export const MainContainer = styled.div`
   justify-content: flex-start;
 `;
 
+export const SearchContainer = styled.div `
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 1rem;
+  height: fit-content;
+  width: 60vw;
+  border-radius: 10px;
+  background-color: var(--primary);
+  margin-bottom: 1rem;
+  padding: 1.75rem;
+`;
+
+export const SearchBarContainer = styled.div `
+  height: fit-content;
+  width: 100%;
+`;
+
+export const ButtonContainer = styled.div `
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1em;
+`;
+
 export const TutorContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(12rem, 16rem));
   width: 90%;

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardBody, Description, Name, Price, TutorImg } from './TutorCard.styles'
-import Profile from '../../assets/img/profile.png';
-import RatingStar from '../RatingStar';
+import Profile from '../../assets/img/profile.png'
+import RatingStar from '../RatingStar'
+import axios from "axios"
 
 const TutorCard = ({ name, description, rating, minPrice, maxPrice }) => {
 

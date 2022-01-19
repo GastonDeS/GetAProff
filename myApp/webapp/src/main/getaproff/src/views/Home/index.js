@@ -1,8 +1,10 @@
 import React, {useHistory} from 'react'
 import PropTypes from 'prop-types'
-import { MainContainer, TutorContainer, Wrapper } from './Home.styles'
+import { ButtonContainer, MainContainer, SearchBarContainer, SearchContainer, TutorContainer, Wrapper } from './Home.styles'
 import Navbar from '../../components/Navbar'
 import TutorCard from '../../components/TutorCard'
+import SearchBar from '../../components/SearchBar'
+import Button from '../../components/Button'
 
 const Home = () => {
 
@@ -10,6 +12,18 @@ const Home = () => {
     <Wrapper>
       <Navbar/>
       <MainContainer>
+        <SearchContainer>
+          <SearchBarContainer>
+            <SearchBar></SearchBar>
+          </SearchBarContainer>
+          <ButtonContainer>
+            <Button text='Matematicas'/>
+            <Button text='Fisica'/>
+            <Button text='Ingles'/>
+            <Button text='Piano'/>
+            <Button text='Cocina'/>
+          </ButtonContainer>
+        </SearchContainer>
         <TutorContainer>
           <TutorCard 
             name="John Doe" 

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const Card = styled.div`
   overflow: hidden;
@@ -7,7 +7,7 @@ export const Card = styled.div`
   cursor: pointer;
   transition: transform 200ms ease-in;
   width: 225px; 
-  height: 365px;
+  height: 385px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -32,7 +32,7 @@ export const CardBody = styled.div`
 
 export const TutorImg = styled.img`
   width: 100%;
-  height: 200px;
+  height: 225px;
   object-fit: cover;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;

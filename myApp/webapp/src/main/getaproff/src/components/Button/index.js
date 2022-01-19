@@ -4,16 +4,20 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const Wrapper = styled.button`
-  width: 7.5rem;
+  width: fit-content;
   border-radius: 2rem;
   color: white;
   height: fit-content;
   font-size: var(--fontMed);
   border: transparent;
-  padding: 0.25em 1em;
+  padding: 0.45em 1.3em;
 
   &:hover {
     color: black;
+  }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 1.25vw;
   }
 `;
 
