@@ -3,6 +3,20 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.util.List;
 
+@SqlResultSetMapping(
+        name="CardProfileMapping",
+        classes = @ConstructorResult(
+                targetClass = CardProfile.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "name"),
+                        @ColumnResult(name = "maxPrice", type = int.class),
+                        @ColumnResult(name = "minPrice", type = int.class),
+                        @ColumnResult(name = "desc"),
+                        @ColumnResult(name = "rate", type = float.class),
+                }
+        )
+)
 @Entity
 @Table(name = "teaches")
 @IdClass(TeachesId.class)

@@ -230,6 +230,13 @@ public class User {
         return userFilesList;
     }
 
+    public Float getRate() {
+        float total = 0F;
+        for (Rating r : ratings) {
+            total += r.getRate();
+        }
+        return total/ratings.size();
+    }
 
     @Override
     public boolean equals(Object o) {

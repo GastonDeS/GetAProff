@@ -178,46 +178,46 @@ public class TeachesDaoJpaTest {
         });
     }
 
-    @Test
-    @Rollback
-    public void testGetTopRatedTeachers() {
-        for (int i = 1; i < 6; i++) {
-            final User userExtra = InstanceProvider.getNewUser(i);
-            entityManager.persist(userExtra);
-            final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
-                    InstanceProvider.getNewLowRating(userExtra, user);
-            entityManager.persist(rating);
-            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
-        }
-        final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
+//    @Test
+//    @Rollback
+//    public void testGetTopRatedTeachers() {
+//        for (int i = 1; i < 6; i++) {
+//            final User userExtra = InstanceProvider.getNewUser(i);
+//            entityManager.persist(userExtra);
+//            final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
+//                    InstanceProvider.getNewLowRating(userExtra, user);
+//            entityManager.persist(rating);
+//            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
+//        }
+//        final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
+//
+//        Assert.assertEquals(4, topRatedTeachers.size());
+//        for (int i = 0; i < 4; i++) {
+//            Object[] teacherInfoRaw = (Object[]) topRatedTeachers.get(i);
+//            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
+//        }
+//    }
 
-        Assert.assertEquals(4, topRatedTeachers.size());
-        for (int i = 0; i < 4; i++) {
-            Object[] teacherInfoRaw = (Object[]) topRatedTeachers.get(i);
-            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
-        }
-    }
-
-    @Test
-    @Rollback
-    public void testGetMostRequested() {
-        for (int i = 1; i < 6; i++) {
-            final User userExtra = InstanceProvider.getNewUser(i);
-            entityManager.persist(userExtra);
-            if (i < 5) {
-                final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
-                entityManager.persist(lectureExtra);
-            }
-            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
-        }
-        final List<Object> mostRequested = teachesDao.getMostRequested();
-
-        Assert.assertEquals(4, mostRequested.size());
-        for (int i = 0; i < 4; i++) {
-            Object[] teacherInfoRaw = (Object[]) mostRequested.get(i);
-            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
-        }
-    }
+//    @Test
+//    @Rollback
+//    public void testGetMostRequested() {
+//        for (int i = 1; i < 6; i++) {
+//            final User userExtra = InstanceProvider.getNewUser(i);
+//            entityManager.persist(userExtra);
+//            if (i < 5) {
+//                final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
+//                entityManager.persist(lectureExtra);
+//            }
+//            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
+//        }
+//        final List<Object> mostRequested = teachesDao.getMostRequested();
+//
+//        Assert.assertEquals(4, mostRequested.size());
+//        for (int i = 0; i < 4; i++) {
+//            Object[] teacherInfoRaw = (Object[]) mostRequested.get(i);
+//            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
+//        }
+//    }
 
     @Test
     @Rollback

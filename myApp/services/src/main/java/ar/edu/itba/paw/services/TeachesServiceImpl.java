@@ -104,14 +104,12 @@ public class TeachesServiceImpl implements TeachesService {
 
     @Override
     public List<CardProfile> getTopRatedTeachers() {
-        List<Object> topRatedTeachersRaw = teachesDao.getTopRatedTeachers();
-        return cardProfileConverter(topRatedTeachersRaw);
+        return teachesDao.getTopRatedTeachers();
     }
 
     @Override
     public List<CardProfile> getMostRequested() {
-        List<Object> hottestTeachersRaw = teachesDao.getMostRequested();
-        return cardProfileConverter(hottestTeachersRaw);
+        return teachesDao.getMostRequested();
     }
 
     @Override

@@ -31,7 +31,6 @@ public class ImagesController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getImage(@PathParam("id") Long id) {
         Optional<Image> image = imageService.findImageById(id);
-        System.out.println("HOLA: " + image.isPresent());
         return image.isPresent() ? Response.ok(ImageDto.fromUser(uriInfo, image.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 

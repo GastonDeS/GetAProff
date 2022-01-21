@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.daos;
 
+import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
 import java.util.List;
@@ -34,9 +34,9 @@ public interface TeachesDao {
 
     List<Object> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset);
 
-    List<Object> getTopRatedTeachers();
+    List<CardProfile> getTopRatedTeachers();
 
-    List<Object> getMostRequested();
+    List<CardProfile> getMostRequested();
 
     List<Object> getSubjectInfoListByUser(Long teacherId);
 }
