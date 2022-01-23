@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.List;
 
-@Path("api")
+@Path("api/teachers")
 @Component
 public class TeacherController {
 
@@ -28,7 +28,15 @@ public class TeacherController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listTopRatedTeachers() {
         List<CardProfile> topRatedTeachers = teachesService.getTopRatedTeachers();
-        return Response.ok(TeacherDto.topRatedTeachers(uriInfo, topRatedTeachers)).build();
+        return Response.ok(TeacherDto.getTeachers(uriInfo, topRatedTeachers)).build();
+    }
+
+    @GET
+    @Path("most-requested")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response listMostRequestedTeachers() {
+        List<CardProfile> mostRequestedTeachers = teachesService.getMostRequested();
+        return Response.ok(TeacherDto.getTeachers(uriInfo, mostRequestedTeachers)).build();
     }
 
 //    @RequestMapping("/")

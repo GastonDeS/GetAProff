@@ -15,11 +15,11 @@ public class TeacherDto {
 
     private float rate;
 
-    private UserDto user;
+    private String description, name;
 
     private Long userId;
 
-    public static GenericEntity<List<TeacherDto>> topRatedTeachers(UriInfo uri, List<CardProfile> teachersCardProfile) {
+    public static GenericEntity<List<TeacherDto>> getTeachers(UriInfo uri, List<CardProfile> teachersCardProfile) {
         List<TeacherDto> topRatedTeacherDto = new ArrayList<>();
         teachersCardProfile.forEach(teacher -> {
             TeacherDto teacherDto = new TeacherDto();
@@ -28,9 +28,27 @@ public class TeacherDto {
             teacherDto.minPrice = teacher.getMinPrice();
             teacherDto.rate = teacher.getRate();
             teacherDto.userId = teacher.getUserId();
+            teacherDto.name = teacher.getName();
+            teacherDto.description = teacher.getDescription();
             topRatedTeacherDto.add(teacherDto);
         });
         return new GenericEntity<List<TeacherDto>>(topRatedTeacherDto){};
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getUserId() {
@@ -39,14 +57,6 @@ public class TeacherDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public UserDto getUser() {
-        return user;
-    }
-
-    public void setUser(UserDto user) {
-        this.user = user;
     }
 
     public String getUrl() {

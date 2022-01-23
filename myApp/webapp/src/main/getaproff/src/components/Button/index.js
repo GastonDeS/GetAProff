@@ -3,27 +3,27 @@ import PropTypes from 'prop-types'
 
 import styled from 'styled-components'
 
+const Wrapper = styled.button`
+  width: fit-content;
+  border-radius: 2rem;
+  color: white;
+  height: fit-content;
+  border: transparent;
+  padding: 0.45em 1.3em;
+
+  &:hover {
+    color: black;
+  }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 1.75vw;
+  }
+`;
+
 const Button = ({ text, callback, color, fontSize }) => {
-  const Wrapper = styled.button`
-    width: fit-content;
-    border-radius: 2rem;
-    color: white;
-    height: fit-content;
-    font-size: ${fontSize};
-    border: transparent;
-    padding: 0.45em 1.3em;
-
-    &:hover {
-      color: black;
-    }
-
-    @media screen and (max-width: 1200px) {
-      font-size: 1.75vw;
-    }
-  `;
 
   return (
-    <Wrapper onClick={callback} style={{backgroundColor: color}}>
+    <Wrapper onClick={callback} style={{backgroundColor: color, fontSize: fontSize}}>
       {text}
     </Wrapper>
   )

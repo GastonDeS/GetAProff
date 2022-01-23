@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+
+import Profile from '../../assets/img/profile.png'
 
 import { ButtonContainer, Content, MainContainer, SearchBarContainer, SearchContainer, TutorContainer, Wrapper } from './Home.styles'
 import Navbar from '../../components/Navbar'
@@ -9,14 +11,46 @@ import SearchBar from '../../components/SearchBar'
 import Button from '../../components/Button'
 
 const Home = () => {
+  const [topRated, setTopRated] = useState({users: []});
+  const [mostRequested, setMostRequested] = useState({users: []});
+  
+  // const fetchImage = async (userId) => {
+  //   const res = await axios.get('api/images/' + userId)
+  //     .catch(error => {
+  //       console.error('ERROR ' + error.message)
+  //     });
+  //   return res ? 'data:image/png;base64,' + res.data.image : Profile
+  // }
 
-  const [image, setImage] = useState('');
+  // axios.get('api/images/87')
+    // .then(res => {
+    //   setImage('data:image/png;base64,' + res.data.image);
+    //   // console.log(res.data.image);
+    // });
 
-  axios.get('api/images/87')
-    .then(res => {
-      setImage('data:image/png;base64,' + res.data.image);
-      console.log(res.data.image);
+  const fetchTopRated = () => {
+    axios.get('/api/teachers/top-rated').then(res => {
+      const data = res.data
+      setTopRated({ users: data.map(item => {
+        // const ret = await fetchImage(item.userId)
+        return {...item, image: Profile}
+      })})
     });
+  }
+
+  const fetchMostRequested = () => {
+    axios.get('/api/teachers/most-requested').then(res => {
+      const data = res.data
+      setMostRequested({ users: data.map(item => {
+        return {...item, image: Profile}
+      })})
+    });
+  }
+
+  useEffect(() => {
+    fetchTopRated();
+    fetchMostRequested();
+  }, []);
 
   return (
     <Wrapper>
@@ -37,44 +71,29 @@ const Home = () => {
         <Content>
           <h2>Top Rated Teachers</h2>
           <TutorContainer>
-            <TutorCard 
-              name="John Doe" 
-              description="Some quick example text to build on the card title and make up the bulk of
-              the card's content. Some more text to test."
-              minPrice="1000"
-              maxPrice="1000"
-              rating="2"
-              image={image}
-            />
-            <TutorCard 
-              name="John Doe" 
-              description="Hola que tal"
-              rating="3.75" 
-              minPrice="1000" 
-              maxPrice="2000"/>
-            <TutorCard name="John Doe"/>
-            <TutorCard name="John Doe"/>
+            {topRated.users.map(item => {
+              return <TutorCard key={item.userId}
+                name={item.name} 
+                description={item.description} 
+                rating={item.rate}
+                maxPrice={item.maxPrice}
+                minPrice={item.minPrice}
+                image={item.image}/>
+            })}
           </TutorContainer>
         </Content>
         <Content>
           <h2>Most requested teachers</h2>
           <TutorContainer>
-            <TutorCard 
-              name="John Doe" 
-              description="Some quick example text to build on the card title and make up the bulk of
-              the card's content. Some more text to test."
-              minPrice="1000"
-              maxPrice="1000"
-              rating="2"
-            />
-            <TutorCard 
-              name="John Doe" 
-              description="Hola que tal"
-              rating="3.75" 
-              minPrice="1000" 
-              maxPrice="2000"/>
-            <TutorCard name="John Doe"/>
-            <TutorCard name="John Doe"/>
+            {mostRequested.users.map(item => {
+              return <TutorCard key={item.userId}
+                name={item.name} 
+                description={item.description} 
+                rating={item.rate}
+                maxPrice={item.maxPrice}
+                minPrice={item.minPrice}
+                image={item.image}/>
+            })}
           </TutorContainer>
         </Content>
       </MainContainer>

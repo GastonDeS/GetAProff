@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,25 +15,11 @@ const options = ['navbar.myProfile', 'navbar.myFiles'];
 
 const Navbar = ({ empty }) => {
   const [auth, setAuth] = useState(false);
-  const [user, setUser] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  // const [user, setUser] = useState('');
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(false);
 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   setLoading(true)
-  //   fetch("api/users/88")
-  //     .then( res => res.json())
-  //     .then( data => {
-  //       setUser(data)
-  //       setLoading(false)
-  //       console.log(data)
-  //     })
-  //     .catch(err => {
-  //       setError(true)
-  //       setLoading(false)})
-  // }, [])
 
   return (
     <Wrapper>
@@ -41,7 +27,7 @@ const Navbar = ({ empty }) => {
         <LogoImg src={Logo} alt='lgoo'/>
         {
           empty ? <></> :
-          (auth ?
+          (auth ? 
             <Container>
               <NavLink to="/">{i18next.t('navbar.explore')}</NavLink>
               <NavLink to="/">{i18next.t('navbar.myClasses')}</NavLink>

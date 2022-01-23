@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardBody, Description, Name, Price, TutorImg } from './TutorCard.styles'
-import Profile from '../../assets/img/profile.png'
 import RatingStar from '../RatingStar'
-import axios from "axios"
 
 const TutorCard = ({ name, description, rating, minPrice, maxPrice, image }) => {
 
@@ -15,7 +13,7 @@ const TutorCard = ({ name, description, rating, minPrice, maxPrice, image }) => 
         <Description>{description}</Description>
         <RatingStar rating={rating}/>
         {
-          minPrice == maxPrice ? <Price>${minPrice}</Price> :
+          minPrice === maxPrice ? <Price>${minPrice}</Price> :
           <Price>${minPrice} - ${maxPrice}</Price>
         }
       </CardBody>
