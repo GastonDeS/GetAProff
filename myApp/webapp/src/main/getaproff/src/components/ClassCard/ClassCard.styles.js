@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: 25vh;
+  height: 22vh;
   margin-bottom: 1rem;
   border-radius: 0.625rem;
   display: flex;
@@ -10,6 +10,14 @@ export const Wrapper = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   background-color: white;
+
+  @media screen and (max-height: 500px) {
+    height: 30vh;
+  }
+
+  @media screen and (max-width: 600px) {
+    height: 17vw!important;
+  }
 `;
 
 export const Margin = styled.div`
@@ -85,6 +93,14 @@ export const ClassInfo = styled.div`
   p {
     font-size: 1.1vw;
     margin-bottom: 5px;
+
+    @media screen and (max-height: 500px) {
+      font-size: 4vh;
+    }
+
+    @media screen and (max-width: 1000px) {
+      font-size: 1.2vw!important;
+    }
   }
 `;
 

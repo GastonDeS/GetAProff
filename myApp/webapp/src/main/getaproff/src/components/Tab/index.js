@@ -9,11 +9,11 @@ const TabContainer = styled.div`
   align-items: stretch;
 `;
 
-const Tab = ({ children, setIndex }) => {
+const Tab = ({ children, setIndex, flexDirection }) => {
   const [itemId, setItemId] = useState(0);
 
   return (
-    <TabContainer>
+    <TabContainer style={{ flexDirection: flexDirection}}>
       {React.Children.map(children, (child, index) => {
         return React.cloneElement(child, {
           onClick: () => {
@@ -27,6 +27,12 @@ const Tab = ({ children, setIndex }) => {
   );
 };
 
-Tab.propTypes = {}
+Tab.propTypes = {
+  flexDirection: PropTypes.string
+}
+
+Tab.defaultProps = {
+  flexDirection: 'row'
+};
 
 export default Tab

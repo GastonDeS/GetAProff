@@ -18,7 +18,7 @@ const Item = styled.div`
   backdrop-filter: blur(8.5px);
   -webkit-backdrop-filter: blur(8.5px);
 
-  > p {
+  p {
     width: fit-content;
     border-radius: 2rem;
     padding: 0.5em 0.75em;
@@ -28,6 +28,15 @@ const Item = styled.div`
     background-color: ${(props) => (
       props.selected ? selectedColor : defaultColor
     )};
+    text-align: center;
+
+    @media screen and (max-height: 500px) {
+      font-size: 3.5vh;
+    }
+
+    @media screen and (max-width: 1200px) {
+      font-size: 1.2vw!important;
+    }
   }
 `;
 

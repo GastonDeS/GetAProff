@@ -19,7 +19,7 @@ const Register = () => {
         <FormContainer>
           <TabContainer>
             <WelcomeText>Welcome</WelcomeText>
-            <Tab setIndex={setIndex}>
+            <Tab setIndex={setIndex} style={{ borderRadius: '2rem' }}>
               {/* index = 0 */}
               <TabItem style={{ borderBottomLeftRadius: '2rem' }}>Teacher</TabItem> 
               {/* index = 1 */}
