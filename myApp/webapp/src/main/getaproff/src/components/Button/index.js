@@ -16,7 +16,11 @@ const Wrapper = styled.button`
   }
 
   @media screen and (max-width: 1200px) {
-    font-size: 1.75vw;
+    font-size: 1.75vw!important;
+  }
+
+  @media screen and (max-height: 500px) {
+    font-size: 2vh!important;
   }
 `;
 
@@ -34,6 +38,7 @@ Button.propTypes = {
   color: PropTypes.string,
   callback: PropTypes.func,
   fontSize: PropTypes.string,
+  radius: PropTypes.string
 };
 
 Button.defaultProps = {

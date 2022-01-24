@@ -7,6 +7,7 @@ import { GlobalStyle } from './GlobalStyle';
 import Login from './views/Login';
 import Register from './views/Register';
 import Home from './views/Home';
+import MyClasses from './views/MyClasses';
 
 const App = () => {
 
@@ -17,6 +18,7 @@ const App = () => {
         <Route path='/' element={ <Home/> }/> 
         <Route path='/login' element={ <Login/> }/>
         <Route path='/register' element={ <Register/> }/>
+        <Route path='/my-classes' element={ <MyClasses/> }/>
       </Routes>
     </Router>
   );

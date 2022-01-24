@@ -20,7 +20,7 @@ const RatingStar = ({ rating }) => {
     } else if (rating - index > 0 && rating - index < 1) {
       items.push(<span key={index} className={'fa fa-star-half-o checked'} style={{color: 'orange'}}></span>);
     } else {
-      items.push(<span key={index} class={'fa fa-star-o checked'} style={{color: 'orange'}}></span>);
+      items.push(<span key={index} className={'fa fa-star-o checked'} style={{color: 'orange'}}></span>);
     }
   }
 

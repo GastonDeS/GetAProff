@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import Navbar from '../../components/Navbar/index'
 import { useNavigate } from 'react-router-dom'
-import axios from "axios"
+import { isEmail } from 'react-validation'
 
 import {
   LoginContainer,
@@ -18,12 +18,22 @@ import {
 import Input from '../../components/Input'
 import AuthService from '../../services/authService'
 
-const Login = (props) => {
+const Login = () => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-  const [state, setState] = useState('');
+  const [message, setMessage] = useState('');
 
   const navigate = useNavigate();
+
+  const email = (value) => {
+    if (!isEmail(value)) {
+      return (
+        <div className="alert alert-danger" role="alert">
+          This is not a valid email.
+        </div>
+      );
+    }
+  };
 
   const onChangeMail = (e) => {
     const mail = e.target.value;
@@ -37,22 +47,28 @@ const Login = (props) => {
   };
 
   const form = useRef();
+  const submitBtn = useRef();
+
   const handleLogin = (event) => {
     event.preventDefault();
-    const loginFormData = new FormData();
-    loginFormData.append("mail", mail)
+    setMessage('');
 
-    try {
-      // make axios post request
-      const response = axios({
-        method: "post",
-        url: "/api/auth/login",
-        data: loginFormData,
-        headers: { "Content-Type": "multipart/form-data" },
+    var formData = new FormData();
+    formData.append('mail', mail);
+    AuthService.login(formData).then(
+      () => {
+        navigate("/");
+        window.location.reload();
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
       });
-    } catch(error) {
-      console.log(error)
-    }
   };
 
   return (
@@ -67,7 +83,7 @@ const Login = (props) => {
               <Input type="password" placeholder="Password" onChange={onChangePassword}/>
             </InputContainer>
             <ButtonContainer>
-              <Button type='submit'>Login</Button>
+              <Button ref={submitBtn} type='submit'>Login</Button>
             </ButtonContainer>
           </FormContainer>
           <SignUp href='/register'>Don't have an account yet? Sign up</SignUp>
@@ -77,9 +93,6 @@ const Login = (props) => {
   )
 }
 
-Login.propTypes = {
-
-}
+Login.propTypes = {}
 
 export default Login
-

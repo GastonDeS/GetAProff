@@ -15,9 +15,6 @@ const options = ['navbar.myProfile', 'navbar.myFiles'];
 
 const Navbar = ({ empty }) => {
   const [auth, setAuth] = useState(false);
-  // const [user, setUser] = useState('');
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 

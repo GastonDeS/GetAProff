@@ -33,7 +33,7 @@ const Register = () => {
               <Input type="password" placeholder="Password"/>
               <Input type="password" placeholder="Confirm password"/>
               {
-                index == 0 ? 
+                index === 0 ? 
                 (<>
                     <Textarea placeholder="Description"/>
                     <Textarea placeholder="Schedule"/>
@@ -49,10 +49,8 @@ const Register = () => {
       </MainContainer>
     </Wrapper>
   )
-}
+};
 
-Register.propTypes = {
-
-}
+Register.propTypes = {};
 
 export default Register

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import styled from "styled-components"
 
 const Input = ({ type, placeholder }) => {
-  return <StyledInput type={type} placeholder={placeholder} />;
+  return <StyledInput type={type} placeholder={placeholder}/>;
 }
 
 const StyledInput = styled.input`
