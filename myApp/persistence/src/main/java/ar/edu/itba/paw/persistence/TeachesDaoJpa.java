@@ -151,10 +151,10 @@ public class TeachesDaoJpa implements TeachesDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> getSubjectInfoListByUser(Long teacherId) {
-        String queryStr = "select s.subjectid, s.name, t.price, t.level from teaches t join subject s on t.subjectid = s.subjectid where t.userid = :teacherId";
-        final Query query = entityManager.createNativeQuery(queryStr)
+    public List<SubjectInfo> getSubjectInfoListByUser(Long teacherId) {
+        String queryStr = "select s.subjectid as id, s.name as name, t.price as price, t.level as level from teaches t join subject s on t.subjectid = s.subjectid where t.userid = :teacherId";
+        final Query query = entityManager.createNativeQuery(queryStr, "SubjectInfoMapping")
                 .setParameter("teacherId", teacherId);
-        return query.getResultList();
+        return (List<SubjectInfo>) query.getResultList();
     }
 }

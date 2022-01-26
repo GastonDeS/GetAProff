@@ -33,14 +33,14 @@ public class TeachesServiceImpl implements TeachesService {
     @Transactional
     @Override
     public List<SubjectInfo> getSubjectInfoListByUser(Long teacherId) {
-        List<SubjectInfo> subjectInfoList = new ArrayList<>();
-        List<Object> subjectInfoListRaw = teachesDao.getSubjectInfoListByUser(teacherId);
-        subjectInfoListRaw.forEach((subjectInfoRaw) -> {
-            Object[] subjectInfo = (Object[]) subjectInfoRaw;
-            subjectInfoList.add(new SubjectInfo(((Number) subjectInfo[0]).longValue(), subjectInfo[1].toString(),
-                    ((Number) subjectInfo[2]).intValue(), ((Number) subjectInfo[3]).intValue()));
-        });
-        return subjectInfoList;
+//        List<SubjectInfo> subjectInfoList = new ArrayList<>();
+//        List<Object> subjectInfoListRaw = teachesDao.getSubjectInfoListByUser(teacherId);
+//        subjectInfoListRaw.forEach((subjectInfoRaw) -> {
+//            Object[] subjectInfo = (Object[]) subjectInfoRaw;
+//            subjectInfoList.add(new SubjectInfo(((Number) subjectInfo[0]).longValue(), subjectInfo[1].toString(),
+//                    ((Number) subjectInfo[2]).intValue(), ((Number) subjectInfo[3]).intValue()));
+//        });
+        return teachesDao.getSubjectInfoListByUser(teacherId);
     }
 
     @Override

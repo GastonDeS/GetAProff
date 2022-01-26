@@ -14,7 +14,7 @@ import i18next from "i18next";
 const options = ['navbar.myProfile', 'navbar.myFiles'];
 
 const Navbar = ({ empty }) => {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(true);
 
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const Navbar = ({ empty }) => {
           (auth ? 
             <Container>
               <NavLink to="/">{i18next.t('navbar.explore')}</NavLink>
-              <NavLink to="/">{i18next.t('navbar.myClasses')}</NavLink>
+              <NavLink to="/my-classes">{i18next.t('navbar.myClasses')}</NavLink>
               <NavLink to="/">{i18next.t('navbar.myFavourites')}</NavLink>
               <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={i18next.t('navbar.logout')}/>
             </Container> :

@@ -39,23 +39,23 @@ public class TeachesServiceImplTest {
     @Mock
     private TeachesDao mockDao;
 
-    @Test
-    public void  testGetSubjectInfoListByUser() {
-        //1. Setup - precondiciones
-        final List<Object> subjectInfoRaw = new ArrayList<>();
-        subjectInfoRaw.add(new Object[] {SUBJECT_ID_ONE, SUBJECT_ONE, PRICE, LEVEL});
-        subjectInfoRaw.add(new Object[] {SUBJECT_ID_TWO, SUBJECT_TWO, PRICE, LEVEL});
-        when(mockDao.getSubjectInfoListByUser(eq(USER_ID_ONE))).thenReturn(subjectInfoRaw);
-
-        //2. Ejercito la class under test una unica linea
-        final List<SubjectInfo> maybeSubjectInfoList = teachesService.getSubjectInfoListByUser(USER_ID_ONE);
-
-        //3. Asserts - postcondiciones
-        final List<SubjectInfo> subjectInfoList = new ArrayList<>();
-        subjectInfoList.add(new SubjectInfo(SUBJECT_ID_ONE, SUBJECT_ONE, PRICE, LEVEL));
-        subjectInfoList.add(new SubjectInfo(SUBJECT_ID_TWO, SUBJECT_TWO, PRICE, LEVEL));
-        Assert.assertEquals(subjectInfoList, maybeSubjectInfoList);
-    }
+//    @Test
+//    public void  testGetSubjectInfoListByUser() {
+//        //1. Setup - precondiciones
+//        final List<Object> subjectInfoRaw = new ArrayList<>();
+//        subjectInfoRaw.add(new Object[] {SUBJECT_ID_ONE, SUBJECT_ONE, PRICE, LEVEL});
+//        subjectInfoRaw.add(new Object[] {SUBJECT_ID_TWO, SUBJECT_TWO, PRICE, LEVEL});
+//        when(mockDao.getSubjectInfoListByUser(eq(USER_ID_ONE))).thenReturn(subjectInfoRaw);
+//
+//        //2. Ejercito la class under test una unica linea
+//        final List<SubjectInfo> maybeSubjectInfoList = teachesService.getSubjectInfoListByUser(USER_ID_ONE);
+//
+//        //3. Asserts - postcondiciones
+//        final List<SubjectInfo> subjectInfoList = new ArrayList<>();
+//        subjectInfoList.add(new SubjectInfo(SUBJECT_ID_ONE, SUBJECT_ONE, PRICE, LEVEL));
+//        subjectInfoList.add(new SubjectInfo(SUBJECT_ID_TWO, SUBJECT_TWO, PRICE, LEVEL));
+//        Assert.assertEquals(subjectInfoList, maybeSubjectInfoList);
+//    }
 
     @Test
     public void testFindTeachersTeachingSubject() {
