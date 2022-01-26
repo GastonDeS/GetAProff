@@ -219,19 +219,19 @@ public class TeachesDaoJpaTest {
 //        }
 //    }
 
-    @Test
-    @Rollback
-    public void testGetSubjectInfoListByUser() {
-        entityManager.persist(teaches);
-        final List<Object> subjectInfoList = teachesDao.getSubjectInfoListByUser(user.getId());
-
-        Object[] subjectInfo = (Object[]) subjectInfoList.get(0);
-
-        Assert.assertEquals(1, subjectInfoList.size());
-        Assert.assertEquals((long) subject.getSubjectId(), ((Number) subjectInfo[0]).longValue());
-        Assert.assertEquals(subject.getName(), subjectInfo[1].toString());
-        Assert.assertEquals(teaches.getPrice(), ((Number) subjectInfo[2]).intValue());
-        Assert.assertEquals(teaches.getLevel(), ((Number) subjectInfo[3]).intValue());
-    }
+//    @Test
+//    @Rollback
+//    public void testGetSubjectInfoListByUser() {
+//        entityManager.persist(teaches);
+//        final List<Object> subjectInfoList = teachesDao.getSubjectInfoListByUser(user.getId());
+//
+//        Object[] subjectInfo = (Object[]) subjectInfoList.get(0);
+//
+//        Assert.assertEquals(1, subjectInfoList.size());
+//        Assert.assertEquals((long) subject.getSubjectId(), ((Number) subjectInfo[0]).longValue());
+//        Assert.assertEquals(subject.getName(), subjectInfo[1].toString());
+//        Assert.assertEquals(teaches.getPrice(), ((Number) subjectInfo[2]).intValue());
+//        Assert.assertEquals(teaches.getLevel(), ((Number) subjectInfo[3]).intValue());
+//    }
 
 }

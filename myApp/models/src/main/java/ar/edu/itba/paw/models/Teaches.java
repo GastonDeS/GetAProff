@@ -3,19 +3,32 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.util.List;
 
-@SqlResultSetMapping(
-        name="CardProfileMapping",
-        classes = @ConstructorResult(
-                targetClass = CardProfile.class,
-                columns = {
-                        @ColumnResult(name = "id", type = Long.class),
-                        @ColumnResult(name = "name"),
-                        @ColumnResult(name = "maxPrice", type = int.class),
-                        @ColumnResult(name = "minPrice", type = int.class),
-                        @ColumnResult(name = "desc"),
-                        @ColumnResult(name = "rate", type = float.class),
-                }
-        )
+@SqlResultSetMappings(
+        {@SqlResultSetMapping(
+                name = "CardProfileMapping",
+                classes = @ConstructorResult(
+                        targetClass = CardProfile.class,
+                        columns = {
+                                @ColumnResult(name = "id", type = Long.class),
+                                @ColumnResult(name = "name"),
+                                @ColumnResult(name = "maxPrice", type = int.class),
+                                @ColumnResult(name = "minPrice", type = int.class),
+                                @ColumnResult(name = "desc"),
+                                @ColumnResult(name = "rate", type = float.class),
+                        }
+                )
+        ), @SqlResultSetMapping(
+                name = "SubjectInfoMapping",
+                classes = @ConstructorResult(
+                        targetClass = SubjectInfo.class,
+                        columns = {
+                                @ColumnResult(name = "id", type = Long.class),
+                                @ColumnResult(name = "name"),
+                                @ColumnResult(name = "price", type = int.class),
+                                @ColumnResult(name = "level", type = int.class),
+                        }
+                )
+        )}
 )
 @Entity
 @Table(name = "teaches")

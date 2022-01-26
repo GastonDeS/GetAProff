@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.models.CardProfile;
 import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
 import java.util.List;
@@ -38,5 +39,5 @@ public interface TeachesDao {
 
     List<CardProfile> getMostRequested();
 
-    List<Object> getSubjectInfoListByUser(Long teacherId);
+    List<SubjectInfo> getSubjectInfoListByUser(Long teacherId);
 }
