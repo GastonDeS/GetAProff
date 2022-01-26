@@ -70,3 +70,25 @@ export const PageContainer = styled.div`
     padding: 2em;
     min-width: 600px;
 `;
+
+export const StarsReviews = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+`;
+
+export const StarsReviewsText = styled.div`
+    font-size: 16px;
+    font-family: "Roboto Light", sans-serif;
+    margin: 0 0 0 5px;
+`;
+
+export const ProfileInfoButtons = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+`;
