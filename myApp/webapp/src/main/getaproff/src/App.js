@@ -8,6 +8,7 @@ import Login from './views/Login';
 import Register from './views/Register';
 import Home from './views/Home';
 import MyClasses from './views/MyClasses';
+import Profile from './views/Profile';
 import EditSubjects from './views/EditSubjects';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path='/login' element={ <Login/> }/>
         <Route path='/register' element={ <Register/> }/>
         <Route path='/my-classes' element={ <MyClasses/> }/>
+        <Route path='/profile/:id' element={ <Profile/> }/>
         <Route path='/edit-subjects' element={ <EditSubjects/> }/>
       </Routes>
     </Router>
