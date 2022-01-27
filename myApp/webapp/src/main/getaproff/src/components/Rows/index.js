@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
+import i18next from "i18next";
+
 import Delete from "../../assets/img/delete_icon.png";
 
 const Row = styled.tr`
@@ -29,26 +31,26 @@ export const Data = styled.td`
   }
 `;
 
-const Rows = ({ edit, id, name, price, level, rowId, remove, subject }) => {
+const Rows = ({ edit, rowId, remove, subject }) => {
   return (
     <>
       <Row>
         {edit ? (
           <>
             <Data style={{ width: "45%" }}>{subject.name}</Data>
-            <Data style={{ width: "20%" }}>${subject.price}/hour</Data>
-            <Data style={{ width: "30%" }}>{subject.price}</Data>
+            <Data style={{ width: "20%" }}>${subject.price}/{i18next.t('subjects.hour')}</Data>
+            <Data style={{ width: "30%" }}>{i18next.t('subjects.levels.' + subject.level)}</Data>
             <Data style={{ width: "5%", textAlign: "end" }}>
-              <a onClick={() => remove(rowId, id)}>
+              <a onClick={() => remove(rowId, subject.id)}>
                 <img src={Delete} alt="delete-icon"/>
               </a>
             </Data>
           </>
         ) : (
           <>
-            <Data style={{ width: "50%" }}>Apples</Data>
-            <Data style={{ width: "20%" }}>98 ui</Data>
-            <Data style={{ width: "30%" }}>8.4 mg</Data>
+            <Data style={{ width: "50%" }}>{subject.name}</Data>
+            <Data style={{ width: "20%" }}>${subject.price}/{i18next.t('subjects.hour')}</Data>
+            <Data style={{ width: "30%" }}>{i18next.t('subjects.levels.' + subject.level)}</Data>
           </>
         )}
       </Row>
@@ -58,12 +60,9 @@ const Rows = ({ edit, id, name, price, level, rowId, remove, subject }) => {
 
 Rows.propTypes = {
   edit: PropTypes.bool,
-  id: PropTypes.number,
-  level: PropTypes.number,
-  name: PropTypes.string,
-  price: PropTypes.number,
   rowId: PropTypes.number,
-  remove: PropTypes.func
+  remove: PropTypes.func,
+  subject: PropTypes.object
 };
 
 export default Rows;

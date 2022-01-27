@@ -10,7 +10,9 @@ import {
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
-import Rows from '../../components/Rows'
+import Rows from '../../components/Rows';
+
+import i18next from "i18next";
 
 const EditSubjects = () => {
   const [rows, setRows] = useState({data: []});
@@ -44,15 +46,15 @@ const EditSubjects = () => {
           <Table>
             <thead>
               <Row>
-                <Headers style={{ width: "45%" }}>Subject</Headers>
-                <Headers style={{ width: "20%" }}>Price</Headers>
-                <Headers style={{ width: "30%" }}>Level</Headers>
+                <Headers style={{ width: "45%" }}>{i18next.t('subjects.subject')}</Headers>
+                <Headers style={{ width: "20%" }}>{i18next.t('subjects.price')}</Headers>
+                <Headers style={{ width: "30%" }}>{i18next.t('subjects.level')}</Headers>
                 <Headers style={{ width: "5%" }}></Headers>
               </Row>
             </thead>
             <tbody>
               {rows.data.map((item, index) => {
-                return <Rows edit={true} remove={remove} rowId={index} subject={item}/>
+                return <Rows key={index} edit={true} remove={remove} rowId={index} subject={item}/>
               })}
             </tbody>
           </Table>

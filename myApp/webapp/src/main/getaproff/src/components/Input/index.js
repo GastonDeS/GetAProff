@@ -1,16 +1,21 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import PropTypes from "prop-types";
 
-import styled from "styled-components"
+import styled from "styled-components";
 
-const Input = ({ type, placeholder }) => {
-  return <StyledInput type={type} placeholder={placeholder}/>;
-}
+const Input = ({ type, placeholder, register, required, name }) => {
+  return (
+    <>
+      {/* <StyledInput type={type} placeholder={placeholder} {...register(name, required)} /> */}
+      <StyledInput type={type} placeholder={placeholder}/>
+    </>
+  );
+};
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input`
   background: hsla(185, 96%, 22%, 0.35);
   border-radius: 2rem;
-  width: 80%;
+  width: 100%;
   height: 35%;
   padding: 1rem;
   border: none;
@@ -36,7 +41,9 @@ const StyledInput = styled.input`
 
 Input.propTypes = {
   type: PropTypes.string,
-  placeholder: PropTypes.string
-}
+  placeholder: PropTypes.string,
+  name: PropTypes.string,
+  register: PropTypes.func,
+};
 
-export default Input
+export default Input;
