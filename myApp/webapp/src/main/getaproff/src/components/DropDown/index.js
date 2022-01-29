@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 import i18next from "i18next";
 
 import {
   DropdownItem,
   DropdownMenu,
-  DropdownDivider
-} from 'styled-dropdown-component';
+  DropdownDivider,
+} from "styled-dropdown-component";
 import styled from "styled-components";
 
 const DropdownContainer = styled.div`
@@ -15,7 +15,9 @@ const DropdownContainer = styled.div`
   cursor: pointer;
   padding: 10px;
 
-  button, input[type="submit"], input[type="reset"] {
+  button,
+  input[type="submit"],
+  input[type="reset"] {
     background: none;
     color: inherit;
     border: none;
@@ -36,11 +38,18 @@ const DropdownContainer = styled.div`
     &:hover {
       color: black;
     }
+
+    @media screen and (max-width: 1200px) {
+      font-size: 2.4vw !important;
+    }
+
+    @media screen and (max-height: 500px) {
+      font-size: 4.5vh !important;
+    }
   }
 `;
 
-const DropDown = ( {brand, options, endOption} ) => {
-
+const DropDown = ({ brand, options, endOption }) => {
   const [hidden, setHidden] = useState(true);
 
   return (
@@ -52,7 +61,7 @@ const DropDown = ( {brand, options, endOption} ) => {
         ))}
         <DropdownDivider />
         <DropdownItem>{endOption}</DropdownItem>
-        </DropdownMenu>
+      </DropdownMenu>
     </DropdownContainer>
   );
 };
@@ -60,7 +69,7 @@ const DropDown = ( {brand, options, endOption} ) => {
 DropDown.propTypes = {
   brand: PropTypes.string,
   options: PropTypes.array,
-  endOption: PropTypes.string
+  endOption: PropTypes.string,
 };
 
 export default DropDown;

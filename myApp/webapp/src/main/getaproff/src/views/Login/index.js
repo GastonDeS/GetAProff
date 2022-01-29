@@ -37,14 +37,11 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onChangeMail = (e) => {
-    const mail = e.target.value;
-    setMail(mail);
+    setMail(e.target.value);
   };
 
   const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-    window.location.reload();
+    setPassword(e.target.value);
   };
 
   const form = useRef();
@@ -54,9 +51,7 @@ const Login = () => {
     event.preventDefault();
     setMessage("");
 
-    var formData = new FormData();
-    formData.append("mail", mail);
-    AuthService.login(formData).then(
+    AuthService.login(mail, password).then(
       () => {
         navigate("/");
         window.location.reload();
@@ -68,7 +63,8 @@ const Login = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        setMessage(resMessage);
+        setMessage('Please enter valid credentials');
+        console.log(AuthService.getCurrentUser())
       }
     );
   };
@@ -79,7 +75,7 @@ const Login = () => {
       <MainContainer>
         <LoginContainer>
           <WelcomeText>Welcome</WelcomeText>
-          <FormContainer ref={form} onSubmit={handleSubmit(handleLogin)}>
+          <FormContainer ref={form} onSubmit={handleLogin}>
             <InputContainer>
               <InputWrapper>
                 {/* <Input
@@ -105,6 +101,7 @@ const Login = () => {
                   onChange={onChangePassword}
                 />
               </InputWrapper>
+              {message && <Error>{message}</Error>}
             </InputContainer>
             <ButtonContainer>
               <Button ref={submitBtn} type="submit">

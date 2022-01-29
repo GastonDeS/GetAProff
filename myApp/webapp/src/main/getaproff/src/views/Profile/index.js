@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
-import ReactStarts from 'react-stars';
-import { Wrapper,PageContainer, ProfileInfoButtons,StarsReviews ,ProfileImage, ProfileInfo, ProfileContainer, InfoContainer, ProfileName, StarsReviewsText } from './profile.styles';
+import RatingStar from 'react-stars';
+import { Wrapper, PageContainer, ProfileInfoButtons, StarsReviews ,ProfileImage, ProfileInfo, ProfileContainer, InfoContainer, ProfileName, StarsReviewsText } from './Profile.styles';
 import Button from '../../components/Button';
 import Tab from '../../components/Tab';
 import TabItem from '../../components/TabItem';
 import Textarea from '../../components/Textarea';
-
 
 const Profile = () => {
     const [index, setIndex] = useState(0);
@@ -23,7 +22,7 @@ const Profile = () => {
                             <ProfileName>
                                 <h1>Gaston De Schant</h1>
                                 <StarsReviews>
-                                    <ReactStarts count={5} value={5} size={18} edit={false}/>
+                                    <RatingStar count={5} value={5} size={18} edit={false}/>
                                     <StarsReviewsText>
                                         <p>( 0 Reviews )</p>
                                     </StarsReviewsText>

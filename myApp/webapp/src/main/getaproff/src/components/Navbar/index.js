@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-
-import Logo from '../../assets/img/logo_green.png';
+import AuthService from "../../services/authService";
 
 //Styles
 import { Wrapper, Content, LogoImg, Container, NavLink } from "./Navbar.styles";
 import Button from '../Button';
 import Dropdown from '../DropDown';
+import Logo from '../../assets/img/logo_green.png';
 
 import i18next from "i18next";
 
 const options = ['navbar.myProfile', 'navbar.myFiles'];
 
 const Navbar = ({ empty }) => {
-  const [auth, setAuth] = useState(true);
+  const [auth, setAuth] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    AuthService.getCurrentUser ? setAuth(true) : setAuth(false);
+  }, []);
+  
+  useEffect(() => {
+    console.log(auth)
+  }, [auth])
 
   return (
     <Wrapper>

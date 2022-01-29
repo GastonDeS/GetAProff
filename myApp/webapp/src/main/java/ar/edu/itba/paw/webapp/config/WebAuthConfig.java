@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
-import ar.edu.itba.paw.webapp.config.filter.JWTAuthorizationFilter;
+import ar.edu.itba.paw.webapp.config.filter.JwtAuthorizationFilter;
+import ar.edu.itba.paw.webapp.auth.AuthEntryPointJwt;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,6 +36,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PawUserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -53,8 +58,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement()
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
@@ -65,12 +69,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 //                    .antMatchers("/myClasses", "/editCertifications", "/favourites", "/classroom/*", "/contact/*").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
 //                    .antMatchers("/login", "/register").anonymous()
                     .antMatchers("/**").authenticated()
-                .and().formLogin()
-                    .usernameParameter("j_email")
-                    .passwordParameter("j_password")
-                    .defaultSuccessUrl("/default", false)
-                    .loginPage("/login")
-                    .failureUrl("/login?error=true")
+//                .and().formLogin()
+//                    .usernameParameter("j_email")
+//                    .passwordParameter("j_password")
+//                    .defaultSuccessUrl("/default", false)
+//                    .loginPage("/login")
+//                    .failureUrl("/login?error=true")
                 .and().rememberMe()
                     .rememberMeParameter("j_rememberme")
                     .userDetailsService(userDetailsService)
@@ -80,8 +84,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/login")
                 .and().exceptionHandling()
-                    .accessDeniedPage("/403")
+                    .authenticationEntryPoint(unauthorizedHandler)
                 .and().csrf().disable();
+
+        http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

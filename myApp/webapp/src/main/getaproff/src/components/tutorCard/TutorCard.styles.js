@@ -7,7 +7,7 @@ export const Card = styled.div`
   cursor: pointer;
   transition: transform 200ms ease-in;
   width: 225px; 
-  height: 385px;
+  height: 397px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
