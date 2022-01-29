@@ -10,7 +10,7 @@ const Textarea = ({ placeholder }) => {
 const StyledTextarea = styled.textarea`
   background: hsla(185, 96%, 22%, 0.35);
   border-radius: 2rem;
-  width: 80%;
+  width: 100%;
   height: 16vh;
   padding: 1rem;
   border: none;

@@ -112,6 +112,11 @@ export const SignUp = styled.a`
 
 export const InputWrapper = styled.div`
   width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-direction: column;
 `;
 
 export const Error = styled.p`

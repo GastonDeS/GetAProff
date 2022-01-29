@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import styled from 'styled-components'
 
-const Wrapper = styled.button`
+const StyledButton = styled.button`
   width: fit-content;
   border-radius: 2rem;
   color: white;
@@ -27,9 +27,9 @@ const Wrapper = styled.button`
 const Button = ({ text, callback, color, fontSize }) => {
 
   return (
-    <Wrapper onClick={callback} style={{backgroundColor: color, fontSize: fontSize}}>
+    <StyledButton onClick={callback} style={{backgroundColor: color, fontSize: fontSize}}>
       {text}
-    </Wrapper>
+    </StyledButton>
   )
 }
 

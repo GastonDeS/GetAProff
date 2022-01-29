@@ -93,8 +93,6 @@ const Login = () => {
                   placeholder="Email"
                   onChange={onChangeMail}
                 />
-              </InputWrapper>
-              <InputWrapper>
                 <Input
                   type="password"
                   placeholder="Password"
