@@ -19,8 +19,8 @@ const Wrapper = styled.button`
     font-size: 1.75vw!important;
   }
 
-  @media screen and (max-height: 500px) {
-    font-size: 2vh!important;
+  @media screen and (max-height: 400px) {
+    font-size: 4vh!important;
   }
 `;
 

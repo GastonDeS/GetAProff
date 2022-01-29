@@ -60,8 +60,8 @@ export const Content = styled.div`
       font-size: 3vw !important;
     }
 
-    @media screen and (max-height: 500px) {
-      font-size: 4.5vh !important;
+    @media screen and (max-height: 400px) {
+      font-size: 8vh !important;
     }
   }
 `;

@@ -15,11 +15,16 @@ const login = async (mail, password) => {
     })
 };
 
+const logout = () => {
+  localStorage.removeItem('user');
+};
+
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  return JSON.parse(localStorage.getItem('user'));
 };
 
 export default {
   login,
   getCurrentUser,
+  logout,
 };

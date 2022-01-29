@@ -11,15 +11,20 @@ import Logo from '../../assets/img/logo_green.png';
 
 import i18next from "i18next";
 
-const options = ['navbar.myProfile', 'navbar.myFiles'];
-
 const Navbar = ({ empty }) => {
+  const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
 
-  const navigate = useNavigate();
+  const onLogout = () => {
+    AuthService.logout();
+    navigate('/login');
+  }
+
+  const options = [{name: 'navbar.myProfile', path: '/profile'}, {name: 'navbar.myFiles', path: '/my-files'}];
+  const endOption = {name: i18next.t('navbar.logout'), callback: onLogout}
 
   useEffect(() => {
-    AuthService.getCurrentUser ? setAuth(true) : setAuth(false);
+    AuthService.getCurrentUser() ? setAuth(true) : setAuth(false);
   }, []);
   
   useEffect(() => {
@@ -37,7 +42,7 @@ const Navbar = ({ empty }) => {
               <NavLink to="/">{i18next.t('navbar.explore')}</NavLink>
               <NavLink to="/my-classes">{i18next.t('navbar.myClasses')}</NavLink>
               <NavLink to="/">{i18next.t('navbar.myFavourites')}</NavLink>
-              <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={i18next.t('navbar.logout')}/>
+              <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={endOption}/>
             </Container> :
             <Container>
               <Button text='Login' callback={() => { navigate('/login') }}/>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import i18next from "i18next";
+import { useNavigate } from 'react-router-dom';
 
 import {
   DropdownItem,
@@ -52,15 +53,17 @@ const DropdownContainer = styled.div`
 const DropDown = ({ brand, options, endOption }) => {
   const [hidden, setHidden] = useState(true);
 
+  const navigate = useNavigate();
+
   return (
     <DropdownContainer>
       <button onClick={() => setHidden(!hidden)}>{brand}</button>
       <DropdownMenu hidden={hidden} toggle={() => setHidden(!hidden)}>
         {options.map((option, index) => (
-          <DropdownItem key={index}>{i18next.t(option)}</DropdownItem>
+          <DropdownItem key={index} onClick={() => { navigate(option.path) }}>{i18next.t(option.name)}</DropdownItem>
         ))}
         <DropdownDivider />
-        <DropdownItem>{endOption}</DropdownItem>
+        <DropdownItem onClick={endOption.callback}>{endOption.name}</DropdownItem>
       </DropdownMenu>
     </DropdownContainer>
   );
