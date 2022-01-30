@@ -10,6 +10,7 @@ import Home from './views/Home';
 import MyClasses from './views/MyClasses';
 import Profile from './views/Profile';
 import EditSubjects from './views/EditSubjects';
+import MyFiles from './views/MyFiles';
 
 const App = () => {
 
@@ -23,6 +24,7 @@ const App = () => {
         <Route path='/my-classes' element={ <MyClasses/> }/>
         <Route path='/profile/:id' element={ <Profile/> }/>
         <Route path='/edit-subjects' element={ <EditSubjects/> }/>
+        <Route path='/my-files' element={ <MyFiles/> } />
       </Routes>
     </Router>
   );

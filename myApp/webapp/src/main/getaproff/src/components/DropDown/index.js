@@ -8,6 +8,7 @@ import {
   DropdownDivider
 } from 'styled-dropdown-component';
 import styled from "styled-components";
+import {Link} from "react-router-dom";
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -48,7 +49,10 @@ const DropDown = ( {brand, options, endOption} ) => {
       <button onClick={() => setHidden(!hidden)}>{brand}</button>
       <DropdownMenu hidden={hidden} toggle={() => setHidden(!hidden)}>
         {options.map((option, index) => (
-          <DropdownItem key={index}>{i18next.t(option)}</DropdownItem>
+          <DropdownItem tag="span" key={index}>
+            <Link to='/my-files' style={{ textDecoration: 'none'}}>
+              {i18next.t(option)}
+            </Link></DropdownItem>
         ))}
         <DropdownDivider />
         <DropdownItem>{endOption}</DropdownItem>

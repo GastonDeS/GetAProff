@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    userId      SERIAL PRIMARY KEY,
+    userId      BIGINT PRIMARY KEY,
     name        varchar(100),
     password    varchar(100),
     mail        varchar(100),
@@ -100,14 +100,14 @@ CREATE TABLE IF NOT EXISTS classes
 
 CREATE TABLE IF NOT EXISTS roles
 (
-    roleId SERIAL PRIMARY KEY,
+    roleId BIGINT PRIMARY KEY,
     role varchar(100)
     );
 
 CREATE TABLE IF NOT EXISTS userRoles
 (
-    roleId INTEGER NOT NULL,
-    userId INTEGER NOT NULL,
+    roleId BIGINT NOT NULL,
+    userId BIGINT NOT NULL,
     PRIMARY KEY (roleId, userId),
     FOREIGN KEY (roleId) REFERENCES roles ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE

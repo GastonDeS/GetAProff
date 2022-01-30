@@ -21,7 +21,7 @@ const Navbar = ({ empty }) => {
   return (
     <Wrapper>
       <Content>
-        <LogoImg src={Logo} alt='lgoo'/>
+        <LogoImg src={Logo} alt='logo'/>
         {
           empty ? <></> :
           (auth ? 
