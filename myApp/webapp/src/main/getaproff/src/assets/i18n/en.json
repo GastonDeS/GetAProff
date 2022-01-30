@@ -7,5 +7,17 @@
     "myProfile": "My profile",
     "myFiles": "My files",
     "logout": "Logout"
+  },
+  "subjects": {
+    "subject": "Subject",
+    "price": "Price",
+    "level": "Level",
+    "hour": "hour",
+    "levels": {
+      "0": "Not specified",
+      "1": "Elementary",
+      "2": "Middle School",
+      "3": "College/University"
+    }
   }
 }

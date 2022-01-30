@@ -1,8 +1,7 @@
-import React, {useRef, useState} from 'react'
-import PropTypes from 'prop-types'
-import Navbar from '../../components/Navbar/index'
-import { useNavigate } from 'react-router-dom'
-import { isEmail } from 'react-validation'
+import React, { useRef, useState } from "react";
+import PropTypes from "prop-types";
+import Navbar from "../../components/Navbar/index";
+import { useNavigate } from "react-router-dom";
 
 import {
   LoginContainer,
@@ -13,37 +12,36 @@ import {
   ButtonContainer,
   Button,
   SignUp,
-  FormContainer
-} from './Login.styles'
-import Input from '../../components/Input'
-import AuthService from '../../services/authService'
+  FormContainer,
+  InputWrapper,
+  Error,
+} from "./Login.styles";
+import Input from "../../components/Input";
+import AuthService from "../../services/authService";
+import { useForm } from "react-hook-form";
+
+const EMAIL_PATTERN =
+  '/^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/';
 
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: "onSubmit" });
+
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
-  const email = (value) => {
-    if (!isEmail(value)) {
-      return (
-        <div className="alert alert-danger" role="alert">
-          This is not a valid email.
-        </div>
-      );
-    }
-  };
-
   const onChangeMail = (e) => {
-    const mail = e.target.value;
-    setMail(mail);
+    setMail(e.target.value);
   };
 
   const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-    window.location.reload();
+    setPassword(e.target.value);
   };
 
   const form = useRef();
@@ -51,11 +49,9 @@ const Login = () => {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    setMessage('');
+    setMessage("");
 
-    var formData = new FormData();
-    formData.append('mail', mail);
-    AuthService.login(formData).then(
+    AuthService.login(mail, password).then(
       () => {
         navigate("/");
         window.location.reload();
@@ -67,32 +63,57 @@ const Login = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        setMessage(resMessage);
-      });
+        setMessage('Please enter valid credentials');
+        console.log(AuthService.getCurrentUser())
+      }
+    );
   };
 
   return (
     <Wrapper>
-      <Navbar empty={true}/>
+      <Navbar empty={true} />
       <MainContainer>
         <LoginContainer>
           <WelcomeText>Welcome</WelcomeText>
           <FormContainer ref={form} onSubmit={handleLogin}>
             <InputContainer>
-              <Input type="text" placeholder="Email" onChange={onChangeMail}/>
-              <Input type="password" placeholder="Password" onChange={onChangePassword}/>
+              <InputWrapper>
+                {/* <Input
+                  type="text"
+                  placeholder="Email"
+                  name="mail"
+                  register={register}
+                  required={{ required: true, pattern: EMAIL_PATTERN }}
+                />
+                {errors.mail.type === "required" && (
+                  <Error>This field is required</Error>
+                )} */}
+                <Input
+                  type="text"
+                  placeholder="Email"
+                  onChange={onChangeMail}
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  onChange={onChangePassword}
+                />
+              </InputWrapper>
+              {message && <Error>{message}</Error>}
             </InputContainer>
             <ButtonContainer>
-              <Button ref={submitBtn} type='submit'>Login</Button>
+              <Button ref={submitBtn} type="submit">
+                Login
+              </Button>
             </ButtonContainer>
           </FormContainer>
-          <SignUp href='/register'>Don't have an account yet? Sign up</SignUp>
+          <SignUp href="/register">Don't have an account yet? Sign up</SignUp>
         </LoginContainer>
       </MainContainer>
     </Wrapper>
-  )
-}
+  );
+};
 
-Login.propTypes = {}
+Login.propTypes = {};
 
-export default Login
+export default Login;

@@ -109,3 +109,20 @@ export const SignUp = styled.a`
     color: black;
   }
 `;
+
+export const InputWrapper = styled.div`
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-direction: column;
+`;
+
+export const Error = styled.p`
+  font-size: var(--fontSmall);
+  text-transform: none;
+  color: red;
+  letter-spacing: 0;
+  margin: 0.5rem 0 0 0.65rem;
+`;

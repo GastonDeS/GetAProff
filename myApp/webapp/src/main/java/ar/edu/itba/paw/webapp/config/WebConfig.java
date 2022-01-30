@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -25,7 +26,7 @@ import java.util.Properties;
 
 @EnableScheduling
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services",
-        "ar.edu.itba.paw.persistence"})
+        "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.util"})
 @Configuration
 @EnableTransactionManagement
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -41,6 +42,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //        viewResolver.setSuffix(".jsp");
 //        return viewResolver;
 //    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public DataSource dataSource() {

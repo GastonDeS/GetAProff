@@ -2,27 +2,29 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import ar.edu.itba.paw.webapp.requestDto.LoginDto;
+import ar.edu.itba.paw.webapp.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.Optional;
 
-
-@Controller
 @Path("api/auth")
+@Component
 public class AuthController {
+    @Autowired
+    AuthenticationManager authenticationManager;
+
     @Autowired
     private UserService userService;
 
@@ -30,40 +32,31 @@ public class AuthController {
     private UriInfo uriInfo;
 
     @Autowired
-    private PawUserDetailsService userDetailsService;
+    private JwtUtils jwtUtils;
 
     @POST
     @Path("/login")
-    @Consumes(value = MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response login(@FormParam("mail") String mail) throws UnsupportedEncodingException {
-        final Optional<User> maybeUser = userService.findByEmail(mail);
-
+    public Response login(@Valid @RequestBody LoginDto loginDto) throws UnsupportedEncodingException {
+        final Optional<User> maybeUser = userService.findByEmail(loginDto.getMail());
         if (!maybeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
 
         User user = maybeUser.get();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getMail());
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getMail(), user.getPassword(), userDetails.getAuthorities());
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getMail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        String token = getJWTToken(mail);
+        String token = jwtUtils.generateJwtToken(loginDto.getMail());
         return Response.ok(UserDto.login(uriInfo, user, token)).build();
     }
 
-    private String getJWTToken(String mail) {
-        String secretKey = "mySecretKey";
+//    @POST
+//    @Path("/register")
+//    @Consumes(value = { MediaType.APPLICATION_JSON, })
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response register() {
+//
+//    }
 
-        String token = Jwts
-                .builder()
-                .setId("softtekJWT")
-                .setSubject(mail)
-                .claim("authorities",
-                        userDetailsService.loadUserByUsername(mail).getAuthorities())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512,
-                        secretKey.getBytes()).compact();
-
-        return "Bearer " + token;
-    }
 }

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 import i18next from "i18next";
+import { useNavigate } from 'react-router-dom';
 
 import {
   DropdownItem,
   DropdownMenu,
-  DropdownDivider
-} from 'styled-dropdown-component';
+  DropdownDivider,
+} from "styled-dropdown-component";
 import styled from "styled-components";
-import {Link} from "react-router-dom";
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -16,7 +16,9 @@ const DropdownContainer = styled.div`
   cursor: pointer;
   padding: 10px;
 
-  button, input[type="submit"], input[type="reset"] {
+  button,
+  input[type="submit"],
+  input[type="reset"] {
     background: none;
     color: inherit;
     border: none;
@@ -37,26 +39,32 @@ const DropdownContainer = styled.div`
     &:hover {
       color: black;
     }
+
+    @media screen and (max-width: 1200px) {
+      font-size: 2.4vw !important;
+    }
+
+    @media screen and (max-height: 500px) {
+      font-size: 4.5vh !important;
+    }
   }
 `;
 
-const DropDown = ( {brand, options, endOption} ) => {
-
+const DropDown = ({ brand, options, endOption }) => {
   const [hidden, setHidden] = useState(true);
+
+  const navigate = useNavigate();
 
   return (
     <DropdownContainer>
       <button onClick={() => setHidden(!hidden)}>{brand}</button>
       <DropdownMenu hidden={hidden} toggle={() => setHidden(!hidden)}>
         {options.map((option, index) => (
-          <DropdownItem tag="span" key={index}>
-            <Link to='/my-files' style={{ textDecoration: 'none'}}>
-              {i18next.t(option)}
-            </Link></DropdownItem>
+          <DropdownItem key={index} onClick={() => { navigate(option.path) }}>{i18next.t(option.name)}</DropdownItem>
         ))}
         <DropdownDivider />
-        <DropdownItem>{endOption}</DropdownItem>
-        </DropdownMenu>
+        <DropdownItem onClick={endOption.callback}>{endOption.name}</DropdownItem>
+      </DropdownMenu>
     </DropdownContainer>
   );
 };
@@ -64,7 +72,7 @@ const DropDown = ( {brand, options, endOption} ) => {
 DropDown.propTypes = {
   brand: PropTypes.string,
   options: PropTypes.array,
-  endOption: PropTypes.string
+  endOption: PropTypes.string,
 };
 
 export default DropDown;

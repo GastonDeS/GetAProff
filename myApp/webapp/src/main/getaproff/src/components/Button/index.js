@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import styled from 'styled-components'
 
-const Wrapper = styled.button`
+const StyledButton = styled.button`
   width: fit-content;
   border-radius: 2rem;
   color: white;
@@ -19,17 +19,17 @@ const Wrapper = styled.button`
     font-size: 1.75vw!important;
   }
 
-  @media screen and (max-height: 500px) {
-    font-size: 2vh!important;
+  @media screen and (max-height: 400px) {
+    font-size: 4vh!important;
   }
 `;
 
 const Button = ({ text, callback, color, fontSize }) => {
 
   return (
-    <Wrapper onClick={callback} style={{backgroundColor: color, fontSize: fontSize}}>
+    <StyledButton onClick={callback} style={{backgroundColor: color, fontSize: fontSize}}>
       {text}
-    </Wrapper>
+    </StyledButton>
   )
 }
 

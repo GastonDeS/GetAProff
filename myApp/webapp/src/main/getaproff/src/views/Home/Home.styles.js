@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export const Wrapper = styled.div `
+export const Wrapper = styled.div`
   height: 100%;
 `;
 
@@ -14,7 +14,7 @@ export const MainContainer = styled.div`
   justify-content: flex-start;
 `;
 
-export const SearchContainer = styled.div `
+export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,12 +28,12 @@ export const SearchContainer = styled.div `
   padding: 1.25rem 1.75rem;
 `;
 
-export const SearchBarContainer = styled.div `
+export const SearchBarContainer = styled.div`
   height: fit-content;
   width: 55vw;
 `;
 
-export const ButtonContainer = styled.div `
+export const ButtonContainer = styled.div`
   height: fit-content;
   width: 100%;
   display: flex;
@@ -57,7 +57,11 @@ export const Content = styled.div`
     margin-bottom: 0;
 
     @media screen and (max-width: 1200px) {
-      font-size: 4.75vw;
+      font-size: 3vw !important;
+    }
+
+    @media screen and (max-height: 400px) {
+      font-size: 8vh !important;
     }
   }
 `;

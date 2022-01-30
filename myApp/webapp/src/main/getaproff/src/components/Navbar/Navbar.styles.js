@@ -39,4 +39,12 @@ export const NavLink = styled(Link)`
   &:hover {
     color: black;
   }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 2.4vw!important;
+  }
+
+  @media screen and (max-height: 500px) {
+    font-size: 4.5vh!important;
+  }
 `;

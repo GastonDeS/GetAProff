@@ -8,18 +8,16 @@ import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("api/subjects")
-@Controller
+@Component
 public class SubjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectController.class);
@@ -33,6 +31,14 @@ public class SubjectController {
     public Response getSubjectsTaughtFromUser(@PathParam("id") Long id) {
         final List<SubjectInfo> subjectInfoList = teachesService.getSubjectInfoListByUser(id);
         return Response.ok(SubjectDto.fromSubjectInfo(subjectInfoList)).build();
+    }
+
+    @DELETE
+    @Path("/{userId}/{id}/{level}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("id") Long id, @PathParam("level") int level) {
+        return teachesService.removeSubjectToUser(userId, id, level) == 1 ?
+                Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 //    @Autowired

@@ -1,33 +1,30 @@
-import React from 'react'
 import axios from "axios";
 
 const API_URL = "api/auth/";
 
-const login = async (formData) => {
-  await axios({
-      method: "post",
-      url: API_URL + "login",
-      data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
+const login = async (mail, password) => {
+  await axios.post(API_URL + 'login', {
+    mail,
+    password,
+  })
     .then(response => {
       if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem('user', JSON.stringify(response.data));
       }
-      console.log(response.data);
       return response.data;
     })
-    // .catch(response => {
-    //   console.log(response);
-    //   return response.message;
-    // });
+};
+
+const logout = () => {
+  localStorage.removeItem('user');
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  return JSON.parse(localStorage.getItem('user'));
 };
 
 export default {
   login,
   getCurrentUser,
+  logout,
 };
