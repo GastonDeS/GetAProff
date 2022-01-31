@@ -55,14 +55,6 @@ export const Content = styled.div`
     font-size: 2rem;
     color: var(--secondary);
     margin-bottom: 0;
-
-    @media screen and (max-width: 1200px) {
-      font-size: 3vw !important;
-    }
-
-    @media screen and (max-height: 400px) {
-      font-size: 8vh !important;
-    }
   }
 `;
 

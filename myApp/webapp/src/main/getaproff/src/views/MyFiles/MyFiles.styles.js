@@ -9,26 +9,21 @@ export const MainDiv = styled.div`
   align-items: center;
   width: 50vw;
   height: fit-content;
-  background-color: #9fedd7;
-  padding: 10px 10px 10px 10px;
-  border-radius: 20px;
-
-  h1 {
-    font-size: 32px;
-    font-weight: bold;
-    color: var(--secondary);
-  }
+  background-color: var(--primary);
+  padding: 1rem;
+  border-radius: 0.625rem;
+  gap: 0.5rem;
 
   h5 {
-    margin: 0.625rem 0 0.625rem 0;
     color: var(--secondary);
+    margin: 0;
   }
 `;
 
 export const SelectContainer = styled.div`
   display: flex;
   width: 90%;
-  margin: 15px 0 25px 0;
+  margin: 0.7rem 0 0.8rem 0;
   column-gap: 1rem;
 `;
 
@@ -44,11 +39,11 @@ export const FilterContainer = styled.div`
   }
 `;
 
-export const Title = styled.h1`
-  font-size: 32px;
-  font-weight: bold;
-  color: var(--secondary);
-`;
+// export const Title = styled.h1`
+//   font-size: 2rem;
+//   font-weight: bold;
+//   color: var(--secondary);
+// `;
 
 export const ModalBody = styled(Modal.Body)`
   background-color: var(--primary);

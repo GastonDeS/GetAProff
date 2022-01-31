@@ -28,10 +28,6 @@ export const Wrapper = styled.div`
     :focus {
       outline: none;
     }
-
-    @media screen and (max-width: 1200px) {
-      font-size: 1.25vw;
-    }
   }
 `;
 

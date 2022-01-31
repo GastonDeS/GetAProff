@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle `
   :root {
@@ -39,5 +39,18 @@ export const GlobalStyle = createGlobalStyle `
       margin: 0;
     }
   }
+`;
 
-`
+export const Title = styled.h1`
+  font-size: 2rem;
+  margin: 0;
+  font-weight: bold;
+  color: var(--secondary);
+`;
+
+export const Levels = [
+  "subjects.levels.0",
+  "subjects.levels.1",
+  "subjects.levels.2",
+  "subjects.levels.3",
+];

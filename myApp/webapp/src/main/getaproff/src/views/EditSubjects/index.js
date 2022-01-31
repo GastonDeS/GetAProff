@@ -6,16 +6,34 @@ import i18next from "i18next";
 import {
   MainContainer,
   Wrapper,
-  Subjects,
+  Content,
   Headers,
   Table,
   Row,
+  SelectContainer,
+  SingleSelect,
+  Request
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
 import Rows from '../../components/Rows';
+import { Title, Levels } from "../../GlobalStyle";
+import SelectDropdown from "../../components/SelectDropdown";
+import Button from "../../components/Button";
 
 const EditSubjects = () => {
   const [rows, setRows] = useState({data: []});
+  const [subject, setSubject] = useState();
+  const [price, setPrice] = useState();
+  const [level, setLevel] = useState();
+  const subjects = ['Matematica', 'Quimica', 'Frances'];
+
+  const onChangePrice = (event) => {
+    setPrice(event.target.value);
+  }
+
+  const handleAddSubject = () => {
+    console.log(subject + ' ' + price + ' ' + level)
+  }
 
   const remove = (rowId, url) => {
     // Array.prototype.filter returns new array
@@ -42,7 +60,28 @@ const EditSubjects = () => {
     <Wrapper>
       <Navbar empty={true} />
       <MainContainer>
-        <Subjects>
+        <Content>
+          <Title>Add subject</Title>
+          <SelectContainer>
+            <SelectDropdown type="Subjects" setIndex={setSubject} options={subjects}/>
+            <SingleSelect>
+              <p>Enter price per hour:</p>
+              <input type="text" placeholder="0" onChange={onChangePrice}/>
+            </SingleSelect>
+            <SingleSelect>
+              <p>Select level:</p>
+              <div style={{ width: '70%' }}>
+                <SelectDropdown type="Levels" setIndex={setLevel} options={Levels}/>
+              </div>
+            </SingleSelect>
+          </SelectContainer>
+          <Button text="Add subject" callback={handleAddSubject} fontSize="1rem"/>
+          <Request>
+            <p>Can't find the subject you want to teach?</p>
+            <a href="/">Request new subject</a>
+          </Request>
+        </Content>
+        <Content>
           <Table>
             <thead>
               <Row>
@@ -58,8 +97,7 @@ const EditSubjects = () => {
               })}
             </tbody>
           </Table>
-        </Subjects>
-        
+        </Content>
       </MainContainer>
     </Wrapper>
   );

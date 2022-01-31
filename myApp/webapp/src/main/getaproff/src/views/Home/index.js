@@ -58,7 +58,7 @@ const Home = () => {
       <MainContainer>
         <SearchContainer>
           <SearchBarContainer>
-            <SearchBar></SearchBar>
+            <SearchBar/>
           </SearchBarContainer>
           <ButtonContainer>
             <Button text='Matematicas' fontSize='1rem'/>

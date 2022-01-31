@@ -8,7 +8,6 @@ import {
   MainDiv,
   SelectContainer,
   FilterContainer,
-  Title,
   ModalBody,
   ButtonContainer,
 } from "./MyFiles.styles";
@@ -17,6 +16,7 @@ import Modal from "react-bootstrap/Modal";
 import SelectDropdown from "../../components/SelectDropdown";
 import { Row, Headers, Table } from "../EditSubjects/EditSubjects.styles";
 import Rows from '../../components/Rows';
+import { Title, Levels } from "../../GlobalStyle";
 
 const MyFiles = () => {
   const inputFile = useRef(null);
@@ -25,12 +25,6 @@ const MyFiles = () => {
   const [level, setLevel] = useState(0);
   const [rows, setRows] = useState({data: []});
 
-  const levels = [
-    "subjects.levels.0",
-    "subjects.levels.1",
-    "subjects.levels.2",
-    "subjects.levels.3",
-  ];
   const subjects = ["Matematicas", "Fisica", "Cocina", "Ingles"];
 
   const handleClose = () => setShow(false);
@@ -81,7 +75,7 @@ const MyFiles = () => {
             <FilterContainer>
               <p>Level:</p>
               <SelectDropdown
-                options={levels}
+                options={Levels}
                 setIndex={setLevel}
                 type="Levels"
               />
@@ -124,7 +118,7 @@ const MyFiles = () => {
                 <FilterContainer>
                   <p>Level:</p>
                   <SelectDropdown
-                    options={levels}
+                    options={Levels}
                     setIndex={setLevel}
                     type="Levels"
                   />

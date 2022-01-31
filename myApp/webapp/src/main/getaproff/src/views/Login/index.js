@@ -36,12 +36,12 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const onChangeMail = (e) => {
-    setMail(e.target.value);
+  const onChangeMail = (event) => {
+    setMail(event.target.value);
   };
 
-  const onChangePassword = (e) => {
-    setPassword(e.target.value);
+  const onChangePassword = (event) => {
+    setPassword(event.target.value);
   };
 
   const form = useRef();

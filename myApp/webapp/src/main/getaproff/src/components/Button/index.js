@@ -15,13 +15,13 @@ const StyledButton = styled.button`
     color: black;
   }
 
-  @media screen and (max-width: 1200px) {
+  /* @media screen and (max-width: 1200px) {
     font-size: 1.75vw!important;
   }
 
   @media screen and (max-height: 400px) {
     font-size: 4vh!important;
-  }
+  } */
 `;
 
 const Button = ({ text, callback, color, fontSize }) => {

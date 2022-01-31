@@ -13,7 +13,7 @@ const Input = ({ type, placeholder, register, required, name, onChange }) => {
 };
 
 export const StyledInput = styled.input`
-  background: hsla(185, 96%, 22%, 0.35);
+  background: var(--tertiary);
   border-radius: 2rem;
   width: 100%;
   height: 35%;
