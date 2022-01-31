@@ -8,28 +8,22 @@ import {
   PageContainer,
   ProfileInfoButtons,
   StarsReviews,
-  ProfileImage,
   ProfileInfo,
   ProfileContainer,
   InfoContainer,
   ProfileName,
-  StarsReviewsText,
   TabInfoContainer,
   SectionInfo,
   ProfileDataContainer,
-  ProfileInfoHeader,
-  ProfileInfoText,
   ProfileSubjects,
-  SubjectsRowTitle,
-  SubjectRowInfo,
   ReviewTitle,
+  TabContainer,
 } from './Profile.styles';
 import RatingStar from "react-stars";
 import Button from "../../components/Button";
 import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
-import { Container, Col } from "react-bootstrap";
-import { Row, Table, Headers, Subjects } from "../EditSubjects/EditSubjects.styles"
+import { Row, Table, Headers } from "../EditSubjects/EditSubjects.styles"
 import Rows from "../../components/Rows";
 
 
@@ -55,7 +49,7 @@ const Profile = () => {
       <PageContainer>
         <ProfileContainer>
           <InfoContainer>
-            <ProfileImage
+            <img
               src={"http://pawserver.it.itba.edu.ar/paw-2021b-6/image/38"}
               alt="profileImg"
             />
@@ -64,18 +58,16 @@ const Profile = () => {
                 <h1 style={{ fontSize: '2rem' }}>Gaston De Schant</h1>
                 <StarsReviews>
                   <RatingStar count={5} value={5} size={18} edit={false} />
-                  <StarsReviewsText>
-                    <p>( 0 Reviews )</p>
-                  </StarsReviewsText>
+                  <p>(0 Reviews)</p>
                 </StarsReviews>
               </ProfileName>
               <ProfileInfoButtons>
                 {profile === 0 ? (
                   <>
-                    <Button text="edit certifications" fontSize="1rem"/>
-                    <Button text="edit profile" fontSize="1rem"/>
-                    <Button text="edit subjects" fontSize="1rem"/>
-                    <Button text="share profile" fontSize="1rem"/>
+                    <Button text="Edit certifications" fontSize="1rem"/>
+                    <Button text="Edit profile" fontSize="1rem"/>
+                    <Button text="Edit subjects" fontSize="1rem"/>
+                    <Button text="Share profile" fontSize="1rem"/>
                   </>
                 ) : (
                   <>
@@ -87,63 +79,67 @@ const Profile = () => {
               </ProfileInfoButtons>
             </ProfileInfo>
           </InfoContainer>
-          <Tab setIndex={setIndex} style={{ margin: "2rem" }}>
-            {tabs.map(tab => {
-                return <TabItem fontSize='1rem'>{i18next.t(tab)}</TabItem>
-            })}
-          </Tab>
-          <TabInfoContainer>
-            {index === 0 ? (
-              // TODO Personal Info
-              <SectionInfo>
-                <ProfileDataContainer>
-                  <ProfileInfoHeader>Description</ProfileInfoHeader>
-                  <ProfileInfoText>esta es la descripcion</ProfileInfoText>
-                </ProfileDataContainer>
-                <ProfileDataContainer>
-                  <ProfileInfoHeader>Schedule</ProfileInfoHeader>
-                  <ProfileInfoText>monday from 1 am to 2 pm</ProfileInfoText>
-                </ProfileDataContainer>
-                <ProfileDataContainer>
-                  <ProfileInfoHeader>Certifications</ProfileInfoHeader>
-                  <ul>
-                    <li>
-                      <a href={"www.google.com"} target={"_blank"}>
-                        Certificacion Cambridge
-                      </a>
-                    </li>
-                  </ul>
-                </ProfileDataContainer>
-              </SectionInfo>
-            ) : index === 1 ? (
-              <ProfileSubjects>
-                <Table>
-                    <thead>
-                      <Row>
-                        <Headers style={{ width: "50%" }}>{i18next.t('subjects.subject')}</Headers>
-                        <Headers style={{ width: "20%" }}>{i18next.t('subjects.price')}</Headers>
-                        <Headers style={{ width: "30%" }}>{i18next.t('subjects.level')}</Headers>
-                      </Row>
-                    </thead>
-                    <tbody>
-                      {rows.data.map((item, index) => {
-                          return <Rows key={index} edit={false} rowId={index} subject={item}/>
-                      })}
-                    </tbody>
-                  </Table>
-              </ProfileSubjects>
-            ) : (
-              <SectionInfo>
-                <ProfileDataContainer>
-                  <ReviewTitle>
-                    <h4>Brlin</h4>
-                    <RatingStar count={5} value={5} size={18} edit={false} />
-                  </ReviewTitle>
-                  <ProfileInfoText>Muy buena clase Gaston</ProfileInfoText>
-                </ProfileDataContainer>
-              </SectionInfo>
-            )}
-          </TabInfoContainer>
+          <TabContainer>
+            <Tab setIndex={setIndex} style={{ margin: "2rem" }}>
+              {tabs.map((tab, index) => {
+                  return index === 0 ? <TabItem fontSize='1rem' style={{ borderTopLeftRadius: '0.625rem'}}>{i18next.t(tab)}</TabItem> : 
+                    index === tabs.length - 1 ? <TabItem fontSize='1rem' style={{ borderTopRightRadius: '0.625rem'}}>{i18next.t(tab)}</TabItem> :
+                   <TabItem fontSize='1rem'>{i18next.t(tab)}</TabItem>
+              })}
+            </Tab>
+            <TabInfoContainer>
+              {index === 0 ? (
+                // TODO Personal Info
+                <SectionInfo>
+                  <ProfileDataContainer>
+                    <h3>Description</h3>
+                    <p>esta es la descripcion</p>
+                  </ProfileDataContainer>
+                  <ProfileDataContainer>
+                    <h3>Schedule</h3>
+                    <p>monday from 1 am to 2 pm</p>
+                  </ProfileDataContainer>
+                  <ProfileDataContainer>
+                    <h3>Certifications</h3>
+                    <ul>
+                      <li>
+                        <a href={"www.google.com"} target={"_blank"}>
+                          Certificacion Cambridge
+                        </a>
+                      </li>
+                    </ul>
+                  </ProfileDataContainer>
+                </SectionInfo>
+              ) : index === 1 ? (
+                <ProfileSubjects>
+                  <Table>
+                      <thead>
+                        <Row>
+                          <Headers style={{ width: "50%" }}>{i18next.t('subjects.subject')}</Headers>
+                          <Headers style={{ width: "20%" }}>{i18next.t('subjects.price')}</Headers>
+                          <Headers style={{ width: "30%" }}>{i18next.t('subjects.level')}</Headers>
+                        </Row>
+                      </thead>
+                      <tbody>
+                        {rows.data.map((item, index) => {
+                            return <Rows key={index} edit={false} rowId={index} subject={item}/>
+                        })}
+                      </tbody>
+                    </Table>
+                </ProfileSubjects>
+              ) : (
+                <SectionInfo>
+                  <ProfileDataContainer>
+                    <ReviewTitle>
+                      <h3>Brlin</h3>
+                      <RatingStar count={5} value={5} size={18} edit={false} />
+                    </ReviewTitle>
+                    <p>Muy buena clase Gaston</p>
+                  </ProfileDataContainer>
+                </SectionInfo>
+              )}
+            </TabInfoContainer>
+          </TabContainer>
         </ProfileContainer>
       </PageContainer>
     </Wrapper>

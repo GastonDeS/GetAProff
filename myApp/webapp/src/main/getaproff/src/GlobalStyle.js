@@ -5,6 +5,7 @@ export const GlobalStyle = createGlobalStyle `
     --background: #edeae5;
     --primary: #9fedd7;
     --secondary: #026670;
+    --tertiary: hsla(185, 96%, 22%, 0.35);
     --fontExtraLarge: 2.5rem;
     --fontLarge: 1.45rem;
     --fontMed: 1.2rem;
@@ -26,9 +27,16 @@ export const GlobalStyle = createGlobalStyle `
       margin: 0;
     }
 
+    h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
     h2 {
       font-size: 1.45rem;
       font-weight: bold;
+      margin: 0;
     }
   }
 
