@@ -19,5 +19,10 @@
       "2": "Secundario",
       "3": "Universitario"
     }
+  },
+  "files": {
+    "file": "Archivo",
+    "subject": "Materia",
+    "level": "Nivel"
   }
 }

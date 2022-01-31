@@ -19,5 +19,10 @@
       "2": "Middle School",
       "3": "College/University"
     }
+  },
+  "files": {
+    "file": "File",
+    "subject": "Subject",
+    "level": "Level"
   }
 }

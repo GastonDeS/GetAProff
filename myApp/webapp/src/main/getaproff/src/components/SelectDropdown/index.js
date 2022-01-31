@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from "styled-components";
+import i18next from "i18next";
 
 const Select = styled.select`
   width: 100%;
@@ -35,7 +36,7 @@ const SelectDropdown = ({ type, options, setIndex }) => {
       }
       {
         options.map((option, index) => {
-          return <option key={index} value={index}>{option}</option>
+          return <option key={index} value={index}>{i18next.t(option)}</option>
         })
       }
     </Select>
