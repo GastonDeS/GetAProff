@@ -40,10 +40,16 @@ const Item = styled.div`
   }
 `;
 
-const TabItem = memo(({ children, ...restProps }) => (
-  <Item {...restProps}><p>{children}</p></Item>
+const TabItem = memo(({ children, fontSize, ...restProps }) => (
+  <Item {...restProps}><p style={{ fontSize: fontSize }}>{children}</p></Item>
 ));
 
-TabItem.propTypes = {}
+TabItem.propTypes = {
+  fontSize: PropTypes.string,
+}
+
+TabItem.defaultProps = {
+  fontSize: '1.2vw',
+}
 
 export default TabItem

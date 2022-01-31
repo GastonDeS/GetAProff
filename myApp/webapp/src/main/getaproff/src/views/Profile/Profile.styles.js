@@ -91,6 +91,7 @@ export const ProfileInfoButtons = styled.div`
     align-items: center;
     width: 100%;
     height: fit-content;
+    gap: 0.3rem;
 `;
 
 export const TabInfoContainer = styled.div`
@@ -147,7 +148,6 @@ export const ProfileSubjects = styled.div`
     display: flex;
     width: 96%;
     margin: auto;
-    background: var(--background);
     border-radius: 10px;
 `;
 

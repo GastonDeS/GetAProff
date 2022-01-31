@@ -26,17 +26,12 @@ const EditSubjects = () => {
 
   useEffect(async () => {
     const res = await axios.get("/api/subjects/145");
-    console.log(res)
     setRows({
       data: res.data.map((item, index) => {
         return { ...item, rowId: index };
       }),
     });
   }, []);
-
-  useEffect(() => {
-    console.log(rows)
-  }, [rows])
 
   return (
     <Wrapper>

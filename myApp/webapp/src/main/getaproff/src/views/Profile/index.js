@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import i18next from "i18next";
+import axios from "axios";
 
 import Navbar from "../../components/Navbar";
 import {
@@ -26,11 +28,26 @@ import RatingStar from "react-stars";
 import Button from "../../components/Button";
 import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
-import { Row, Container, Col } from "react-bootstrap";
+import { Container, Col } from "react-bootstrap";
+import { Row, Table, Headers, Subjects } from "../EditSubjects/EditSubjects.styles"
+import Rows from "../../components/Rows";
+
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
   const profile = Math.round(Math.random());
+  const [rows, setRows] = useState({data: []});
+
+  const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
+
+  useEffect(async () => {
+    const res = await axios.get("/api/subjects/145");
+    setRows({
+      data: res.data.map((item, index) => {
+        return { ...item, rowId: index };
+      }),
+    });
+  }, []);
 
   return (
     <Wrapper>
@@ -44,7 +61,7 @@ const Profile = () => {
             />
             <ProfileInfo>
               <ProfileName>
-                <h1>Gaston De Schant</h1>
+                <h1 style={{ fontSize: '2rem' }}>Gaston De Schant</h1>
                 <StarsReviews>
                   <RatingStar count={5} value={5} size={18} edit={false} />
                   <StarsReviewsText>
@@ -54,32 +71,26 @@ const Profile = () => {
               </ProfileName>
               <ProfileInfoButtons>
                 {profile === 0 ? (
-                  <div>
-                    <Button text={"edit certifications"} />
-                    <Button text={"edit profile"} />
-                    <Button text={"edit subjects"} />
-                    <Button text={"share profile"} />
-                  </div>
+                  <>
+                    <Button text="edit certifications" fontSize="1rem"/>
+                    <Button text="edit profile" fontSize="1rem"/>
+                    <Button text="edit subjects" fontSize="1rem"/>
+                    <Button text="share profile" fontSize="1rem"/>
+                  </>
                 ) : (
-                  <div>
-                    <Button text={"Request class"} />
-                    <Button text={"Add to favorites"} />
-                    <Button text={"Share profile"} />
-                  </div>
+                  <>
+                    <Button text="Request class" fontSize="1rem"/>
+                    <Button text="Add to favorites" fontSize="1rem"/>
+                    <Button text="Share profile" fontSize="1rem"/>
+                  </>
                 )}
               </ProfileInfoButtons>
             </ProfileInfo>
           </InfoContainer>
           <Tab setIndex={setIndex} style={{ margin: "2rem" }}>
-            <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
-              Teacher
-            </TabItem>
-            <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
-              Teacher
-            </TabItem>
-            <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
-              Teacher
-            </TabItem>
+            {tabs.map(tab => {
+                return <TabItem fontSize='1rem'>{i18next.t(tab)}</TabItem>
+            })}
           </Tab>
           <TabInfoContainer>
             {index === 0 ? (
@@ -106,30 +117,20 @@ const Profile = () => {
               </SectionInfo>
             ) : index === 1 ? (
               <ProfileSubjects>
-                <Container>
-                  <Row style={{ background: "#026670" }}>
-                    <Col xs={7}>
-                      <SubjectsRowTitle>Subject</SubjectsRowTitle>
-                    </Col>
-                    <Col xs={2}>
-                      <SubjectsRowTitle>Price</SubjectsRowTitle>
-                    </Col>
-                    <Col xs={3}>
-                      <SubjectsRowTitle>Level</SubjectsRowTitle>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={7}>
-                      <SubjectRowInfo>Math</SubjectRowInfo>
-                    </Col>
-                    <Col xs={2}>
-                      <SubjectRowInfo>800 $/h</SubjectRowInfo>
-                    </Col>
-                    <Col xs={3}>
-                      <SubjectRowInfo>Elementary</SubjectRowInfo>
-                    </Col>
-                  </Row>
-                </Container>
+                <Table>
+                    <thead>
+                      <Row>
+                        <Headers style={{ width: "50%" }}>{i18next.t('subjects.subject')}</Headers>
+                        <Headers style={{ width: "20%" }}>{i18next.t('subjects.price')}</Headers>
+                        <Headers style={{ width: "30%" }}>{i18next.t('subjects.level')}</Headers>
+                      </Row>
+                    </thead>
+                    <tbody>
+                      {rows.data.map((item, index) => {
+                          return <Rows key={index} edit={false} rowId={index} subject={item}/>
+                      })}
+                    </tbody>
+                  </Table>
               </ProfileSubjects>
             ) : (
               <SectionInfo>
