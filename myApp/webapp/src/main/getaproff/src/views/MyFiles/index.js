@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import i18next from "i18next";
+import axios from "axios";
 
 import Navbar from "../../components/Navbar";
 import { MainContainer, Wrapper } from "../Home/Home.styles";
@@ -13,16 +14,16 @@ import {
 } from "./MyFiles.styles";
 import Button from "../../components/Button";
 import Modal from "react-bootstrap/Modal";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Form from "react-bootstrap/Form";
 import SelectDropdown from "../../components/SelectDropdown";
 import { Row, Headers, Table } from "../EditSubjects/EditSubjects.styles";
+import Rows from '../../components/Rows';
 
 const MyFiles = () => {
   const inputFile = useRef(null);
   const [show, setShow] = useState(false);
   const [subject, setSubject] = useState(0);
   const [level, setLevel] = useState(0);
+  const [rows, setRows] = useState({data: []});
 
   const levels = [
     "subjects.levels.0",
@@ -38,6 +39,28 @@ const MyFiles = () => {
   const openFile = () => {
     inputFile.current.click();
   };
+
+  const remove = (rowId, url) => {
+    // Array.prototype.filter returns new array
+    // so we aren't mutating state here
+    const arrayCopy = rows.data.filter((row) => row.id !== rowId);
+    setRows({ data: arrayCopy });
+  }
+
+  useEffect(async () => {
+    const res = await axios.get("/api/subject-files/145");
+    setRows({
+      data: res.data.map((item, index) => {
+        return { 
+          first: item.name, 
+          second: item.subject,
+          third: i18next.t('subjects.levels.' + item.level),
+          url: item.fileId,
+        };
+      }),
+    });
+  }, []);
+
 
   return (
     <Wrapper>
@@ -74,7 +97,9 @@ const MyFiles = () => {
               </Row>
             </thead>
             <tbody>
-              
+              {rows.data.map((item, index) => {
+                return <Rows key={index} edit={true} remove={remove} data={item} rowId={index}/>
+              })}
             </tbody>
           </Table>
           <Button callback={handleShow} text="Agregar Archivos" fontSize="1rem"/>

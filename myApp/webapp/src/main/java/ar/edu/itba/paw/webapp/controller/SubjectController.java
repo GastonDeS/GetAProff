@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("api/subjects")
 @Component
@@ -29,8 +31,9 @@ public class SubjectController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getSubjectsTaughtFromUser(@PathParam("id") Long id) {
-        final List<SubjectInfo> subjectInfoList = teachesService.getSubjectInfoListByUser(id);
-        return Response.ok(SubjectDto.fromSubjectInfo(subjectInfoList)).build();
+        final List<SubjectDto> subjectDtos = teachesService.getSubjectInfoListByUser(id).stream()
+                .map(SubjectDto::fromSubjectInfo).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
     @DELETE

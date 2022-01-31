@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("api/teachers")
 @Component
@@ -27,28 +28,17 @@ public class TeacherController {
     @Path("top-rated")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listTopRatedTeachers() {
-        List<CardProfile> topRatedTeachers = teachesService.getTopRatedTeachers();
-        return Response.ok(TeacherDto.getTeachers(uriInfo, topRatedTeachers)).build();
+        List<TeacherDto> topRatedTeachers = teachesService.getTopRatedTeachers().stream()
+                .map(TeacherDto::getTeacher).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TeacherDto>>(topRatedTeachers){}).build();
     }
 
     @GET
     @Path("most-requested")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listMostRequestedTeachers() {
-        List<CardProfile> mostRequestedTeachers = teachesService.getMostRequested();
-        return Response.ok(TeacherDto.getTeachers(uriInfo, mostRequestedTeachers)).build();
+        List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
+                .map(TeacherDto::getTeacher).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TeacherDto>>(mostRequestedTeachers){}).build();
     }
-
-//    @RequestMapping("/")
-//    public ModelAndView index() {
-//        Optional<User> curr = userService.getCurrentUser();
-//        List<Subject> subjectList = subjectService.list();
-//        final ModelAndView mav = new ModelAndView("index")
-//                .addObject("subjects", subjectList)
-//                .addObject("topRated", teachesService.getTopRatedTeachers())
-//                .addObject("hottest", teachesService.getMostRequested())
-//                .addObject("hottestSubjects", subjectService.getHottestSubjects());
-//        curr.ifPresent(user -> mav.addObject("uid", user.getId()));
-//        return mav;
-//    }
 }

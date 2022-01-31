@@ -38,7 +38,11 @@ const Profile = () => {
     const res = await axios.get("/api/subjects/145");
     setRows({
       data: res.data.map((item, index) => {
-        return { ...item, rowId: index };
+        return { 
+          first: item.name,
+          second: '$' + item.price + '/' + i18next.t('subjects.hour'),
+          third: i18next.t('subjects.levels.' + item.level)
+        };
       }),
     });
   }, []);
@@ -122,7 +126,7 @@ const Profile = () => {
                       </thead>
                       <tbody>
                         {rows.data.map((item, index) => {
-                            return <Rows key={index} edit={false} rowId={index} subject={item}/>
+                            return <Rows key={index} edit={false} data={item}/>
                         })}
                       </tbody>
                     </Table>

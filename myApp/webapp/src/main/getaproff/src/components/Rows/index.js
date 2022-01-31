@@ -31,26 +31,26 @@ export const Data = styled.td`
   }
 `;
 
-const Rows = ({ edit, rowId, remove, subject }) => {
+const Rows = ({ edit, remove, data, rowId }) => {
   return (
     <>
       <Row>
         {edit ? (
           <>
-            <Data style={{ width: "45%" }}>{subject.name}</Data>
-            <Data style={{ width: "20%" }}>${subject.price}/{i18next.t('subjects.hour')}</Data>
-            <Data style={{ width: "30%" }}>{i18next.t('subjects.levels.' + subject.level)}</Data>
+            <Data style={{ width: "45%" }}>{data.first}</Data>
+            <Data style={{ width: "20%" }}>{data.second}</Data>
+            <Data style={{ width: "30%" }}>{data.third}</Data>
             <Data style={{ width: "5%", textAlign: "end" }}>
-              <a onClick={() => remove(rowId, subject.id)}>
+              <a onClick={() => remove(rowId, data.url)}>
                 <img src={Delete} alt="delete-icon"/>
               </a>
             </Data>
           </>
         ) : (
           <>
-            <Data style={{ width: "50%" }}>{subject.name}</Data>
-            <Data style={{ width: "20%" }}>${subject.price}/{i18next.t('subjects.hour')}</Data>
-            <Data style={{ width: "30%" }}>{i18next.t('subjects.levels.' + subject.level)}</Data>
+            <Data style={{ width: "50%" }}>{data.first}</Data>
+            <Data style={{ width: "20%" }}>{data.second}</Data>
+            <Data style={{ width: "30%" }}>{data.third}</Data>
           </>
         )}
       </Row>
@@ -60,7 +60,6 @@ const Rows = ({ edit, rowId, remove, subject }) => {
 
 Rows.propTypes = {
   edit: PropTypes.bool,
-  rowId: PropTypes.number,
   remove: PropTypes.func,
   subject: PropTypes.object
 };

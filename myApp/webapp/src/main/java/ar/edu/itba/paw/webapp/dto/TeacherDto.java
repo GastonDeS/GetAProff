@@ -19,20 +19,15 @@ public class TeacherDto {
 
     private Long userId;
 
-    public static GenericEntity<List<TeacherDto>> getTeachers(UriInfo uri, List<CardProfile> teachersCardProfile) {
-        List<TeacherDto> topRatedTeacherDto = new ArrayList<>();
-        teachersCardProfile.forEach(teacher -> {
-            TeacherDto teacherDto = new TeacherDto();
-            teacherDto.url = uri.getBaseUriBuilder().path("api/users").path(String.valueOf(teacher.getUserId())).build().toString();
-            teacherDto.maxPrice = teacher.getMaxPrice();
-            teacherDto.minPrice = teacher.getMinPrice();
-            teacherDto.rate = teacher.getRate();
-            teacherDto.userId = teacher.getUserId();
-            teacherDto.name = teacher.getName();
-            teacherDto.description = teacher.getDescription();
-            topRatedTeacherDto.add(teacherDto);
-        });
-        return new GenericEntity<List<TeacherDto>>(topRatedTeacherDto){};
+    public static TeacherDto getTeacher(CardProfile teacher) {
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.maxPrice = teacher.getMaxPrice();
+        teacherDto.minPrice = teacher.getMinPrice();
+        teacherDto.rate = teacher.getRate();
+        teacherDto.userId = teacher.getUserId();
+        teacherDto.name = teacher.getName();
+        teacherDto.description = teacher.getDescription();
+        return teacherDto;
     }
 
     public String getDescription() {

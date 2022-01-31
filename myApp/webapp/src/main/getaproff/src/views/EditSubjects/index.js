@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
+import i18next from "i18next";
+
 import {
   MainContainer,
   Wrapper,
@@ -9,15 +12,12 @@ import {
   Row,
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
 import Rows from '../../components/Rows';
-
-import i18next from "i18next";
 
 const EditSubjects = () => {
   const [rows, setRows] = useState({data: []});
 
-  const remove = (rowId, id) => {
+  const remove = (rowId, url) => {
     // Array.prototype.filter returns new array
     // so we aren't mutating state here
     const arrayCopy = rows.data.filter((row) => row.id !== rowId);
@@ -28,7 +28,12 @@ const EditSubjects = () => {
     const res = await axios.get("/api/subjects/145");
     setRows({
       data: res.data.map((item, index) => {
-        return { ...item, rowId: index };
+        return { 
+          first: item.name,
+          second: '$' + item.price + '/' + i18next.t('subjects.hour'),
+          third: i18next.t('subjects.levels.' + item.level),
+          url: item.id + '/' + item.level,
+        };
       }),
     });
   }, []);
@@ -49,11 +54,12 @@ const EditSubjects = () => {
             </thead>
             <tbody>
               {rows.data.map((item, index) => {
-                return <Rows key={index} edit={true} remove={remove} rowId={index} subject={item}/>
+                return <Rows key={index} edit={true} remove={remove} data={item} rowId={index}/>
               })}
             </tbody>
           </Table>
         </Subjects>
+        
       </MainContainer>
     </Wrapper>
   );

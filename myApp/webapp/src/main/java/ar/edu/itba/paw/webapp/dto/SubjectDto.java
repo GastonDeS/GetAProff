@@ -13,17 +13,13 @@ public class SubjectDto {
 
     private int price, level;
 
-    public static GenericEntity<List<SubjectDto>> fromSubjectInfo(List<SubjectInfo> subjects) {
-        List<SubjectDto> subjectDtos = new ArrayList<>();
-        subjects.forEach((subject) -> {
-            SubjectDto subjectDto = new SubjectDto();
-            subjectDto.id = subject.getSubjectId();
-            subjectDto.name = subject.getName();
-            subjectDto.level = subject.getLevel();
-            subjectDto.price = subject.getPrice();
-            subjectDtos.add(subjectDto);
-        });
-        return new GenericEntity<List<SubjectDto>>(subjectDtos){};
+    public static SubjectDto fromSubjectInfo(SubjectInfo subject) {
+        SubjectDto subjectDto = new SubjectDto();
+        subjectDto.id = subject.getSubjectId();
+        subjectDto.name = subject.getName();
+        subjectDto.level = subject.getLevel();
+        subjectDto.price = subject.getPrice();
+        return subjectDto;
     }
 
     public String getName() {
