@@ -23,16 +23,8 @@ export const FilterContainer = styled.div`
 `;
 
 export const Filter = styled.p`
-  font-size: var(--fontMed);
+  font-size: var(--fontSmall);
   margin-bottom: 0.5rem;
-
-  @media screen and (max-height: 500px) {
-    font-size: 4vh;
-  }
-
-  @media screen and (max-width: 1000px) {
-    font-size: 1.2vw!important;
-  }
 `;
 
 export const SelectContainer = styled.div`

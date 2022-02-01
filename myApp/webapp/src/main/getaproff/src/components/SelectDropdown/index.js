@@ -35,7 +35,7 @@ const SelectDropdown = ({ type, options, setIndex }) => {
         type ? <option value="" hidden>{type}</option> : <></>
       }
       {
-        options.map((option, index) => {
+        options && options.map((option, index) => {
           return <option key={index} value={index}>{i18next.t(option)}</option>
         })
       }

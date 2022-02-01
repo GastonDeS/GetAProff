@@ -22,9 +22,9 @@ const MyClasses = () => {
           <FilterContainer>
             <Tab setIndex={setTabIndex} flexDirection='column'>
               {/* index = 0 */}
-              <TabItem style={{ borderRadius: '0.625rem' }}>Requested</TabItem> 
+              <TabItem style={{ borderRadius: '0.625rem' }} fontSize="1.1rem">Requested</TabItem> 
               {/* index = 1 */}
-              <TabItem>Offered</TabItem>
+              <TabItem fontSize="1.1rem">Offered</TabItem>
             </Tab>
             <Filter>Filter by:</Filter>
             <SelectContainer>

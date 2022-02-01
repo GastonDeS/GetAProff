@@ -10,6 +10,7 @@ import {
   FilterContainer,
   ModalBody,
   ButtonContainer,
+  Files,
 } from "./MyFiles.styles";
 import Button from "../../components/Button";
 import Modal from "react-bootstrap/Modal";
@@ -24,11 +25,17 @@ const MyFiles = () => {
   const [subject, setSubject] = useState(0);
   const [level, setLevel] = useState(0);
   const [rows, setRows] = useState({data: []});
+  const [files, setFiles] = useState([]);
 
   const subjects = ["Matematicas", "Fisica", "Cocina", "Ingles"];
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => setShow(current => !current);
+
+  const displayFiles = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setFiles([...files, {file: event.target.files[0], name: event.target.files[0].name}]);
+    }
+  };
 
   const openFile = () => {
     inputFile.current.click();
@@ -44,7 +51,7 @@ const MyFiles = () => {
   useEffect(async () => {
     const res = await axios.get("/api/subject-files/145");
     setRows({
-      data: res.data.map((item, index) => {
+      data: res.data.map((item) => {
         return { 
           first: item.name, 
           second: item.subject,
@@ -54,7 +61,6 @@ const MyFiles = () => {
       }),
     });
   }, []);
-
 
   return (
     <Wrapper>
@@ -99,12 +105,12 @@ const MyFiles = () => {
           <Button callback={handleShow} text="Agregar Archivos" fontSize="1rem"/>
 
           {/* MODAL */}
-          <Modal show={show} onHide={handleClose} size="xl">
+          <Modal show={show} onHide={handleShow} size="xl">
             <Modal.Header closeButton>
               <Title>Agregar Archivo</Title>
             </Modal.Header>
             <ModalBody>
-              <input type="file" id="file" ref={inputFile} style={{ display: "none" }}/>
+              <input type="file" id="file" ref={inputFile} style={{ display: "none" }} onChange={displayFiles}/>
               <h3>Elija en que clases quiere disponiblizar el archivo</h3>
               <SelectContainer>
                 <FilterContainer>
@@ -124,10 +130,11 @@ const MyFiles = () => {
                   />
                 </FilterContainer>
               </SelectContainer>
-              <ul style={{ width: "100%", marginTop: "45px" }}>
-                {/* <FileItem fileName={"Archivo1.pdf"}/>
-                                <FileItem fileName={"Archivo2.pdf"}/> */}
-              </ul>
+              <Files>
+                {files && files.map((item, index) => {
+                  return <Rows key={index} data={item.name} rowId={index} type={1}/>
+                })}
+              </Files>
               <ButtonContainer>
                 <Button
                   text="Elegir archivos"
@@ -138,11 +145,11 @@ const MyFiles = () => {
                   <Button
                     color="grey"
                     fontSize="1rem"
-                    callback={handleClose}
+                    callback={handleShow}
                     text="Cancelar"
                   />
                   <Button
-                    callback={handleClose}
+                    callback={handleShow}
                     fontSize="1rem"
                     text="Guardar Cambios"
                   />

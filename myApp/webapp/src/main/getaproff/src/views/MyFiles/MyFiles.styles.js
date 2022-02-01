@@ -46,9 +46,9 @@ export const ModalBody = styled(Modal.Body)`
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  gap: 1rem;
 
   h3 {
-    margin-bottom: 15px;
     font-weight: 400;
     color: var(--secondary);
   }
@@ -65,4 +65,11 @@ export const ButtonContainer = styled.div`
     gap: 0.5rem;
     display: flex;
   }
+`;
+
+export const Files = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  gap: 0.25rem;
 `;
