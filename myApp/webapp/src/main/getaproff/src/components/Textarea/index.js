@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 import styled from "styled-components"
 
-const Textarea = ({ placeholder }) => {
-  return <StyledTextarea placeholder={placeholder} />;
+const Textarea = ({ placeholder, value }) => {
+  return <StyledTextarea placeholder={placeholder} value={value} />;
 }
 
 const StyledTextarea = styled.textarea`
@@ -35,7 +35,8 @@ const StyledTextarea = styled.textarea`
 `;
 
 Textarea.propTypes = {
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  value: PropTypes.string
 }
 
 export default Textarea

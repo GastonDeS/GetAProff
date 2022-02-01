@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Content = styled.div`
-  width: 50vw;
+  width: 40vw;
   height: fit-content;
   padding: 1rem;
   background-color: var(--primary);
@@ -14,22 +14,9 @@ export const Content = styled.div`
   gap: 1.2rem;
 `;
 
-export const Files = styled.div`
-  width: 90%;
+export const InputContainer = styled.div`
+  width: 80%;
   display: flex;
+  gap: 1rem;
   flex-direction: column;
-  gap: 0.25rem;
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  height: fit-content;
-  gap: 0.5rem;
-
-  input {
-    display: none;
-  }
 `;

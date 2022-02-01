@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 
 import styled from "styled-components";
 
-const Input = ({ type, placeholder, register, required, name, onChange }) => {
+const Input = ({ type, placeholder, register, required, name, onChange, value }) => {
   return (
     <>
       {/* <StyledInput type={type} placeholder={placeholder} {...register(name, required)} /> */}
-      <StyledInput type={type} placeholder={placeholder} onChange={onChange}/>
+      <StyledInput type={type} placeholder={placeholder} onChange={onChange} value={value}/>
     </>
   );
 };
@@ -44,7 +44,8 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   name: PropTypes.string,
   register: PropTypes.func,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  value: PropTypes.string
 };
 
 export default Input;
