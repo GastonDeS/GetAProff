@@ -54,3 +54,35 @@ export const Levels = [
   "subjects.levels.2",
   "subjects.levels.3",
 ];
+
+export const Request = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  gap: 0.25rem;
+
+  p {
+    color: var(--secondary);
+  }
+
+  a {
+    color: var(--secondary);
+    cursor: pointer;
+
+    &:hover {
+      color: black;
+    }
+  }
+`;
+
+export const MainContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 3em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+`;
+
+export const Wrapper = styled.div``;

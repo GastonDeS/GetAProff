@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
 
-export const MainDiv = styled.div`
+export const Content = styled.div`
   min-width: fit-content;
   display: flex;
   flex-direction: column;
@@ -38,12 +38,6 @@ export const FilterContainer = styled.div`
     color: var(--secondary);
   }
 `;
-
-// export const Title = styled.h1`
-//   font-size: 2rem;
-//   font-weight: bold;
-//   color: var(--secondary);
-// `;
 
 export const ModalBody = styled(Modal.Body)`
   background-color: var(--primary);

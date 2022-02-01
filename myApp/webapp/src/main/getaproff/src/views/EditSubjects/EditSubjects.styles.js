@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div ``;
-
 export const MainContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -71,44 +69,23 @@ export const SingleSelect = styled.div`
   }
 
   input {
-  border-radius: 0.625rem;
-  padding: 0.25rem 0 0.25rem 0.5rem;
-  border: 1px solid var(--secondary);
-  outline: none;
-  font-size: var(--fontSmall);
-  height: fit-content;
-  width: 70%;
-
-  &:focus {
-    display: inline-block;
-    box-shadow: 0 0 0 0.1rem var(--secondary);
-    backdrop-filter: blur(12rem);
-  }
-
-  &::placeholder {
-    font-weight: 100;
+    border-radius: 0.625rem;
+    padding: 0.25rem 0 0.25rem 0.5rem;
+    border: 1px solid var(--secondary);
+    outline: none;
     font-size: var(--fontSmall);
-  }
-  }
-`;
+    height: fit-content;
+    width: 70%;
 
-export const Request = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  gap: 0.25rem;
+    &:focus {
+      display: inline-block;
+      box-shadow: 0 0 0 0.1rem var(--secondary);
+      backdrop-filter: blur(12rem);
+    }
 
-  p {
-    color: var(--secondary);
-  }
-
-  a {
-    color: var(--secondary);
-    cursor: pointer;
-
-    &:hover {
-      color: black;
-  }
+    &::placeholder {
+      font-weight: 100;
+      font-size: var(--fontSmall);
+    }
   }
 `;

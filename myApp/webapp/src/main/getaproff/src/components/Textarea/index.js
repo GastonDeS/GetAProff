@@ -8,14 +8,14 @@ const Textarea = ({ placeholder }) => {
 }
 
 const StyledTextarea = styled.textarea`
-  background: hsla(185, 96%, 22%, 0.35);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 2rem;
   width: 100%;
   height: 16vh;
   padding: 1rem;
-  border: none;
+  border: 2.5px solid var(--secondary);
   outline: none;
-  color: white;
+  color: black;
   font-size: var(--fontSmall);
   font-weight: 100;
   resize: none;
@@ -28,7 +28,6 @@ const StyledTextarea = styled.textarea`
   }
 
   &::placeholder {
-    color: white;
     font-weight: 100;
     font-size: var(--fontSmall);
     text-transform: uppercase;

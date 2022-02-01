@@ -1,16 +1,5 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div ``;
-
-export const MainContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 3em;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-`;
-
 export const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -21,9 +10,8 @@ export const LoginContainer = styled.div`
   backdrop-filter: blur(8.5px);
   -webkit-backdrop-filter: blur(8.5px);
   border-radius: 2rem;
-  color: var(--secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.4rem;
+  padding-bottom: 1rem;
+
   @media only screen and (max-width: 320px) {
     width: 80vw;
     height: 90vh;
@@ -61,6 +49,9 @@ export const FormContainer = styled.form`
 
 export const WelcomeText = styled.h2`
   margin: 3rem 0 2rem 0;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4rem;
 `;
 
 export const InputContainer = styled.div`
@@ -93,18 +84,6 @@ export const Button = styled.button`
   border-radius: 2rem;
   cursor: pointer;
 
-  &:hover {
-    color: black;
-  }
-`;
-
-export const SignUp = styled.a`
-  text-decoration: none;
-  color: var(--secondary);
-  cursor: pointer;
-  text-transform: none;
-  letter-spacing: 0;
-  margin-bottom: 1rem;
   &:hover {
     color: black;
   }

@@ -12,15 +12,13 @@ import {
   ButtonContainer,
   Form,
   FormContainer,
-  MainContainer,
   TabContainer,
-  Wrapper,
   InputContainer,
-  Login,
   InputWrapper,
 } from "./Register.styles";
 import Textarea from "../../components/Textarea";
 import DisplayImage from "../../components/DisplayImage";
+import { Request, MainContainer, Wrapper } from "../../GlobalStyle";
 
 const Register = () => {
   const [index, setIndex] = useState(0);
@@ -67,7 +65,10 @@ const Register = () => {
             <ButtonContainer>
               <Button>Sign up</Button>
             </ButtonContainer>
-            <Login href="/login">Already have an account? Login</Login>
+            <Request>
+              <p>Already have an account?</p>
+              <a href="/login">Login</a>
+            </Request>
           </Form>
         </FormContainer>
       </MainContainer>

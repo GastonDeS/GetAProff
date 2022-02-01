@@ -1,16 +1,5 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div ``;
-
-export const MainContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 3em;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-`;
-
 export const FormContainer = styled.div`
   height: fit-content;
   width: 30vw;
@@ -58,7 +47,7 @@ export const WelcomeText = styled.h2`
 `;
 
 export const Form = styled.div`
-  padding-top: 1rem;
+  padding: 1rem 0;
   width: 100%;
   height: fit-content;
   display: flex;
@@ -98,18 +87,6 @@ export const Button = styled.button`
   border-radius: 2rem;
   cursor: pointer;
 
-  &:hover {
-    color: black;
-  }
-`;
-
-export const Login = styled.a`
-  text-decoration: none;
-  color: var(--secondary);
-  cursor: pointer;
-  text-transform: none;
-  letter-spacing: 0;
-  margin-bottom: 1rem;
   &:hover {
     color: black;
   }

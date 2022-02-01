@@ -13,14 +13,14 @@ const Input = ({ type, placeholder, register, required, name, onChange }) => {
 };
 
 export const StyledInput = styled.input`
-  background: var(--tertiary);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 2rem;
   width: 100%;
   height: 35%;
   padding: 1rem;
-  border: none;
+  border: 2.5px solid var(--secondary);
   outline: none;
-  color: white;
+  color: black;
   font-size: var(--fontSmall);
   font-weight: 100;
 
@@ -32,7 +32,7 @@ export const StyledInput = styled.input`
   }
 
   &::placeholder {
-    color: white;
+    /* color: black; */
     font-weight: 100;
     font-size: var(--fontSmall);
     text-transform: uppercase;

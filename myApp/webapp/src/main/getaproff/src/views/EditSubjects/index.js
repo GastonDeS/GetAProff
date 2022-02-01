@@ -5,20 +5,19 @@ import i18next from "i18next";
 
 import {
   MainContainer,
-  Wrapper,
   Content,
   Headers,
   Table,
   Row,
   SelectContainer,
-  SingleSelect,
-  Request
+  SingleSelect
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
 import Rows from '../../components/Rows';
 import { Title, Levels } from "../../GlobalStyle";
 import SelectDropdown from "../../components/SelectDropdown";
 import Button from "../../components/Button";
+import { Request, Wrapper } from "../../GlobalStyle";
 
 const EditSubjects = () => {
   const [rows, setRows] = useState({data: []});

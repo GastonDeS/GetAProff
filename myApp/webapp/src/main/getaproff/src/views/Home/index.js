@@ -4,11 +4,12 @@ import axios from 'axios'
 
 import Profile from '../../assets/img/profile.png'
 
-import { ButtonContainer, Content, MainContainer, SearchBarContainer, SearchContainer, TutorContainer, Wrapper } from './Home.styles'
+import { ButtonContainer, Content, SearchBarContainer, SearchContainer, TutorContainer } from './Home.styles'
 import Navbar from '../../components/Navbar'
 import TutorCard from '../../components/TutorCard'
 import SearchBar from '../../components/SearchBar'
 import Button from '../../components/Button'
+import { Wrapper, MainContainer } from "../../GlobalStyle";
 
 const Home = () => {
   const [topRated, setTopRated] = useState({users: []});
@@ -55,7 +56,7 @@ const Home = () => {
   return (
     <Wrapper>
       <Navbar/>
-      <MainContainer>
+      <MainContainer style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
         <SearchContainer>
           <SearchBarContainer>
             <SearchBar/>

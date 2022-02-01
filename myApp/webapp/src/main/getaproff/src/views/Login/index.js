@@ -5,13 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 import {
   LoginContainer,
-  MainContainer,
-  Wrapper,
   WelcomeText,
   InputContainer,
   ButtonContainer,
   Button,
-  SignUp,
   FormContainer,
   InputWrapper,
   Error,
@@ -19,6 +16,7 @@ import {
 import Input from "../../components/Input";
 import AuthService from "../../services/authService";
 import { useForm } from "react-hook-form";
+import { Request, Wrapper, MainContainer } from "../../GlobalStyle";
 
 const EMAIL_PATTERN =
   '/^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/';
@@ -107,7 +105,10 @@ const Login = () => {
               </Button>
             </ButtonContainer>
           </FormContainer>
-          <SignUp href="/register">Don't have an account yet? Sign up</SignUp>
+          <Request>
+            <p>Don't have an account yet?</p>
+            <a href="/register">Sign up</a>
+          </Request>
         </LoginContainer>
       </MainContainer>
     </Wrapper>

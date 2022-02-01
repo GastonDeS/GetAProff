@@ -13,6 +13,8 @@ import MyClasses from './views/MyClasses';
 import Profile from './views/Profile';
 import EditSubjects from './views/EditSubjects';
 import MyFiles from './views/MyFiles';
+import RequestSubject from './views/RequestSubject';
+import RequestClass from './views/RequestClass';
 
 const App = () => {
 
@@ -27,6 +29,8 @@ const App = () => {
         <Route path='/profile' element={ <Profile/> }/>
         <Route path='/edit-subjects' element={ <EditSubjects/> }/>
         <Route path='/my-files' element={ <MyFiles/> } />
+        <Route path='/request-subject' element={ <RequestSubject/> } />
+        <Route path='/request-class' element={ <RequestClass/> } />
       </Routes>
     </Router>
   );

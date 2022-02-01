@@ -4,8 +4,6 @@ import axios from "axios";
 
 import Navbar from "../../components/Navbar";
 import {
-  Wrapper,
-  PageContainer,
   ProfileInfoButtons,
   StarsReviews,
   ProfileInfo,
@@ -25,7 +23,7 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import { Row, Table, Headers } from "../EditSubjects/EditSubjects.styles"
 import Rows from "../../components/Rows";
-
+import { Wrapper, MainContainer } from "../../GlobalStyle";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
@@ -50,7 +48,7 @@ const Profile = () => {
   return (
     <Wrapper>
       <Navbar/>
-      <PageContainer>
+      <MainContainer>
         <ProfileContainer>
           <InfoContainer>
             <img
@@ -145,7 +143,7 @@ const Profile = () => {
             </TabInfoContainer>
           </TabContainer>
         </ProfileContainer>
-      </PageContainer>
+      </MainContainer>
     </Wrapper>
   );
 };

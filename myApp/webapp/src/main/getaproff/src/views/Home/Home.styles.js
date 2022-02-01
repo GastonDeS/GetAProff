@@ -1,19 +1,5 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
-  height: 100%;
-`;
-
-export const MainContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 3em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
 export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;

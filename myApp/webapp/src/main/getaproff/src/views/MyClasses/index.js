@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Wrapper, MainContainer, Content, FilterContainer, CardContainer, Filter, SelectContainer } from './MyClasses.styles';
+import { Content, FilterContainer, CardContainer, Filter, SelectContainer } from './MyClasses.styles';
 import Navbar from '../../components/Navbar';
 import ClassCard from '../../components/ClassCard';
 import Tab from '../../components/Tab';
 import TabItem from '../../components/TabItem'
 import SelectDropdown from '../../components/SelectDropdown';
+import { Wrapper, MainContainer } from "../../GlobalStyle";
 
 const MyClasses = () => {
   const [tabIndex, setTabIndex] = useState(0);

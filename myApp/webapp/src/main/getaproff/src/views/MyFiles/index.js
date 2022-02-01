@@ -3,9 +3,9 @@ import i18next from "i18next";
 import axios from "axios";
 
 import Navbar from "../../components/Navbar";
-import { MainContainer, Wrapper } from "../Home/Home.styles";
+import { MainContainer, Wrapper } from "../../GlobalStyle";
 import {
-  MainDiv,
+  Content,
   SelectContainer,
   FilterContainer,
   ModalBody,
@@ -60,7 +60,7 @@ const MyFiles = () => {
     <Wrapper>
       <Navbar />
       <MainContainer>
-        <MainDiv>
+        <Content>
           <Title>Mis archivos</Title>
           <h5>Filtrar por:</h5>
           <SelectContainer>
@@ -150,7 +150,7 @@ const MyFiles = () => {
               </ButtonContainer>
             </ModalBody>
           </Modal>
-        </MainDiv>
+        </Content>
       </MainContainer>
     </Wrapper>
   );
