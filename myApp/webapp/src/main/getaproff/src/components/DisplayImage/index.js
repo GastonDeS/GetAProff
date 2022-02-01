@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 import styled from "styled-components";
 import Default from "../../assets/img/add_img.png";
+import Button from "../Button";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,33 +24,11 @@ const Wrapper = styled.div`
   input {
     display: none;
   }
-
-  label {
-    width: fit-content;
-    border-radius: 2rem;
-    color: white;
-    height: fit-content;
-    border: transparent;
-    padding: 0.45em 1.3em;
-    background-color: var(--secondary);
-
-    &:hover {
-      color: black;
-      cursor: pointer;
-    }
-
-    @media screen and (max-width: 1200px) {
-      font-size: 1.75vw !important;
-    }
-
-    @media screen and (max-height: 400px) {
-      font-size: 4vh !important;
-    }
-  }
 `;
 
 const DisplayImage = () => {
   const [image, setImage] = useState(Default);
+  const inputFile = useRef(null);
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -57,16 +36,21 @@ const DisplayImage = () => {
     }
   };
 
+  const openFile = () => {
+    inputFile.current.click();
+  };
+
   return (
     <Wrapper>
-      <img src={image} />
+      <img src={image} alt="userImage"/>
       <label>
-        Choose photo
+        <Button text="Choose photo" fontSize="1rem" callback={openFile}/>
         <input
           type="file"
           name="userImage"
           onChange={onImageChange}
           accept="image/*"
+          ref={inputFile}
         />
       </label>
     </Wrapper>

@@ -2,8 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import i18next from "i18next";
-
 import Delete from "../../assets/img/delete_icon.png";
 
 const Row = styled.tr`
@@ -31,11 +29,11 @@ export const Data = styled.td`
   }
 `;
 
-const Rows = ({ edit, remove, data, rowId }) => {
+const Rows = ({ edit, remove, data, rowId, type }) => {
   return (
     <>
       <Row>
-        {edit ? (
+        {type === 0 ? (edit ? (
           <>
             <Data style={{ width: "45%" }}>{data.first}</Data>
             <Data style={{ width: "20%" }}>{data.second}</Data>
@@ -52,7 +50,18 @@ const Rows = ({ edit, remove, data, rowId }) => {
             <Data style={{ width: "20%" }}>{data.second}</Data>
             <Data style={{ width: "30%" }}>{data.third}</Data>
           </>
-        )}
+        )) :
+        (
+          <>
+            <Data style={{ width: "95%" }}>{data}</Data>
+            <Data style={{ width: "5%", textAlign: "end" }}>
+              <a onClick={() => remove(rowId, data.url)}>
+                <img src={Delete} alt="delete-icon"/>
+              </a>
+            </Data>
+          </>
+        )
+        }
       </Row>
     </>
   );
@@ -61,7 +70,13 @@ const Rows = ({ edit, remove, data, rowId }) => {
 Rows.propTypes = {
   edit: PropTypes.bool,
   remove: PropTypes.func,
-  subject: PropTypes.object
+  data: PropTypes.object,
+  rowId: PropTypes.number,
+  type: PropTypes.number
 };
+
+Rows.defaultProps = {
+  type: 0
+}
 
 export default Rows;

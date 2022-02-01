@@ -44,7 +44,7 @@ const EditSubjects = () => {
   useEffect(async () => {
     const res = await axios.get("/api/subjects/145");
     setRows({
-      data: res.data.map((item, index) => {
+      data: res.data.map((item) => {
         return { 
           first: item.name,
           second: '$' + item.price + '/' + i18next.t('subjects.hour'),
