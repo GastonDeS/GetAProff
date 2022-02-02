@@ -61,8 +61,8 @@ const Login = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        setMessage('Please enter valid credentials');
-        console.log(AuthService.getCurrentUser())
+        setMessage("Please enter valid credentials");
+        console.log(AuthService.getCurrentUser());
       }
     );
   };

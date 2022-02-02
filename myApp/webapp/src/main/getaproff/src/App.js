@@ -16,6 +16,7 @@ import MyFiles from './views/MyFiles';
 import RequestSubject from './views/RequestSubject';
 import RequestClass from './views/RequestClass';
 import EditCertifications from './views/EditCertifications';
+import EditProfile from './views/EditProfile';
 import Tutors from "./views/Tutors";
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
         <Route path='/request-subject' element={ <RequestSubject/> } />
         <Route path='/request-class' element={ <RequestClass/> } />
         <Route path='/edit-certifications' element={ <EditCertifications/> } />
+        <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />
       </Routes>
     </Router>

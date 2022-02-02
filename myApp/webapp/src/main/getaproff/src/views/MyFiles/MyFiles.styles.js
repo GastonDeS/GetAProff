@@ -56,7 +56,7 @@ export const ModalBody = styled(Modal.Body)`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  width: 100%;
+  width: 90%;
   padding: 1rem 3rem 0 3rem;
   justify-content: space-between;
   align-items: center;
@@ -67,9 +67,9 @@ export const ButtonContainer = styled.div`
   }
 `;
 
-export const Files = styled.div`
+export const Files = styled.tbody`
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   gap: 0.25rem;
 `;

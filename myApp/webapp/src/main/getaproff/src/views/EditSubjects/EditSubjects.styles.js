@@ -25,29 +25,6 @@ export const Content = styled.div`
   gap: 0.75rem;
 `;
 
-export const Table = styled.table`
-  width: 100%;
-  margin: 12px 0 8px 0;
-  border: none;
-`;
-
-export const Row = styled.tr`
-  background: hsla(185, 96%, 22%, 0.35);
-  box-shadow: 0 0 9px 0 rgb(0 0 0 / 10%);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 0.625rem;
-  padding: 0.65rem;
-  margin-bottom: 8px;
-  width: 100%;
-`;
-
-export const Headers = styled.th`
-  text-align: start;
-  font-size: var(--fontMed);
-`;
-
 export const SelectContainer = styled.div`
   width: 90%;
   display: flex;
