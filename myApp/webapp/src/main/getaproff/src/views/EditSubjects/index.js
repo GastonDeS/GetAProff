@@ -6,18 +6,15 @@ import i18next from "i18next";
 import {
   MainContainer,
   Content,
-  Headers,
-  Table,
-  Row,
   SelectContainer,
   SingleSelect
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
 import Rows from '../../components/Rows';
-import { Title, Levels } from "../../GlobalStyle";
 import SelectDropdown from "../../components/SelectDropdown";
 import Button from "../../components/Button";
-import { Request, Wrapper } from "../../GlobalStyle";
+import { Request, Wrapper, Title, Levels, Row, Headers, Table } from "../../GlobalStyle";
+import CheckBox from "../../components/CheckBox";
 
 const EditSubjects = () => {
   const [rows, setRows] = useState({data: []});
@@ -87,12 +84,12 @@ const EditSubjects = () => {
                 <Headers style={{ width: "45%" }}>{i18next.t('subjects.subject')}</Headers>
                 <Headers style={{ width: "20%" }}>{i18next.t('subjects.price')}</Headers>
                 <Headers style={{ width: "30%" }}>{i18next.t('subjects.level')}</Headers>
-                <Headers style={{ width: "5%" }}></Headers>
+                <Headers style={{ width: "5%" }}><CheckBox/></Headers>
               </Row>
             </thead>
             <tbody>
               {rows.data.map((item, index) => {
-                return <Rows key={index} edit={true} remove={remove} data={item} rowId={index}/>
+                return <Rows key={index} remove={remove} data={item} rowId={index}/>
               })}
             </tbody>
           </Table>

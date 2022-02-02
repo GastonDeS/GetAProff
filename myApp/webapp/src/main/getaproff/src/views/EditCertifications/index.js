@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { Wrapper, MainContainer, Title } from "../../GlobalStyle";
+import { Wrapper, MainContainer, Title, Row, Headers, Table } from "../../GlobalStyle";
 import Navbar from '../../components/Navbar';
 import { ButtonContainer, Content, Files } from './EditCertifications.styles';
 import Rows from '../../components/Rows';
 import Button from '../../components/Button';
+import CheckBox from '../../components/CheckBox';
 
 const EditCertifications = () => {
   const inputFile = useRef(null);
@@ -21,11 +22,21 @@ const EditCertifications = () => {
       <MainContainer>
         <Content>
           <Title>Edit certifications</Title>
-          <Files>
-            {files.map((item, index) => {
-              return <Rows key={index} data={item} rowId={index} type={1}/>
-            })}
-          </Files>
+          <Table>
+            <thead>
+              <Row>
+                <Headers style={{ width: "95%" }}>Files</Headers>
+                <Headers style={{ width: "5%" }}>
+                  <CheckBox/>
+                </Headers>
+              </Row>
+            </thead>
+            <Files>
+              {files.map((item, index) => {
+                return <Rows key={index} data={item} rowId={index} multi={false}/>
+              })}
+            </Files>
+          </Table>
           <ButtonContainer>
             <label>
               <Button text="Upload file" fontSize="1rem" callback={openFile}/>

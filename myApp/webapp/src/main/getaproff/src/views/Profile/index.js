@@ -21,9 +21,8 @@ import RatingStar from "react-stars";
 import Button from "../../components/Button";
 import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
-import { Row, Table, Headers } from "../EditSubjects/EditSubjects.styles"
 import Rows from "../../components/Rows";
-import { Wrapper, MainContainer } from "../../GlobalStyle";
+import { Wrapper, MainContainer, Row, Headers, Table } from "../../GlobalStyle";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);

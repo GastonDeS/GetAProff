@@ -15,9 +15,9 @@ import {
 import Button from "../../components/Button";
 import Modal from "react-bootstrap/Modal";
 import SelectDropdown from "../../components/SelectDropdown";
-import { Row, Headers, Table } from "../EditSubjects/EditSubjects.styles";
 import Rows from '../../components/Rows';
-import { Title, Levels } from "../../GlobalStyle";
+import { Title, Levels, Row, Headers, Table } from "../../GlobalStyle";
+import CheckBox from "../../components/CheckBox";
 
 const MyFiles = () => {
   const inputFile = useRef(null);
@@ -93,12 +93,14 @@ const MyFiles = () => {
                 <Headers style={{ width: "45%" }}>{i18next.t('files.file')}</Headers>
                 <Headers style={{ width: "20%" }}>{i18next.t('files.subject')}</Headers>
                 <Headers style={{ width: "30%" }}>{i18next.t('files.level')}</Headers>
-                <Headers style={{ width: "5%" }}></Headers>
+                <Headers style={{ width: "5%" }}>
+                  <CheckBox/>
+                </Headers>
               </Row>
             </thead>
             <tbody>
               {rows.data.map((item, index) => {
-                return <Rows key={index} edit={true} remove={remove} data={item} rowId={index}/>
+                return <Rows key={index} remove={remove} data={item} rowId={index}/>
               })}
             </tbody>
           </Table>
@@ -130,11 +132,13 @@ const MyFiles = () => {
                   />
                 </FilterContainer>
               </SelectContainer>
-              <Files>
-                {files && files.map((item, index) => {
-                  return <Rows key={index} data={item.name} rowId={index} type={1}/>
-                })}
-              </Files>
+              <table style={{ width: '90%' }}>
+                <Files>
+                  {files && files.map((item, index) => {
+                    return <Rows key={index} data={item.name} rowId={index} multi={false} check={false}/>
+                  })}
+                </Files>
+              </table>
               <ButtonContainer>
                 <Button
                   text="Elegir archivos"

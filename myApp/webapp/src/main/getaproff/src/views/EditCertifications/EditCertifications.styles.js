@@ -14,8 +14,8 @@ export const Content = styled.div`
   gap: 1.2rem;
 `;
 
-export const Files = styled.div`
-  width: 90%;
+export const Files = styled.tbody`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
