@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const FiltersContainer = styled.div `
     background: #9fedd7;
     border-radius: 8px;
-    width: 70%;
+    width: 60%;
     height: fit-content;
     min-width: 200px;
     padding: 15px;
