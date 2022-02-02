@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import {Pagination} from "react-bootstrap";
 
 export const FiltersContainer = styled.div `
-    background: #9fedd7;
+    background: var(--primary);
     border-radius: 8px;
     width: 60%;
     height: fit-content;
@@ -20,11 +21,30 @@ export const FilterSection = styled.div `
     margin: 5px 0;
     
     input[type=radio]:checked {
-        background-color: #026670;
+        background-color: var(--secondary);
     }
     
     input[type="radio"]:checked + label {
     font-weight: bold;
 }
+`
+
+export const Grid = styled.div `
+  margin: 30px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+`
+
+export const StyledPagination = styled(Pagination) `
+    align-self: center;
+    span {
+        background-color: var(--secondary) !important;
+        border-color: var(--secondary) !important;
+        }
+    a {
+        color: var(--secondary) !important;
+       }
 `
 

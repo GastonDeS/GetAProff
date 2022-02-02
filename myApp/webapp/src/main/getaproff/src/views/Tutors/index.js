@@ -3,13 +3,14 @@ import {MainContainer, Wrapper, Levels} from "../../GlobalStyle";
 import Navbar from "../../components/Navbar";
 import {SearchBarContainer} from "../Home/Home.styles";
 import SearchBar from "../../components/SearchBar";
-import {FiltersContainer, FilterSection} from "./Tutors.styles";
+import {FiltersContainer, FilterSection, Grid, StyledPagination} from "./Tutors.styles";
 import SelectDropdown from "../../components/SelectDropdown";
 import RangeSlider from "../../components/RangeSlider";
 import i18next from "i18next";
-import {Form, FormCheck} from "react-bootstrap";
+import {Form, FormCheck, PageItem} from "react-bootstrap";
 import RatingStars from "../../components/RatingStars";
 import Button from "../../components/Button";
+import TutorCard from "../../components/TutorCard";
 
 
 const Tutors = () => {
@@ -17,12 +18,20 @@ const Tutors = () => {
     const [currOrder, setOrder] = useState(0);
     const [currPrice, setPrice] = useState(1000);
     const [currLevel, setLevel] = useState(0);
+    const [currPage, setPage] = useState(1);
 
     const order = ["Price Ascending", "Price Descending", "Rate Ascending", "Rate Descending"];
     const rating = [0, 1, 2, 3, 4];
 
     const myURL = window.location.search;
+
+    //TODO: revisar esto de los parametros para filtros
     const haveParams = myURL.indexOf("?") > -1;
+
+
+    //Funciones
+
+    const handlePaging = event =>  setPage(parseInt(event.currentTarget.innerHTML));
 
     const cleanFilters = () => {
         document.getElementById("filterForm").reset();
@@ -35,6 +44,16 @@ const Tutors = () => {
     const s = () => {
         console.log("submiteed");
     }
+
+    let items = [];
+    for (let number = 1; number <= 5; number++) {
+        items.push(
+            <PageItem key={number} active={number === currPage} onClick={handlePaging}>
+                {number}
+            </PageItem>,
+        );
+    }
+
 
     return (
         <Wrapper>
@@ -62,11 +81,14 @@ const Tutors = () => {
                             <FilterSection>
                                 <h4>Rating</h4>
                                 {rating.map(rating => {
-                                    return <Form.Check key={rating} id={"radio-rating-" + rating} style={{marginLeft : "-20px"}}>
+                                    return <Form.Check key={rating} id={"radio-rating-" + rating}
+                                                       style={{marginLeft: "-20px"}}>
                                         <Form.Check.Input type={"radio"} name="rating" value={rating}
-                                                           style={{position: "fixed",
-                                                               opacity: "0",
-                                                               pointerEvents: 'none'}}/>
+                                                          style={{
+                                                              position: "fixed",
+                                                              opacity: "0",
+                                                              pointerEvents: 'none'
+                                                          }}/>
                                         <Form.Check.Label>
                                             <div style={{width: "100%", display: "flex"}}>
                                                 <RatingStars markedStars={rating} key={rating}/>
@@ -88,10 +110,23 @@ const Tutors = () => {
                         </Form>
                     </FiltersContainer>
                 </div>
-                <div style={{width: '70%'}}>
-                    <SearchBarContainer>
-                        <SearchBar/>
-                    </SearchBarContainer>
+                <div style={{width: '70%', display: "flex", flexDirection: "column"}}>
+                    <div style={{alignSelf: "center"}}>
+                        <SearchBarContainer>
+                            <SearchBar/>
+                        </SearchBarContainer>
+                    </div>
+                    <Grid>
+                        <TutorCard/>
+                        <TutorCard/>
+                        <TutorCard/>
+                        <TutorCard/>
+                        <TutorCard/>
+                        <TutorCard/>
+                        <TutorCard/>
+                        <TutorCard/>
+                    </Grid>
+                        <StyledPagination>{items}</StyledPagination>
                 </div>
             </MainContainer>
         </Wrapper>
