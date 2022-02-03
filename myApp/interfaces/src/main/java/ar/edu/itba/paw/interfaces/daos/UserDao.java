@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.User;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface UserDao {
      */
     Optional<User> get(Long userId);
 
-    List<Object> getFavourites(Long userId);
+    List<TeacherInfo> getFavourites(Long userId);
 
     int addFavourite(Long teacherId, Long studentId);
 

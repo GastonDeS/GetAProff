@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
@@ -34,7 +34,7 @@ public class FavouritesController {
             throw new NoUserLoggedException("exception.not.logger.user");
         }
         LOGGER.debug("Accessing favourites for user {}", user.get().getId());
-        List<CardProfile> favouritesTutors = userService.getFavourites(user.get().getId());
+        List<TeacherInfo> favouritesTutors = userService.getFavourites(user.get().getId());
         mav.addObject("uid", user.get().getId());
         mav.addObject("favouritesTutors", favouritesTutors);
         return mav;

@@ -4,11 +4,10 @@ import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,5 +30,11 @@ public class SubjectFilesController {
                 .map(SubjectFileDto::fromUser).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
     }
+
+//    @POST
+//    @Path("/{id}")
+//    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @RequestParam("files") MultipartFile[] files) {
+//
+//    }
 
 }

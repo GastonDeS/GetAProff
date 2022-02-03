@@ -5,9 +5,9 @@ import java.util.List;
 
 @SqlResultSetMappings(
         {@SqlResultSetMapping(
-                name = "CardProfileMapping",
+                name = "TeacherInfoMapping",
                 classes = @ConstructorResult(
-                        targetClass = CardProfile.class,
+                        targetClass = TeacherInfo.class,
                         columns = {
                                 @ColumnResult(name = "id", type = Long.class),
                                 @ColumnResult(name = "name"),
@@ -15,6 +15,8 @@ import java.util.List;
                                 @ColumnResult(name = "minPrice", type = int.class),
                                 @ColumnResult(name = "desc"),
                                 @ColumnResult(name = "rate", type = float.class),
+                                @ColumnResult(name = "sch"),
+                                @ColumnResult(name = "mail")
                         }
                 )
         ), @SqlResultSetMapping(

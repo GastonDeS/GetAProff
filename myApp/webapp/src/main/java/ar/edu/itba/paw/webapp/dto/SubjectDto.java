@@ -1,25 +1,31 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.SubjectInfo;
+import ar.edu.itba.paw.models.Subject;
 
-import javax.ws.rs.core.GenericEntity;
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.core.UriInfo;
 
 public class SubjectDto {
+
     private String name;
 
-    private Long id;
+    private Long subjectId;
 
-    private int price, level;
+    private String url;
 
-    public static SubjectDto fromSubjectInfo(SubjectInfo subject) {
+    public static SubjectDto get(UriInfo uri, Subject subject) {
         SubjectDto subjectDto = new SubjectDto();
-        subjectDto.id = subject.getSubjectId();
         subjectDto.name = subject.getName();
-        subjectDto.level = subject.getLevel();
-        subjectDto.price = subject.getPrice();
+        subjectDto.subjectId = subject.getSubjectId();
+        subjectDto.url = uri.getBaseUriBuilder().path("api/subjects").path(String.valueOf(subject.getSubjectId())).build().toString();
         return subjectDto;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getName() {
@@ -30,27 +36,11 @@ public class SubjectDto {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
+    public Long getSubjectId() {
+        return subjectId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 }

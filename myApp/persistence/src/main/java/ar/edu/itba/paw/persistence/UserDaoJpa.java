@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
 
@@ -24,14 +25,18 @@ public class UserDaoJpa implements UserDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> getFavourites(Long userId) {
-        final Query query = entityManager.createNativeQuery("select a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
-                "min(t.price) as minPrice, a1.description as description from (select u.userid as teacherid, u.name as name, coalesce(u.description, '') as description " +
-                "from users u JOIN favourites f on u.userid = f.teacherid where f.studentid = :userId) as a1 join teaches t on a1.teacherid = t.userid " +
-                "group by a1.teacherid, a1.name, a1.description) as a2 left outer join rating r on r.teacherid = a2.teacherid group by a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description");
+    public List<TeacherInfo> getFavourites(Long userId) {
+        final String queryStr = "select a2.teacherid as id, a2.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, a2.description as desc, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, a2.schedule as sch, a2.mail as mail " +
+                "from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
+                "min(t.price) as minPrice, a1.description as description, a1.schedule as schedule, a1.mail as mail " +
+                "from (select u.userid as teacherid, u.name as name, coalesce(u.description, '') as description, " +
+                "coalesce(u.schedule, '') as schedule, u.mail as mail from users u JOIN favourites f on u.userid = f.teacherid where f.studentid = :userId) " +
+                "as a1 join teaches t on a1.teacherid = t.userid group by a1.teacherid, a1.name, a1.description, a1.schedule, a1.mail) " +
+                "as a2 left outer join rating r on r.teacherid = a2.teacherid group by a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, a2.schedule, a2.mail";
+        final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping");
         query.setParameter("userId", userId);
-        return query.getResultList();
+        return (List<TeacherInfo>) query.getResultList();
     }
 
     @Override

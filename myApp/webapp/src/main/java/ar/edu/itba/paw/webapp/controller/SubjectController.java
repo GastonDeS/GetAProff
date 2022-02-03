@@ -1,20 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
-import ar.edu.itba.paw.models.SubjectInfo;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.SubjectDto;
-import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,13 +23,35 @@ public class SubjectController {
     @Autowired
     private TeachesService teachesService;
 
+    @Autowired
+    private SubjectService subjectService;
+
+    @Context
+    private UriInfo uriInfo;
+
     @GET
-    @Path("/{id}")
+    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getSubjectsTaughtFromUser(@PathParam("id") Long id) {
-        final List<SubjectDto> subjectDtos = teachesService.getSubjectInfoListByUser(id).stream()
-                .map(SubjectDto::fromSubjectInfo).collect(Collectors.toList());
+    public Response getAllSubjects() {
+        List<SubjectDto> subjectDtos = subjectService.list().stream()
+                .map(subject -> SubjectDto.get(uriInfo, subject)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
+    }
+
+//    @GET
+//    @Path("/{id}")
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response getAllSubjects(@PathParam("id") Long id) {
+//
+//    }
+
+    @GET
+    @Path("/info/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
+        final List<SubjectInfoDto> subjectInfoDtos = teachesService.getSubjectInfoListByUser(id).stream()
+                .map(SubjectInfoDto::fromSubjectInfo).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 
     @DELETE

@@ -1,41 +1,31 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.TeacherInfo;
 
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeacherDto {
 
-    private String url;
+    private String name, mail, description, schedule, url;
+
+    private Long id;
 
     private int minPrice, maxPrice;
 
     private float rate;
 
-    private String description, name;
-
-    private Long userId;
-
-    public static TeacherDto getTeacher(CardProfile teacher) {
+    public static TeacherDto getTeacher(UriInfo uri, TeacherInfo teacher) {
         TeacherDto teacherDto = new TeacherDto();
         teacherDto.maxPrice = teacher.getMaxPrice();
         teacherDto.minPrice = teacher.getMinPrice();
         teacherDto.rate = teacher.getRate();
-        teacherDto.userId = teacher.getUserId();
         teacherDto.name = teacher.getName();
+        teacherDto.schedule = teacher.getSchedule();
         teacherDto.description = teacher.getDescription();
+        teacherDto.mail = teacher.getMail();
+        teacherDto.id = teacher.getUserId();
+        teacherDto.url = uri.getBaseUriBuilder().path("api/teachers/").path(String.valueOf(teacher.getUserId())).build().toString();
         return teacherDto;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getName() {
@@ -46,12 +36,28 @@ public class TeacherDto {
         this.name = name;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getMail() {
+        return mail;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
     }
 
     public String getUrl() {
@@ -60,6 +66,14 @@ public class TeacherDto {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getMinPrice() {

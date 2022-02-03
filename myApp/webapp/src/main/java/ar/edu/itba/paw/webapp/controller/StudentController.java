@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.StudentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,8 @@ import java.util.Optional;
 
 @Path("api/users")
 @Component
-public class UserController {
+public class StudentController {
+
     @Autowired
     private UserService userService;
 
@@ -24,6 +25,6 @@ public class UserController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getUser(@PathParam("id") Long id) {
         final Optional<User> user = userService.findById(id);
-        return user.isPresent() ? Response.ok(UserDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
+        return user.isPresent() ? Response.ok(StudentDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 }

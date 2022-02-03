@@ -20,6 +20,14 @@ public class TeachesDaoJpa implements TeachesDao {
     private EntityManager entityManager;
 
     @Override
+    public List<Teaches> getByUser(Long userId) {
+        final User teacher = entityManager.getReference(User.class,userId);
+        final TypedQuery<Teaches> query = entityManager.createQuery("FROM Teaches t where t.teacher = :teacher", Teaches.class);
+        query.setParameter("teacher", teacher);
+        return query.getResultList();
+    }
+
+    @Override
     public Teaches addSubjectToUser(Long userId, Long subjectId, int price, int level) {
         final User teacher = entityManager.getReference(User.class, userId);
         final Subject subject = entityManager.getReference(Subject.class, subjectId);
@@ -78,8 +86,9 @@ public class TeachesDaoJpa implements TeachesDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset) {
-        String queryStr = "select teacherid, u.name, maxPrice, minPrice, coalesce(u.description, ''), rate " +
+    public List<TeacherInfo> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset) {
+        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
+                "coalesce(u.schedule, '') as sch, u.mail as mail" +
                 "from (select a1.teacherid as teacherid, max(a1.price) as maxPrice, min(a1.price) as minPrice, " +
                 "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
                 "from (select t.userid as teacherid, t.price as price, t.level as level from Teaches t JOIN Subject s " +
@@ -87,7 +96,7 @@ public class TeachesDaoJpa implements TeachesDao {
                 "(t.level between :minLevel and :maxLevel or t.level = 0)) as a1 LEFT OUTER JOIN Rating r on a1.teacherid = r.teacherid " +
                 "group by a1.teacherid) as a2 JOIN users u on a2.teacherid = u.userid where a2.rate >= :rate ";
         queryStr += checkOrdering(order);
-        final Query query = entityManager.createNativeQuery(queryStr);
+        final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping");
         query.setParameter("price", price)
                 .setParameter("searchedSubject", "%"+searchedSubject.toLowerCase()+"%")
                 .setParameter("minLevel", minLevel)
@@ -97,35 +106,7 @@ public class TeachesDaoJpa implements TeachesDao {
             query.setFirstResult((offset - 1) * PAGE_SIZE)
                     .setMaxResults(PAGE_SIZE);
         }
-        return query.getResultList();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<CardProfile> getTopRatedTeachers() {
-        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate " +
-                "from (select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
-                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
-                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid order by rate desc";
-        final Query query = entityManager.createNativeQuery(queryStr, "CardProfileMapping").setMaxResults(4);
-        return (List<CardProfile>) query.getResultList();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<CardProfile> getMostRequested() {
-        String queryStr = "select a3.teacherid as id, a3.name as name, a3.maxPrice as maxPrice, a3.minPrice as minPrice, a3.description as desc, " +
-                "a3.rate as rate from (select a2.teacherid, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
-                "coalesce(u.description, '') as description, a2.rate as rate from " +
-                "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
-                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
-                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid) as a3 LEFT OUTER JOIN " +
-                "classes c on a3.teacherid = c.teacherid group by a3.teacherid, a3.name, a3.maxPrice," +
-                "a3.minPrice, a3.description, a3.rate order by count(c.classid) desc";
-        final Query query = entityManager.createNativeQuery(queryStr, "CardProfileMapping").setMaxResults(4);
-        return (List<CardProfile>) query.getResultList();
+        return (List<TeacherInfo>) query.getResultList();
     }
 
     private String checkOrdering(int order){
@@ -151,10 +132,53 @@ public class TeachesDaoJpa implements TeachesDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    public List<TeacherInfo> getTopRatedTeachers() {
+        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
+                "coalesce(u.schedule, '') as sch, u.mail as mail " +
+                "from (select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
+                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
+                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid order by rate desc";
+        final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping").setMaxResults(4);
+        return (List<TeacherInfo>) query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<TeacherInfo> getMostRequested() {
+        String queryStr = "select a3.teacherid as id, a3.name as name, a3.maxPrice as maxPrice, a3.minPrice as minPrice, a3.description as desc, " +
+                "a3.rate as rate, a3.schedule as sch, a3.mail as mail from (select a2.teacherid, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
+                "coalesce(u.description, '') as description, a2.rate as rate, coalesce(u.schedule, '') as schedule, u.mail as mail from " +
+                "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
+                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
+                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid) as a3 LEFT OUTER JOIN " +
+                "classes c on a3.teacherid = c.teacherid group by a3.teacherid, a3.name, a3.maxPrice," +
+                "a3.minPrice, a3.description, a3.rate, a3.schedule, a3.mail order by count(c.classid) desc";
+        final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping").setMaxResults(4);
+        return (List<TeacherInfo>) query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public List<SubjectInfo> getSubjectInfoListByUser(Long teacherId) {
         String queryStr = "select s.subjectid as id, s.name as name, t.price as price, t.level as level from teaches t join subject s on t.subjectid = s.subjectid where t.userid = :teacherId";
         final Query query = entityManager.createNativeQuery(queryStr, "SubjectInfoMapping")
                 .setParameter("teacherId", teacherId);
         return (List<SubjectInfo>) query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Optional<TeacherInfo> getTeacherInfo(Long teacherId) {
+        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
+                "coalesce(u.schedule, '') as sch, u.mail as mail from (select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
+                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid where t.userid = :teacherId " +
+                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid";
+        final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping")
+                .setParameter("teacherId", teacherId);
+        List<TeacherInfo> teacherInfos = (List<TeacherInfo>) query.getResultList();
+        return teacherInfos.isEmpty() ? Optional.empty() : Optional.of(teacherInfos.get(0));
     }
 }

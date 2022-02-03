@@ -64,6 +64,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/images/*").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/subject-files/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/teachers/*").permitAll()
 //                    .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
 //                    .antMatchers("/editSubjects/*", "/newSubjectForm", "/newSubjectFormSent").hasAuthority("USER_TEACHER")
 //                    .antMatchers("/editProfile/startTeaching").hasAnyAuthority("USER_STUDENT")

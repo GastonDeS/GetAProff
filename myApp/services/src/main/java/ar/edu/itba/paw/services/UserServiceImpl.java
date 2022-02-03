@@ -47,17 +47,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public List<CardProfile> getFavourites(Long userId) {
-        List<Object> favourites = userDao.getFavourites(userId);
-        List<CardProfile> teacherCard = new ArrayList<>();
-        favourites.forEach((favourite) -> {
-            Object[] cardProfileInfo = (Object[]) favourite;
-            teacherCard.add(
-                    new CardProfile(((Number) cardProfileInfo[0]).longValue(), cardProfileInfo[1].toString(), ((Number) cardProfileInfo[2]).intValue(),
-                            ((Number) cardProfileInfo[3]).intValue(), cardProfileInfo[4].toString(), ((Number) cardProfileInfo[5]).floatValue())
-            );
-        });
-        return teacherCard;
+    public List<TeacherInfo> getFavourites(Long userId) {
+        return userDao.getFavourites(userId);
     }
 
     @Transactional

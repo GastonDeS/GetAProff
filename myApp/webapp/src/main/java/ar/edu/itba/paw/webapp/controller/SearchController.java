@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class SearchController {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
         LOGGER.debug("Teachers found for {}", searchQuery);
-        List<CardProfile> maybeTutors = teachesService.findTeachersTeachingSubject(searchQuery, offset);
+        List<TeacherInfo> maybeTutors = teachesService.findTeachersTeachingSubject(searchQuery, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));
@@ -72,7 +72,7 @@ public class SearchController {
         String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
         addUserId(mav);
         LOGGER.debug("Teachers found for {}", urlParams);
-        List<CardProfile> maybeTutors = teachesService.filterUsers(searchQuery,order, price, level, rating, offset);
+        List<TeacherInfo> maybeTutors = teachesService.filterUsers(searchQuery,order, price, level, rating, offset);
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));

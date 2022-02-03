@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.CardProfile;
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface TeachesService {
@@ -21,9 +22,9 @@ public interface TeachesService {
 
     List<Teaches> get(Long teacherId);
 
-    List<CardProfile> findTeachersTeachingSubject(String searchedSubject, String offset);
+    List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, String offset);
 
-    List<CardProfile> filterUsers(String searchedSubject, String order, String price, String level, String rating, String offset);
+    List<TeacherInfo> filterUsers(String searchedSubject, String order, String price, String level, String rating, String offset);
 
     Integer getMostExpensiveUserFee(String searchedSubject);
 
@@ -31,8 +32,11 @@ public interface TeachesService {
 
     Integer getPageQty(String searchedSubject);
 
-    List<CardProfile> getTopRatedTeachers();
+    List<TeacherInfo> getTopRatedTeachers();
 
-    List<CardProfile> getMostRequested();
+    List<TeacherInfo> getMostRequested();
 
+    Map<Subject, List<Integer>> getSubjectAndLevelsTaughtByUser(Long userId);
+
+    Optional<TeacherInfo> getTeacherInfo(Long teacherId);
 }
