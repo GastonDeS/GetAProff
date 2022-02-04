@@ -6,16 +6,13 @@ import ar.edu.itba.paw.webapp.dto.TeacherDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("api/teachers")
+@Path("teachers")
 @Component
 public class TeacherController {
 
@@ -29,10 +26,44 @@ public class TeacherController {
     private UriInfo uriInfo;
 
     @GET
+    @Path("/subject")
+    public Response findBySubject(@QueryParam("page") int page, @QueryParam("search") String search) {
+        final List<TeacherDto> filteredTeachers = teachesService.findTeachersTeachingSubject(search, page).stream()
+                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
+        int total = teachesService.getPageQty(search);
+        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
+    }
+
+    @GET
+    @Path("/filters")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response filterTeachers(@QueryParam("page") int page, @QueryParam("search") String search, @QueryParam("price") Integer price,
+                                   @QueryParam("level") Integer level, @QueryParam("rating") Integer rating, @QueryParam("order") Integer order) {
+        final List<TeacherDto> filteredTeachers = teachesService.filterUsers(search, order, price, level, rating, page).stream()
+                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
+        int total = teachesService.getPageQty(search, price, level, rating);
+        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
+    }
+
+    private Response addPaginationHeaders(int current, int total, Response.ResponseBuilder response) {
+        if (current + 1 <= total) {
+            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", current + 1).build().toString(), "next");
+        }
+        if (current - 1 > 0) {
+            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", current - 1).build().toString(), "prev");
+        }
+        if (total > 1) {
+            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", total).build().toString(), "last");
+        }
+        response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build().toString(), "first");
+        return response.build();
+    }
+
+    @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getTeacherInfo(@PathParam("id") Long id) {
-        Optional<TeacherInfo> teacherInfo = teachesService.getTeacherInfo(id);
+        final Optional<TeacherInfo> teacherInfo = teachesService.getTeacherInfo(id);
         return teacherInfo.isPresent() ? Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
@@ -40,7 +71,7 @@ public class TeacherController {
     @Path("/favourites/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getUserFavourites(@PathParam("id") Long id) {
-        List<TeacherDto> favourites = userService.getFavourites(id).stream()
+        final List<TeacherDto> favourites = userService.getFavourites(id).stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(favourites){}).build();
     }
@@ -49,7 +80,7 @@ public class TeacherController {
     @Path("/top-rated")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listTopRatedTeachers() {
-        List<TeacherDto> topRatedTeachers = teachesService.getTopRatedTeachers().stream()
+        final List<TeacherDto> topRatedTeachers = teachesService.getTopRatedTeachers().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(topRatedTeachers){}).build();
     }
@@ -58,7 +89,7 @@ public class TeacherController {
     @Path("/most-requested")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listMostRequestedTeachers() {
-        List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
+        final List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(mostRequestedTeachers){}).build();
     }

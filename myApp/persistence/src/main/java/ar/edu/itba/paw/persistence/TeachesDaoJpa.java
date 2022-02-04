@@ -87,8 +87,8 @@ public class TeachesDaoJpa implements TeachesDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<TeacherInfo> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset) {
-        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
-                "coalesce(u.schedule, '') as sch, u.mail as mail" +
+        String queryStr = "select a2.teacherid as id, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
+                "coalesce(u.description, '') as desc, a2.rate as rate, coalesce(u.schedule, '') as sch, u.mail as mail " +
                 "from (select a1.teacherid as teacherid, max(a1.price) as maxPrice, min(a1.price) as minPrice, " +
                 "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate " +
                 "from (select t.userid as teacherid, t.price as price, t.level as level from Teaches t JOIN Subject s " +

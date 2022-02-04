@@ -12,7 +12,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("api/subject-files")
+@Path("subject-files")
 @Component
 public class SubjectFilesController {
 

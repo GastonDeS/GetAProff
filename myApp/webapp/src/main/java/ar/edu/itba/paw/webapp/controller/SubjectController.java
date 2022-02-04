@@ -14,7 +14,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("api/subjects")
+@Path("subjects")
 @Component
 public class SubjectController {
 
@@ -33,7 +33,7 @@ public class SubjectController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getAllSubjects() {
-        List<SubjectDto> subjectDtos = subjectService.list().stream()
+        final List<SubjectDto> subjectDtos = subjectService.list().stream()
                 .map(subject -> SubjectDto.get(uriInfo, subject)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }

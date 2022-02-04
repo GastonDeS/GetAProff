@@ -49,36 +49,33 @@ public class TeachesServiceImpl implements TeachesService {
 
     @Transactional
     @Override
-    public List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, String offset) {
+    public List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer offset) {
         return teachesDao.filterUsers(searchedSubject,
-                teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, Integer.parseInt(offset));
+                teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, offset);
     }
 
     @Transactional
     @Override
-    public List<TeacherInfo> filterUsers(String searchedSubject, String order, String price, String level, String rating, String offset) {
-        int lvl = Integer.parseInt(level);
-        int maxLevel = lvl, minLevel = lvl;
-        if (lvl <= 0 || lvl > MAX_LEVEL){
+    public List<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
+        int maxLevel = level, minLevel = level;
+        if (level <= 0 || level > MAX_LEVEL){
             maxLevel = MAX_LEVEL;
             minLevel = ANY_LEVEL;
         }
         Integer maxPrice = teachesDao.getMostExpensiveUserFee(searchedSubject);
-        int intPrice = Integer.parseInt(price);
-        if (intPrice > maxPrice) intPrice = maxPrice;
-        return teachesDao.filterUsers(searchedSubject, intPrice, minLevel, maxLevel,
-                Integer.parseInt(rating), Integer.parseInt(order), Integer.parseInt(offset));
+        if (price > maxPrice) price = maxPrice;
+        return teachesDao.filterUsers(searchedSubject, price, minLevel, maxLevel, rating, order, offset);
     }
 
     @Override
-    public Integer getPageQty(String searchedSubject, String price, String level, String rating) {
-        List<TeacherInfo> teachersListResult = filterUsers(searchedSubject, RAND_ORDER.toString(), price, level, rating, GET_ALL.toString());
+    public Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating) {
+        List<TeacherInfo> teachersListResult = filterUsers(searchedSubject, RAND_ORDER, price, level, rating, GET_ALL);
         return (int) Math.ceil(teachersListResult.size()/(double) PAGE_SIZE);
     }
 
     @Override
     public Integer getPageQty(String searchedSubject) {
-        return (int) Math.ceil(findTeachersTeachingSubject(searchedSubject, GET_ALL.toString()).size()/(double) PAGE_SIZE);
+        return (int) Math.ceil(findTeachersTeachingSubject(searchedSubject, GET_ALL).size()/(double) PAGE_SIZE);
     }
 
     @Override

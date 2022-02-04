@@ -53,7 +53,7 @@ public class SearchController {
             return new ModelAndView("403").addObject("exception", messageSource.getMessage("page.not.found", null, LocaleContextHolder.getLocale()));
         }
         LOGGER.debug("Teachers found for {}", searchQuery);
-        List<TeacherInfo> maybeTutors = teachesService.findTeachersTeachingSubject(searchQuery, offset);
+        List<TeacherInfo> maybeTutors = teachesService.findTeachersTeachingSubject(searchQuery, Integer.parseInt(offset));
         mav.addObject("tutors", maybeTutors);
         mav.addObject("subjects", subjectService.list());
         mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));
@@ -64,22 +64,22 @@ public class SearchController {
         return mav;
     }
 
-    @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = {"query","order","price","level","rating"})
-    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "order") @NotNull final String order,
-                               @RequestParam(value = "price") @NotNull final String price, @RequestParam(value = "level") @NotNull final String level,
-                               @RequestParam(value = "rating") @NotNull final String rating, @PathVariable String offset) {
-        final ModelAndView mav = new ModelAndView("tutors");
-        String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
-        addUserId(mav);
-        LOGGER.debug("Teachers found for {}", urlParams);
-        List<TeacherInfo> maybeTutors = teachesService.filterUsers(searchQuery,order, price, level, rating, offset);
-        mav.addObject("tutors", maybeTutors);
-        mav.addObject("subjects", subjectService.list());
-        mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));
-        mav.addObject("urlParams", urlParams);
-        mav.addObject("searchQuery", searchQuery);
-        mav.addObject("offset", offset);
-        mav.addObject("pageQty",teachesService.getPageQty(searchQuery, price, level, rating));
-        return mav;
-    }
+//    @RequestMapping(value = "/tutors/{offset}", method = RequestMethod.GET, params = {"query","order","price","level","rating"})
+//    public ModelAndView tutors(@RequestParam(value = "query") @NotNull final String searchQuery, @RequestParam(value = "order") @NotNull final String order,
+//                               @RequestParam(value = "price") @NotNull final String price, @RequestParam(value = "level") @NotNull final String level,
+//                               @RequestParam(value = "rating") @NotNull final String rating, @PathVariable String offset) {
+//        final ModelAndView mav = new ModelAndView("tutors");
+//        String urlParams = "?query=" + searchQuery + "&order=" + order + "&price=" + price +"&level=" + level + "&rating=" + rating;
+//        addUserId(mav);
+//        LOGGER.debug("Teachers found for {}", urlParams);
+//        List<TeacherInfo> maybeTutors = teachesService.filterUsers(searchQuery,order, price, level, rating, offset);
+//        mav.addObject("tutors", maybeTutors);
+//        mav.addObject("subjects", subjectService.list());
+//        mav.addObject("maxPrice", teachesService.getMostExpensiveUserFee(searchQuery));
+//        mav.addObject("urlParams", urlParams);
+//        mav.addObject("searchQuery", searchQuery);
+//        mav.addObject("offset", offset);
+//        mav.addObject("pageQty",teachesService.getPageQty(searchQuery, price, level, rating));
+//        return mav;
+//    }
 }

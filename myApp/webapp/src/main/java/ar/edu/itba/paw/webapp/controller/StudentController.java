@@ -10,7 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Optional;
 
-@Path("api/users")
+@Path("users")
 @Component
 public class StudentController {
 

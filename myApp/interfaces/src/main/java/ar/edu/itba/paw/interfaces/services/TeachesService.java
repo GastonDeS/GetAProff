@@ -22,13 +22,13 @@ public interface TeachesService {
 
     List<Teaches> get(Long teacherId);
 
-    List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, String offset);
+    List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer offset);
 
-    List<TeacherInfo> filterUsers(String searchedSubject, String order, String price, String level, String rating, String offset);
+    List<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
 
     Integer getMostExpensiveUserFee(String searchedSubject);
 
-    Integer getPageQty(String searchedSubject, String price, String level, String rating);
+    Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating);
 
     Integer getPageQty(String searchedSubject);
 

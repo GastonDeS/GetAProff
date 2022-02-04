@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
-@ComponentScan({"ar.edu.itba.paw.webapp.auth"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.util"})
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
@@ -39,6 +39,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public JwtAuthorizationFilter authenticationJwtTokenFilter() {
+        return new JwtAuthorizationFilter();
+    }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -61,16 +66,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .invalidSessionUrl("/")
                 .and().authorizeRequests()
-                    .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/images/*").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/subject-files/*").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/teachers/*").permitAll()
+//                    .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+//                    .antMatchers(HttpMethod.GET, "/api/images/*").permitAll()
+//                    .antMatchers(HttpMethod.GET, "/api/subject-files/*").permitAll()
+//                    .antMatchers(HttpMethod.GET, "/api/teachers/*").permitAll()
 //                    .antMatchers("/profile/**/**", "/", "/tutors/**", "/image/*").permitAll()
 //                    .antMatchers("/editSubjects/*", "/newSubjectForm", "/newSubjectFormSent").hasAuthority("USER_TEACHER")
 //                    .antMatchers("/editProfile/startTeaching").hasAnyAuthority("USER_STUDENT")
 //                    .antMatchers("/myClasses", "/editCertifications", "/favourites", "/classroom/*", "/contact/*").hasAnyAuthority("USER_TEACHER", "USER_STUDENT")
 //                    .antMatchers("/login", "/register").anonymous()
-                    .antMatchers("/**").authenticated()
+                    .antMatchers("/**").permitAll()
 //                .and().formLogin()
 //                    .usernameParameter("j_email")
 //                    .passwordParameter("j_password")
@@ -89,7 +94,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(unauthorizedHandler)
                 .and().csrf().disable();
 
-        http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
