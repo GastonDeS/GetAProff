@@ -53,36 +53,36 @@ public class ProfileController {
     @Autowired
     private UserFileService userFileService;
 
-    @RequestMapping("/profile/{uid}")
-    public ModelAndView profile(@PathVariable("uid") final Long uid) {
-        Optional<User> curr = userService.getCurrentUser();
-        Optional<User> user = userService.findById(uid);
-        if (!user.isPresent()) {
-            LOGGER.debug("No profile found for id: {}", uid);
-            throw new ProfileNotFoundException("exception.profile");
-        }
-        ModelAndView mav = new ModelAndView("profile").addObject("user", user.get());
-        mav.addObject("userFiles", userFileService.getAllUserFiles(uid));
-        if (curr.isPresent()) {
-            mav.addObject("currentUser", curr.get());
-            if (curr.get().getId().equals(user.get().getId())) {
-                mav.addObject("edit", 1);
-            } else if (!user.get().isTeacher() || teachesService.get(user.get().getId()).isEmpty()) {
-                LOGGER.debug("Cannot access profile for id: {}", uid);
-                throw new ProfileNotFoundException("exception.profile");
-            } else {
-                mav.addObject("isFaved", userService.isFaved(uid, curr.get().getId()));
-            }
-        }
-        LOGGER.debug("Accessing profile for id: {}", uid);
-        if (user.get().isTeacher()) {
-            List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
-            mav.addObject("subjectsList", subjectsGiven)
-                    .addObject("rating", ratingService.getRatingById(uid))
-                    .addObject("ratingList", ratingService.getTeacherRatings(uid));
-        }
-        return mav;
-    }
+//    @RequestMapping("/profile/{uid}")
+//    public ModelAndView profile(@PathVariable("uid") final Long uid) {
+//        Optional<User> curr = userService.getCurrentUser();
+//        Optional<User> user = userService.findById(uid);
+//        if (!user.isPresent()) {
+//            LOGGER.debug("No profile found for id: {}", uid);
+//            throw new ProfileNotFoundException("exception.profile");
+//        }
+//        ModelAndView mav = new ModelAndView("profile").addObject("user", user.get());
+//        mav.addObject("userFiles", userFileService.getAllUserFiles(uid));
+//        if (curr.isPresent()) {
+//            mav.addObject("currentUser", curr.get());
+//            if (curr.get().getId().equals(user.get().getId())) {
+//                mav.addObject("edit", 1);
+//            } else if (!user.get().isTeacher() || teachesService.get(user.get().getId()).isEmpty()) {
+//                LOGGER.debug("Cannot access profile for id: {}", uid);
+//                throw new ProfileNotFoundException("exception.profile");
+//            } else {
+//                mav.addObject("isFaved", userService.isFaved(uid, curr.get().getId()));
+//            }
+//        }
+//        LOGGER.debug("Accessing profile for id: {}", uid);
+//        if (user.get().isTeacher()) {
+//            List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+//            mav.addObject("subjectsList", subjectsGiven)
+//                    .addObject("rating", ratingService.getRatingById(uid))
+//                    .addObject("ratingList", ratingService.getTeacherRatings(uid));
+//        }
+//        return mav;
+//    }
 
     @RequestMapping(value = "/editProfile", method = RequestMethod.GET)
     public ModelAndView editProfile(@ModelAttribute("userForm") final UserForm form) {
@@ -213,9 +213,9 @@ public class ProfileController {
         ModelAndView mav = new ModelAndView("myFiles");
         User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
         List<SubjectFile> userSubjectFiles = subjectFileService.getAllSubjectFilesFromUser(currUser.getId());
-        List<Subject> userSubject = teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId());
+        List<Subject> userSubject = teachesService.getListOfAllSubjectsTaughtByUser(currUser.getId());
         mav.addObject("userSubjectFiles", userSubjectFiles);
-        mav.addObject("userSubjectInfo", teachesService.getSubjectInfoListByUser(currUser.getId()));
+        mav.addObject("userSubjectInfo", teachesService.get(currUser.getId()));
         mav.addObject("userSubjects", userSubject);
         mav.addObject("user", currUser);
         mav.addObject("filtering",false);
@@ -226,10 +226,10 @@ public class ProfileController {
     public ModelAndView myFiles(@RequestParam (name = "subject-select-filter") Long subjectId, @RequestParam (name = "level-select-filter") Integer level ){
         ModelAndView mav = new ModelAndView("myFiles");
         User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
-        List<Subject> userSubject = teachesService.getListOfAllSubjectsTeachedByUser(currUser.getId());
+        List<Subject> userSubject = teachesService.getListOfAllSubjectsTaughtByUser(currUser.getId());
         List<SubjectFile> userSubjectFiles = subjectFileService.filterUserSubjectFilesBySubjectAndLevel(currUser.getId(), subjectId, level);
         mav.addObject("userSubjectFiles", userSubjectFiles);
-        mav.addObject("userSubjectInfo",teachesService.getSubjectInfoListByUser(currUser.getId()));
+        mav.addObject("userSubjectInfo",teachesService.get(currUser.getId()));
         mav.addObject("userSubjects",userSubject);
         mav.addObject("user",currUser);
         mav.addObject("filtering",true);

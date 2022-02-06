@@ -16,7 +16,7 @@ public class SubjectDto {
         SubjectDto subjectDto = new SubjectDto();
         subjectDto.name = subject.getName();
         subjectDto.subjectId = subject.getSubjectId();
-        subjectDto.url = uri.getBaseUriBuilder().path("api/subjects").path(String.valueOf(subject.getSubjectId())).build().toString();
+        subjectDto.url = uri.getBaseUriBuilder().path("subjects").path(String.valueOf(subject.getSubjectId())).build().toString();
         return subjectDto;
     }
 

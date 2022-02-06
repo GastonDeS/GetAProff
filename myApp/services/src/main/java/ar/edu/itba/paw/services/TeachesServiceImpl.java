@@ -30,14 +30,14 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.removeSubjectToUser(userId, subjectId, level);
     }
 
-    @Transactional
-    @Override
-    public List<SubjectInfo> getSubjectInfoListByUser(Long teacherId) {
-        return teachesDao.getSubjectInfoListByUser(teacherId);
-    }
+//    @Transactional
+//    @Override
+//    public List<Teaches> getSubjectInfoListByUser(Long teacherId) {
+//        return teachesDao.getSubjectInfoListByUser(teacherId);
+//    }
 
     @Override
-    public List<Subject> getListOfAllSubjectsTeachedByUser(Long userId) {
+    public List<Subject> getListOfAllSubjectsTaughtByUser(Long userId) {
         return teachesDao.getListOfAllSubjectsTeachedByUser(userId);
     }
 

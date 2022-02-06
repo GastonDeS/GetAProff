@@ -24,7 +24,7 @@ public class StudentDto {
         StudentDto studentDto = new StudentDto();
         studentDto.mail = user.getMail();
         studentDto.name = user.getName();
-        studentDto.url = uri.getBaseUriBuilder().path("api/users").path(String.valueOf(user.getId())).build().toString();
+        studentDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
         return studentDto;
     }
 
@@ -32,7 +32,7 @@ public class StudentDto {
         StudentDto studentDto = new StudentDto();
         studentDto.token = token;
         studentDto.mail = user.getMail();
-        studentDto.url = uri.getBaseUriBuilder().path("api/auth").path(user.getMail()).build().toString();
+        studentDto.url = uri.getBaseUriBuilder().path("auth").path(user.getMail()).build().toString();
         return studentDto;
     }
 

@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
+import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,7 @@ public class TeacherController {
 
     @GET
     @Path("/subject")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findBySubject(@QueryParam("page") int page, @QueryParam("search") String search) {
         final List<TeacherDto> filteredTeachers = teachesService.findTeachersTeachingSubject(search, page).stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
@@ -92,5 +95,31 @@ public class TeacherController {
         final List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(mostRequestedTeachers){}).build();
+    }
+
+    @GET
+    @Path("/subjects/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
+        final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
+                .map(SubjectInfoDto::fromSubjectInfo).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
+    }
+
+    @GET
+    @Path("/subjects/levels/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response getSubjectAndLevelsFromUser(@PathParam("id") Long id) {
+        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
+                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
+    }
+
+    @DELETE
+    @Path("/{userId}/{id}/{level}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("id") Long id, @PathParam("level") int level) {
+        return teachesService.removeSubjectToUser(userId, id, level) == 1 ?
+                Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 }

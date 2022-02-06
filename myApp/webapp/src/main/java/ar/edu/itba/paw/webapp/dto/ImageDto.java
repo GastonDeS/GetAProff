@@ -13,7 +13,7 @@ public class ImageDto {
     public static ImageDto fromUser(UriInfo uri, Image image) {
         ImageDto imageDto = new ImageDto();
         imageDto.image = image.getImage();
-        imageDto.url = uri.getBaseUriBuilder().path("api/users").path(String.valueOf(image.getUserid())).build().toString();
+        imageDto.url = uri.getBaseUriBuilder().path("images/").path(String.valueOf(image.getUserid())).build().toString();
         return imageDto;
     }
 

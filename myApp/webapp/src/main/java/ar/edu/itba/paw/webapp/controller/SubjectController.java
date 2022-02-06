@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SubjectService;
-import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.webapp.dto.SubjectDto;
-import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("subjects")
@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 public class SubjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectController.class);
-
-    @Autowired
-    private TeachesService teachesService;
 
     @Autowired
     private SubjectService subjectService;
@@ -38,28 +35,21 @@ public class SubjectController {
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
-//    @GET
-//    @Path("/{id}")
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response getAllSubjects(@PathParam("id") Long id) {
-//
-//    }
-
     @GET
-    @Path("/info/{id}")
+    @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
-        final List<SubjectInfoDto> subjectInfoDtos = teachesService.getSubjectInfoListByUser(id).stream()
-                .map(SubjectInfoDto::fromSubjectInfo).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
+    public Response getSubject(@PathParam("id") Long id) {
+        final Optional<Subject> subject = subjectService.findById(id);
+        return subject.isPresent() ? Response.ok(SubjectDto.get(uriInfo, subject.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @DELETE
-    @Path("/{userId}/{id}/{level}")
+    @GET
+    @Path("/most-requested")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("id") Long id, @PathParam("level") int level) {
-        return teachesService.removeSubjectToUser(userId, id, level) == 1 ?
-                Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
+    public Response getMostRequestedSubjects() {
+        final List<SubjectDto> subjectDtos = subjectService.getHottestSubjects().stream()
+                .map(subject -> SubjectDto.get(uriInfo, subject)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
 //    @Autowired

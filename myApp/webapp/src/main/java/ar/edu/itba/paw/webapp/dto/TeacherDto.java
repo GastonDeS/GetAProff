@@ -24,7 +24,7 @@ public class TeacherDto {
         teacherDto.description = teacher.getDescription();
         teacherDto.mail = teacher.getMail();
         teacherDto.id = teacher.getUserId();
-        teacherDto.url = uri.getBaseUriBuilder().path("api/teachers/").path(String.valueOf(teacher.getUserId())).build().toString();
+        teacherDto.url = uri.getBaseUriBuilder().path("teachers/").path(String.valueOf(teacher.getUserId())).build().toString();
         return teacherDto;
     }
 

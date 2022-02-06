@@ -39,7 +39,7 @@ const EditSubjects = () => {
   }
 
   useEffect(async () => {
-    const res = await axios.get("/api/subjects/145");
+    const res = await axios.get("/teachers/subjects/145");
     setRows({
       data: res.data.map((item) => {
         return { 

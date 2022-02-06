@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RatingDao {
 
-    Rating addRating(User teacher, User student, float rate, String review);
+    Rating addRating(Long teacherId, Long studentId, float rate, String review);
 
     Pair<Float, Integer> getRatingById(Long teacherId);
 

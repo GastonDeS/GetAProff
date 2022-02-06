@@ -20,20 +20,26 @@ import { Title, Levels, Row, Headers, Table } from "../../GlobalStyle";
 import CheckBox from "../../components/CheckBox";
 
 const MyFiles = () => {
+  const initialState = {
+    id: null,
+    name: '',
+    levels: []
+  }
   const inputFile = useRef(null);
   const [show, setShow] = useState(false);
-  const [subject, setSubject] = useState(0);
+  const [subject, setSubject] = useState(initialState);
   const [level, setLevel] = useState(0);
-  const [rows, setRows] = useState({data: []});
-  const [files, setFiles] = useState([]);
-
-  const subjects = ["Matematicas", "Fisica", "Cocina", "Ingles"];
+  const [currentFiles, setCurrentFiles] = useState({data: []});
+  const [newFiles, setNewFiles] = useState([]);
+  const [state, setState] = useState();
+  const [currentLevels, setCurrentLevels] = useState([]);
+  const [currentSubjects, setCurrentSubjects] = useState([]);
 
   const handleShow = () => setShow(current => !current);
 
   const displayFiles = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setFiles([...files, {file: event.target.files[0], name: event.target.files[0].name}]);
+      setNewFiles([...newFiles, {file: event.target.files[0], name: event.target.files[0].name}]);
     }
   };
 
@@ -44,14 +50,19 @@ const MyFiles = () => {
   const remove = (rowId, url) => {
     // Array.prototype.filter returns new array
     // so we aren't mutating state here
-    const arrayCopy = rows.data.filter((row) => row.id !== rowId);
-    setRows({ data: arrayCopy });
+    const arrayCopy = currentFiles.data.filter((row) => row.id !== rowId);
+    setCurrentFiles({ data: arrayCopy });
+  }
+
+  const handleSubjectChange = (event) => {
+    setCurrentLevels([]);
+    setSubject(currentSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0])
   }
 
   useEffect(async () => {
-    const res = await axios.get("/api/subject-files/145");
-    setRows({
-      data: res.data.map((item) => {
+    const files = await axios.get("/subject-files/145");
+    setCurrentFiles({
+      data: files.data.map((item) => {
         return { 
           first: item.name, 
           second: item.subject,
@@ -60,7 +71,31 @@ const MyFiles = () => {
         };
       }),
     });
+    const subjects = await axios.get("/teachers/subjects/levels/145");
+    subjects.data.map((item) => {
+      setCurrentSubjects(previous => [...previous, {
+        name: item.subject.name,
+        id: item.subject.subjectId,
+        levels: item.levels
+      }])
+    })
   }, []);
+
+  useEffect(() => {
+    setSubject(currentSubjects[0]);
+  }, [currentSubjects]);
+
+  useEffect(() => {
+    subject && subject.levels.map((item, index) => {
+      if (index === 0) {
+        setLevel(item)
+      }
+      setCurrentLevels(previous => [...previous, {
+        name: i18next.t('subjects.levels.' + item),
+        id: item
+      }])
+    });
+  }, [subject]);
 
   return (
     <Wrapper>
@@ -73,17 +108,15 @@ const MyFiles = () => {
             <FilterContainer>
               <p>Subject:</p>
               <SelectDropdown
-                options={subjects}
-                setIndex={setSubject}
-                type="Subjects"
+                options={currentSubjects}
+                handler={handleSubjectChange}
               />
             </FilterContainer>
             <FilterContainer>
               <p>Level:</p>
               <SelectDropdown
-                options={Levels}
-                setIndex={setLevel}
-                type="Levels"
+                options={currentLevels}
+                handler={setLevel}
               />
             </FilterContainer>
           </SelectContainer>
@@ -99,7 +132,7 @@ const MyFiles = () => {
               </Row>
             </thead>
             <tbody>
-              {rows.data.map((item, index) => {
+              {currentFiles.data.map((item, index) => {
                 return <Rows key={index} remove={remove} data={item} rowId={index}/>
               })}
             </tbody>
@@ -118,23 +151,21 @@ const MyFiles = () => {
                 <FilterContainer>
                   <p>Subject:</p>
                   <SelectDropdown
-                    options={subjects}
-                    setIndex={setSubject}
-                    type="Subjects"
+                    options={currentSubjects}
+                    handler={setSubject}
                   />
                 </FilterContainer>
                 <FilterContainer>
                   <p>Level:</p>
                   <SelectDropdown
-                    options={Levels}
-                    setIndex={setLevel}
-                    type="Levels"
+                    options={currentLevels}
+                    handler={setLevel}
                   />
                 </FilterContainer>
               </SelectContainer>
               <table style={{ width: '90%' }}>
                 <Files>
-                  {files && files.map((item, index) => {
+                  {newFiles && newFiles.map((item, index) => {
                     return <Rows key={index} data={item.name} rowId={index} multi={false} check={false}/>
                   })}
                 </Files>

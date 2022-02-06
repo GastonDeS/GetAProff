@@ -120,26 +120,26 @@ public class LecturesController {
         return mav.addObject("teacher", teacher.get().getName()).addObject("userid", currentUser.getId());
     }
 
-    @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
-    public ModelAndView rate(@PathVariable("cid") final Long cid, @ModelAttribute("rateForm") @Valid final RateForm form,
-                             final BindingResult errors, HttpServletRequest request) throws MalformedURLException {
-        if (errors.hasErrors()) {
-            return rateForm(form, cid);
-        }
-        Lecture currentLecture = checkLectureExistence(cid);
-        lectureService.setStatus(cid, Lecture.Status.RATED.getValue());
-        currentLecture.setStatus(Lecture.Status.RATED.getValue());
-        Optional<Rating> newRating = ratingService.addRating(currentLecture.getTeacher(), currentLecture.getStudent(), form.getRating().floatValue(), form.getReview());
-        if (!newRating.isPresent()) throw new OperationFailedException("exception.failed");
-        String localAddress = localAddress(request, "/rate");
-        try {
-            emailService.sendRatedMessage(currentLecture, form.getRating(), form.getReview(), localAddress);
-        } catch (MailNotSentException exception) {
-            throw new OperationFailedException("exception.failed");
-        }
-        LOGGER.debug("Lecture rated by student " + currentLecture.getStudent().getId() + " for teacher " + currentLecture.getTeacher().getId());
-        return new ModelAndView("redirect:/myClasses/requested/2");
-    }
+//    @RequestMapping(value = "/rate/{cid}", method = RequestMethod.POST)
+//    public ModelAndView rate(@PathVariable("cid") final Long cid, @ModelAttribute("rateForm") @Valid final RateForm form,
+//                             final BindingResult errors, HttpServletRequest request) throws MalformedURLException {
+//        if (errors.hasErrors()) {
+//            return rateForm(form, cid);
+//        }
+//        Lecture currentLecture = checkLectureExistence(cid);
+//        lectureService.setStatus(cid, Lecture.Status.RATED.getValue());
+//        currentLecture.setStatus(Lecture.Status.RATED.getValue());
+//        Optional<Rating> newRating = ratingService.addRating(currentLecture.getTeacher(), currentLecture.getStudent(), form.getRating().floatValue(), form.getReview());
+//        if (!newRating.isPresent()) throw new OperationFailedException("exception.failed");
+//        String localAddress = localAddress(request, "/rate");
+//        try {
+//            emailService.sendRatedMessage(currentLecture, form.getRating(), form.getReview(), localAddress);
+//        } catch (MailNotSentException exception) {
+//            throw new OperationFailedException("exception.failed");
+//        }
+//        LOGGER.debug("Lecture rated by student " + currentLecture.getStudent().getId() + " for teacher " + currentLecture.getTeacher().getId());
+//        return new ModelAndView("redirect:/myClasses/requested/2");
+//    }
 
     @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
     public ModelAndView accessClassroom(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
@@ -254,47 +254,47 @@ public class LecturesController {
         return new ResponseEntity<>(subjectFile.getFile(), headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
-    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final Long uid) {
-        final ModelAndView mav = new ModelAndView("contactForm");
-        Optional<User> maybeUser = userService.findById(uid);
-        User currentUser = checkCurrentUser();
-        if (!maybeUser.isPresent() || maybeUser.get().getId().equals(currentUser.getId())) {
-            throw new InvalidOperationException("exception.invalid");
-        }
-        LOGGER.debug("User {} contacting teacher {}", currentUser.getId(), uid);
-        mav.addObject("user", maybeUser.get());
-        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
-        List<SubjectInfo> subjectNames = new ArrayList<>(subjectsGiven);
-        Set<String> unique = new HashSet<>();
-        subjectNames.removeIf(e -> !unique.add(e.getName()));
-        mav.addObject("names", subjectNames);
-        mav.addObject("subjects", subjectsGiven);
-        mav.addObject("currentUid", currentUser.getId());
-        return mav;
-    }
+//    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.GET)
+//    public ModelAndView contactForm(@ModelAttribute("contactForm") final ContactForm form, @PathVariable("uid") final Long uid) {
+//        final ModelAndView mav = new ModelAndView("contactForm");
+//        Optional<User> maybeUser = userService.findById(uid);
+//        User currentUser = checkCurrentUser();
+//        if (!maybeUser.isPresent() || maybeUser.get().getId().equals(currentUser.getId())) {
+//            throw new InvalidOperationException("exception.invalid");
+//        }
+//        LOGGER.debug("User {} contacting teacher {}", currentUser.getId(), uid);
+//        mav.addObject("user", maybeUser.get());
+//        List<SubjectInfo> subjectsGiven = teachesService.getSubjectInfoListByUser(uid);
+//        List<SubjectInfo> subjectNames = new ArrayList<>(subjectsGiven);
+//        Set<String> unique = new HashSet<>();
+//        subjectNames.removeIf(e -> !unique.add(e.getName()));
+//        mav.addObject("names", subjectNames);
+//        mav.addObject("subjects", subjectsGiven);
+//        mav.addObject("currentUid", currentUser.getId());
+//        return mav;
+//    }
 
-    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
-    public ModelAndView contact(@PathVariable("uid") final Long uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
-                                final BindingResult errors, HttpServletRequest request) {
-        if (errors.hasErrors()) {
-            return contactForm(form, uid);
-        }
-        User currentUser = checkCurrentUser();
-        Optional<User> user = userService.findById(uid);
-        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.valueOf(form.getSubject()), Integer.parseInt(form.getLevel())%10);
-        if (!t.isPresent() || !user.isPresent() || user.get().getId().equals(currentUser.getId())) {
-            throw new InvalidOperationException("exception.invalid");
-        }
-        Optional<Lecture> newLecture = lectureService.create(currentUser.getId(), uid, t.get().getLevel(), t.get().getSubject().getSubjectId(), t.get().getPrice());
-        if (!newLecture.isPresent()) throw new OperationFailedException("exception.failed");
-        String localAddress = localAddress(request, "/contact");
-        try {
-            emailService.sendNewClassMessage(user.get().getMail(), currentUser.getName(), t.get().getSubject().getName(), localAddress);
-        } catch (RuntimeException exception) {
-            throw new OperationFailedException("exception");
-        }
-        LOGGER.debug("User {} requested class from teacher {}", currentUser.getId(), uid);
-        return new ModelAndView("redirect:/classroom/" + newLecture.get().getClassId().toString());
-    }
+//    @RequestMapping(value = "/contact/{uid}", method = RequestMethod.POST)
+//    public ModelAndView contact(@PathVariable("uid") final Long uid, @ModelAttribute("contactForm") @Valid final ContactForm form,
+//                                final BindingResult errors, HttpServletRequest request) {
+//        if (errors.hasErrors()) {
+//            return contactForm(form, uid);
+//        }
+//        User currentUser = checkCurrentUser();
+//        Optional<User> user = userService.findById(uid);
+//        Optional<Teaches> t = teachesService.findByUserAndSubjectAndLevel(uid, Long.valueOf(form.getSubject()), Integer.parseInt(form.getLevel())%10);
+//        if (!t.isPresent() || !user.isPresent() || user.get().getId().equals(currentUser.getId())) {
+//            throw new InvalidOperationException("exception.invalid");
+//        }
+//        Optional<Lecture> newLecture = lectureService.create(currentUser.getId(), uid, t.get().getLevel(), t.get().getSubject().getSubjectId(), t.get().getPrice());
+//        if (!newLecture.isPresent()) throw new OperationFailedException("exception.failed");
+//        String localAddress = localAddress(request, "/contact");
+//        try {
+//            emailService.sendNewClassMessage(user.get().getMail(), currentUser.getName(), t.get().getSubject().getName(), localAddress);
+//        } catch (RuntimeException exception) {
+//            throw new OperationFailedException("exception");
+//        }
+//        LOGGER.debug("User {} requested class from teacher {}", currentUser.getId(), uid);
+//        return new ModelAndView("redirect:/classroom/" + newLecture.get().getClassId().toString());
+//    }
 }

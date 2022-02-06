@@ -30,7 +30,7 @@ const Home = () => {
     // });
 
   const fetchTopRated = () => {
-    axios.get('/api/teachers/top-rated').then(res => {
+    axios.get('/teachers/top-rated').then(res => {
       const data = res.data
       setTopRated({ users: data.map(item => {
         // const ret = await fetchImage(item.userId)
@@ -40,7 +40,7 @@ const Home = () => {
   }
 
   const fetchMostRequested = () => {
-    axios.get('/api/teachers/most-requested').then(res => {
+    axios.get('/teachers/most-requested').then(res => {
       const data = res.data
       setMostRequested({ users: data.map(item => {
         return {...item, image: Profile}

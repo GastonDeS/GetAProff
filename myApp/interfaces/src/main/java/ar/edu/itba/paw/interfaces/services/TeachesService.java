@@ -2,7 +2,6 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.SubjectInfo;
 import ar.edu.itba.paw.models.Teaches;
 
 import java.util.List;
@@ -14,9 +13,9 @@ public interface TeachesService {
 
     int removeSubjectToUser(Long userId, Long subjectId, int level);
 
-    List<SubjectInfo> getSubjectInfoListByUser(Long teacherId);
+//    List<Teaches> getSubjectInfoListByUser(Long teacherId);
 
-    List<Subject> getListOfAllSubjectsTeachedByUser(Long userId);
+    List<Subject> getListOfAllSubjectsTaughtByUser(Long userId);
 
     Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
 

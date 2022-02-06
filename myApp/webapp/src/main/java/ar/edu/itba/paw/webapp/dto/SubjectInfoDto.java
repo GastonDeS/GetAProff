@@ -1,29 +1,29 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.SubjectInfo;
+import ar.edu.itba.paw.models.Teaches;
 
 public class SubjectInfoDto {
-    private String name;
+    private String subject;
 
     private Long id;
 
     private int price, level;
 
-    public static SubjectInfoDto fromSubjectInfo(SubjectInfo subject) {
+    public static SubjectInfoDto fromSubjectInfo(Teaches subject) {
         SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
-        subjectInfoDto.id = subject.getSubjectId();
-        subjectInfoDto.name = subject.getName();
+        subjectInfoDto.id = subject.getTeacher().getId();
+        subjectInfoDto.subject = subject.getSubject().getName();
         subjectInfoDto.level = subject.getLevel();
         subjectInfoDto.price = subject.getPrice();
         return subjectInfoDto;
     }
 
-    public String getName() {
-        return name;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public Long getId() {

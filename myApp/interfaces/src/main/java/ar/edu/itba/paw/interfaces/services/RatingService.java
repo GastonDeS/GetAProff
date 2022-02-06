@@ -11,7 +11,7 @@ public interface RatingService {
 
     Pair<Float, Integer> getRatingById(Long teacherId);
 
-    Optional<Rating> addRating(User teacher, User student, float rate, String review);
+    Optional<Rating> addRating(Long teacherId, Long studentId, float rate, String review);
 
     List<Rating> getTeacherRatings(Long teacherId);
 }

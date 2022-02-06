@@ -25,8 +25,8 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional
     @Override
-    public Optional<Rating> addRating(User teacher, User student, float rate, String review) {
-        return Optional.ofNullable(ratingDao.addRating(teacher,student, rate, review));
+    public Optional<Rating> addRating(Long teacherId, Long studentId, float rate, String review) {
+        return Optional.ofNullable(ratingDao.addRating(teacherId, studentId, rate, review));
     }
 
     @Override

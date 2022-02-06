@@ -23,20 +23,16 @@ const Select = styled.select`
   }
 `;
 
-const SelectDropdown = ({ type, options, setIndex }) => {
-
-  const handleClick = (event) => {
-    setIndex(event.target.value);
-  }
+const SelectDropdown = ({ type, options, handler }) => {
   
   return (
-    <Select onChange={handleClick}>
+    <Select onChange={handler}>
       {
         type ? <option value="" hidden>{type}</option> : <></>
       }
       {
         options && options.map((option, index) => {
-          return <option key={index} value={index}>{i18next.t(option)}</option>
+          return <option key={index} value={option.id}>{i18next.t(option.name)}</option>
         })
       }
     </Select>
@@ -46,7 +42,7 @@ const SelectDropdown = ({ type, options, setIndex }) => {
 SelectDropdown.propTypes = {
   options: PropTypes.array,
   type: PropTypes.string,
-  setIndex: PropTypes.func
+  handler: PropTypes.func
 };
 
 export default SelectDropdown;
