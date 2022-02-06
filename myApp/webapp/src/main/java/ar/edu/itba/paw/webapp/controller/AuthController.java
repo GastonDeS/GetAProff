@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.StudentDto;
 import ar.edu.itba.paw.webapp.requestDto.LoginDto;
 import ar.edu.itba.paw.webapp.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import javax.ws.rs.core.*;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
-@Path("api/auth")
+@Path("auth")
 @Component
 public class AuthController {
     @Autowired
@@ -48,14 +48,14 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         String token = jwtUtils.generateJwtToken(loginDto.getMail());
-        return Response.ok(UserDto.login(uriInfo, user, token)).build();
+        return Response.ok(StudentDto.login(uriInfo, user, token)).build();
     }
 
 //    @POST
-//    @Path("/register")
+//    @Path("/register/student")
 //    @Consumes(value = { MediaType.APPLICATION_JSON, })
 //    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response register() {
+//    public Response register(@Validated(RegisterForm.Student.class) @RequestBody RegisterDto registerDto) {
 //
 //    }
 
