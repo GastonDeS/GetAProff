@@ -33,6 +33,7 @@ const Profile = () => {
   const [teacher, setTeacher] = useState({data: []});
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState({data: []});
+  const [image, setImage] = useState();
 
 
   const location = useLocation();
@@ -42,7 +43,6 @@ const Profile = () => {
   useEffect(async () => {
     if ( user.id ) {
       const res = await axios.get("/teachers/subjects/"+user.id);
-      console.log(res);
       setRows({
         data: res.data.map((item, index) => {
           return { 
@@ -56,6 +56,8 @@ const Profile = () => {
       setTeacher({data: teacherRes.data});
       const reviewsRes = await axios.get("/ratings/"+user.id);
       setReviews({data: reviewsRes.data});
+      const imageRes = await axios.get('/images/'+user.id)
+      setImage('data:image/png;base64,' + imageRes.data.image);
     }
   }, [user]);
 
@@ -69,7 +71,6 @@ const Profile = () => {
 
   useEffect(async () => {
     setLoading(false);
-    console.log(teacher);
   },[teacher]);
 
   return (
@@ -83,7 +84,7 @@ const Profile = () => {
         <ProfileContainer>
           <InfoContainer>
             <img
-              src={"http://pawserver.it.itba.edu.ar/paw-2021b-6/image/52"}
+              src={image}
               alt="profileImg"
             />
             <ProfileInfo>
