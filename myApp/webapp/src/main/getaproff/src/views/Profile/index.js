@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import i18next from "i18next";
 import axios from "axios";
-
+import PropTypes from 'prop-types'
+import AuthService from "../../services/authService";
 import Navbar from "../../components/Navbar";
 import {
   ProfileInfoButtons,
@@ -23,47 +24,79 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
 import { Wrapper, MainContainer, Row, Headers, Table } from "../../GlobalStyle";
+import {useLocation} from 'react-router-dom';
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
-  const profile = Math.round(Math.random());
   const [rows, setRows] = useState({data: []});
+  const [user, setUser] = useState({data: []});
+  const [teacher, setTeacher] = useState({data: []});
+  const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState({data: []});
+
+
+  const location = useLocation();
 
   const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
 
   useEffect(async () => {
-    const res = await axios.get("/teachers/subjects/145");
-    setRows({
-      data: res.data.map((item, index) => {
-        return { 
-          first: item.name,
-          second: '$' + item.price + '/' + i18next.t('subjects.hour'),
-          third: i18next.t('subjects.levels.' + item.level)
-        };
-      }),
-    });
+    if ( user.id ) {
+      const res = await axios.get("/teachers/subjects/"+user.id);
+      console.log(res);
+      setRows({
+        data: res.data.map((item, index) => {
+          return { 
+            first: item.subject,
+            second: '$' + item.price + '/' + i18next.t('subjects.hour'),
+            third: i18next.t('subjects.levels.' + item.level)
+          };
+        }),
+      });
+      const teacherRes = await axios.get("/teachers/52");
+      setTeacher({data: teacherRes.data});
+      const reviewsRes = await axios.get("/ratings/"+user.id);
+      setReviews({data: reviewsRes.data});
+    }
+  }, [user]);
+
+  useEffect(async () => {
+    if (!(location.state != null && location.state.id != null)) {
+      setUser(await AuthService.getCurrentUser());
+    } else {
+      // 
+    }
   }, []);
+
+  useEffect(async () => {
+    setLoading(false);
+    console.log(teacher);
+  },[teacher]);
 
   return (
     <Wrapper>
       <Navbar/>
       <MainContainer>
+        {(loading)?
+          <>
+          </>
+        :
         <ProfileContainer>
           <InfoContainer>
             <img
-              src={"http://pawserver.it.itba.edu.ar/paw-2021b-6/image/38"}
+              src={"http://pawserver.it.itba.edu.ar/paw-2021b-6/image/52"}
               alt="profileImg"
             />
             <ProfileInfo>
               <ProfileName>
-                <h1 style={{ fontSize: '2rem' }}>Gaston De Schant</h1>
+                <h1 style={{ fontSize: '2rem' }}>{teacher.data.name}</h1>
                 <StarsReviews>
-                  <RatingStar count={5} value={5} size={18} edit={false} />
-                  <p>(0 Reviews)</p>
+                  <RatingStar count={5} value={teacher.data.rate} size={18} edit={false} />
+                  {/* TODO getReviewsCount */}
+                  <p>({teacher.data.rate} Reviews)</p>
                 </StarsReviews>
               </ProfileName>
               <ProfileInfoButtons>
-                {profile === 0 ? (
+                {teacher.data.id === user.id ? (
                   <>
                     <Button text="Edit certifications" fontSize="1rem"/>
                     <Button text="Edit profile" fontSize="1rem"/>
@@ -94,13 +127,14 @@ const Profile = () => {
                 <SectionInfo>
                   <ProfileDataContainer>
                     <h3>Description</h3>
-                    <p>esta es la descripcion</p>
+                    <p>{teacher.data.description}</p>
                   </ProfileDataContainer>
                   <ProfileDataContainer>
                     <h3>Schedule</h3>
-                    <p>monday from 1 am to 2 pm</p>
+                    <p>{teacher.data.schedule}</p>
                   </ProfileDataContainer>
-                  <ProfileDataContainer>
+                  {/* TODO getCertificaciones */}
+                  <ProfileDataContainer> 
                     <h3>Certifications</h3>
                     <ul>
                       <li>
@@ -130,23 +164,36 @@ const Profile = () => {
                 </ProfileSubjects>
               ) : (
                 <SectionInfo>
-                  <ProfileDataContainer>
-                    <ReviewTitle>
-                      <h3>Brlin</h3>
-                      <RatingStar count={5} value={5} size={18} edit={false} />
-                    </ReviewTitle>
-                    <p>Muy buena clase Gaston</p>
-                  </ProfileDataContainer>
+                  {
+                    reviews.data.map((option,index) => {
+                      return <ProfileDataContainer>
+                        <ReviewTitle>
+                          <h3>{option.student}</h3>
+                          <RatingStar count={5} value={option.rate} size={18} edit={false} />
+                        </ReviewTitle>
+                        <p>{option.review}</p>
+                      </ProfileDataContainer>
+                    })
+                  }
+                  
                 </SectionInfo>
               )}
             </TabInfoContainer>
           </TabContainer>
         </ProfileContainer>
+        }
       </MainContainer>
     </Wrapper>
   );
 };
 
-Profile.propTypes = {};
+Profile.propTypes = {
+  isTeacher: PropTypes.bool,
+  id: PropTypes.number
+};
+
+Profile.defaultProps = {
+  isTeacher: true
+}
 
 export default Profile;
