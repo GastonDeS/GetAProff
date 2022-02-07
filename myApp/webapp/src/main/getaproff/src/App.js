@@ -18,6 +18,8 @@ import RequestClass from './views/RequestClass';
 import EditCertifications from './views/EditCertifications';
 import EditProfile from './views/EditProfile';
 import Tutors from "./views/Tutors";
+import Classrom from './views/Classroom';
+import Favorites from './views/Favorites';
 
 const App = () => {
 
@@ -37,6 +39,8 @@ const App = () => {
         <Route path='/edit-certifications' element={ <EditCertifications/> } />
         <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />
+        <Route path='/classroom' element={ <Classrom/> }/>
+        <Route path='/favorites' element={ <Favorites/> }/>
       </Routes>
     </Router>
   );
