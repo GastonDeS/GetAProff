@@ -27,7 +27,7 @@ public class UserDaoJpa implements UserDao {
     @Override
     public List<TeacherInfo> getFavourites(Long userId) {
         final String queryStr = "select a2.teacherid as id, a2.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, a2.description as desc, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, a2.schedule as sch, a2.mail as mail, count(coalesce(r.rate,0) as reviews " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, a2.schedule as sch, a2.mail as mail, count(coalesce(r.rate,0)) as reviews " +
                 "from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
                 "min(t.price) as minPrice, a1.description as description, a1.schedule as schedule, a1.mail as mail " +
                 "from (select u.userid as teacherid, u.name as name, coalesce(u.description, '') as description, " +
