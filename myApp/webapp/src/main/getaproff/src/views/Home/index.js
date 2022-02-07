@@ -24,10 +24,10 @@ const Home = () => {
   // }
 
   // axios.get('api/images/87')
-    // .then(res => {
-    //   setImage('data:image/png;base64,' + res.data.image);
-    //   // console.log(res.data.image);
-    // });
+  //   .then(res => {
+  //     setImage('data:image/png;base64,' + res.data.image);
+  //     // console.log(res.data.image);
+  //   });
 
   const fetchTopRated = () => {
     axios.get('/teachers/top-rated').then(res => {

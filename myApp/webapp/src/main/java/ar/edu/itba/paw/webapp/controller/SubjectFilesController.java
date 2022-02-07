@@ -29,10 +29,13 @@ public class SubjectFilesController {
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
     }
 
-//    @DELETE
-//    @Path("/{id}")
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response deleteUserSubjectFiles()
+    @DELETE
+    @Path("/{file}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteUserSubjectFile(@PathParam("file") Long file) {
+        int success = subjectFileService.deleteSubjectFile(file);
+        return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
 //    @POST
 //    @Path("/{id}/{subject}/{level}")

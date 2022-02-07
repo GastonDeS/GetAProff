@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.models;
 
 public class TeacherInfo {
-    private final int minPrice, maxPrice;
+    private final int minPrice, maxPrice, reviews;
     private final float rate;
     private final String name, mail, description, schedule;
     private final Long userId;
 
-    public TeacherInfo(Long userId, String name, int maxPrice, int minPrice, String description, float rate, String schedule, String mail) {
+    public TeacherInfo(Long userId, String name, int maxPrice, int minPrice, String description, float rate, String schedule, String mail, int reviews) {
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
         this.rate = rate;
@@ -15,6 +15,11 @@ public class TeacherInfo {
         this.userId = userId;
         this.description = description;
         this.schedule = schedule;
+        this.reviews = reviews;
+    }
+
+    public int getReviews() {
+        return reviews;
     }
 
     public String getName() {

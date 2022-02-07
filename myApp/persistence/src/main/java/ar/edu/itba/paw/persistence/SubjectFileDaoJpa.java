@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -34,11 +35,9 @@ public class SubjectFileDaoJpa implements SubjectFileDao {
 
     @Override
     public int deleteSubjectFile(Long fileId) {
-        TypedQuery<SubjectFile> query = entityManager.createQuery("from SubjectFile sf where sf.fileId = :file", SubjectFile.class);
+        final Query query = entityManager.createQuery("delete from SubjectFile sf where sf.fileId = :file");
         query.setParameter("file", fileId);
-        SubjectFile subjectFile = query.getSingleResult();
-        entityManager.remove(subjectFile);
-        return 0;
+        return query.executeUpdate();
     }
 
     @Override

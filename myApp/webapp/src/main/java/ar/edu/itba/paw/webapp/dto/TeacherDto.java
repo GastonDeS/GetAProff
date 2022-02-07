@@ -10,7 +10,7 @@ public class TeacherDto {
 
     private Long id;
 
-    private int minPrice, maxPrice;
+    private int minPrice, maxPrice, reviews;
 
     private float rate;
 
@@ -24,8 +24,17 @@ public class TeacherDto {
         teacherDto.description = teacher.getDescription();
         teacherDto.mail = teacher.getMail();
         teacherDto.id = teacher.getUserId();
+        teacherDto.reviews = teacher.getReviews();
         teacherDto.url = uri.getBaseUriBuilder().path("teachers/").path(String.valueOf(teacher.getUserId())).build().toString();
         return teacherDto;
+    }
+
+    public int getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
     }
 
     public String getName() {

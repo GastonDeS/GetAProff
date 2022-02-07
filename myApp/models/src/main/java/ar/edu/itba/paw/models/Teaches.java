@@ -16,7 +16,8 @@ import java.util.List;
                                 @ColumnResult(name = "desc"),
                                 @ColumnResult(name = "rate", type = float.class),
                                 @ColumnResult(name = "sch"),
-                                @ColumnResult(name = "mail")
+                                @ColumnResult(name = "mail"),
+                                @ColumnResult(name = "reviews", type = int.class)
                         }
                 )
         ), @SqlResultSetMapping(
