@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.StudentDto;
 import ar.edu.itba.paw.webapp.requestDto.LoginDto;
 import ar.edu.itba.paw.webapp.util.JwtUtils;
@@ -48,7 +49,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         String token = jwtUtils.generateJwtToken(loginDto.getMail());
-        return Response.ok(StudentDto.login(uriInfo, user, token)).build();
+        return Response.ok(AuthDto.login(uriInfo, user, token)).build();
     }
 
 //    @POST

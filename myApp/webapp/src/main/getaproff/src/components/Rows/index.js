@@ -19,7 +19,7 @@ export const Data = styled.td`
   }
 `;
 
-const Rows = ({ edit, remove, data, rowId, multi, check }) => {
+const Rows = ({ edit, remove, data, rowId, multi, check, checkHandler }) => {
 
   return (
     <>
@@ -45,7 +45,7 @@ const Rows = ({ edit, remove, data, rowId, multi, check }) => {
             <Data style={{ width: "95%" }}>{data}</Data>
             <Data style={{ width: "5%", textAlign: "end" }}>
               {
-                check ? <CheckBox/> : <Button text="X" fontSize="0.8rem"/>
+                check ? <CheckBox value={data}/> : <Button text="X" fontSize="0.8rem"/>
               }
             </Data>
           </>

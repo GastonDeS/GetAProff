@@ -26,10 +26,6 @@ const Navbar = ({ empty }) => {
   useEffect(() => {
     AuthService.getCurrentUser() ? setAuth(true) : setAuth(false);
   }, []);
-  
-  useEffect(() => {
-    console.log(auth)
-  }, [auth])
 
   return (
     <Wrapper>

@@ -236,16 +236,16 @@ public class ProfileController {
         return mav;
     }
 
-    @RequestMapping(value = "/myFiles", method = RequestMethod.POST)
-    public ModelAndView addUserFiles(@RequestParam (name = "files") MultipartFile[] files, @RequestParam (name = "level") Integer level,
-                                     @RequestParam (name = "subject") Long subjectId) throws IOException {
-        User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
-        Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(() -> new OperationFailedException("exception.failed"));
-        for (MultipartFile file : files) {
-            subjectFileService.saveNewSubjectFile(file.getBytes(), file.getOriginalFilename(), currUser.getId(), subjectForFile, level%10);
-        }
-        return new ModelAndView("redirect:/myFiles");
-    }
+//    @RequestMapping(value = "/myFiles", method = RequestMethod.POST)
+//    public ModelAndView addUserFiles(@RequestParam (name = "files") MultipartFile[] files, @RequestParam (name = "level") Integer level,
+//                                     @RequestParam (name = "subject") Long subjectId) throws IOException {
+//        User currUser = userService.getCurrentUser().orElseThrow(() -> new NoUserLoggedException("exception.not.logger.user"));
+//        Subject subjectForFile = subjectService.findById(subjectId).orElseThrow(() -> new OperationFailedException("exception.failed"));
+//        for (MultipartFile file : files) {
+//            subjectFileService.saveNewSubjectFile(file.getBytes(), file.getOriginalFilename(), currUser.getId(), subjectForFile, level%10);
+//        }
+//        return new ModelAndView("redirect:/myFiles");
+//    }
 
     @RequestMapping(value = "/myFilesDelete/{uid}", method = RequestMethod.POST, params = "deleted-files")
     public ModelAndView removeSubjectFile(@PathVariable("uid") final Long uid,  @RequestParam (name = "deleted-files") String[] filesIdToDelete) {

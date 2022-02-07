@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectFileServiceImpl implements SubjectFileService {
@@ -23,8 +24,8 @@ public class SubjectFileServiceImpl implements SubjectFileService {
 
     @Transactional
     @Override
-    public SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Subject subject, Integer level) {
-        return subjectFileDao.saveNewSubjectFile(file,fileName,ownerId,subject,level);
+    public Optional<SubjectFile> saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Long subejctId, Integer level) {
+        return Optional.ofNullable(subjectFileDao.saveNewSubjectFile(file, fileName, ownerId, subejctId, level));
     }
 
     @Transactional

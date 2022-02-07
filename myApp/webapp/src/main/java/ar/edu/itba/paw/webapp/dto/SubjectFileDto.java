@@ -2,22 +2,26 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.SubjectFile;
 
+import javax.ws.rs.core.UriInfo;
+
 public class SubjectFileDto {
 
     private Long fileId;
 
     private int level;
 
-    private String subject, name;
+    private String name;
+
+    private SubjectDto subject;
 
     private byte[] file;
 
-    public static SubjectFileDto fromUser(SubjectFile subjectFile) {
+    public static SubjectFileDto fromUser(UriInfo uri, SubjectFile subjectFile) {
         SubjectFileDto subjectFileDto = new SubjectFileDto();
         subjectFileDto.fileId = subjectFile.getFileId();
         subjectFileDto.file = subjectFile.getFile();
         subjectFileDto.name = subjectFile.getFileName();
-        subjectFileDto.subject = subjectFile.getTeachesInfo().getSubject().getName();
+        subjectFileDto.subject = SubjectDto.get(uri, subjectFile.getTeachesInfo().getSubject());
         subjectFileDto.level = subjectFile.getTeachesInfo().getLevel();
         return subjectFileDto;
     }
@@ -54,11 +58,11 @@ public class SubjectFileDto {
         this.level = level;
     }
 
-    public String getSubject() {
+    public SubjectDto getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(SubjectDto subject) {
         this.subject = subject;
     }
 }

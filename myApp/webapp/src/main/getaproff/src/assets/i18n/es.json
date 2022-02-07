@@ -18,7 +18,8 @@
       "1": "Primario",
       "2": "Secundario",
       "3": "Universitario"
-    }
+    },
+    "all": "Todos"
   },
   "files": {
     "file": "Archivo",

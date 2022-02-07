@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Subject;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SubjectLevelDto {
 
@@ -15,7 +16,7 @@ public class SubjectLevelDto {
     public static SubjectLevelDto fromSubjectLevel(UriInfo uri, Map.Entry<Subject, List<Integer>> subjectAndLevels) {
         SubjectLevelDto subjectLevelDto = new SubjectLevelDto();
         subjectLevelDto.subject = SubjectDto.get(uri, subjectAndLevels.getKey());
-        subjectLevelDto.levels = subjectAndLevels.getValue();
+        subjectLevelDto.levels = subjectAndLevels.getValue().stream().sorted().collect(Collectors.toList());
         return subjectLevelDto;
     }
 

@@ -15,29 +15,29 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class TeachesServiceImplTest {
 
-    private static final String USERNAME = "John Doe";
-    private static final String DESCRIPTION = "soy un muy buen profesor de la facultad ITBA";
-    private static final Long USER_ID_ONE = 1L;
-    private static final Long USER_ID_TWO = 2L;
-    private static final String SUBJECT_ONE = "MATE 1";
-    private static final String SUBJECT_TWO = "MATE 2";
-    private static final Long SUBJECT_ID_ONE = 1L;
-    private static final Long SUBJECT_ID_TWO = 2L;
-    private static final Integer PRICE = 500;
-    private static final Integer LEVEL = 3;
-    private static final Integer MAXPRICE = 1400;
-    private static final Integer MINPRICE = 550;
-    private static final float RATE = 3.99f ;
-    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, MAX_LEVEL = 3, GET_ALL = 0, OVER_PRICE = 1500;
-
-    @InjectMocks
-    private TeachesServiceImpl teachesService = new TeachesServiceImpl();
-
-    @Mock
-    private TeachesDao mockDao;
+//    private static final String USERNAME = "John Doe";
+//    private static final String DESCRIPTION = "soy un muy buen profesor de la facultad ITBA";
+//    private static final Long USER_ID_ONE = 1L;
+//    private static final Long USER_ID_TWO = 2L;
+//    private static final String SUBJECT_ONE = "MATE 1";
+//    private static final String SUBJECT_TWO = "MATE 2";
+//    private static final Long SUBJECT_ID_ONE = 1L;
+//    private static final Long SUBJECT_ID_TWO = 2L;
+//    private static final Integer PRICE = 500;
+//    private static final Integer LEVEL = 3;
+//    private static final Integer MAXPRICE = 1400;
+//    private static final Integer MINPRICE = 550;
+//    private static final float RATE = 3.99f ;
+//    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, MAX_LEVEL = 3, GET_ALL = 0, OVER_PRICE = 1500;
+//
+//    @InjectMocks
+//    private TeachesServiceImpl teachesService = new TeachesServiceImpl();
+//
+//    @Mock
+//    private TeachesDao mockDao;
 
 //    @Test
 //    public void  testGetSubjectInfoListByUser() {

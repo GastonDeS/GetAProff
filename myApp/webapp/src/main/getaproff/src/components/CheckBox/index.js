@@ -42,7 +42,7 @@ const StyledCheckbox = styled.div`
   }
 `;
 
-const CheckBox = ({ id, value }) => {
+const CheckBox = ({ id, value, handler }) => {
   const [checked, setChecked] = useState(false);
   const handleCheck = (event) => {
     setChecked(event.target.checked);

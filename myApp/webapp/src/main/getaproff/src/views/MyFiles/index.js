@@ -16,32 +16,58 @@ import Button from "../../components/Button";
 import Modal from "react-bootstrap/Modal";
 import SelectDropdown from "../../components/SelectDropdown";
 import Rows from '../../components/Rows';
-import { Title, Levels, Row, Headers, Table } from "../../GlobalStyle";
+import { Title, Row, Headers, Table } from "../../GlobalStyle";
 import CheckBox from "../../components/CheckBox";
 
+const ALL_LEVELS = 4;
+
 const MyFiles = () => {
-  const initialState = {
-    id: null,
-    name: '',
-    levels: []
+  const initialLevel = {
+    name: i18next.t('subjects.all'),
+    id: ALL_LEVELS
   }
   const inputFile = useRef(null);
   const [show, setShow] = useState(false);
-  const [subject, setSubject] = useState(initialState);
-  const [level, setLevel] = useState(0);
+  const [subject, setSubject] = useState();
+  const [level, setLevel] = useState(ALL_LEVELS);
   const [currentFiles, setCurrentFiles] = useState({data: []});
   const [newFiles, setNewFiles] = useState([]);
-  const [state, setState] = useState();
-  const [currentLevels, setCurrentLevels] = useState([]);
+  const [currentLevels, setCurrentLevels] = useState([initialLevel]);
   const [currentSubjects, setCurrentSubjects] = useState([]);
+  const [selected, setSelected] = useState([]);
 
   const handleShow = () => setShow(current => !current);
 
-  const displayFiles = (event) => {
+  const displayNewFiles = (event) => {
     if (event.target.files && event.target.files[0]) {
       setNewFiles([...newFiles, {file: event.target.files[0], name: event.target.files[0].name}]);
     }
   };
+
+  const handleSelected = (item) => {
+    setSelected(previous => [...previous, item]);
+  };
+
+  const handleDeleteAll = () => {
+    selected.map((item) => {
+      for (var i = 0; i < currentFiles.data.length; i++) {
+        if (item === currentFiles.data[i]) {
+          currentFiles.data.splice(i, 1);
+          break;
+        }
+      }
+    })
+  }
+
+  const renderFiles = (item, index) => {
+    if (subject && Number(subject.id) > 0 && Number(subject.id) !== Number(item.subjectId)) {
+      return <></>
+    }
+    else if (Number(level) !== ALL_LEVELS && Number(level) !== Number(item.levelId)) {
+      return <></>
+    }
+    return <Rows key={index} remove={remove} data={item} rowId={index} checkHandler={handleSelected}/>
+  }
 
   const openFile = () => {
     inputFile.current.click();
@@ -54,9 +80,25 @@ const MyFiles = () => {
     setCurrentFiles({ data: arrayCopy });
   }
 
+  const handleLevelChange = (event) => {
+    setLevel(event.target.value)
+  }
+
   const handleSubjectChange = (event) => {
-    setCurrentLevels([]);
+    setCurrentLevels([initialLevel]);
     setSubject(currentSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0])
+  }
+
+  const addAllLevels = (all, levels) => {
+    if (all.length === 0) {
+      levels.forEach((level) => all.push(level));
+    }
+    else {levels.forEach((level) => {
+        if (all.filter(item => item === level).length === 0) {
+          all.push(level)
+        }
+      })
+    }
   }
 
   useEffect(async () => {
@@ -65,37 +107,46 @@ const MyFiles = () => {
       data: files.data.map((item) => {
         return { 
           first: item.name, 
-          second: item.subject,
+          second: item.subject.name,
           third: i18next.t('subjects.levels.' + item.level),
           url: item.fileId,
+          subjectId: item.subject.subjectId,
+          levelId: item.level,
         };
       }),
     });
     const subjects = await axios.get("/teachers/subjects/levels/145");
+    var allLevels = [];
     subjects.data.map((item) => {
+      addAllLevels(allLevels, item.levels);
       setCurrentSubjects(previous => [...previous, {
         name: item.subject.name,
         id: item.subject.subjectId,
         levels: item.levels
-      }])
-    })
+      }]);
+    });
+    var initialState = {
+      id: 0,
+      name: i18next.t('subjects.all'),
+      levels: allLevels
+    };
+    setCurrentSubjects(previous => [initialState, ...previous]);
+    setSubject(initialState);
   }, []);
 
   useEffect(() => {
-    setSubject(currentSubjects[0]);
-  }, [currentSubjects]);
-
-  useEffect(() => {
-    subject && subject.levels.map((item, index) => {
-      if (index === 0) {
-        setLevel(item)
-      }
+    console.log(subject)
+    subject && subject.levels.map((item) => {
       setCurrentLevels(previous => [...previous, {
         name: i18next.t('subjects.levels.' + item),
         id: item
       }])
     });
   }, [subject]);
+
+  useEffect(() => {
+    console.log(selected)
+  }, [selected])
 
   return (
     <Wrapper>
@@ -116,7 +167,7 @@ const MyFiles = () => {
               <p>Level:</p>
               <SelectDropdown
                 options={currentLevels}
-                handler={setLevel}
+                handler={handleLevelChange}
               />
             </FilterContainer>
           </SelectContainer>
@@ -132,9 +183,7 @@ const MyFiles = () => {
               </Row>
             </thead>
             <tbody>
-              {currentFiles.data.map((item, index) => {
-                return <Rows key={index} remove={remove} data={item} rowId={index}/>
-              })}
+              {currentFiles && currentFiles.data.map((item, index) => renderFiles(item, index))}
             </tbody>
           </Table>
           <Button callback={handleShow} text="Agregar Archivos" fontSize="1rem"/>
@@ -145,7 +194,7 @@ const MyFiles = () => {
               <Title>Agregar Archivo</Title>
             </Modal.Header>
             <ModalBody>
-              <input type="file" id="file" ref={inputFile} style={{ display: "none" }} onChange={displayFiles}/>
+              <input type="file" id="file" ref={inputFile} style={{ display: "none" }} onChange={displayNewFiles}/>
               <h3>Elija en que clases quiere disponiblizar el archivo</h3>
               <SelectContainer>
                 <FilterContainer>

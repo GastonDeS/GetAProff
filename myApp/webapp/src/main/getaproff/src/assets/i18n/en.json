@@ -18,7 +18,8 @@
       "1": "Elementary",
       "2": "Middle School",
       "3": "College/University"
-    }
+    },
+    "all": "All"
   },
   "files": {
     "file": "File",

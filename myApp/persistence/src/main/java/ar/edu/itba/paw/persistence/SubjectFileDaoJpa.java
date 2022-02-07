@@ -24,8 +24,8 @@ public class SubjectFileDaoJpa implements SubjectFileDao {
     }
 
     @Override
-    public SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Subject subject, Integer level) {
-        final TeachesId teachesId = new TeachesId(ownerId, subject.getSubjectId(), level);
+    public SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Long subjectId, Integer level) {
+        final TeachesId teachesId = new TeachesId(ownerId, subjectId, level);
         final Teaches teaches = entityManager.find(Teaches.class, teachesId);
         final SubjectFile newSubjectFile = new SubjectFile( null, fileName, file, teaches);
         entityManager.persist(newSubjectFile);

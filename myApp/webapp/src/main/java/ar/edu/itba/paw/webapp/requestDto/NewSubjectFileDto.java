@@ -1,22 +1,34 @@
 package ar.edu.itba.paw.webapp.requestDto;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
 public class NewSubjectFileDto {
 
-    private String name;
+//    private String name;
 
-    private Long subjectId;
+    private Long subjectId, userId;
 
     private int level;
 
-    private byte[] file;
+    private List<MultipartFile> file;
 
-    public String getName() {
-        return name;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
+
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public Long getSubjectId() {
         return subjectId;
@@ -34,11 +46,11 @@ public class NewSubjectFileDto {
         this.level = level;
     }
 
-    public byte[] getFile() {
+    public List<MultipartFile> getFile() {
         return file;
     }
 
-    public void setFile(byte[] file) {
+    public void setFile(List<MultipartFile> file) {
         this.file = file;
     }
 }

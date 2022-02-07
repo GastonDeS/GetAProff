@@ -4,8 +4,6 @@ import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -27,14 +25,32 @@ public class SubjectFilesController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getUserSubjectFiles(@PathParam("id") Long id) {
         final List<SubjectFileDto> subjectFileDtos = subjectFileService.getAllSubjectFilesFromUser(id).stream()
-                .map(SubjectFileDto::fromUser).collect(Collectors.toList());
+                .map(subjectFile -> SubjectFileDto.fromUser(uriInfo, subjectFile)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
     }
 
-//    @POST
+//    @DELETE
 //    @Path("/{id}")
-//    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @RequestParam("files") MultipartFile[] files) {
-//
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response deleteUserSubjectFiles()
+
+//    @POST
+//    @Path("/{id}/{subject}/{level}")
+//    @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @PathParam("subject") Long subject,
+//                                           @PathParam("level") Integer level, @FormDataParam("file") FormDataMultiPart multiPart) {
+//        final List<SubjectFileDto> subjectFileDtos = new ArrayList<>();
+//        multiPart.getFields("file").forEach(formDataBodyPart -> {
+//            MultipartFile file = formDataBodyPart.getValueAs(MultipartFile.class);
+//            try {
+//                final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file.getBytes(), file.getName(),
+//                                id, subject, level);
+//                subjectFile.ifPresent(newFile -> subjectFileDtos.add(SubjectFileDto.fromUser(uriInfo, newFile)));
+//            } catch (IOException e) {
+//            }
+//        });
+//        return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
 //    }
 
 }

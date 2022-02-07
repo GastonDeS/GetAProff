@@ -11,14 +11,9 @@ public class StudentDto {
 
     private String url;
 
-    //TODO: SACAR TOKEN, HACER AuthDto
-    private String token;
-
     private String name, mail;
 
     private Long id;
-
-    public StudentDto() {}
 
     public static StudentDto fromUser(UriInfo uri, User user) {
         StudentDto studentDto = new StudentDto();
@@ -28,28 +23,12 @@ public class StudentDto {
         return studentDto;
     }
 
-    public static StudentDto login(UriInfo uri, User user, String token) {
-        StudentDto studentDto = new StudentDto();
-        studentDto.token = token;
-        studentDto.mail = user.getMail();
-        studentDto.url = uri.getBaseUriBuilder().path("auth").path(user.getMail()).build().toString();
-        return studentDto;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getUrl() {

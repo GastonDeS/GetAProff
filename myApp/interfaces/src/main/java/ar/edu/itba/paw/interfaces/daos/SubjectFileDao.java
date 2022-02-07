@@ -9,7 +9,7 @@ import java.util.List;
 public interface SubjectFileDao {
     List<SubjectFile> getAllSubjectFilesFromUser(Long ownerId);
 
-    SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Subject subject, Integer level);
+    SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Long subjectId, Integer level);
 
     int deleteSubjectFile(Long fileId);
 
