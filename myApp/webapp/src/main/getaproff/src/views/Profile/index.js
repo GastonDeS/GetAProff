@@ -34,6 +34,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState({data: []});
   const [image, setImage] = useState();
+  const [certifications, setCertifications] = useState({data: []});
 
 
   const location = useLocation();
@@ -58,6 +59,10 @@ const Profile = () => {
       setReviews({data: reviewsRes.data});
       const imageRes = await axios.get('/images/'+user.id)
       setImage('data:image/png;base64,' + imageRes.data.image);
+      const certRes = await axios.get('/user-files/'+user.id);
+      console.log(certRes);
+      
+      setCertifications({data: certRes.data});
     }
   }, [user]);
 
@@ -92,8 +97,7 @@ const Profile = () => {
                 <h1 style={{ fontSize: '2rem' }}>{teacher.data.name}</h1>
                 <StarsReviews>
                   <RatingStar count={5} value={teacher.data.rate} size={18} edit={false} />
-                  {/* TODO getReviewsCount */}
-                  <p>({teacher.data.rate} Reviews)</p>
+                  <p>({teacher.data.reviewsQty} Reviews)</p>
                 </StarsReviews>
               </ProfileName>
               <ProfileInfoButtons>
@@ -134,17 +138,23 @@ const Profile = () => {
                     <h3>Schedule</h3>
                     <p>{teacher.data.schedule}</p>
                   </ProfileDataContainer>
-                  {/* TODO getCertificaciones */}
-                  <ProfileDataContainer> 
+                  { (certifications.data.length !== 0)?
+                    <ProfileDataContainer> 
                     <h3>Certifications</h3>
                     <ul>
-                      <li>
-                        <a href={"www.google.com"} target={"_blank"}>
-                          Certificacion Cambridge
+                      {/* {teacher.data.certifications.map((certification, index) => {
+                        <li>
+                        <a href={""} target={"_blank"}>
+                          certification.name
                         </a>
                       </li>
+                      })} */}
+                      
                     </ul>
                   </ProfileDataContainer>
+                  : <></>
+                  }
+                  
                 </SectionInfo>
               ) : index === 1 ? (
                 <ProfileSubjects>
