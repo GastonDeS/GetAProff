@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserFileDao {
 
@@ -13,5 +14,5 @@ public interface UserFileDao {
 
     int deleteFile(Long fileId);
 
-    UserFile getFileById(Long fileId);
+    Optional<UserFile> getFileById(Long fileId);
 }

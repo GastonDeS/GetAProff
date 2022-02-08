@@ -26,14 +26,17 @@ public class UserDaoJpa implements UserDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<TeacherInfo> getFavourites(Long userId) {
-        final String queryStr = "select a2.teacherid as id, a2.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, a2.description as desc, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, a2.schedule as sch, a2.mail as mail, count(r.rate) as reviews " +
-                "from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
+        final String queryStr = "select a2.teacherid as id, a2.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
+                "a2.description as desc, coalesce(a3.rate, 0) as rate, a2.schedule as sch, a2.mail as mail, " +
+                "coalesce(a3.rate, 0) as reviews from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
                 "min(t.price) as minPrice, a1.description as description, a1.schedule as schedule, a1.mail as mail " +
                 "from (select u.userid as teacherid, u.name as name, coalesce(u.description, '') as description, " +
-                "coalesce(u.schedule, '') as schedule, u.mail as mail from users u JOIN favourites f on u.userid = f.teacherid where f.studentid = :userId) " +
-                "as a1 join teaches t on a1.teacherid = t.userid group by a1.teacherid, a1.name, a1.description, a1.schedule, a1.mail) " +
-                "as a2 left outer join rating r on r.teacherid = a2.teacherid group by a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, a2.schedule, a2.mail";
+                "coalesce(u.schedule, '') as schedule, u.mail as mail from users u JOIN favourites f on u.userid = f.teacherid " +
+                "where f.studentid = :userId) as a1 join teaches t on a1.teacherid = t.userid group by a1.teacherid, a1.name, " +
+                "a1.description, a1.schedule, a1.mail) as a2 left outer join (SELECT r.teacherid as teacherid, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
+                "FROM rating r group by teacherid) as a3 on a3.teacherid = a2.teacherid group by " +
+                "a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, a2.schedule, a2.mail, rate, reviews";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping");
         query.setParameter("userId", userId);
         return (List<TeacherInfo>) query.getResultList();

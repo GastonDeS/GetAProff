@@ -87,14 +87,16 @@ public class TeachesDaoJpa implements TeachesDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<TeacherInfo> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset) {
-        String queryStr = "select a2.teacherid as id, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
-                "coalesce(u.description, '') as desc, a2.rate as rate, coalesce(u.schedule, '') as sch, u.mail as mail, " +
-                "a2.reviews as reviews from (select a1.teacherid as teacherid, max(a1.price) as maxPrice, min(a1.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
-                "from (select t.userid as teacherid, t.price as price, t.level as level from Teaches t JOIN Subject s " +
-                "on t.subjectid = s.subjectid where lower(s.name) like '%'||:searchedSubject||'%' and t.price <= :price and " +
-                "(t.level between :minLevel and :maxLevel or t.level = 0)) as a1 LEFT OUTER JOIN Rating r on a1.teacherid = r.teacherid " +
-                "group by a1.teacherid) as a2 JOIN users u on a2.teacherid = u.userid where a2.rate >= :rate ";
+        String queryStr = "select a3.teacherid as id, u.name as name, a3.maxPrice as maxPrice, a3.minPrice as minPrice, " +
+                "coalesce(u.description, '') as desc, a3.rate as rate, coalesce(u.schedule, '') as sch, u.mail as mail, " +
+                "a3.reviews as reviews from (select a2.teacherid as teacherid, max(a2.price) as maxPrice, min(a2.price) as minPrice, " +
+                "coalesce(a1.rate, 0) as rate, coalesce(a1.reviews, 0) as reviews from (select t.userid as teacherid, " +
+                "t.price as price, t.level as level from Teaches t JOIN Subject s on t.subjectid = s.subjectid " +
+                "where lower(s.name) like '%'||:searchedSubject||'%' and t.price <= :price and " +
+                "(t.level between :minLevel and :maxLevel or t.level = 0)) as a2 LEFT OUTER JOIN " +
+                "(SELECT r.teacherid as teacherid, sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
+                "FROM rating r group by teacherid) as a1 on a1.teacherid = a2.teacherid " +
+                "group by a2.teacherid, rate, reviews) as a3 JOIN users u on a3.teacherid = u.userid where a3.rate >= :rate ";
         queryStr += checkOrdering(order);
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping");
         query.setParameter("price", price)
@@ -176,7 +178,7 @@ public class TeachesDaoJpa implements TeachesDao {
     @SuppressWarnings("unchecked")
     @Override
     public Optional<TeacherInfo> getTeacherInfo(Long teacherId) {
-        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
+        String queryStr = "select a2.teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
                 "coalesce(u.schedule, '') as sch, u.mail as mail, reviews from " +
                 "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
                 "a1.rate as rate, a1.reviews as reviews " +
@@ -184,7 +186,7 @@ public class TeachesDaoJpa implements TeachesDao {
                 "FROM rating r where r.teacherid = :id group by teacherid) as a1 on a1.teacherid = t.userid " +
                 "group by t.userid, a1.rate, a1.reviews) as a2 JOIN users u on a2.teacherid = u.userid";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping")
-                .setParameter("teacherId", teacherId);
+                .setParameter("id", teacherId);
         List<TeacherInfo> teacherInfos = (List<TeacherInfo>) query.getResultList();
         return teacherInfos.isEmpty() ? Optional.empty() : Optional.of(teacherInfos.get(0));
     }

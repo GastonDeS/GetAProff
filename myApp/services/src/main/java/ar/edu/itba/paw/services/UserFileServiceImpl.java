@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserFileServiceImpl implements UserFileService {
@@ -36,7 +37,7 @@ public class UserFileServiceImpl implements UserFileService {
     }
 
     @Override
-    public UserFile getFileById(Long fileId) {
+    public Optional<UserFile> getFileById(Long fileId) {
         return userFileDao.getFileById(fileId);
     }
 }

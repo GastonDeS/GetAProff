@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.UserFile;
 
+import javax.ws.rs.core.UriInfo;
+
 public class UserFileDto {
 
     private Long fileId;
 
-    private String name;
+    private String name, url;
 
-    private byte[] file;
-
-    public static UserFileDto fromUser(UserFile file) {
+    public static UserFileDto fromUser(UriInfo uri, UserFile file) {
         UserFileDto userFileDto = new UserFileDto();
-        userFileDto.file = file.getFile();
+        userFileDto.url = uri.getBaseUriBuilder().path("files/user/").path(String.valueOf(file.getFileId())).build().toString();
         userFileDto.fileId = file.getFileId();
         userFileDto.name = file.getFileName();
         return userFileDto;
@@ -34,11 +34,11 @@ public class UserFileDto {
         this.name = name;
     }
 
-    public byte[] getFile() {
-        return file;
+    public String getUrl() {
+        return url;
     }
 
-    public void setFile(byte[] file) {
-        this.file = file;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

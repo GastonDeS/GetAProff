@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserFileDaoJpa implements UserFileDao {
@@ -34,15 +36,13 @@ public class UserFileDaoJpa implements UserFileDao {
 
     @Override
     public int deleteFile(Long fileId) {
-        TypedQuery<UserFile> query = entityManager.createQuery("from UserFile u where u.fileId = :file", UserFile.class);
-        query.setParameter("file",fileId);
-        UserFile uf = query.getSingleResult();
-        entityManager.remove(uf);
-        return 0;
+        final Query query = entityManager.createQuery("delete from UserFile sf u where u.fileId = :file");
+        query.setParameter("file", fileId);
+        return query.executeUpdate();
     }
 
     @Override
-    public UserFile getFileById(Long fileId) {
-        return entityManager.find(UserFile.class,fileId);
+    public Optional<UserFile> getFileById(Long fileId) {
+        return Optional.ofNullable(entityManager.find(UserFile.class, fileId));
     }
 }

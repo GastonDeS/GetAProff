@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.UserFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserFileService {
     List<UserFile> getAllUserFiles(Long ownerId);
@@ -11,6 +12,6 @@ public interface UserFileService {
 
     int deleteFile(Long fileId);
 
-    UserFile getFileById(Long fileId);
+    Optional<UserFile> getFileById(Long fileId);
 
 }
