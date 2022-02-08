@@ -90,7 +90,7 @@ public class TeachesDaoJpa implements TeachesDao {
         String queryStr = "select a2.teacherid as id, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
                 "coalesce(u.description, '') as desc, a2.rate as rate, coalesce(u.schedule, '') as sch, u.mail as mail, " +
                 "a2.reviews as reviews from (select a1.teacherid as teacherid, max(a1.price) as maxPrice, min(a1.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(coalesce(r.rate,0)) as reviews " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
                 "from (select t.userid as teacherid, t.price as price, t.level as level from Teaches t JOIN Subject s " +
                 "on t.subjectid = s.subjectid where lower(s.name) like '%'||:searchedSubject||'%' and t.price <= :price and " +
                 "(t.level between :minLevel and :maxLevel or t.level = 0)) as a1 LEFT OUTER JOIN Rating r on a1.teacherid = r.teacherid " +
@@ -133,12 +133,13 @@ public class TeachesDaoJpa implements TeachesDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<TeacherInfo> getTopRatedTeachers() {
-        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
-                "coalesce(u.schedule, '') as sch, u.mail as mail, reviews " +
-                "from (select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(coalesce(r.rate,0)) as reviews " +
-                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
-                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid order by rate desc";
+        String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, " +
+                "rate, coalesce(u.schedule, '') as sch, u.mail as mail, reviews from " +
+                "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
+                "coalesce(a1.rate, 0) as rate, coalesce(a1.reviews, 0) as reviews from Teaches t " +
+                "LEFT OUTER JOIN (SELECT r.teacherid as teacherid, sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, " +
+                "count(r.rate) as reviews FROM rating r group by teacherid) as a1 on t.userid = a1.teacherid " +
+                "group by t.userid, a1.rate, a1.reviews) as a2 JOIN users u on a2.teacherid = u.userid order by rate desc";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping").setMaxResults(4);
         return (List<TeacherInfo>) query.getResultList();
     }
@@ -146,16 +147,17 @@ public class TeachesDaoJpa implements TeachesDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<TeacherInfo> getMostRequested() {
-        String queryStr = "select a3.teacherid as id, a3.name as name, a3.maxPrice as maxPrice, a3.minPrice as minPrice, a3.description as desc, " +
+        String queryStr = "select a3.teacherid as id, a3.name as name, a3.maxPrice as maxPrice, a3.minPrice as minPrice, a3.description as desc,\n" +
                 "a3.rate as rate, a3.schedule as sch, a3.mail as mail, a3.reviews as reviews " +
                 "from (select a2.teacherid, u.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
                 "coalesce(u.description, '') as description, a2.rate as rate, coalesce(u.schedule, '') as schedule, u.mail as mail, " +
                 "a2.reviews as reviews from (select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(coalesce(r.rate,0)) as reviews " +
-                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid " +
-                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid) as a3 LEFT OUTER JOIN " +
-                "classes c on a3.teacherid = c.teacherid group by a3.teacherid, a3.name, a3.maxPrice," +
-                "a3.minPrice, a3.description, a3.rate, a3.schedule, a3.mail order by count(c.classid) desc";
+                "COALESCE(a1.rate, 0) as rate, COALESCE(a1.reviews, 0) as reviews from Teaches t " +
+                "LEFT OUTER JOIN (SELECT r.teacherid as teacherid, sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
+                "FROM rating r group by teacherid) as a1 on a1.teacherid = t.userid group by t.userid, a1.rate, a1.reviews) " +
+                "as a2 JOIN users u on a2.teacherid = u.userid) as a3 LEFT OUTER JOIN " +
+                "classes c on a3.teacherid = c.teacherid group by a3.teacherid, a3.name, a3.maxPrice, " +
+                "a3.minPrice, a3.description, a3.rate, a3.schedule, a3.mail, a3.reviews order by count(c.classid) desc";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping").setMaxResults(4);
         return (List<TeacherInfo>) query.getResultList();
     }
@@ -177,9 +179,10 @@ public class TeachesDaoJpa implements TeachesDao {
         String queryStr = "select teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
                 "coalesce(u.schedule, '') as sch, u.mail as mail, reviews from " +
                 "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
-                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(coalesce(r.rate,0)) as reviews " +
-                "from Teaches t LEFT OUTER JOIN Rating r on t.userid = r.teacherid where t.userid = :teacherId " +
-                "group by t.userid) as a2 JOIN users u on a2.teacherid = u.userid";
+                "a1.rate as rate, a1.reviews as reviews " +
+                "from Teaches t JOIN (SELECT r.teacherid as teacherid, sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
+                "FROM rating r where r.teacherid = :id group by teacherid) as a1 on a1.teacherid = t.userid " +
+                "group by t.userid, a1.rate, a1.reviews) as a2 JOIN users u on a2.teacherid = u.userid";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping")
                 .setParameter("teacherId", teacherId);
         List<TeacherInfo> teacherInfos = (List<TeacherInfo>) query.getResultList();
