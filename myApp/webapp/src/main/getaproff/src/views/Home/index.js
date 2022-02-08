@@ -12,39 +12,22 @@ import Button from '../../components/Button'
 import { Wrapper, MainContainer } from "../../GlobalStyle";
 
 const Home = () => {
-  const [topRated, setTopRated] = useState({users: []});
-  const [mostRequested, setMostRequested] = useState({users: []});
-  
-  // const fetchImage = async (userId) => {
-  //   const res = await axios.get('api/images/' + userId)
-  //     .catch(error => {
-  //       console.error('ERROR ' + error.message)
-  //     });
-  //   return res ? 'data:image/png;base64,' + res.data.image : Profile
-  // }
-
-  // axios.get('api/images/87')
-  //   .then(res => {
-  //     setImage('data:image/png;base64,' + res.data.image);
-  //     // console.log(res.data.image);
-  //   });
+  const [topRated, setTopRated] = useState([]);
+  const [mostRequested, setMostRequested] = useState([]);
 
   const fetchTopRated = () => {
     axios.get('/teachers/top-rated').then(res => {
-      const data = res.data
-      setTopRated({ users: data.map(item => {
-        // const ret = await fetchImage(item.userId)
-        return {...item, image: Profile}
-      })})
+      res.data.map(item => {
+        setTopRated(previous => [...previous, item])
+      })
     });
   }
 
   const fetchMostRequested = () => {
     axios.get('/teachers/most-requested').then(res => {
-      const data = res.data
-      setMostRequested({ users: data.map(item => {
-        return {...item, image: Profile}
-      })})
+      res.data.map(item => {
+        setMostRequested(previous => [...previous, item])
+      })
     });
   }
 
@@ -52,6 +35,7 @@ const Home = () => {
     fetchTopRated();
     fetchMostRequested();
   }, []);
+
 
   return (
     <Wrapper>
@@ -72,28 +56,16 @@ const Home = () => {
         <Content>
           <h2>Top Rated Teachers</h2>
           <TutorContainer>
-            {topRated.users.map(item => {
-              return <TutorCard key={item.userId}
-                name={item.name} 
-                description={item.description} 
-                rating={item.rate}
-                maxPrice={item.maxPrice}
-                minPrice={item.minPrice}
-                image={item.image}/>
+            {topRated.map(item => {
+              return <TutorCard key={item.userId} user={item}/>
             })}
           </TutorContainer>
         </Content>
         <Content>
           <h2>Most requested teachers</h2>
           <TutorContainer>
-            {mostRequested.users.map(item => {
-              return <TutorCard key={item.userId}
-                name={item.name} 
-                description={item.description} 
-                rating={item.rate}
-                maxPrice={item.maxPrice}
-                minPrice={item.minPrice}
-                image={item.image}/>
+          {mostRequested.map(item => {
+              return <TutorCard key={item.userId} user={item}/>
             })}
           </TutorContainer>
         </Content>

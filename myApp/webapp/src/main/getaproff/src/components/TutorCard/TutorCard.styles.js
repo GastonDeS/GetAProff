@@ -32,7 +32,7 @@ export const CardBody = styled.div`
 
 export const TutorImg = styled.img`
   width: 100%;
-  height: 225px;
+  height: 210px;
   object-fit: cover;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;

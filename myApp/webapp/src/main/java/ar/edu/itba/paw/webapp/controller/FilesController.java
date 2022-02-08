@@ -30,6 +30,5 @@ public class FilesController {
     public Response getUserFile(@PathParam("id") Long id) {
         final Optional<UserFile> userFile = userFileService.getFileById(id);
         return userFile.isPresent() ? Response.ok(FileDto.fromUserFile(userFile.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
-//        return Response.ok().build();
     }
 }

@@ -1,21 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 
 import { Card, CardBody, Description, Name, Price, TutorImg } from './TutorCard.styles'
 import RatingStar from 'react-stars';
+import Profile from '../../assets/img/profile.png'
 
-const TutorCard = ({ name, description, rating, minPrice, maxPrice, image }) => {
+const TutorCard = ({ user }) => {
+  const [image, setImage] = useState(Profile);
+
+  useEffect(() => {
+    axios.get('images/' + user.id)
+    .then(res => {
+      setImage('data:image/png;base64,' + res.data.image);
+    });
+  }, [])
 
   return (
     <Card>
       <TutorImg variant="top" src={image} alt='tutorImage'/> 
       <CardBody>
-        <Name>{name}</Name>
-        <Description>{description}</Description>
-        <RatingStar count={5} value={rating} size={15} edit={false}/>
+        <Name>{user.name}</Name>
+        <Description>{user.description}</Description>
+        <RatingStar count={5} value={user.rate} size={15} edit={false}/>
         {
-          minPrice === maxPrice ? <Price>${minPrice}</Price> :
-          <Price>${minPrice} - ${maxPrice}</Price>
+          user.minPrice === user.maxPrice ? <Price>${user.minPrice}</Price> :
+          <Price>${user.minPrice} - ${user.maxPrice}</Price>
         }
       </CardBody>
     </Card>
@@ -23,11 +33,7 @@ const TutorCard = ({ name, description, rating, minPrice, maxPrice, image }) => 
 }
 
 TutorCard.propTypes = {
-  name: PropTypes.string,
-  description: PropTypes.string,
-  rating: PropTypes.number,
-  minPrice: PropTypes.number,
-  maxPrice: PropTypes.number
+  user: PropTypes.element
 }
 
 export default TutorCard
