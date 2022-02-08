@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -26,9 +27,9 @@ public class FilesController {
 
     @GET
     @Path("/user/{id}")
-    public Response getUserFile(@QueryParam("id") Long id) {
-//        final Optional<UserFile> userFile = userFileService.getFileById(id);
-//        return userFile.isPresent() ? Response.ok(FileDto.fromUserFile(userFile.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
-        return Response.ok().build();
+    public Response getUserFile(@PathParam("id") Long id) {
+        final Optional<UserFile> userFile = userFileService.getFileById(id);
+        return userFile.isPresent() ? Response.ok(FileDto.fromUserFile(userFile.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
+//        return Response.ok().build();
     }
 }
