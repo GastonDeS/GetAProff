@@ -1,13 +1,24 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
+import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("subject-files")
@@ -37,23 +48,17 @@ public class SubjectFilesController {
         return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-//    @POST
-//    @Path("/{id}/{subject}/{level}")
-//    @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @PathParam("subject") Long subject,
-//                                           @PathParam("level") Integer level, @FormDataParam("file") FormDataMultiPart multiPart) {
-//        final List<SubjectFileDto> subjectFileDtos = new ArrayList<>();
-//        multiPart.getFields("file").forEach(formDataBodyPart -> {
-//            MultipartFile file = formDataBodyPart.getValueAs(MultipartFile.class);
-//            try {
-//                final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file.getBytes(), file.getName(),
-//                                id, subject, level);
-//                subjectFile.ifPresent(newFile -> subjectFileDtos.add(SubjectFileDto.fromUser(uriInfo, newFile)));
-//            } catch (IOException e) {
-//            }
-//        });
-//        return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
-//    }
+    @POST
+    @Path("/{id}/{subject}/{level}")
+    @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @PathParam("subject") Long subject,
+                                           @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
+                                           @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+        byte[] file = IOUtils.toByteArray(uploadedInputStream);
+        final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), id, subject, level);
+        return subjectFile.isPresent() ? Response.ok(SubjectFileDto.fromUser(uriInfo, subjectFile.get())).build() :
+                    Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
 }

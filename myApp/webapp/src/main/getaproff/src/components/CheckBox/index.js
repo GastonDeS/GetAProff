@@ -42,10 +42,11 @@ const StyledCheckbox = styled.div`
   }
 `;
 
-const CheckBox = ({ id, value, handler }) => {
+const CheckBox = ({ handleCheck }) => {
   const [checked, setChecked] = useState(false);
-  const handleCheck = (event) => {
+  const handleChange = (event) => {
     setChecked(event.target.checked);
+    handleCheck(event);
   }
 
   return (
@@ -53,7 +54,7 @@ const CheckBox = ({ id, value, handler }) => {
       <label>
         <HiddenCheckbox 
           checked={checked} 
-          onChange={handleCheck}
+          onChange={handleChange}
         />
         <StyledCheckbox checked={checked}>
           <Icon viewBox="0 0 24 24">
@@ -61,12 +62,12 @@ const CheckBox = ({ id, value, handler }) => {
           </Icon>
         </StyledCheckbox>
       </label>
-      </CheckboxContainer>
+    </CheckboxContainer>
   );
 };
 
 CheckBox.propTypes = {
-  handler: PropTypes.func,
+  handleCheck: PropTypes.func
 };
 
 export default CheckBox;

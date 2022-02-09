@@ -8,12 +8,14 @@ import Profile from '../../assets/img/profile.png'
 
 const TutorCard = ({ user }) => {
   const [image, setImage] = useState(Profile);
+  const [error, setError] = useState();
 
   useEffect(() => {
     axios.get('images/' + user.id)
     .then(res => {
       setImage('data:image/png;base64,' + res.data.image);
-    });
+    })
+    .catch(error => setError(error));
   }, [])
 
   return (
@@ -33,7 +35,7 @@ const TutorCard = ({ user }) => {
 }
 
 TutorCard.propTypes = {
-  user: PropTypes.element
+  user: PropTypes.object
 }
 
 export default TutorCard

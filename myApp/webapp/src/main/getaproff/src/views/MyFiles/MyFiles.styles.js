@@ -55,6 +55,11 @@ export const ModalBody = styled(Modal.Body)`
 `;
 
 export const ButtonContainer = styled.div`
+  gap: 0.5rem;
+  display: flex;
+`;
+
+export const ModalButtonContainer = styled.div`
   display: flex;
   width: 90%;
   padding: 1rem 3rem 0 3rem;

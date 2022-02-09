@@ -9,8 +9,9 @@ import {
   SelectContainer,
   FilterContainer,
   ModalBody,
-  ButtonContainer,
+  ModalButtonContainer,
   Files,
+  ButtonContainer,
 } from "./MyFiles.styles";
 import Button from "../../components/Button";
 import Modal from "react-bootstrap/Modal";
@@ -30,11 +31,13 @@ const MyFiles = () => {
   const [show, setShow] = useState(false);
   const [subject, setSubject] = useState();
   const [level, setLevel] = useState(ALL_LEVELS);
-  const [currentFiles, setCurrentFiles] = useState({data: []});
+  const [allFiles, setAllFiles] = useState([]);
   const [newFiles, setNewFiles] = useState([]);
   const [currentLevels, setCurrentLevels] = useState([initialLevel]);
   const [currentSubjects, setCurrentSubjects] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [filteredFiles, setFilteredFiles] = useState([]);
+  const [deleted, setDeleted] = useState([]);
 
   const handleShow = () => setShow(current => !current);
 
@@ -44,30 +47,36 @@ const MyFiles = () => {
     }
   };
 
-  const handleSelected = (item) => {
-    setSelected(previous => [...previous, item]);
+  const handleCheckedFile = (checked, file) => {
+    if (checked) {
+      setSelected((previous) => [...previous, file]);
+    } else {
+      setSelected(selected.filter((id) => id !== Number(file)));
+    }
   };
 
-  const handleDeleteAll = () => {
-    selected.map((item) => {
-      for (var i = 0; i < currentFiles.data.length; i++) {
-        if (item === currentFiles.data[i]) {
-          currentFiles.data.splice(i, 1);
-          break;
-        }
-      }
+  const handleDelete = () => {
+    setDeleted([]);
+    selected.forEach((id) => {
+      axios.delete('/subject-files/' + id)
+      .then(() => {
+        setDeleted(previous => [...previous, id]);
+      })
+      .catch(error => {})
     })
+    setSelected([]);
   }
 
-  const renderFiles = (item, index) => {
-    if (subject && Number(subject.id) > 0 && Number(subject.id) !== Number(item.subjectId)) {
-      return <></>
-    }
-    else if (Number(level) !== ALL_LEVELS && Number(level) !== Number(item.levelId)) {
-      return <></>
-    }
-    return <Rows key={index} remove={remove} data={item} rowId={index} checkHandler={handleSelected}/>
-  }
+  // const handleDeleteAll = () => {
+  //   selected.map((item) => {
+  //     for (var i = 0; i < allFiles.data.length; i++) {
+  //       if (item === allFiles.data[i]) {
+  //         allFiles.data.splice(i, 1);
+  //         break;
+  //       }
+  //     }
+  //   })
+  // }
 
   const openFile = () => {
     inputFile.current.click();
@@ -76,8 +85,18 @@ const MyFiles = () => {
   const remove = (rowId, url) => {
     // Array.prototype.filter returns new array
     // so we aren't mutating state here
-    const arrayCopy = currentFiles.data.filter((row) => row.id !== rowId);
-    setCurrentFiles({ data: arrayCopy });
+    const arrayCopy = allFiles.data.filter((row) => row.id !== rowId);
+    setAllFiles({ data: arrayCopy });
+  }
+
+  const filterFiles = () => {
+    allFiles.forEach((item) => {
+      if (subject && (Number(subject.id) === 0 || Number(subject.id) === Number(item.subjectId))) {
+        if (Number(level) === ALL_LEVELS || Number(level) === Number(item.levelId)) {
+          setFilteredFiles(previous => [...previous, item]);
+        }
+      }
+    })
   }
 
   const handleLevelChange = (event) => {
@@ -86,7 +105,8 @@ const MyFiles = () => {
 
   const handleSubjectChange = (event) => {
     setCurrentLevels([initialLevel]);
-    setSubject(currentSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0])
+    setLevel(ALL_LEVELS);
+    setSubject(currentSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0]);
   }
 
   const addAllLevels = (all, levels) => {
@@ -103,21 +123,19 @@ const MyFiles = () => {
 
   useEffect(async () => {
     const files = await axios.get("/subject-files/145");
-    setCurrentFiles({
-      data: files.data.map((item) => {
-        return { 
-          first: item.name, 
-          second: item.subject.name,
-          third: i18next.t('subjects.levels.' + item.level),
-          url: item.fileId,
-          subjectId: item.subject.subjectId,
-          levelId: item.level,
-        };
-      }),
-    });
+    files && files.data.forEach((item) => {
+      setAllFiles(previous => [...previous, {
+        first: item.name, 
+        second: item.subject.name,
+        third: i18next.t('subjects.levels.' + item.level),
+        subjectId: item.subject.subjectId,
+        levelId: item.level,
+        id: item.fileId
+      }]);
+    })
     const subjects = await axios.get("/teachers/subjects/levels/145");
     var allLevels = [];
-    subjects.data.map((item) => {
+    subjects.data.forEach((item) => {
       addAllLevels(allLevels, item.levels);
       setCurrentSubjects(previous => [...previous, {
         name: item.subject.name,
@@ -135,18 +153,24 @@ const MyFiles = () => {
   }, []);
 
   useEffect(() => {
-    console.log(subject)
-    subject && subject.levels.map((item) => {
+    subject && subject.levels.forEach((item) => {
       setCurrentLevels(previous => [...previous, {
         name: i18next.t('subjects.levels.' + item),
         id: item
-      }])
+      }]);
     });
   }, [subject]);
 
   useEffect(() => {
-    console.log(selected)
-  }, [selected])
+    setFilteredFiles([]);
+    filterFiles();
+  }, [subject, level, allFiles]);
+
+  useEffect(() => {
+    deleted.forEach((id) => {
+      setAllFiles(allFiles.filter(item => item.id !== id))
+    })
+  }, [deleted])
 
   return (
     <Wrapper>
@@ -183,11 +207,19 @@ const MyFiles = () => {
               </Row>
             </thead>
             <tbody>
-              {currentFiles && currentFiles.data.map((item, index) => renderFiles(item, index))}
+              {filteredFiles && filteredFiles.map((item, index) => {
+                return <Rows key={index} data={item} handleCheck={handleCheckedFile}/>
+              })}
             </tbody>
           </Table>
-          <Button callback={handleShow} text="Agregar Archivos" fontSize="1rem"/>
-
+          <ButtonContainer>
+            <Button callback={handleShow} text="Agregar Archivos" fontSize="1rem"/>
+            {
+              selected.length === 0 ? <></> : 
+              <Button callback={handleDelete} text="Borrar Archivos" fontSize="1rem"/>
+            }
+          </ButtonContainer>
+        
           {/* MODAL */}
           <Modal show={show} onHide={handleShow} size="xl">
             <Modal.Header closeButton>
@@ -215,11 +247,11 @@ const MyFiles = () => {
               <table style={{ width: '90%' }}>
                 <Files>
                   {newFiles && newFiles.map((item, index) => {
-                    return <Rows key={index} data={item.name} rowId={index} multi={false} check={false}/>
+                    return <Rows key={index} data={item.name} multi={false} type="remove"/>
                   })}
                 </Files>
               </table>
-              <ButtonContainer>
+              <ModalButtonContainer>
                 <Button
                   text="Elegir archivos"
                   fontSize="1rem"
@@ -238,7 +270,7 @@ const MyFiles = () => {
                     text="Guardar Cambios"
                   />
                 </div>
-              </ButtonContainer>
+              </ModalButtonContainer>
             </ModalBody>
           </Modal>
         </Content>

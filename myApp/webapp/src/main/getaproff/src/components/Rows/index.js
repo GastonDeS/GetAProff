@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import CheckBox from "../CheckBox";
 import { Row } from "../../GlobalStyle";
 import Button from "../Button";
+import CheckBox from "../CheckBox";
 
-export const Data = styled.td`
+const Data = styled.td`
   border: none;
   font-size: var(--fontSmall);
-
   img {
     width: 18px;
   }
@@ -19,38 +18,44 @@ export const Data = styled.td`
   }
 `;
 
-const Rows = ({ edit, remove, data, rowId, multi, check, checkHandler }) => {
+const Rows = ({ edit, data, multi, type, handleCheck }) => {
+
+  const handleChange = (event) => {
+    handleCheck(event.target.checked, data.id);
+  };
 
   return (
     <>
       <Row>
-        {multi ? (edit ? (
-          <>
-            <Data style={{ width: "45%" }}>{data.first}</Data>
-            <Data style={{ width: "20%" }}>{data.second}</Data>
-            <Data style={{ width: "30%" }}>{data.third}</Data>
-            <Data style={{ width: "5%", textAlign: "end" }}>
-              <CheckBox/>
-            </Data>
-          </>
+        {multi ? (
+          edit ? (
+            <>
+              <Data style={{ width: "45%" }}>{data.first}</Data>
+              <Data style={{ width: "20%" }}>{data.second}</Data>
+              <Data style={{ width: "30%" }}>{data.third}</Data>
+              <Data style={{ width: "5%", textAlign: "end" }}>
+                <CheckBox handleCheck={handleChange} />
+              </Data>
+            </>
+          ) : (
+            <>
+              <Data style={{ width: "50%" }}>{data.first}</Data>
+              <Data style={{ width: "20%" }}>{data.second}</Data>
+              <Data style={{ width: "30%" }}>{data.third}</Data>
+            </>
+          )
         ) : (
-          <>
-            <Data style={{ width: "50%" }}>{data.first}</Data>
-            <Data style={{ width: "20%" }}>{data.second}</Data>
-            <Data style={{ width: "30%" }}>{data.third}</Data>
-          </>
-        )) :
-        (
           <>
             <Data style={{ width: "95%" }}>{data}</Data>
             <Data style={{ width: "5%", textAlign: "end" }}>
-              {
-                check ? <CheckBox value={data}/> : <Button text="X" fontSize="0.8rem"/>
-              }
+              {type === "check" ? (
+                <CheckBox handleCheck={handleChange} />
+              ) : (
+                <Button text="X" fontSize="0.8rem" />
+              )}
             </Data>
           </>
-        )
-        }
+        )}
       </Row>
     </>
   );
@@ -59,15 +64,15 @@ const Rows = ({ edit, remove, data, rowId, multi, check, checkHandler }) => {
 Rows.propTypes = {
   edit: PropTypes.bool,
   multi: PropTypes.bool,
-  remove: PropTypes.func,
   data: PropTypes.object,
-  rowId: PropTypes.number
+  type: PropTypes.string,
+  handleCheck: PropTypes.func,
 };
 
 Rows.defaultProps = {
   multi: true,
   edit: true,
-  check: true,
-}
+  type: "check",
+};
 
 export default Rows;

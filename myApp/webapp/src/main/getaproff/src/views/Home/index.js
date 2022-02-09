@@ -1,41 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
-import Profile from '../../assets/img/profile.png'
-
-import { ButtonContainer, Content, SearchBarContainer, SearchContainer, TutorContainer } from './Home.styles'
-import Navbar from '../../components/Navbar'
-import TutorCard from '../../components/TutorCard'
-import SearchBar from '../../components/SearchBar'
-import Button from '../../components/Button'
+import { ButtonContainer, Content, SearchBarContainer, SearchContainer, TutorContainer } from './Home.styles';
+import Navbar from '../../components/Navbar';
+import TutorCard from '../../components/TutorCard';
+import SearchBar from '../../components/SearchBar';
+import Button from '../../components/Button';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
+import { useHomeFetch } from '../../hooks/useHomeFetch';
 
 const Home = () => {
-  const [topRated, setTopRated] = useState([]);
-  const [mostRequested, setMostRequested] = useState([]);
-
-  const fetchTopRated = () => {
-    axios.get('/teachers/top-rated').then(res => {
-      res.data.map(item => {
-        setTopRated(previous => [...previous, item])
-      })
-    });
-  }
-
-  const fetchMostRequested = () => {
-    axios.get('/teachers/most-requested').then(res => {
-      res.data.map(item => {
-        setMostRequested(previous => [...previous, item])
-      })
-    });
-  }
-
-  useEffect(() => {
-    fetchTopRated();
-    fetchMostRequested();
-  }, []);
-
+  const { topRated, mostRequested } = useHomeFetch();
 
   return (
     <Wrapper>
@@ -57,7 +33,7 @@ const Home = () => {
           <h2>Top Rated Teachers</h2>
           <TutorContainer>
             {topRated.map(item => {
-              return <TutorCard key={item.userId} user={item}/>
+              return <TutorCard key={item.id} user={item}/>
             })}
           </TutorContainer>
         </Content>
@@ -65,7 +41,7 @@ const Home = () => {
           <h2>Most requested teachers</h2>
           <TutorContainer>
           {mostRequested.map(item => {
-              return <TutorCard key={item.userId} user={item}/>
+              return <TutorCard key={item.id} user={item}/>
             })}
           </TutorContainer>
         </Content>
@@ -75,7 +51,6 @@ const Home = () => {
 }
 
 Home.propTypes = {
-
 }
 
 export default Home
