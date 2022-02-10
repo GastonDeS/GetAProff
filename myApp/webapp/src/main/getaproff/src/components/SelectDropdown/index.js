@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from "styled-components";
 import i18next from "i18next";
+import { selectOptions } from '@testing-library/user-event/dist/select-options';
 
 const Select = styled.select`
   width: 100%;
@@ -23,10 +24,10 @@ const Select = styled.select`
   }
 `;
 
-const SelectDropdown = ({ type, options, handler }) => {
-  
+const SelectDropdown = ({ type, options, handler, value }) => {
+
   return (
-    <Select onChange={handler}>
+    <Select onChange={handler} value={value}>
       {
         type ? <option value="" hidden>{type}</option> : <></>
       }

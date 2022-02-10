@@ -19,9 +19,12 @@ const Data = styled.td`
 `;
 
 const Rows = ({ edit, data, multi, type, handleCheck }) => {
-
   const handleChange = (event) => {
-    handleCheck(event.target.checked, data.id);
+    handleCheck(event.target.checked, data.id);  
+  };
+
+  const handleRemove = () => {
+    handleCheck(data.name);
   };
 
   return (
@@ -34,7 +37,7 @@ const Rows = ({ edit, data, multi, type, handleCheck }) => {
               <Data style={{ width: "20%" }}>{data.second}</Data>
               <Data style={{ width: "30%" }}>{data.third}</Data>
               <Data style={{ width: "5%", textAlign: "end" }}>
-                <CheckBox handleCheck={handleChange} />
+                <CheckBox handleCheck={handleChange}/>
               </Data>
             </>
           ) : (
@@ -46,12 +49,12 @@ const Rows = ({ edit, data, multi, type, handleCheck }) => {
           )
         ) : (
           <>
-            <Data style={{ width: "95%" }}>{data}</Data>
+            <Data style={{ width: "95%" }}>{data.name}</Data>
             <Data style={{ width: "5%", textAlign: "end" }}>
               {type === "check" ? (
                 <CheckBox handleCheck={handleChange} />
               ) : (
-                <Button text="X" fontSize="0.8rem" />
+                <Button text="X" fontSize="0.8rem" callback={handleRemove}/>
               )}
             </Data>
           </>
