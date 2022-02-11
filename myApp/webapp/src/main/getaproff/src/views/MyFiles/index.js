@@ -22,7 +22,6 @@ import CheckBox from "../../components/CheckBox";
 import {
   useMyFilesFetch,
   ALL_LEVELS,
-  ALL_SUBJECTS,
 } from "../../hooks/useMyFilesFetch";
 
 const MyFiles = () => {
@@ -35,15 +34,14 @@ const MyFiles = () => {
     currentLevels,
     filteredFiles,
     show,
-    selected,
     newFiles,
     setShow,
     setNewFiles,
     setAllFiles,
-    setSelected,
     setDeleted,
     setLevel,
     setSubject,
+    setFilteredFiles
   } = useMyFilesFetch();
 
   const openFileUpload = () => {
@@ -55,17 +53,18 @@ const MyFiles = () => {
       const form = new FormData();
       form.append("file", item.file);
       await axios.post('subject-files/145/' + subject.id + '/' + level, form)
-        .then(res => {
-          setAllFiles([...allFiles, {
-            first: res.data.name,
-            second: res.data.subject.name,
-            third: i18next.t("subjects.levels." + res.data.level),
-            subjectId: res.data.subject.subjectId,
-            levelId: res.data.level,
-            id: res.data.fileId
-          }])
-        })
-        .catch(error => {});
+      .then(res => {
+        setAllFiles([...allFiles, {
+          first: res.data.name,
+          second: res.data.subject.name,
+          third: i18next.t("subjects.levels." + res.data.level),
+          subjectId: res.data.subject.subjectId,
+          levelId: res.data.level,
+          id: res.data.fileId,
+          selected: false
+        }])
+      })
+      .catch(error => {});
     })
     handleShow();
   }
@@ -89,25 +88,25 @@ const MyFiles = () => {
     setNewFiles(newFiles.filter(item => item.name !== name));
   };
 
-  const handleCheckedFile = (checked, file) => {
-    if (checked) {
-      setSelected((previous) => [...previous, file]);
-    } else {
-      setSelected(selected.filter((id) => id !== Number(file)));
-    }
+  const handleCheckedFile = (checked, id) => {
+    setFilteredFiles(filteredFiles.map(file => {
+      if (Number(file.id) === id ) file.selected = checked;
+      return file;
+    }));
   };
 
   const handleDelete = () => {
     setDeleted([]);
-    selected.forEach((id) => {
-      axios
-        .delete("/subject-files/" + id)
+    filteredFiles.forEach((file) => {
+      if (file.selected) {
+        axios
+        .delete("/subject-files/" + file.id)
         .then(() => {
-          setDeleted((previous) => [...previous, id]);
+          setDeleted((previous) => [...previous, file.id]);
         })
         .catch((error) => {});
+      }
     });
-    setSelected([]);
   };
 
   // const handleDeleteAll = () => {
@@ -189,6 +188,7 @@ const MyFiles = () => {
                       key={index}
                       data={item}
                       handleCheck={handleCheckedFile}
+                      checked={item.selected}
                     />
                   );
                 })}
@@ -200,7 +200,7 @@ const MyFiles = () => {
               text="Agregar Archivos"
               fontSize="1rem"
             />
-            {selected.length === 0 ? (
+            {filteredFiles.filter(file => file.selected).length === 0 ? (
               <></>
             ) : (
               <Button
