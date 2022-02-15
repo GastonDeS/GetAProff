@@ -7,9 +7,12 @@ import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Button';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
 import { useHomeFetch } from '../../hooks/useHomeFetch';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const { topRated, mostRequested } = useHomeFetch();
+  const { topRated, mostRequested, subjects } = useHomeFetch();
+
+  const navigate = useNavigate();
 
   return (
     <Wrapper>
@@ -20,11 +23,11 @@ const Home = () => {
             <SearchBar/>
           </SearchBarContainer>
           <ButtonContainer>
-            <Button text='Matematicas' fontSize='1rem'/>
-            <Button text='Fisica' fontSize='1rem'/>
-            <Button text='Ingles' fontSize='1rem'/>
-            <Button text='Piano' fontSize='1rem'/>
-            <Button text='Cocina' fontSize='1rem'/>
+            {
+              subjects && subjects.map(item => {
+                return <Button text={item.name} fontSize='1rem' callback={() => navigate('tutors', {state: {subject: item}})}/>
+              })
+            }
           </ButtonContainer>
         </SearchContainer>
         <Content>
