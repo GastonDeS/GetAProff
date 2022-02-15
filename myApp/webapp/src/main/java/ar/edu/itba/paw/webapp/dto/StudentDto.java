@@ -19,6 +19,7 @@ public class StudentDto {
         StudentDto studentDto = new StudentDto();
         studentDto.mail = user.getMail();
         studentDto.name = user.getName();
+        studentDto.id = user.getId();
         studentDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
         return studentDto;
     }

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import styled from "styled-components"
 
 const Textarea = ({ placeholder, value }) => {
-  return <StyledTextarea placeholder={placeholder} value={value} />;
+  return <StyledTextarea placeholder={placeholder} defaultValue={value} />;
 }
 
 const StyledTextarea = styled.textarea`

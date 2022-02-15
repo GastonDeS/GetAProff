@@ -1,7 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 
 import styled from "styled-components";
-import Default from "../../assets/img/add_img.png";
 import Button from "../Button";
 
 const Wrapper = styled.div`
@@ -26,8 +25,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const DisplayImage = () => {
-  const [image, setImage] = useState(Default);
+const DisplayImage = ({ image, setImage }) => {
   const inputFile = useRef(null);
 
   const onImageChange = (event) => {

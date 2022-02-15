@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
@@ -19,10 +18,12 @@ import {
 import Textarea from "../../components/Textarea";
 import DisplayImage from "../../components/DisplayImage";
 import { Request, MainContainer, Wrapper } from "../../GlobalStyle";
+import Default from "../../assets/img/add_img.png";
 
 const Register = () => {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
+  const [image, setImage] = useState(Default);
 
   return (
     <Wrapper>
@@ -45,7 +46,7 @@ const Register = () => {
           <Form>
             <InputContainer>
               <div style={{ width: "80%" }}>
-                <DisplayImage />
+              <DisplayImage image={image} setImage={setImage}/>
               </div>
               <InputWrapper>
                 <Input type="text" placeholder="Name" />
@@ -67,7 +68,7 @@ const Register = () => {
             </ButtonContainer>
             <Request>
               <p>Already have an account?</p>
-              <a href="/login">Login</a>
+              <button onClick={() => { navigate('/login')}}>Login</button>
             </Request>
           </Form>
         </FormContainer>

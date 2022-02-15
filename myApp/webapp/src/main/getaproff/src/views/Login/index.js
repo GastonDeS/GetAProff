@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import PropTypes from "prop-types";
 import Navbar from "../../components/Navbar/index";
 import { useNavigate } from "react-router-dom";
 
@@ -107,7 +106,7 @@ const Login = () => {
           </FormContainer>
           <Request>
             <p>Don't have an account yet?</p>
-            <a href="/register">Sign up</a>
+            <button onClick={() => { navigate('/register')}}>Sign Up</button>
           </Request>
         </LoginContainer>
       </MainContainer>

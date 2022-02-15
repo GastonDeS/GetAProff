@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import axios from "axios";
 import i18next from "i18next";
+import { useNavigate } from "react-router-dom";
 
 import {
   MainContainer,
@@ -22,6 +22,8 @@ const EditSubjects = () => {
   const [price, setPrice] = useState();
   const [level, setLevel] = useState();
   const subjects = ['Matematica', 'Quimica', 'Frances'];
+
+  const navigate = useNavigate();
 
   const onChangePrice = (event) => {
     setPrice(event.target.value);
@@ -74,7 +76,7 @@ const EditSubjects = () => {
           <Button text="Add subject" callback={handleAddSubject} fontSize="1rem"/>
           <Request>
             <p>Can't find the subject you want to teach?</p>
-            <a href="/">Request new subject</a>
+            <button onClick={() => { navigate('/request-subject')}}>Request new subject</button>
           </Request>
         </Content>
         <Content>

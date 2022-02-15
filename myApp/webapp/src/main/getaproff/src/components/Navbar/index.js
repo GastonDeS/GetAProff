@@ -14,23 +14,29 @@ import i18next from "i18next";
 const Navbar = ({ empty }) => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
+  const [options, setOptions] = useState();
 
   const onLogout = () => {
     AuthService.logout();
     navigate('/login');
-  }
-
-  const options = [{name: 'navbar.myProfile', path: '/profile'}, {name: 'navbar.myFiles', path: '/my-files'}];
+  };
+  
   const endOption = {name: i18next.t('navbar.logout'), callback: onLogout}
 
   useEffect(() => {
-    AuthService.getCurrentUser() ? setAuth(true) : setAuth(false);
+    var curr = AuthService.getCurrentUser();
+    if (curr) {
+      setAuth(true);
+      setOptions([{name: 'navbar.myProfile', path: '/profile/' + curr.id}, {name: 'navbar.myFiles', path: '/my-files'}]);
+    }
   }, []);
 
   return (
     <Wrapper>
       <Content>
-        <LogoImg src={Logo} alt='logo'/>
+        <LogoImg onClick={() => { navigate('/')}}>
+          <img src={Logo} alt='logo'/>
+        </LogoImg>
         {
           empty ? <></> :
           (auth ? 
@@ -41,8 +47,8 @@ const Navbar = ({ empty }) => {
               <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={endOption}/>
             </Container> :
             <Container>
-              <Button text='Login' callback={() => { navigate('/login') }}/>
-              <Button text='Register' callback={() => { navigate('/register') }}/>
+              <Button text='Login' callback={() => { navigate('/login')}}/>
+              <Button text='Register' callback={() => { navigate('/register')}}/>
             </Container>)
         }
       </Content>

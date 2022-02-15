@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
+import ar.edu.itba.paw.webapp.requestDto.EditTeacherDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,9 @@ public class TeacherController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Context
     private UriInfo uriInfo;
@@ -121,5 +125,21 @@ public class TeacherController {
     public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("id") Long id, @PathParam("level") int level) {
         return teachesService.removeSubjectToUser(userId, id, level) == 1 ?
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @PUT
+    @Path("/update")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response editTeacherProfile(EditTeacherDto editTeacherDto) {
+        boolean added = false;
+        if (editTeacherDto.isSwitchRole()) {
+            added = userRoleService.addRoleToUser(editTeacherDto.getId(), Roles.TEACHER.getId());
+        }
+        userService.setTeacherAuthorityToUser();
+        int desc = userService.setUserDescription(editTeacherDto.getId(), editTeacherDto.getDescription());
+        int sch = userService.setUserSchedule(editTeacherDto.getId(), editTeacherDto.getSchedule());
+        int name = userService.setUserName(editTeacherDto.getId(), editTeacherDto.getName());
+        //TODO: EXCEPTION
+        return (added && desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 }

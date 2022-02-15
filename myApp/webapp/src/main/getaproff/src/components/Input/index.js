@@ -7,7 +7,7 @@ const Input = ({ type, placeholder, register, required, name, onChange, value })
   return (
     <>
       {/* <StyledInput type={type} placeholder={placeholder} {...register(name, required)} /> */}
-      <StyledInput type={type} placeholder={placeholder} onChange={onChange} value={value}/>
+      <StyledInput type={type} placeholder={placeholder} onChange={onChange} defaultValue={value}/>
     </>
   );
 };

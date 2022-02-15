@@ -162,7 +162,6 @@ export const useMyFilesFetch = () => {
     setDeleted,
     setLevel,
     setSubject,
-    setAllFiles,
     setFilteredFiles
   };
 };

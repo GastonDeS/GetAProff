@@ -14,11 +14,16 @@ export const Content = styled.div`
   margin: 0;
 `;
 
-export const LogoImg = styled.img`
-  width: 200px;
+export const LogoImg = styled.button`
+  background: transparent;
+  border: none;
   
-  @media screen and (max-width: 900px) {
-    width: 150px;
+  .img {
+    width: 200px;
+  
+    @media screen and (max-width: 900px) {
+      width: 150px;
+    }
   }
 `;
 

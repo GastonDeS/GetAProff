@@ -66,9 +66,11 @@ export const Request = styled.div`
     color: var(--secondary);
   }
 
-  a {
+  button {
+    background: transparent;
+    border: none;
     color: var(--secondary);
-    cursor: pointer;
+    text-decoration: underline;
 
     &:hover {
       color: black;

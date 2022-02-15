@@ -30,34 +30,3 @@ export const Wrapper = styled.div`
     }
   }
 `;
-
-export const Content = styled.div`
-  position: relative;
-  max-width: var(--maxWidth);
-  width: 100%;
-  height: 100%;
-  /* height: 55px; */
-  background-color: white;
-
-  img {
-    position: absolute;
-    left: 15px;
-    top: 14px;
-    width: 28px;
-  }
-
-  input {
-    font-size: var(--fontMed);
-    position: absolute;
-    left: 0;
-    padding: 0 0 0 60px;
-    border: 0;
-    width: 95%;
-    background: transparent;
-    height: 40px;
-    color: var(--white);
-    :focus {
-      outline: none;
-    }
-  }
-`;

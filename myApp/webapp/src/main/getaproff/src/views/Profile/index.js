@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import i18next from "i18next";
 import axios from "axios";
-import PropTypes from 'prop-types'
 import AuthService from "../../services/authService";
+import { useNavigate, useParams } from 'react-router-dom';
+
 import Navbar from "../../components/Navbar";
 import {
   ProfileInfoButtons,
@@ -24,59 +26,60 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
 import { Wrapper, MainContainer, Row, Headers, Table } from "../../GlobalStyle";
-import {useLocation} from 'react-router-dom';
+import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
-  const [rows, setRows] = useState({data: []});
-  const [user, setUser] = useState({data: []});
-  const [teacher, setTeacher] = useState({data: []});
+  const [subjects, setSubjects] = useState([]);
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
-  const [reviews, setReviews] = useState({data: []});
-  const [image, setImage] = useState();
+  const [reviews, setReviews] = useState([]);
+  const [image, setImage] = useState(ProfileImg);
   const [certifications, setCertifications] = useState({data: []});
+  const [currentUser, setCurrentUser] = useState();
+  const [isTeacher, setIsTeacher] = useState(true);
 
-
-  const location = useLocation();
-
+  const navigate = useNavigate();
+  const { id } = useParams();
   const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
 
   useEffect(async () => {
-    if ( user.id ) {
-      const res = await axios.get("/teachers/subjects/"+user.id);
-      setRows({
-        data: res.data.map((item, index) => {
-          return { 
-            first: item.subject,
-            second: '$' + item.price + '/' + i18next.t('subjects.hour'),
-            third: i18next.t('subjects.levels.' + item.level)
-          };
-        }),
-      });
-      const teacherRes = await axios.get("/teachers/52");
-      setTeacher({data: teacherRes.data});
-      const reviewsRes = await axios.get("/ratings/"+user.id);
-      setReviews({data: reviewsRes.data});
-      const imageRes = await axios.get('/images/'+user.id)
-      setImage('data:image/png;base64,' + imageRes.data.image);
-      const certRes = await axios.get('/user-files/'+user.id);
-      console.log(certRes);
-      
-      setCertifications({data: certRes.data});
-    }
-  }, [user]);
-
-  useEffect(async () => {
-    if (!(location.state != null && location.state.id != null)) {
-      setUser(await AuthService.getCurrentUser());
-    } else {
-      // 
-    }
+    setCurrentUser(AuthService.getCurrentUser());
   }, []);
 
-  useEffect(async () => {
-    setLoading(false);
-  },[teacher]);
+  useEffect(() => {
+    if (currentUser) {
+      let url = 'teachers';
+      if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
+        url = 'students';
+        setIsTeacher(false);
+      };
+      axios.get('/' + url + '/' + id).then(res => {setUser(res.data)});
+    }
+  }, [currentUser]);
+  
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+      axios.get('images/' + user.id)
+        .then(res => {
+          setImage('data:image/png;base64,' + res.data.image);
+        })
+        .catch(error => {});
+      if (isTeacher) {
+        axios.get("/teachers/subjects/" + user.id).then(res => {
+          res.data.forEach(item => {
+            setSubjects([...subjects, {
+              first: item.subject,
+              second: '$' + item.price + '/' + i18next.t('subjects.hour'),
+              third: i18next.t('subjects.levels.' + item.level)
+            }]);
+          });
+        });
+        axios.get("/ratings/" + user.id).then(res => setReviews(res.data));
+      }
+    }
+  },[user]);
 
   return (
     <Wrapper>
@@ -94,20 +97,25 @@ const Profile = () => {
             />
             <ProfileInfo>
               <ProfileName>
-                <h1 style={{ fontSize: '2rem' }}>{teacher.data.name}</h1>
-                <StarsReviews>
-                  <RatingStar count={5} value={teacher.data.rate} size={18} edit={false} />
-                  <p>({teacher.data.reviewsQty} Reviews)</p>
-                </StarsReviews>
+                <h1 style={{ fontSize: '2rem' }}>{user.name}</h1>
+                {
+                  isTeacher && 
+                  <StarsReviews>
+                    <RatingStar count={5} value={user.rate} size={18} edit={false} />
+                    <p>({user.reviewsQty} Reviews)</p>
+                  </StarsReviews>
+                }
               </ProfileName>
               <ProfileInfoButtons>
-                {teacher.data.id === user.id ? (
+                {currentUser && currentUser.id === user.id ? (
+                  isTeacher ? 
                   <>
-                    <Button text="Edit certifications" fontSize="1rem"/>
                     <Button text="Edit profile" fontSize="1rem"/>
                     <Button text="Edit subjects" fontSize="1rem"/>
-                    <Button text="Share profile" fontSize="1rem"/>
-                  </>
+                    <Button text="Edit certifications" fontSize="1rem"/>
+                    <Button text="Share profile" fontSize="1rem"/> 
+                  </> : 
+                  <Button text="Edit profile" fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
                   <>
                     <Button text="Request class" fontSize="1rem"/>
@@ -118,7 +126,7 @@ const Profile = () => {
               </ProfileInfoButtons>
             </ProfileInfo>
           </InfoContainer>
-          <TabContainer>
+          {isTeacher && <TabContainer>
             <Tab setIndex={setIndex} style={{ margin: "2rem" }}>
               {tabs.map((tab, index) => {
                   return index === 0 ? <TabItem fontSize='1rem' style={{ borderTopLeftRadius: '0.625rem'}}>{i18next.t(tab)}</TabItem> : 
@@ -132,17 +140,17 @@ const Profile = () => {
                 <SectionInfo>
                   <ProfileDataContainer>
                     <h3>Description</h3>
-                    <p>{teacher.data.description}</p>
+                    <p>{user.description}</p>
                   </ProfileDataContainer>
                   <ProfileDataContainer>
                     <h3>Schedule</h3>
-                    <p>{teacher.data.schedule}</p>
+                    <p>{user.schedule}</p>
                   </ProfileDataContainer>
                   { (certifications.data.length !== 0)?
                     <ProfileDataContainer> 
                     <h3>Certifications</h3>
                     <ul>
-                      {/* {teacher.data.certifications.map((certification, index) => {
+                      {/* {user.certifications.map((certification, index) => {
                         <li>
                         <a href={""} target={"_blank"}>
                           certification.name
@@ -167,7 +175,7 @@ const Profile = () => {
                         </Row>
                       </thead>
                       <tbody>
-                        {rows.data.map((item, index) => {
+                        {subjects.map((item, index) => {
                             return <Rows key={index} edit={false} data={item}/>
                         })}
                       </tbody>
@@ -176,7 +184,7 @@ const Profile = () => {
               ) : (
                 <SectionInfo>
                   {
-                    reviews.data.map((option,index) => {
+                    reviews.map((option) => {
                       return <ProfileDataContainer>
                         <ReviewTitle>
                           <h3>{option.student}</h3>
@@ -190,7 +198,7 @@ const Profile = () => {
                 </SectionInfo>
               )}
             </TabInfoContainer>
-          </TabContainer>
+          </TabContainer>}
         </ProfileContainer>
         }
       </MainContainer>
@@ -199,12 +207,12 @@ const Profile = () => {
 };
 
 Profile.propTypes = {
-  isTeacher: PropTypes.bool,
+  // isTeacher: PropTypes.bool,
   id: PropTypes.number
 };
 
-Profile.defaultProps = {
-  isTeacher: true
-}
+// Profile.defaultProps = {
+//   isTeacher: true
+// }
 
 export default Profile;

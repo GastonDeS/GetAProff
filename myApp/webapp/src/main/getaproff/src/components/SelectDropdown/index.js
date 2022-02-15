@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from "styled-components";
 import i18next from "i18next";
-import { selectOptions } from '@testing-library/user-event/dist/select-options';
 
 const Select = styled.select`
   width: 100%;

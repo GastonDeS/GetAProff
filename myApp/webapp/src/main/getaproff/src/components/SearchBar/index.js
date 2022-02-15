@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Content, Wrapper } from './SearchBar.styles'
+import { Wrapper } from './SearchBar.styles'
 
 // Icon
 import SearchIcon from '../../assets/img/search_icon.png'
