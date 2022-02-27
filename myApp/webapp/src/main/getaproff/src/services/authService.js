@@ -4,15 +4,15 @@ const API_URL = "auth/";
 
 const login = async (mail, password) => {
   await axios.post(API_URL + 'login', {
-    mail,
-    password,
-  })
+      mail,
+      password,
+    })
     .then(response => {
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data));
-      }
+      };
       return response.data;
-    })
+    });
 };
 
 const logout = () => {

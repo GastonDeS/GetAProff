@@ -109,10 +109,6 @@ export const ProfileDataContainer = styled.div`
   background: var(--tertiary);
   padding: 0.7rem;
   gap: 0.5rem;
-
-  a {
-    color: black;
-  }
 `;
 
 export const ProfileSubjects = styled.div`

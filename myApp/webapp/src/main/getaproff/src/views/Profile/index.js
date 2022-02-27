@@ -25,8 +25,10 @@ import Button from "../../components/Button";
 import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
-import { Wrapper, MainContainer, Row, Headers, Table } from "../../GlobalStyle";
+import { Wrapper, MainContainer, Row, Headers, Table, Request } from "../../GlobalStyle";
 import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
+import ImagesService from "../../services/imagesService";
+import FilesService from "../../services/filesService";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
@@ -35,9 +37,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
   const [image, setImage] = useState(ProfileImg);
-  const [certifications, setCertifications] = useState({data: []});
+  const [certifications, setCertifications] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [isTeacher, setIsTeacher] = useState(true);
+  const [link, setLink] = useState();
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -48,24 +51,20 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (currentUser) {
-      let url = 'teachers';
+    let url = 'teachers';
+    if (currentUser){
       if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
         url = 'students';
         setIsTeacher(false);
       };
-      axios.get('/' + url + '/' + id).then(res => {setUser(res.data)});
-    }
+    };
+    axios.get('/' + url + '/' + id).then(res => {setUser(res.data)}).catch(error => {});
   }, [currentUser]);
   
   useEffect(() => {
     if (user) {
       setLoading(false);
-      axios.get('images/' + user.id)
-        .then(res => {
-          setImage('data:image/png;base64,' + res.data.image);
-        })
-        .catch(error => {});
+      ImagesService.getImage(user.id, setImage);
       if (isTeacher) {
         axios.get("/teachers/subjects/" + user.id).then(res => {
           res.data.forEach(item => {
@@ -77,7 +76,8 @@ const Profile = () => {
           });
         });
         axios.get("/ratings/" + user.id).then(res => setReviews(res.data));
-      }
+        axios.get("/user-files/" + user.id).then(res => setCertifications(res.data));
+      };
     }
   },[user]);
 
@@ -86,8 +86,7 @@ const Profile = () => {
       <Navbar/>
       <MainContainer>
         {(loading)?
-          <>
-          </>
+          <></>
         :
         <ProfileContainer>
           <InfoContainer>
@@ -146,23 +145,19 @@ const Profile = () => {
                     <h3>Schedule</h3>
                     <p>{user.schedule}</p>
                   </ProfileDataContainer>
-                  { (certifications.data.length !== 0)?
-                    <ProfileDataContainer> 
+                  <ProfileDataContainer> 
                     <h3>Certifications</h3>
                     <ul>
-                      {/* {user.certifications.map((certification, index) => {
-                        <li>
-                        <a href={""} target={"_blank"}>
-                          certification.name
-                        </a>
-                      </li>
-                      })} */}
-                      
+                      {certifications.map((certification) => {
+                        return (
+                        <li key={certification.fileId}>
+                          <Request>
+                            <button onClick={() => window.open(URL.createObjectURL(new Blob([FilesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
+                          </Request>
+                        </li>
+                      )})}
                     </ul>
                   </ProfileDataContainer>
-                  : <></>
-                  }
-                  
                 </SectionInfo>
               ) : index === 1 ? (
                 <ProfileSubjects>
@@ -194,7 +189,6 @@ const Profile = () => {
                       </ProfileDataContainer>
                     })
                   }
-                  
                 </SectionInfo>
               )}
             </TabInfoContainer>
@@ -207,12 +201,7 @@ const Profile = () => {
 };
 
 Profile.propTypes = {
-  // isTeacher: PropTypes.bool,
   id: PropTypes.number
 };
-
-// Profile.defaultProps = {
-//   isTeacher: true
-// }
 
 export default Profile;

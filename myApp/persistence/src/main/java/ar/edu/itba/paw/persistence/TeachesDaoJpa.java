@@ -181,9 +181,10 @@ public class TeachesDaoJpa implements TeachesDao {
         String queryStr = "select a2.teacherid as id, u.name as name, maxPrice, minPrice, coalesce(u.description, '') as desc, rate, " +
                 "coalesce(u.schedule, '') as sch, u.mail as mail, reviews from " +
                 "(select t.userid as teacherid, max(t.price) as maxPrice, min(t.price) as minPrice, " +
-                "a1.rate as rate, a1.reviews as reviews " +
-                "from Teaches t JOIN (SELECT r.teacherid as teacherid, sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
-                "FROM rating r where r.teacherid = :id group by teacherid) as a1 on a1.teacherid = t.userid " +
+                "COALESCE(a1.rate, 0) as rate, COALESCE(a1.reviews, 0) as reviews " +
+                "from Teaches t LEFT OUTER JOIN (SELECT r.teacherid as teacherid, " +
+                "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
+                "FROM rating r group by teacherid) as a1 on a1.teacherid = t.userid where t.userid = :id " +
                 "group by t.userid, a1.rate, a1.reviews) as a2 JOIN users u on a2.teacherid = u.userid";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping")
                 .setParameter("id", teacherId);
