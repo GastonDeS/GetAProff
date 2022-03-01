@@ -26,7 +26,7 @@ public class UserFileServiceImpl implements UserFileService {
 
     @Transactional
     @Override
-    public UserFile saveNewFile(byte[] file, String fileName, Long ownerId) {
+    public Optional<UserFile> saveNewFile(byte[] file, String fileName, Long ownerId) {
         return userFileDao.saveNewFile(file,fileName,ownerId);
     }
 

@@ -27,11 +27,11 @@ public class UserFileDaoJpa implements UserFileDao {
     }
 
     @Override
-    public UserFile saveNewFile(byte[] file, String fileName, Long ownerId) {
+    public Optional<UserFile> saveNewFile(byte[] file, String fileName, Long ownerId) {
         final User owner = entityManager.getReference(User.class, ownerId);
         final UserFile newFile = new UserFile(owner, null, fileName, file);
         entityManager.persist(newFile);
-        return newFile;
+        return Optional.ofNullable(newFile);
     }
 
     @Override

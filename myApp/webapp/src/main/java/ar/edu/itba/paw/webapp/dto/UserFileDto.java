@@ -6,7 +6,7 @@ import javax.ws.rs.core.UriInfo;
 
 public class UserFileDto {
 
-    private Long fileId;
+    private Long id;
 
     private String name, url;
 
@@ -15,7 +15,7 @@ public class UserFileDto {
     public static UserFileDto fromUser(UriInfo uri, UserFile file) {
         UserFileDto userFileDto = new UserFileDto();
         userFileDto.url = uri.getBaseUriBuilder().path("files/user/").path(String.valueOf(file.getFileId())).build().toString();
-        userFileDto.fileId = file.getFileId();
+        userFileDto.id = file.getFileId();
         userFileDto.name = file.getFileName();
         userFileDto.file = file.getFile();
         return userFileDto;
@@ -29,12 +29,12 @@ public class UserFileDto {
         this.file = file;
     }
 
-    public Long getFileId() {
-        return fileId;
+    public Long getId() {
+        return id;
     }
 
-    public void setFileId(Long fileId) {
-        this.fileId = fileId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

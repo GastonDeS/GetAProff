@@ -40,13 +40,12 @@ const Profile = () => {
   const [certifications, setCertifications] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [isTeacher, setIsTeacher] = useState(true);
-  const [link, setLink] = useState();
 
   const navigate = useNavigate();
   const { id } = useParams();
   const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
 
-  useEffect(async () => {
+  useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
 

@@ -10,7 +10,7 @@ public interface UserFileDao {
 
     List<UserFile> getAllUserFiles(Long ownerId);
 
-    UserFile saveNewFile(byte[] file, String fileName, Long ownerId);
+    Optional<UserFile> saveNewFile(byte[] file, String fileName, Long ownerId);
 
     int deleteFile(Long fileId);
 

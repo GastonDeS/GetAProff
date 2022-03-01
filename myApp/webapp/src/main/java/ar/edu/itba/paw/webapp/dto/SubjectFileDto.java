@@ -6,7 +6,7 @@ import javax.ws.rs.core.UriInfo;
 
 public class SubjectFileDto {
 
-    private Long fileId;
+    private Long id;
 
     private int level;
 
@@ -18,7 +18,7 @@ public class SubjectFileDto {
 
     public static SubjectFileDto fromUser(UriInfo uri, SubjectFile subjectFile) {
         SubjectFileDto subjectFileDto = new SubjectFileDto();
-        subjectFileDto.fileId = subjectFile.getFileId();
+        subjectFileDto.id = subjectFile.getFileId();
         subjectFileDto.file = subjectFile.getFile();
         subjectFileDto.name = subjectFile.getFileName();
         subjectFileDto.subject = SubjectDto.get(uri, subjectFile.getTeachesInfo().getSubject());
@@ -26,12 +26,12 @@ public class SubjectFileDto {
         return subjectFileDto;
     }
 
-    public Long getFileId() {
-        return fileId;
+    public Long getId() {
+        return id;
     }
 
-    public void setFileId(Long fileId) {
-        this.fileId = fileId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

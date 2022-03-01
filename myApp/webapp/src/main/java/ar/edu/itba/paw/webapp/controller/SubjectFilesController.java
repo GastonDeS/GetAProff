@@ -58,5 +58,4 @@ public class SubjectFilesController {
         return subjectFile.isPresent() ? Response.ok(SubjectFileDto.fromUser(uriInfo, subjectFile.get())).build() :
                     Response.status(Response.Status.BAD_REQUEST).build();
     }
-
 }

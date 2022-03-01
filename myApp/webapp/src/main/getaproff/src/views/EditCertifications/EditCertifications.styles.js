@@ -33,3 +33,9 @@ export const ButtonContainer = styled.div`
     display: none;
   }
 `;
+
+export const DeleteButton = styled.div`
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+`;
