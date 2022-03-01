@@ -29,6 +29,7 @@ import { Wrapper, MainContainer, Row, Headers, Table, Request } from "../../Glob
 import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 import ImagesService from "../../services/imagesService";
 import FilesService from "../../services/filesService";
+import Dropdown from "../../components/DropDown";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
@@ -40,6 +41,9 @@ const Profile = () => {
   const [certifications, setCertifications] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [isTeacher, setIsTeacher] = useState(true);
+  const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
+    {name: 'profile.edit.certifications', path: '/edit-certifications'},
+    {name: 'profile.edit.subjects', path: '/edit-subjects'}];
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -108,9 +112,10 @@ const Profile = () => {
                 {currentUser && currentUser.id === user.id ? (
                   isTeacher ? 
                   <>
-                    <Button text="Edit profile" fontSize="1rem"/>
+                    {/* <Button text="Edit profile" fontSize="1rem"/>
                     <Button text="Edit subjects" fontSize="1rem"/>
-                    <Button text="Edit certifications" fontSize="1rem"/>
+                    <Button text="Edit certifications" fontSize="1rem"/> */}
+                    <Dropdown brand="Edit" options={editOptions} size="1rem" color="white" background="var(--secondary)" radius="2rem" padding="0.45em 1.3em"/>
                     <Button text="Share profile" fontSize="1rem"/> 
                   </> : 
                   <Button text="Edit profile" fontSize="1rem" callback={() => navigate('/edit-profile')}/>

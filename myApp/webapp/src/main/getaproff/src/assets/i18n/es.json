@@ -29,6 +29,11 @@
   "profile": {
     "personal": "Información",
     "subjects": "Materias",
-    "reviews": "Reseñas"
+    "reviews": "Reseñas",
+    "edit": {
+      "profile": "Perfil",
+      "certifications": "Certificationes",
+      "subjects": "Materias"
+    }
   }
 }

@@ -32,7 +32,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: fit-content;
-  column-gap: 1em;
+  column-gap: 1.65em;
 `;
 
 export const NavLink = styled(Link)`

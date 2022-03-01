@@ -29,6 +29,11 @@
   "profile": {
     "personal": "Information",
     "subjects": "Subjects",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "edit": {
+      "profile": "Profile",
+      "certifications": "Certifications",
+      "subjects": "Subjects"
+    }
   }
 }
