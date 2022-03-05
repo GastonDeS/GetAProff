@@ -36,7 +36,7 @@ public class UserFileDaoJpa implements UserFileDao {
 
     @Override
     public int deleteFile(Long fileId) {
-        final Query query = entityManager.createQuery("delete from UserFile sf u where u.fileId = :file");
+        final Query query = entityManager.createQuery("delete from UserFile u where u.fileId = :file");
         query.setParameter("file", fileId);
         return query.executeUpdate();
     }

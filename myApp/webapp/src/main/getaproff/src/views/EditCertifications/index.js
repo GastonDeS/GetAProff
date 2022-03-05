@@ -21,12 +21,32 @@ import { useNavigate } from "react-router-dom";
 const EditCertifications = () => {
   const [currentUser, setCurrentUser] = useState();
   const [certifications, setCertifications] = useState([]);
+  const [checkAll, setCheckAll] = useState(false);
   const inputFile = useRef(null);
 
   const navigate = useNavigate();
 
   const openFile = () => {
     inputFile.current.click();
+  };
+
+  const handleDeleteAll = (event) => {
+    setCheckAll(event.target.checked);
+    if (event.target.checked) {
+      setCertifications(certifications.map(file => {
+        return {
+          ...file,
+          selected: true
+        };
+      }));
+    };
+  };
+
+  const handleDelete = () => {
+    certifications.filter((file) => file.selected).forEach((file) => {
+      axios.delete('/user-files/' + file.id);
+    });
+    setCertifications(certifications.filter(file => !file.selected));
   };
 
   const handleUpload = async (event) => {
@@ -36,7 +56,6 @@ const EditCertifications = () => {
         const form = new FormData();
         form.append("file", files[i]);
         const res = await axios.post('/user-files/' + currentUser.id, form);
-        console.log(res);
         setCertifications(previous => [...previous, {
           ...res.data,
           selected: false
@@ -58,7 +77,7 @@ const EditCertifications = () => {
     return (
       <DeleteButton>
         {displayButtons()}
-        <Button text="Delete" fontSize="1rem" color="red"/>
+        <Button text="Delete" fontSize="1rem" color="red" callback={handleDelete}/>
       </DeleteButton>
     )
   };
@@ -102,7 +121,7 @@ const EditCertifications = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    console.log(certifications);
+    if (certifications && certifications.length === 0) setCheckAll(false) 
   }, [certifications]);
 
   return (
@@ -116,7 +135,7 @@ const EditCertifications = () => {
               <Row>
                 <Headers style={{ width: "95%" }}>Files</Headers>
                 <Headers style={{ width: "5%" }}>
-                  <CheckBox />
+                  <CheckBox checked={checkAll} handleCheck={handleDeleteAll}/>
                 </Headers>
               </Row>
             </thead>

@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserFileService;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.UserFile;
-import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import ar.edu.itba.paw.webapp.dto.UserFileDto;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
