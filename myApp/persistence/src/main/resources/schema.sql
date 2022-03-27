@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    userId      BIGINT default nextval('users_userid_seq'::regclass),
+    userId      BIGSERIAL,
     name        VARCHAR(100),
     password    VARCHAR(100),
     mail        VARCHAR(100),
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS images
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    postid      BIGINT default nextval('posts_postid_seq'::regclass),
+    postid      BIGSERIAL,
     userid      BIGINT,
     message     VARCHAR(100) default ''::character varying,
     classid     BIGINT,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS posts
 
 CREATE TABLE IF NOT EXISTS subject
 (
-    subjectId SERIAL PRIMARY KEY,
+    subjectId BIGSERIAL PRIMARY KEY,
     name      varchar(100)
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS teaches
 CREATE TABLE IF NOT EXISTS user_file
 (
     userId   BIGINT,
-    fileId   BIGINT DEFAULT nextval('user_file_fileid_seq'::regclass),
+    fileId   BIGSERIAL,
     fileName VARCHAR,
     file     BYTEA,
     FOREIGN KEY (userId) REFERENCES users ON DELETE CASCADE,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS user_file
 CREATE TABLE IF NOT EXISTS subject_files
 (
     userId          BIGINT,
-    fileId          BIGINT PRIMARY KEY,
+    fileId          BIGSERIAL PRIMARY KEY,
     fileName        VARCHAR,
     file            BYTEA,
     subjectid       BIGINT,
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS shared
 
 CREATE TABLE IF NOT EXISTS classes
 (
-    classId   BIGINT default nextval('classes_classid_seq'::regclass) PRIMARY KEY,
+    classId   BIGSERIAL PRIMARY KEY,
     studentId BIGINT NOT NULL,
     teacherId BIGINT NOT NULL,
     level     INTEGER NOT NULL,
