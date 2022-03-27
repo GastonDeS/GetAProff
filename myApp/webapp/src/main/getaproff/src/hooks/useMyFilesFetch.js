@@ -20,6 +20,7 @@ export const useMyFilesFetch = () => {
   const [filteredFiles, setFilteredFiles] = useState([]);
   const [deleted, setDeleted] = useState([]);
   const [initialState, setInitialState] = useState();
+  const [checkAll, setCheckAll] = useState(false);
 
   const changeLevels = (levels) => {
     var auxLevels = [];
@@ -35,6 +36,7 @@ export const useMyFilesFetch = () => {
   };
 
   const filterFiles = () => {
+    setCheckAll(false);
     allFiles.forEach((item) => {
       if (
         subject &&
@@ -75,7 +77,7 @@ export const useMyFilesFetch = () => {
             third: i18next.t("subjects.levels." + item.level),
             subjectId: item.subject.subjectId,
             levelId: item.level,
-            id: item.fileId,
+            id: item.id,
             selected: false
           },
         ]);
@@ -146,7 +148,11 @@ export const useMyFilesFetch = () => {
       setLevel(ALL_LEVELS);
       setNewFiles([]);
     }
-  }, [show])
+  }, [show]);
+
+  useEffect(() => {
+    if (filteredFiles && filteredFiles.length === 0) setCheckAll(false);
+  }, [filteredFiles]);
 
   return {
     subject,
@@ -156,12 +162,15 @@ export const useMyFilesFetch = () => {
     filteredFiles,
     show,
     newFiles,
+    checkAll,
+    allFiles,
     setShow,
     setNewFiles, 
     setAllFiles,
     setDeleted,
     setLevel,
     setSubject,
-    setFilteredFiles
+    setFilteredFiles,
+    setCheckAll
   };
 };
