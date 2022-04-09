@@ -42,7 +42,7 @@ export const LoginContainer = styled.div`
   }
 `;
 
-export const FormContainer = styled.form`
+export const Form = styled.form`
   width: 100%;
   height: 100%;
 `;

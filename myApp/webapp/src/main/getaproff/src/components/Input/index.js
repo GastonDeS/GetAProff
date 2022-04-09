@@ -35,7 +35,6 @@ export const StyledInput = styled.input`
     /* color: black; */
     font-weight: 100;
     font-size: var(--fontSmall);
-    text-transform: uppercase;
   }
 `;
 

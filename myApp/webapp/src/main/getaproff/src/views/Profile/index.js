@@ -4,6 +4,7 @@ import i18next from "i18next";
 import axios from "axios";
 import AuthService from "../../services/authService";
 import { useNavigate, useParams } from 'react-router-dom';
+import {useForm} from "react-hook-form";
 
 import Navbar from "../../components/Navbar";
 import {
@@ -44,6 +45,7 @@ const Profile = () => {
   const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
     {name: 'profile.edit.certifications', path: '/edit-certifications'},
     {name: 'profile.edit.subjects', path: '/edit-subjects'}];
+
 
   const navigate = useNavigate();
   const { id } = useParams();
