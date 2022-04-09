@@ -38,12 +38,16 @@ const Login = () => {
   };
 
   const handleLogin = event => {
+    setInvalidCredentials(false)
     AuthService
         .login(event.username, event.password)
         .then(
-            (u) => {
-              console.log('aaa' + u)
+            () => {
               navigate("/");
+            },
+            (err) => {
+              setInvalidCredentials(true)
+              console.log('faiol' + err)
             }
         )
   };
@@ -57,6 +61,7 @@ const Login = () => {
             <WelcomeText>Welcome</WelcomeText>
             <Form onSubmit={handleSubmit(handleLogin)}>
               <InputContainer>
+                {invalidCredentials && <Error>You have entered an invalid username or password</Error>}
                 <InputWrapper>
                   <StyledInput
                       placeholder="example@gmail.com"
@@ -74,7 +79,7 @@ const Login = () => {
                           })
                       }
                   />
-                  {errors.username && <span className="text-danger">{errors.username.message}</span>}
+                  {errors.username && <Error>{errors.username.message}</Error>}
                 </InputWrapper>
                 <InputWrapper>
                   <StyledInput type="password"
@@ -89,7 +94,7 @@ const Login = () => {
                           })
                       }
                   />
-                  {errors.password && <span className="text-danger">{errors.password.message}</span>}
+                  {errors.password && <Error>{errors.password.message}</Error>}
                 </InputWrapper>
               </InputContainer>
               <ButtonContainer>
