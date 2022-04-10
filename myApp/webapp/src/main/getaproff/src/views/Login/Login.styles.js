@@ -104,4 +104,5 @@ export const Error = styled.p`
   color: red;
   letter-spacing: 0;
   margin: 0.5rem 0 0 0.65rem;
+  align-self: center;
 `;

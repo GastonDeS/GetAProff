@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import Navbar from "../../components/Navbar/index";
 import {useNavigate} from "react-router-dom";
 
@@ -12,7 +12,7 @@ import {
   InputWrapper,
   Error,
 } from "./Login.styles";
-import Input, {StyledInput} from "../../components/Input";
+import {StyledInput} from "../../components/Input";
 import AuthService from "../../services/authService";
 import {useForm} from "react-hook-form";
 import {Request, Wrapper, MainContainer} from "../../GlobalStyle";
@@ -21,21 +21,11 @@ const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
 const Login = () => {
 
-  const [mail, setMail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const {register, formState: {errors}, handleSubmit} = useForm();
   const [invalidCredentials, setInvalidCredentials] = useState(false);
 
   const navigate = useNavigate();
 
-  const onChangeMail = (event) => {
-    setMail(event.target.value);
-  };
-
-  const onChangePassword = (event) => {
-    setPassword(event.target.value);
-  };
 
   const handleLogin = event => {
     setInvalidCredentials(false)
@@ -45,11 +35,11 @@ const Login = () => {
             () => {
               navigate("/");
             },
-            (err) => {
+            () => {
               setInvalidCredentials(true)
-              console.log('faiol' + err)
             }
         )
+        .catch(() => navigate("/error"))
   };
 
 

@@ -2,10 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import styled from "styled-components"
+import Input, {StyledInput} from "../Input";
 
-const Textarea = ({ placeholder, value }) => {
-  return <StyledTextarea placeholder={placeholder} defaultValue={value} />;
-}
+const Textarea = ({ register, name, options, ...rest }) => {
+  return (
+      <StyledTextarea {...register(name, options)} {...rest}/>
+  );
+};
 
 const StyledTextarea = styled.textarea`
   background: rgba(255, 255, 255, 0.8);
@@ -35,8 +38,12 @@ const StyledTextarea = styled.textarea`
 `;
 
 Textarea.propTypes = {
+  type: PropTypes.string,
   placeholder: PropTypes.string,
+  name: PropTypes.string,
+  register: PropTypes.func,
+  onChange: PropTypes.func,
   value: PropTypes.string
-}
+};
 
 export default Textarea

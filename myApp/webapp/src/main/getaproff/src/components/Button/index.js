@@ -10,6 +10,7 @@ const StyledButton = styled.button`
   height: fit-content;
   border: transparent;
   padding: 0.45em 1.3em;
+  align-self: center;
 
   &:hover {
     color: black;
@@ -24,10 +25,10 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ text, callback, color, fontSize }) => {
+const Button = ({ text, callback, color, fontSize, type }) => {
 
   return (
-    <StyledButton onClick={callback} style={{backgroundColor: color, fontSize: fontSize}}>
+    <StyledButton type={type} onClick={callback} style={{backgroundColor: color, fontSize: fontSize} }>
       {text}
     </StyledButton>
   )
