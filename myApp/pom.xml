@@ -29,6 +29,8 @@
     <org.hibernate.version>5.1.0.Final</org.hibernate.version>
     <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
     <jersey.version>3.0-SNAPSHOT</jersey.version>
+    <node.version>v14.17.0</node.version>
+    <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
   </properties>
 
   <repositories>
@@ -304,45 +306,6 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>com.github.eirslett</groupId>
-          <artifactId>frontend-maven-plugin</artifactId>
-          <version>1.6</version>
-          <configuration>
-            <workingDirectory>getaproff</workingDirectory>
-            <installDirectory>target</installDirectory>
-          </configuration>
-          <executions>
-            <execution>
-              <id>install node and npm</id>
-              <goals>
-                <goal>install-node-and-npm</goal>
-              </goals>
-              <configuration>
-                <nodeVersion>v8.9.4</nodeVersion>
-                <npmVersion>5.6.0</npmVersion>
-              </configuration>
-            </execution>
-            <execution>
-              <id>npm install</id>
-              <goals>
-                <goal>npm</goal>
-              </goals>
-              <configuration>
-                <arguments>install</arguments>
-              </configuration>
-            </execution>
-            <execution>
-              <id>npm run build</id>
-              <goals>
-                <goal>npm</goal>
-              </goals>
-              <configuration>
-                <arguments>run build</arguments>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.1.0</version>
@@ -354,10 +317,10 @@
                 <goal>copy-resources</goal>
               </goals>
               <configuration>
-                <outputDirectory>${project.basedir}/target/classes</outputDirectory>
+                <outputDirectory>../webapp/target/webapp-1.0-SNAPSHOT</outputDirectory>
                 <resources>
                   <resource>
-                    <directory>getaproff/build</directory>
+                    <directory>build</directory>
                   </resource>
                 </resources>
               </configuration>
@@ -368,6 +331,7 @@
     </pluginManagement>
   </build>
   <modules>
+    <module>getaproff</module>
     <module>webapp</module>
     <module>interfaces</module>
     <module>services</module>
