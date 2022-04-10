@@ -7,7 +7,8 @@ import {
   MainContainer,
   Content,
   SelectContainer,
-  SingleSelect
+  SingleSelect,
+  ErrorMsg
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
 import Rows from '../../components/Rows';
@@ -23,6 +24,7 @@ const EditSubjects = () => {
   const [availableSubjects, setAvailableSubjects] = useState([]);
   const [subjectsTaught, setSubjectsTaught] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,6 +34,12 @@ const EditSubjects = () => {
 
   const handleAddSubject = () => {
     console.log(subject + ' ' + price + ' ' + level)
+    if (!price || price <= 0) {
+      setError(true);
+    } else {
+      setError(false);
+      // TODO: POST SUBJECT
+    }
   }
 
   const remove = (rowId, url) => {
@@ -95,17 +103,20 @@ const EditSubjects = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Add subject</Title>
+          <Title>{i18next.t('editSubjects.title')}</Title>
           <SelectContainer>
             {
               !loading && <SelectDropdown options={availableSubjects} handler={handleSubjectChange}/>
             }
             <SingleSelect>
-              <p>Enter price per hour:</p>
+              <p>{i18next.t('editSubjects.price')}</p>
               <input type="text" placeholder="0" onChange={onChangePrice}/>
             </SingleSelect>
+            {
+              error && <ErrorMsg>{i18next.t('errors.price')}</ErrorMsg>
+            }
             <SingleSelect>
-              <p>Select level:</p>
+              <p>{i18next.t('editSubjects.level')}</p>
               <div style={{ width: '70%' }}>
                 {
                   !loading && <SelectDropdown options={subject.levels} handler={handleLevelChange} value={level.id}/>
@@ -113,10 +124,10 @@ const EditSubjects = () => {
               </div>
             </SingleSelect>
           </SelectContainer>
-          <Button text="Add subject" callback={handleAddSubject} fontSize="1rem"/>
+          <Button text={i18next.t('editSubjects.addSubject')} callback={handleAddSubject} fontSize="1rem"/>
           <Request>
-            <p>Can't find the subject you want to teach?</p>
-            <button onClick={() => { navigate('/request-subject')}}>Request new subject</button>
+            <p>{i18next.t('editSubjects.request.question')}</p>
+            <button onClick={() => { navigate('/request-subject')}}>{i18next.t('editSubjects.request.access')}</button>
           </Request>
         </Content>
         <Content>

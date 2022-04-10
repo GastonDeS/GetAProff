@@ -151,4 +151,13 @@ public class TeacherController {
                 .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
     }
+
+    @POST
+    @Path("/{userId}/{subjectId}/{price}/{level}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response addSubjectToUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId,
+                                     @PathParam("price") int price, @PathParam("level") int level) {
+        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, subjectId, price, level);
+        return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }
