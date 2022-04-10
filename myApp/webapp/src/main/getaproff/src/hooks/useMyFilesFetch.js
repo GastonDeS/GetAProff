@@ -125,7 +125,6 @@ export const useMyFilesFetch = () => {
   }, [subject]);
 
   useEffect(() => {
-    console.log(allFiles)
     if (!show) {
       setFilteredFiles([]);
       filterFiles();

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
 import ar.edu.itba.paw.interfaces.services.TeachesService;
 import ar.edu.itba.paw.models.*;
@@ -17,6 +18,8 @@ public class TeachesServiceImpl implements TeachesService {
     @Autowired
     private TeachesDao teachesDao;
 
+    @Autowired
+    private SubjectDao subjectDao;
 
     @Transactional
     @Override
@@ -105,6 +108,21 @@ public class TeachesServiceImpl implements TeachesService {
     }
 
     @Override
+    public Map<Subject, List<Integer>> getSubjectAndLevelsAvailableForUser(Long userId) {
+        Map<Subject, List<Integer>> availableSubjects = new HashMap<>();
+        subjectDao.listSubjects().forEach(subject -> {
+            availableSubjects.put(subject, new ArrayList<>(Arrays.asList(0, 1, 2, 3)));
+        });
+        teachesDao.get(userId).forEach(teaches -> {
+            Subject subject = teaches.getSubject();
+            List<Integer> newLevels = availableSubjects.get(subject);
+            newLevels.remove(new Integer(teaches.getLevel()));
+            availableSubjects.replace(subject, newLevels);
+        });
+        return availableSubjects;
+    }
+
+    @Override
     public Integer getMostExpensiveUserFee(String searchedSubject) {
         return teachesDao.getMostExpensiveUserFee(searchedSubject);
     }
@@ -113,5 +131,4 @@ public class TeachesServiceImpl implements TeachesService {
     public List<Teaches> get(Long teacherId) {
         return teachesDao.get(teacherId);
     }
-
 }

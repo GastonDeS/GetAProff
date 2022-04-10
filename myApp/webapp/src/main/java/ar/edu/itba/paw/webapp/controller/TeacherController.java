@@ -113,7 +113,7 @@ public class TeacherController {
     @GET
     @Path("/subjects/levels/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getSubjectAndLevelsFromUser(@PathParam("id") Long id) {
+    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
         final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
                 .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
@@ -141,5 +141,14 @@ public class TeacherController {
         int name = userService.setUserName(editTeacherDto.getId(), editTeacherDto.getName());
         //TODO: EXCEPTION
         return (added && desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @GET
+    @Path("/available-subjects/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response getSubjectAndLevelsAvailableForUser(@PathParam("id") Long id) {
+        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsAvailableForUser(id)
+                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
     }
 }

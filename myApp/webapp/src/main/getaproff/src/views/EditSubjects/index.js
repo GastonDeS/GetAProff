@@ -17,11 +17,12 @@ import { Request, Wrapper, Title, Levels, Row, Headers, Table } from "../../Glob
 import CheckBox from "../../components/CheckBox";
 
 const EditSubjects = () => {
-  const [rows, setRows] = useState({data: []});
   const [subject, setSubject] = useState();
   const [price, setPrice] = useState();
   const [level, setLevel] = useState();
-  const subjects = ['Matematica', 'Quimica', 'Frances'];
+  const [availableSubjects, setAvailableSubjects] = useState([]);
+  const [subjectsTaught, setSubjectsTaught] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -36,22 +37,57 @@ const EditSubjects = () => {
   const remove = (rowId, url) => {
     // Array.prototype.filter returns new array
     // so we aren't mutating state here
-    const arrayCopy = rows.data.filter((row) => row.id !== rowId);
-    setRows({ data: arrayCopy });
+    // const arrayCopy = rows.data.filter((row) => row.id !== rowId);
+    // setRows({ data: arrayCopy });
   }
 
+  const handleLevelChange = (event) => {
+    setLevel(subject.levels.filter(level => Number(level.id) === Number(event.target.value))[0]);
+  }
+
+  const handleSubjectChange = (event) => {
+    setSubject(availableSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0]);
+  };
+
+  useEffect(() => {
+    level && setLoading(false);
+  }, [level])
+
+  useEffect(() => {
+    subject && setLevel(subject.levels[0]);
+  }, [subject]);
+
+  useEffect(() => {
+    availableSubjects && setSubject(availableSubjects[0]);
+  }, [availableSubjects]);
+
   useEffect(async () => {
-    const res = await axios.get("/teachers/subjects/145");
-    setRows({
-      data: res.data.map((item) => {
+    axios.get("/teachers/subjects/145").then(res => {
+      setSubjectsTaught(res.data.map((item) => {
         return { 
-          first: item.name,
+          first: item.subject,
           second: '$' + item.price + '/' + i18next.t('subjects.hour'),
           third: i18next.t('subjects.levels.' + item.level),
           url: item.id + '/' + item.level,
         };
-      }),
+      }))
     });
+    axios.get("/teachers/available-subjects/145").then(res => {
+      setAvailableSubjects(res.data.map((item) => {
+        var levels = []
+        item.levels.forEach(level => {
+          levels.push({
+            id: level,
+            name: "subjects.levels." + level
+          })
+        })
+        return {
+          name: item.subject.name,
+          id: item.subject.subjectId,
+          levels: levels
+        }
+      }))
+    })
   }, []);
 
   return (
@@ -61,7 +97,9 @@ const EditSubjects = () => {
         <Content>
           <Title>Add subject</Title>
           <SelectContainer>
-            <SelectDropdown type="Subjects" setIndex={setSubject} options={subjects}/>
+            {
+              !loading && <SelectDropdown options={availableSubjects} handler={handleSubjectChange}/>
+            }
             <SingleSelect>
               <p>Enter price per hour:</p>
               <input type="text" placeholder="0" onChange={onChangePrice}/>
@@ -69,7 +107,9 @@ const EditSubjects = () => {
             <SingleSelect>
               <p>Select level:</p>
               <div style={{ width: '70%' }}>
-                <SelectDropdown type="Levels" setIndex={setLevel} options={Levels}/>
+                {
+                  !loading && <SelectDropdown options={subject.levels} handler={handleLevelChange} value={level.id}/>
+                }
               </div>
             </SingleSelect>
           </SelectContainer>
@@ -90,7 +130,7 @@ const EditSubjects = () => {
               </Row>
             </thead>
             <tbody>
-              {rows.data.map((item, index) => {
+              {subjectsTaught.map((item, index) => {
                 return <Rows key={index} remove={remove} data={item} rowId={index}/>
               })}
             </tbody>
