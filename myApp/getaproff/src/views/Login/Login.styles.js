@@ -42,7 +42,7 @@ export const LoginContainer = styled.div`
   }
 `;
 
-export const FormContainer = styled.form`
+export const Form = styled.form`
   width: 100%;
   height: 100%;
 `;
@@ -104,4 +104,5 @@ export const Error = styled.p`
   color: red;
   letter-spacing: 0;
   margin: 0.5rem 0 0 0.65rem;
+  align-self: center;
 `;

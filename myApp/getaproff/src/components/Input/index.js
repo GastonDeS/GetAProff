@@ -3,12 +3,9 @@ import PropTypes from "prop-types";
 
 import styled from "styled-components";
 
-const Input = ({ type, placeholder, register, required, name, onChange, value }) => {
+const Input = ({ register, name, options, ...rest }) => {
   return (
-    <>
-      {/* <StyledInput type={type} placeholder={placeholder} {...register(name, required)} /> */}
-      <StyledInput type={type} placeholder={placeholder} onChange={onChange} defaultValue={value}/>
-    </>
+      <StyledInput {...register(name, options)} {...rest}/>
   );
 };
 
@@ -35,7 +32,6 @@ export const StyledInput = styled.input`
     /* color: black; */
     font-weight: 100;
     font-size: var(--fontSmall);
-    text-transform: uppercase;
   }
 `;
 
@@ -43,7 +39,7 @@ Input.propTypes = {
   type: PropTypes.string,
   placeholder: PropTypes.string,
   name: PropTypes.string,
-  register: PropTypes.func,
+  register: PropTypes.any,
   onChange: PropTypes.func,
   value: PropTypes.string
 };

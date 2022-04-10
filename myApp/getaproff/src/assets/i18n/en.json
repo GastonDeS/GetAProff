@@ -35,5 +35,18 @@
       "certifications": "Certifications",
       "subjects": "Subjects"
     }
+  },
+  "errors": {
+    "price": "Price value must be greater than zero"
+  },
+  "editSubjects": {
+    "request": {
+      "question": "Can't find the subject you want to teach?",
+      "access": "Request new subject"
+    },
+    "addSubject": "Add subject",
+    "price": "Enter price per hour:",
+    "level": "Select level:",
+    "title": "Edit subjects"
   }
 }

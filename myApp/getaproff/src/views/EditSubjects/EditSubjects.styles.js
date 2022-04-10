@@ -30,7 +30,7 @@ export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin: 0.5rem 0;
   gap: 1rem;
 `;
@@ -65,4 +65,8 @@ export const SingleSelect = styled.div`
       font-size: var(--fontSmall);
     }
   }
+`;
+
+export const ErrorMsg = styled.p`
+  color: red;
 `;
