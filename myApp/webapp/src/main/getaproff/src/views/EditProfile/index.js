@@ -18,7 +18,7 @@ const EditProfile = () => {
   const [change, setChange] = useState(false);
   const [image, setImage] = useState(Default);
   const [currentUser, setCurrentUser] = useState();
-  const {register, formState: { errors }, handleSubmit, reset} = useForm({defaultValues : { nameInput: "", schedule: "", description: ""}});
+  const {register, formState: { errors }, handleSubmit, reset, setValue} = useForm({defaultValues : { nameInput: "", schedule: "", description: ""}});
 
   const handleRoleChange = () => {
     setChange(current => !current);
@@ -50,6 +50,7 @@ const EditProfile = () => {
       });
       axios.get('images/' + currentUser.id)
         .then(res => {
+          console.log(res);
           setImage('data:image/png;base64,' + res.data.image);
         })
         .catch(error => {});
@@ -65,7 +66,7 @@ const EditProfile = () => {
         <Content>
           <Title>Edit profile</Title>
             <Form onSubmit={handleSubmit(onS)}>
-              <DisplayImage image={image} setImage={setImage}/>
+              <DisplayImage register={register} name = "userPhoto" options={{required: true}} image = {image} setImage={setImage}/>
               <Input register={register} name = "nameInput" options={{required : {value: true, message: "This field is required"}}}
               />
               {errors.nameInput && <Error>{errors.nameInput.message}</Error>}

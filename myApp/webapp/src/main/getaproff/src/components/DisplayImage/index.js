@@ -25,8 +25,8 @@ const Wrapper = styled.div`
   }
 `;
 
-const DisplayImage = ({ image, setImage }) => {
-  const inputFile = useRef(null);
+const DisplayImage = ({ image, setImage, register, name }) => {
+
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -34,23 +34,23 @@ const DisplayImage = ({ image, setImage }) => {
     }
   };
 
+
+
   const openFile = () => {
-    inputFile.current.click();
-  };
+    document.getElementById("usrPhoto").click()
+    };
 
   return (
     <Wrapper>
-      <img src={image} alt="userImage"/>
-      <label>
-        <Button text="Choose photo" fontSize="1rem" callback={openFile}/>
+      <img src={image} id="img-con" alt="userImage" />
+        <Button type="button" text="Choose photo" fontSize="1rem" callback={openFile} />
         <input
-          type="file"
-          name="userImage"
-          onChange={onImageChange}
-          accept="image/*"
-          ref={inputFile}
+            id="usrPhoto"
+            type="file"
+            {...register(name)}
+            onInput={onImageChange}
+            accept="image/png, image/jpeg"
         />
-      </label>
     </Wrapper>
   );
 };
