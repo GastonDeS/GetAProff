@@ -29,42 +29,46 @@ const MyFiles = () => {
   const {
     subject,
     level,
-    allFiles,
     currentSubjects,
     currentLevels,
     filteredFiles,
     show,
     newFiles,
+    checkAll,
+    allFiles,
     setShow,
-    setNewFiles,
+    setNewFiles, 
     setAllFiles,
     setDeleted,
     setLevel,
     setSubject,
-    setFilteredFiles
+    setFilteredFiles,
+    setCheckAll
   } = useMyFilesFetch();
 
   const openFileUpload = () => {
-    inputFile.current.click();
+    if (inputFile && inputFile.current) inputFile.current.click();
   };
 
   const handleUpload = () => {
+    let files = [];
     newFiles.forEach(async (item) => {
       const form = new FormData();
       form.append("file", item.file);
       await axios.post('subject-files/145/' + subject.id + '/' + level, form)
       .then(res => {
-        setAllFiles([...allFiles, {
+        files.push({
           first: res.data.name,
           second: res.data.subject.name,
           third: i18next.t("subjects.levels." + res.data.level),
           subjectId: res.data.subject.subjectId,
           levelId: res.data.level,
-          id: res.data.fileId,
+          id: res.data.id,
           selected: false
-        }])
+        });
       })
       .catch(error => {});
+      setAllFiles(allFiles.concat(files));
     })
     handleShow();
   }
@@ -109,16 +113,17 @@ const MyFiles = () => {
     });
   };
 
-  // const handleDeleteAll = () => {
-  //   selected.map((item) => {
-  //     for (var i = 0; i < allFiles.data.length; i++) {
-  //       if (item === allFiles.data[i]) {
-  //         allFiles.data.splice(i, 1);
-  //         break;
-  //       }
-  //     }
-  //   })
-  // }
+  const handleDeleteAll = (event) => {
+    setCheckAll(event.target.checked);
+    if (event.target.checked) {
+      setFilteredFiles(filteredFiles.map(file => {
+        return {
+          ...file,
+          selected: true
+        }
+      }));
+    };
+  };
 
   const handleLevelChange = (event) => {
     setLevel(event.target.value);
@@ -176,7 +181,7 @@ const MyFiles = () => {
                   {i18next.t("files.level")}
                 </Headers>
                 <Headers style={{ width: "5%" }}>
-                  <CheckBox />
+                  <CheckBox checked={checkAll} handleCheck={handleDeleteAll}/>
                 </Headers>
               </Row>
             </thead>
@@ -221,7 +226,7 @@ const MyFiles = () => {
                 type="file"
                 id="file"
                 ref={inputFile}
-                style={{ display: "none" }}
+                hidden={true}
                 onChange={displayNewFiles}
                 multiple
                 onClick={(event) => event.target.value = null}

@@ -20,9 +20,9 @@ const StyledButton = styled.button`
     font-size: 1.75vw!important;
   }
 
-  @media screen and (max-height: 400px) {
+  /* @media screen and (max-height: 400px) {
     font-size: 4vh!important;
-  }
+  } */
 `;
 
 const Button = ({ text, callback, color, fontSize, type }) => {
