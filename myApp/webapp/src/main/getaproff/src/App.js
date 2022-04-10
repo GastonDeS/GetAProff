@@ -20,6 +20,7 @@ import EditProfile from './views/EditProfile';
 import Tutors from "./views/Tutors";
 import Classrom from './views/Classroom';
 import Favorites from './views/Favorites';
+import Classroom from "./views/Classroom";
 
 const App = () => {
 
@@ -39,7 +40,7 @@ const App = () => {
         <Route path='/edit-certifications' element={ <EditCertifications/> } />
         <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />
-        <Route path='/classroom' element={ <Classrom/> }/>
+        <Route path='/classroom' element={ <Classroom/> }/>
         <Route path='/favorites' element={ <Favorites/> }/>
       </Routes>
     </Router>

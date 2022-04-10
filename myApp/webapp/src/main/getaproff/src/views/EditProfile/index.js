@@ -3,49 +3,32 @@ import axios from "axios";
 import AuthService from "../../services/authService";
 
 import { Wrapper, MainContainer, Title, Request } from "../../GlobalStyle";
+import { useForm } from "react-hook-form";
 import Navbar from "../../components/Navbar";
-import { Content, InputContainer } from "./EditProfile.styles";
-import Input from "../../components/Input";
+import {Content, Form, InputContainer} from "./EditProfile.styles";
+import Input, {StyledInput} from "../../components/Input";
 import DisplayImage from "../../components/DisplayImage";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import Default from "../../assets/img/add_img.png";
+import {Error} from "../Login/Login.styles";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [schedule, setSchedule] = useState('');
   const [change, setChange] = useState(false);
   const [image, setImage] = useState(Default);
   const [currentUser, setCurrentUser] = useState();
-
-  const onChangeName = (event) => {
-    setName(event.target.value);
-  };
-
-  const onChangeDescription = (event) => {
-    setDescription(event.target.value);
-  };
-
-  const onChangeSchedule = (event) => {
-    setSchedule(event.target.value);
-  };
+  const {register, formState: { errors }, handleSubmit, reset, setValue} = useForm({defaultValues : { nameInput: "", schedule: "", description: ""}});
 
   const handleRoleChange = () => {
     setChange(current => !current);
     setIsTeacher(current => !current);
   }
 
-  // const saveChanges = () => {
-  //   if (change) {
-
-  //   }
-  // }
-
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
+
 
   useEffect(() => {
     if (currentUser) {
@@ -53,39 +36,52 @@ const EditProfile = () => {
       if (!currentUser.teacher) {
         url = 'students';
         setIsTeacher(false);
-      };
+      }
       axios.get('/' + url + '/' + currentUser.id).then(res => {
-        setName(res.data.name);
+        reset({
+          nameInput: res.data.name
+        })
         if (currentUser.teacher) {
-          setDescription(res.data.description);
-          setSchedule(res.data.schedule);
+          reset({
+            schedule: res.data.schedule,
+            description: res.data.description
+          })
         }
       });
       axios.get('images/' + currentUser.id)
         .then(res => {
+          console.log(res);
           setImage('data:image/png;base64,' + res.data.image);
         })
         .catch(error => {});
     }
   }, [currentUser]);
-  
+
+  const onS = (data) => console.log(data);
+
   return (
     <Wrapper>
       <Navbar empty={true} />
       <MainContainer>
         <Content>
           <Title>Edit profile</Title>
-          <InputContainer>
-            <DisplayImage image={image} setImage={setImage}/>
-            <Input type="text" placeholder="Name" onChange={onChangeName} value={name}/>
-            {isTeacher && 
-              (<>
-                <Textarea placeholder="Description" value={description} onChange={onChangeDescription}/>
-                <Textarea placeholder="Schedule" value={schedule} onChange={onChangeSchedule}/>
-              </>)
-            }
-          </InputContainer>
-          <Button text="Save changes"/>
+            <Form onSubmit={handleSubmit(onS)}>
+              <DisplayImage register={register} name = "userPhoto" options={{required: true}} image = {image} setImage={setImage}/>
+              <Input register={register} name = "nameInput" options={{required : {value: true, message: "This field is required"}}}
+              />
+              {errors.nameInput && <Error>{errors.nameInput.message}</Error>}
+              {isTeacher &&
+                <>
+                  <Textarea name = "description" register = {register} options = {{required: {value: true, message: "This field is required"}}} placeholder="Description"
+                  />
+                  {errors.description && <Error>{errors.description.message}</Error>}
+                  <Textarea name= "schedule" register = {register} options = {{required: {value: true, message: "This field is required"}}} placeholder="Schedule"
+                  />
+                  {errors.schedule && <Error>{errors.schedule.message}</Error>}
+                </>
+              }
+              <Button type="submit" text="Save changes" />
+            </Form>
           {!isTeacher && (<>
             <Request>
               <p>Want to become a teacher?</p>

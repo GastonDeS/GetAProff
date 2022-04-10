@@ -14,7 +14,7 @@ export const Content = styled.div`
   gap: 1.2rem;
 `;
 
-export const InputContainer = styled.div`
+export const Form = styled.form`
   width: 80%;
   display: flex;
   gap: 1rem;

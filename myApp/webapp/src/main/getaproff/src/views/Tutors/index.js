@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { MainContainer, Wrapper, Levels } from "../../GlobalStyle";
 import Navbar from "../../components/Navbar";
 import SearchBar from "../../components/SearchBar";
@@ -28,7 +27,6 @@ const Tutors = () => {
   const [page, setPage] = useState(1);
   const [subject, setSubject] = useState();
   const [tutors, setTutors] = useState([]);
-
   const orders = [
     {name: "Price Ascending", id: 1},
     {name: "Price Descending", id: 2},
@@ -92,7 +90,7 @@ const Tutors = () => {
       <MainContainer>
         <FiltersContainer>
           <h3>Filtros</h3>
-          <Form
+          <form
             id="filterForm"
             style={{ display: "flex", flexDirection: "column" }}
             onSubmit={s}
@@ -167,7 +165,7 @@ const Tutors = () => {
                 <Button text={"Limpiar filtros"} callback={cleanFilters} />
               </div>
             )}
-          </Form>
+          </form>
         </FiltersContainer>
         <TutorsWrapper>
           <SearchBarContainer>
