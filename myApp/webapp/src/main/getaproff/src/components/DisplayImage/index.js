@@ -45,9 +45,9 @@ const DisplayImage = ({ image, setImage, register, name }) => {
       <img src={image} id="img-con" alt="userImage" />
         <Button type="button" text="Choose photo" fontSize="1rem" callback={openFile} />
         <input
+            {...register(name)}
             id="usrPhoto"
             type="file"
-            {...register(name)}
             onInput={onImageChange}
             accept="image/png, image/jpeg"
         />

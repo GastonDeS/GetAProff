@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.requestDto;
 import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -20,8 +19,6 @@ public class RegisterDto {
     @Size(min = 8, groups = {RegisterForm.Teacher.class, RegisterForm.Student.class})
     private String password;
 
-    private String confirmPass;
-
     private Long userRole;
 
     @NotBlank(groups = {RegisterForm.Teacher.class})
@@ -29,8 +26,6 @@ public class RegisterDto {
 
     @NotBlank(groups = {RegisterForm.Teacher.class})
     private String schedule;
-
-    private MultipartFile imageFile;
 
     public interface Teacher {}
 
@@ -50,14 +45,6 @@ public class RegisterDto {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
-    }
-
-    public MultipartFile getImageFile() {
-        return imageFile;
-    }
-
-    public void setImageFile(MultipartFile imageFile) {
-        this.imageFile = imageFile;
     }
 
     public String getMail() {
@@ -83,15 +70,6 @@ public class RegisterDto {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getConfirmPass() {
-        return confirmPass;
-    }
-
-    public void setConfirmPass(String confirmPass) {
-        this.confirmPass = confirmPass;
-    }
-
     public Long getUserRole() {
         return userRole;
     }

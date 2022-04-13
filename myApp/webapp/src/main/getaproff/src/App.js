@@ -29,10 +29,10 @@ const App = () => {
       <GlobalStyle/>
       <Routes>
         <Route path='/' element={ <Home/> }/> 
-        <Route path='/login' element={ <Login/> }/>
-        <Route path='/register' element={ <Register/> }/>
+        <Route path='/users/login' element={ <Login/> }/>
+        <Route path='/users/new' element={ <Register/> }/>
         <Route path='/my-classes' element={ <MyClasses/> }/>
-        <Route path='/profile/:id' element={ <Profile/> }/>
+        <Route path='/users/:id' element={ <Profile/> }/>
         <Route path='/edit-subjects' element={ <EditSubjects/> }/>
         <Route path='/my-files' element={ <MyFiles/> } />
         <Route path='/request-subject' element={ <RequestSubject/> }/>

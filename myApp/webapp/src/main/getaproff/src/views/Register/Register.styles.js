@@ -46,7 +46,7 @@ export const WelcomeText = styled.h2`
   color: var(--secondary);
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   padding: 1rem 0;
   width: 100%;
   height: fit-content;

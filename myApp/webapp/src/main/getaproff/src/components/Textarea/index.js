@@ -6,7 +6,7 @@ import Input, {StyledInput} from "../Input";
 
 const Textarea = ({ register, name, options, ...rest }) => {
   return (
-      <StyledTextarea {...register(name, options)} {...rest}/>
+      <StyledTextarea {...register(name)} {...rest}/>
   );
 };
 
@@ -33,7 +33,6 @@ const StyledTextarea = styled.textarea`
   &::placeholder {
     font-weight: 100;
     font-size: var(--fontSmall);
-    text-transform: uppercase;
   }
 `;
 
@@ -41,7 +40,7 @@ Textarea.propTypes = {
   type: PropTypes.string,
   placeholder: PropTypes.string,
   name: PropTypes.string,
-  register: PropTypes.func,
+  register: PropTypes.any,
   onChange: PropTypes.func,
   value: PropTypes.string
 };

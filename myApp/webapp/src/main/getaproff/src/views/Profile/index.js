@@ -56,14 +56,14 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    let url = 'teachers';
+    let url = 'users';
     if (currentUser){
       if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
-        url = 'students';
+        url = 'placeholder';
         setIsTeacher(false);
-      };
-    };
-    axios.get('/' + url + '/' + id).then(res => {setUser(res.data)}).catch(error => {});
+      }
+    }
+    axios.get('/' + url + '/' + id).then(res => {setUser(res.data)}).catch(error => {console.log("pi")});
   }, [currentUser]);
   
   useEffect(() => {
@@ -71,7 +71,8 @@ const Profile = () => {
       setLoading(false);
       ImagesService.getImage(user.id, setImage);
       if (isTeacher) {
-        axios.get("/teachers/subjects/" + user.id).then(res => {
+        //TODO: esto seria users/id/subjects y me retorna lista con ref a subjects
+        axios.get("/users/subjects/" + user.id).then(res => {
           res.data.forEach(item => {
             setSubjects([...subjects, {
               first: item.subject,

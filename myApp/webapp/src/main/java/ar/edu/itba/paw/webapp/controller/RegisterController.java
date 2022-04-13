@@ -44,39 +44,39 @@ public class RegisterController {
         return new ModelAndView("register");
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST, params = "teacher")
-    public ModelAndView registerTeacher(@ModelAttribute("register") @Validated(RegisterForm.Teacher.class) final RegisterForm form, final BindingResult errors) {
-        if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
-        if(!form.getPassword().equals(form.getConfirmPass())) errors.rejectValue("confirmPass", "password.not.matching");
-        if (userService.findByEmail(form.getMail()).isPresent()) errors.rejectValue("mail", "form.email.already.exists");
-        if (errors.hasErrors()) {
-            return new ModelAndView("register");
-        }
-        try {
-            commonRegister(form);
-        } catch (Exception exception) {
-            throw new RegisterErrorException("exception.register");
-        }
-        return new ModelAndView("redirect:/editSubjects");
-    }
-
-    @RequestMapping(value = "/register", method = RequestMethod.POST, params = "student")
-    public ModelAndView registerStudent(@ModelAttribute("register") @Validated(RegisterForm.Student.class) final RegisterForm form, final BindingResult errors) {
-        if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
-        if(!form.getPassword().equals(form.getConfirmPass())) errors.rejectValue("confirmPass", "password.not.matching");
-        if (userService.findByEmail(form.getMail()).isPresent()) errors.rejectValue("mail", "form.email.already.exists");
-        if (errors.hasErrors()) {
-            return new ModelAndView("register");
-        }
-        Long userId;
-        try {
-            userId = commonRegister(form);
-        } catch (Exception exception) {
-            throw new RegisterErrorException("exception.register");
-        }
-        String redirect = "redirect:/profile/" + userId;
-        return new ModelAndView(redirect);
-    }
+//    @RequestMapping(value = "/register", method = RequestMethod.POST, params = "teacher")
+//    public ModelAndView registerTeacher(@ModelAttribute("register") @Validated(RegisterForm.Teacher.class) final RegisterForm form, final BindingResult errors) {
+//        if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
+//        if(!form.getPassword().equals(form.getConfirmPass())) errors.rejectValue("confirmPass", "password.not.matching");
+//        if (userService.findByEmail(form.getMail()).isPresent()) errors.rejectValue("mail", "form.email.already.exists");
+//        if (errors.hasErrors()) {
+//            return new ModelAndView("register");
+//        }
+//        try {
+//            commonRegister(form);
+//        } catch (Exception exception) {
+//            throw new RegisterErrorException("exception.register");
+//        }
+//        return new ModelAndView("redirect:/editSubjects");
+//    }
+//
+//    @RequestMapping(value = "/register", method = RequestMethod.POST, params = "student")
+//    public ModelAndView registerStudent(@ModelAttribute("register") @Validated(RegisterForm.Student.class) final RegisterForm form, final BindingResult errors) {
+//        if(form.getImageFile().isEmpty()) errors.rejectValue("imageFile", "form.image.required");
+//        if(!form.getPassword().equals(form.getConfirmPass())) errors.rejectValue("confirmPass", "password.not.matching");
+//        if (userService.findByEmail(form.getMail()).isPresent()) errors.rejectValue("mail", "form.email.already.exists");
+//        if (errors.hasErrors()) {
+//            return new ModelAndView("register");
+//        }
+//        Long userId;
+//        try {
+//            userId = commonRegister(form);
+//        } catch (Exception exception) {
+//            throw new RegisterErrorException("exception.register");
+//        }
+//        String redirect = "redirect:/profile/" + userId;
+//        return new ModelAndView(redirect);
+//    }
 
     private Long commonRegister(final RegisterForm form) throws IOException {
         Optional<User> maybeUser = userService.create(form.getName(), form.getMail(), form.getPassword(), form.getDescription(), form.getSchedule(), form.getUserRole());

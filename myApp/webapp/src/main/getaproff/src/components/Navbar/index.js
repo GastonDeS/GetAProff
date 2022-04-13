@@ -18,7 +18,7 @@ const Navbar = ({ empty }) => {
 
   const onLogout = () => {
     AuthService.logout();
-    navigate('/login');
+    navigate('/');
   };
   
   const endOption = {name: i18next.t('navbar.logout'), callback: onLogout}
@@ -27,7 +27,7 @@ const Navbar = ({ empty }) => {
     var curr = AuthService.getCurrentUser();
     if (curr) {
       setAuth(true);
-      setOptions([{name: 'navbar.myProfile', path: '/profile/' + curr.id}, {name: 'navbar.myFiles', path: '/my-files'}]);
+      setOptions([{name: 'navbar.myProfile', path: '/users/' + curr.id}, {name: 'navbar.myFiles', path: '/my-files'}]);
     }
   }, []);
 
@@ -49,8 +49,8 @@ const Navbar = ({ empty }) => {
               <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={endOption} weight="bold"/>
             </Container> :
             <Container>
-              <Button text='Login' callback={() => { navigate('/login')}}/>
-              <Button text='Register' callback={() => { navigate('/register')}}/>
+              <Button text='Login' callback={() => { navigate('/users/login')}}/>
+              <Button text='Register' callback={() => { navigate('/users/new')}}/>
             </Container>)
         }
       </Content>

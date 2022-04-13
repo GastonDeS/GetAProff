@@ -19,11 +19,33 @@ import Textarea from "../../components/Textarea";
 import DisplayImage from "../../components/DisplayImage";
 import { Request, MainContainer, Wrapper } from "../../GlobalStyle";
 import Default from "../../assets/img/add_img.png";
+import {useForm} from "react-hook-form";
+import {Error} from "../Login/Login.styles";
+import AuthService from "../../services/authService";
+
 
 const Register = () => {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
   const [image, setImage] = useState(Default);
+  const {register, formState: {errors}, handleSubmit, getValues, setValue} = useForm();
+
+  const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+
+  const onS = data => {
+      AuthService
+          .register(data.NameInput ,data.MailInput, data.PassInput,
+              data.DescriptionInput, data.ScheduleInput, data.Role)
+          .then(
+              () => navigate("/"),
+              () => {}
+          )
+          .catch(
+              () => navigate("/error")
+          )
+
+  };
 
   return (
     <Wrapper>
@@ -32,9 +54,10 @@ const Register = () => {
         <FormContainer>
           <TabContainer>
             <WelcomeText>Welcome</WelcomeText>
-            <Tab setIndex={setIndex} style={{ borderRadius: "2rem" }}>
+              <input type="number" {...register("Role")}/>
+            <Tab setIndex={setIndex}  setValue={setValue} style={{ borderRadius: "2rem" }}>
               {/* index = 0 */}
-              <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
+              <TabItem style={{ borderBottomLeftRadius: "2rem" }}  >
                 Teacher
               </TabItem>
               {/* index = 1 */}
@@ -43,28 +66,57 @@ const Register = () => {
               </TabItem>
             </Tab>
           </TabContainer>
-          <Form>
+          <Form onSubmit={handleSubmit(onS)}>
             <InputContainer>
               <div style={{ width: "80%" }}>
-              <DisplayImage image={image} setImage={setImage}/>
+              <DisplayImage  register={register} name="ImgInput" image={image} setImage={setImage}/>
               </div>
               <InputWrapper>
-                <Input type="text" placeholder="Name" />
-                <Input type="text" placeholder="Email" />
-                <Input type="password" placeholder="Password" />
-                <Input type="password" placeholder="Confirm password" />
+                <Input register={register} name="NameInput" options={{required: {value: true, message: "This field is required"}}} type="text" placeholder="Name" />
+                <Input register={register} name="MailInput"
+                       options={{
+                         required: {
+                           value: true,
+                           message: "This field is required"
+                         },
+                         pattern: {
+                           value: EMAIL_PATTERN,
+                           message: "You must enter a valid mail"
+                         }
+                       }} type="text" placeholder="mail@example.com"  />
+                {errors.MailInput && <Error>{errors.MailInput.message}</Error>}
+                <Input register={register} name="PassInput"
+                       options={{
+                         required: {
+                           value: true,
+                           message: "This field is required"
+                         },
+                         minLength: {
+                           value: 8,
+                           message: "Password must have at least 8 characters"
+                         }
+                       }} type="text" placeholder="Password"  />
+                {errors.PassInput && <Error>{errors.PassInput.message}</Error>}
+                <Input register={register} name="ConfirmPassInput"
+                       options={{
+                         required: {
+                           value: true, message: "This field is required"
+                         },
+                         validate: value => value === getValues("PassInput") || "The passwords don't match"
+                       }} type="text" placeholder="Confirm Password"  />
+                {errors.ConfirmPassInput && <Error>{errors.ConfirmPassInput.message}</Error>}
                 {index === 0 ? (
                   <>
-                    <Textarea placeholder="Description" />
-                    <Textarea placeholder="Schedule" />
+                    <Textarea register={register} name="DescriptionInput" placeholder="Description" />
+                    <Textarea register={register} name="ScheduleInput" placeholder="Schedule" />
                   </>
                 ) : (
-                  <div></div>
+                  <></>
                 )}
               </InputWrapper>
             </InputContainer>
             <ButtonContainer>
-              <Button>Sign up</Button>
+              <Button type="Submit">Sign up</Button>
             </ButtonContainer>
             <Request>
               <p>Already have an account?</p>

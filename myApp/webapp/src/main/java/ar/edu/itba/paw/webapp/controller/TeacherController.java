@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("teachers")
+@Path("users")
 @Component
 public class TeacherController {
 
@@ -70,8 +71,12 @@ public class TeacherController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getTeacherInfo(@PathParam("id") Long id) {
-        final Optional<TeacherInfo> teacherInfo = teachesService.getTeacherInfo(id);
-        return teacherInfo.isPresent() ? Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
+        final Optional<User> mayBeUser = userService.findById(id);
+        if(!mayBeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        User user = mayBeUser.get();
+        TeacherInfo teacherInfo = new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
+                user.getMail(), 0);
+        return Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo)).build();
     }
 
     @GET
@@ -142,4 +147,5 @@ public class TeacherController {
         //TODO: EXCEPTION
         return (added && desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
+
 }

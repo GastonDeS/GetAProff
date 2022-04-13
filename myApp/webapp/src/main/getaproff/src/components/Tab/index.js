@@ -9,7 +9,7 @@ const TabContainer = styled.div`
   align-items: stretch;
 `;
 
-const Tab = ({ children, setIndex, flexDirection }) => {
+const Tab = ({ children, setIndex, setValue, flexDirection }) => {
   const [itemId, setItemId] = useState(0);
 
   return (
@@ -19,6 +19,7 @@ const Tab = ({ children, setIndex, flexDirection }) => {
           onClick: () => {
             setItemId(index);
             setIndex(index);
+            setValue("Role", 1 - index);
           },
           selected: itemId === index
         });

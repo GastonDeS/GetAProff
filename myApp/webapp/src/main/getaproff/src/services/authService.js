@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const API_URL = "auth/";
+const API_URL = "/users";
 
 const login = async (mail, password) => {
-  await axios.post(API_URL + 'login', {
+    //TODO: corregir post sin /login
+  await axios.post(API_URL  + "/login", {
       mail,
       password,
     })
@@ -15,6 +16,19 @@ const login = async (mail, password) => {
     });
 };
 
+
+const register = async (name, mail, password, description, schedule) => {
+
+  await axios
+      .post(API_URL, {
+        name,
+        mail,
+        password,
+        description,
+        schedule,
+      })
+      .then( response => {return response.data;});
+}
 const logout = () => {
   localStorage.removeItem('user');
 };
@@ -27,4 +41,5 @@ export default {
   login,
   getCurrentUser,
   logout,
+  register
 };

@@ -20,8 +20,6 @@ public class RegisterForm {
     @Size(min = 8, groups = {Teacher.class, Student.class})
     private String password;
 
-    private String confirmPass;
-
     private Long userRole;
 
     @NotBlank(groups = {Teacher.class})
@@ -84,13 +82,6 @@ public class RegisterForm {
         this.password = password;
     }
 
-    public String getConfirmPass() {
-        return confirmPass;
-    }
-
-    public void setConfirmPass(String confirmPass) {
-        this.confirmPass = confirmPass;
-    }
 
     public Long getUserRole() {
         return userRole;
