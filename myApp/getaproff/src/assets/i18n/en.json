@@ -1,0 +1,52 @@
+{
+  "navbar": {
+    "explore": "Explore",
+    "myClasses": "My classes",
+    "myFavourites": "My favourites",
+    "myAccount": "My account",
+    "myProfile": "My profile",
+    "myFiles": "My files",
+    "logout": "Logout"
+  },
+  "subjects": {
+    "subject": "Subject",
+    "price": "Price",
+    "level": "Level",
+    "hour": "hour",
+    "levels": {
+      "0": "Not specified",
+      "1": "Elementary",
+      "2": "Middle School",
+      "3": "College/University"
+    },
+    "all": "All"
+  },
+  "files": {
+    "file": "File",
+    "subject": "Subject",
+    "level": "Level"
+  },
+  "profile": {
+    "personal": "Information",
+    "subjects": "Subjects",
+    "reviews": "Reviews",
+    "edit": {
+      "profile": "Profile",
+      "certifications": "Certifications",
+      "subjects": "Subjects"
+    }
+  },
+  "errors": {
+    "price": "Price value must be greater than zero"
+  },
+  "editSubjects": {
+    "request": {
+      "question": "Can't find the subject you want to teach?",
+      "access": "Request new subject"
+    },
+    "addSubject": "Add subject",
+    "price": "Enter price per hour:",
+    "level": "Select level:",
+    "title": "Edit subjects"
+  }
+}

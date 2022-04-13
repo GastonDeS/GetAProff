@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
@@ -118,7 +117,7 @@ public class TeacherController {
     @GET
     @Path("/subjects/levels/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getSubjectAndLevelsFromUser(@PathParam("id") Long id) {
+    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
         final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
                 .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
@@ -148,4 +147,22 @@ public class TeacherController {
         return (added && desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+
+    @GET
+    @Path("/available-subjects/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response getSubjectAndLevelsAvailableForUser(@PathParam("id") Long id) {
+        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsAvailableForUser(id)
+                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
+    }
+
+    @POST
+    @Path("/{userId}/{subjectId}/{price}/{level}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response addSubjectToUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId,
+                                     @PathParam("price") int price, @PathParam("level") int level) {
+        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, subjectId, price, level);
+        return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }

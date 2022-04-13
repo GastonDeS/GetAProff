@@ -38,4 +38,6 @@ public interface TeachesService {
     Map<Subject, List<Integer>> getSubjectAndLevelsTaughtByUser(Long userId);
 
     Optional<TeacherInfo> getTeacherInfo(Long teacherId);
+
+    Map<Subject, List<Integer>> getSubjectAndLevelsAvailableForUser(Long userId);
 }
