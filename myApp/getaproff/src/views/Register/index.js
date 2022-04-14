@@ -45,6 +45,7 @@ const Register = () => {
               () => navigate("/error")
           )
 
+
   };
 
   return (
@@ -54,7 +55,7 @@ const Register = () => {
         <FormContainer>
           <TabContainer>
             <WelcomeText>Welcome</WelcomeText>
-              <input type="number" {...register("Role")}/>
+              <input type="number" style={{display: 'none'}} {...register("Role")}/>
             <Tab setIndex={setIndex}  setValue={setValue} style={{ borderRadius: "2rem" }}>
               {/* index = 0 */}
               <TabItem style={{ borderBottomLeftRadius: "2rem" }}  >
