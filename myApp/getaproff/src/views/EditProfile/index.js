@@ -12,9 +12,11 @@ import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import Default from "../../assets/img/add_img.png";
 import {Error} from "../Login/Login.styles";
+import {useNavigate} from "react-router-dom";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
+  const navigate = useNavigate();
   const [change, setChange] = useState(false);
   const [image, setImage] = useState(Default);
   const [currentUser, setCurrentUser] = useState();
@@ -34,7 +36,6 @@ const EditProfile = () => {
     if (currentUser) {
       let url = '/users';
       if (!currentUser.teacher) {
-        url = 'students';
         setIsTeacher(false);
       }
       axios.get(url + '/' + currentUser.id).then(res => {
@@ -58,8 +59,19 @@ const EditProfile = () => {
   }, [currentUser]);
 
   const onSubmit = (data) => {
-    axios.post('/users' + '/' + currentUser.id, data)
-        .then( () => console.log("Todo en orden"))
+    let formData = new FormData();
+    formData.append("name", data.nameInput);
+    formData.append("description", data.description);
+    formData.append("schedule", data.schedule);
+    formData.append("image", data.image[0]);
+    formData.append("wantToTeach", isTeacher? "true" : "false");
+    axios.post('/users' + '/' + currentUser.id, formData, {
+      headers: { 'Content-Type' : 'multipart/form-data' }
+    })
+        .then( () => {
+          console.log("Todo en orden");
+          navigate("/users/"+ currentUser.id);
+        })
         .catch( err => console.log(err));
   }
 
@@ -70,7 +82,7 @@ const EditProfile = () => {
         <Content>
           <Title>Edit profile</Title>
             <Form onSubmit={handleSubmit(onSubmit)}>
-              <DisplayImage register={register} name = "userPhoto" options={{required: true}} image = {image} setImage={setImage}/>
+              <DisplayImage register={register} name = "image" image = {image} setImage={setImage}/>
               <Input register={register} name = "nameInput" options={{required : {value: true, message: "This field is required"}}}
               />
               {errors.nameInput && <Error>{errors.nameInput.message}</Error>}

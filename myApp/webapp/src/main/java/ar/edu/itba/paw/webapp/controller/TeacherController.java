@@ -6,6 +6,7 @@ import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
 import ar.edu.itba.paw.webapp.requestDto.EditTeacherDto;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,7 @@ public class TeacherController {
         return response.build();
     }
 
+    //Esto no se usa mas?
     @POST
     @Path("/{uid}/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
@@ -149,18 +151,26 @@ public class TeacherController {
 
     @POST
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response editTeacherProfile(EditTeacherDto editTeacherDto) {
+    @Produces(value = { MediaType.MULTIPART_FORM_DATA, })
+    public Response editTeacherProfile(@PathParam("id") Long id, @FormDataParam("name") String newName, @FormDataParam("description") String newDescription,
+                                       @FormDataParam("schedule") String newSchedule, @FormDataParam("image") InputStream newImage,
+                                       @FormDataParam("teach") String wantToTeach ) throws IOException {
+
         boolean added = false;
-        if (editTeacherDto.isSwitchRole()) {
-            added = userRoleService.addRoleToUser(editTeacherDto.getId(), Roles.TEACHER.getId());
-        }
-        userService.setTeacherAuthorityToUser();
-        int desc = userService.setUserDescription(editTeacherDto.getId(), editTeacherDto.getDescription());
-        int sch = userService.setUserSchedule(editTeacherDto.getId(), editTeacherDto.getSchedule());
-        int name = userService.setUserName(editTeacherDto.getId(), editTeacherDto.getName());
-        //TODO: EXCEPTION
-        return (added && desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        int desc =0, sch =0, name = 0;
+        Optional<User> currUser = userService.getCurrentUser();
+//            if (wantToTeach.equals("true")) {
+//                added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
+//            }
+//            userService.setTeacherAuthorityToUser();
+            desc = userService.setUserDescription(id, newDescription);
+            sch = userService.setUserSchedule(id, newSchedule);
+            name = userService.setUserName(id, newName);
+            //TODO: hacerlo solo si mandan imagen
+            imageService.createOrUpdate(id, IOUtils.toByteArray(newImage));
+
+        //TODO: Chequear esto?
+        return (desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 

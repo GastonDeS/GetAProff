@@ -45,10 +45,8 @@ const Register = () => {
       formData.append("image", userImg);
       AuthService
           .register(formData)
-          .then( navigate("/"))
-          .catch(
-              () => navigate("/error")
-          )
+          .then( navigate("/") )
+          .catch( navigate("/error") )
   };
   return (
     <Wrapper>
