@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
@@ -29,12 +29,11 @@ const Register = () => {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
   const [image, setImage] = useState(Default);
-  const {register, formState: {errors}, handleSubmit, getValues, setValue} = useForm();
+  const {register, formState: {errors}, handleSubmit, getValues, setValue} = useForm( {defaultValues: {"Role" : 1}});
 
   const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
-
-  const onS = data => {
+  const onSubmit = data => {
       let userImg = data.ImgInput[0];
       AuthService
           .register(data.NameInput ,data.MailInput, data.PassInput,
@@ -44,8 +43,6 @@ const Register = () => {
                   let userId = res.headers.location.split("/").pop();
                   let data = new FormData();
                   data.append("image", userImg);
-                  console.log(data);
-                  console.log(userImg);
                   axios.post('/users/' + userId + '/image',
                        data ,
                       {
@@ -53,8 +50,7 @@ const Register = () => {
                               'Content-Type': 'multipart/form-data'
                           }
                       })
-                      .then(
-                      () => console.log("A") )
+                      .then()
                       .catch(
                           err => console.log(err)
                       );
@@ -74,11 +70,10 @@ const Register = () => {
         <FormContainer>
           <TabContainer>
             <WelcomeText>Welcome</WelcomeText>
-              <input type="number" style={{display: 'none'}} {...register("Role")}/>
-            <Tab setIndex={setIndex}  setValue={setValue} style={{ borderRadius: "2rem" }}>
+            <Tab setIndex={setIndex} setValue={setValue} style={{ borderRadius: "2rem" }}>
               {/* index = 0 */}
-              <TabItem style={{ borderBottomLeftRadius: "2rem" }}  >
-                Teacher
+              <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
+                  Teacher
               </TabItem>
               {/* index = 1 */}
               <TabItem style={{ borderBottomRightRadius: "2rem" }}>
@@ -86,8 +81,9 @@ const Register = () => {
               </TabItem>
             </Tab>
           </TabContainer>
-          <Form onSubmit={handleSubmit(onS)}>
-            <InputContainer>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+              <input type="number"  style={{display: 'none'}} {...register("Role")}/>
+              <InputContainer>
               <div style={{ width: "80%" }}>
               <DisplayImage  register={register} name="ImgInput" image={image} setImage={setImage}/>
               </div>

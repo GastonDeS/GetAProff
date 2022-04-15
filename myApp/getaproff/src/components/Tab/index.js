@@ -19,7 +19,8 @@ const Tab = ({ children, setIndex, setValue, flexDirection }) => {
           onClick: () => {
             setItemId(index);
             setIndex(index);
-            setValue("Role", 1 - index);
+            if(setValue != null)
+              setValue("Role", 1 - index);
           },
           selected: itemId === index
         });

@@ -53,10 +53,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> create(String username, String mail, String password, String description, String schedule, Long roleid) {
+    public Optional<User> create(String username, String mail, String password, String description, String schedule, Long roleId) {
         User user = userDao.create(Utility.capitalizeString(username), mail, passwordEncoder.encode(password), description, schedule);
         List<UserRole> userRoles = new ArrayList<>();
-        if (roleid.equals(Roles.TEACHER.getId())) {
+        if (roleId.equals(Roles.TEACHER.getId())) {
             userRoles.add(new UserRole(Roles.TEACHER.getId(), user));
         }
         userRoles.add(new UserRole(Roles.STUDENT.getId(), user));
