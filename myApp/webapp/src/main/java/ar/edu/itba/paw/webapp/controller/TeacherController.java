@@ -97,7 +97,7 @@ public class TeacherController {
     }
 
     @GET
-    @Path("/favourites/{id}")
+    @Path("/{id}/favourites")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getUserFavourites(@PathParam("id") Long id) {
         final List<TeacherDto> favourites = userService.getFavourites(id).stream()

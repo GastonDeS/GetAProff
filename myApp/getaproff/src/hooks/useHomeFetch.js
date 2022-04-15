@@ -7,7 +7,7 @@ export const useHomeFetch = () => {
   const [subjects, setSubjects] = useState([]);
 
   const fetchTopRated = () => {
-    axios.get('/teachers/top-rated')
+    axios.get('/users/top-rated')
       .then(res => {
         res.data.forEach(item => {
           setTopRated(previous => [...previous, item])
@@ -17,7 +17,7 @@ export const useHomeFetch = () => {
   }
 
   const fetchMostRequested = () => {
-    axios.get('/teachers/most-requested')
+    axios.get('/users/most-requested')
       .then(res => {
         res.data.forEach(item => {
           setMostRequested(previous => [...previous, item])
