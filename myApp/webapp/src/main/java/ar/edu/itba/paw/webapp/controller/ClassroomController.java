@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.webapp.dto.ClassroomDto;
+import ar.edu.itba.paw.webapp.dto.PaginatedFileDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +65,9 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-
-        return Response.ok().build();
+        Lecture lecture = checkLectureExistence(classId);
+        final List<PaginatedFileDto> ans = lecture.getSharedFilesByTeacher().stream().map(e -> PaginatedFileDto.getPaginatedFileDto(uriInfo, e)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<PaginatedFileDto>>(ans){}).build();
     }
 
     private Lecture checkLectureExistence(Long classId) throws ClassNotFoundException {
