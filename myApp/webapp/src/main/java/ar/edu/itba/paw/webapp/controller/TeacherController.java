@@ -147,8 +147,8 @@ public class TeacherController {
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @PUT
-    @Path("/update")
+    @POST
+    @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response editTeacherProfile(EditTeacherDto editTeacherDto) {
         boolean added = false;

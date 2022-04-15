@@ -49,7 +49,7 @@ const EditProfile = () => {
         }
       });
       //TODO: Revisar este endpoint
-      axios.get( 'images/' + currentUser.id)
+      axios.get( '/images/' + currentUser.id)
         .then(res => {
           setImage('data:image/png;base64,' + res.data.image);
         })
@@ -57,7 +57,11 @@ const EditProfile = () => {
     }
   }, [currentUser]);
 
-  const onS = (data) => console.log(data);
+  const onSubmit = (data) => {
+    axios.post('/users' + '/' + currentUser.id, data)
+        .then( () => console.log("Todo en orden"))
+        .catch( err => console.log(err));
+  }
 
   return (
     <Wrapper>
@@ -65,7 +69,7 @@ const EditProfile = () => {
       <MainContainer>
         <Content>
           <Title>Edit profile</Title>
-            <Form onSubmit={handleSubmit(onS)}>
+            <Form onSubmit={handleSubmit(onSubmit)}>
               <DisplayImage register={register} name = "userPhoto" options={{required: true}} image = {image} setImage={setImage}/>
               <Input register={register} name = "nameInput" options={{required : {value: true, message: "This field is required"}}}
               />
