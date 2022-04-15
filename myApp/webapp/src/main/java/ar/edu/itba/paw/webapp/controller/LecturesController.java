@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Post;
+import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
-import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
-import ar.edu.itba.paw.webapp.forms.ClassUploadForm;
-import ar.edu.itba.paw.webapp.forms.ContactForm;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.forms.RateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LecturesController {
@@ -141,39 +139,39 @@ public class LecturesController {
 //        return new ModelAndView("redirect:/myClasses/requested/2");
 //    }
 
-    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
-    public ModelAndView accessClassroom(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
-        Lecture currentLecture = checkLectureExistence(classId);
-        User currentUser = checkCurrentUser();
-        checkAccessToClassroom(currentUser, currentLecture);
-        if (currentLecture.getStatus() >= 3) throw new ClassNotFoundException("No class found for class id " + classId);
-        lectureService.refreshTime(currentLecture.getClassId(), currentUser.getId().equals(currentLecture.getTeacher().getId()) ? 0  : 1);
-        return new ModelAndView("classroom")
-                .addObject("currentUser", currentUser)
-                .addObject("currentClass", currentLecture)
-                .addObject("sharedFiles",lectureService.getSharedFilesByTeacher(currentLecture.getClassId()))
-                .addObject("teacherFiles", lectureService.getFilesNotSharedInLecture(classId, currentLecture.getTeacher().getId()))
-                .addObject("posts", postService.retrievePosts(classId));
-    }
+//    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.GET)
+//    public ModelAndView accessClassroom(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form) {
+//        Lecture currentLecture = checkLectureExistence(classId);
+//        User currentUser = checkCurrentUser();
+//        checkAccessToClassroom(currentUser, currentLecture);
+//        if (currentLecture.getStatus() >= 3) throw new ClassNotFoundException("No class found for class id " + classId);
+//        lectureService.refreshTime(currentLecture.getClassId(), currentUser.getId().equals(currentLecture.getTeacher().getId()) ? 0  : 1);
+//        return new ModelAndView("classroom")
+//                .addObject("currentUser", currentUser)
+//                .addObject("currentClass", currentLecture)
+//                .addObject("sharedFiles",lectureService.getSharedFilesByTeacher(currentLecture.getClassId()))
+//                .addObject("teacherFiles", lectureService.getFilesNotSharedInLecture(classId, currentLecture.getTeacher().getId()))
+//                .addObject("posts", postService.retrievePosts(classId));
+//    }
 
-    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
-    public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
-                                    final BindingResult errors, HttpServletRequest request) throws IOException {
-        if (form.getMessage().isEmpty() && form.getFile().isEmpty()) errors.rejectValue("message", "form.upload.empty");
-        if (errors.hasErrors()) return accessClassroom(classId, form);
-        Lecture currentLecture = checkLectureExistence(classId);
-        User currentUser = checkCurrentUser();
-        checkAccessToClassroom(currentUser, currentLecture);
-        Optional<Post> maybePost = postService.post(currentUser.getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
-        if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
-        String localAddress = localAddress(request, "/classroom");
-        try {
-            emailService.sendNewPostMessage(currentUser, currentLecture, localAddress);
-        } catch (RuntimeException exception) {
-            throw new OperationFailedException("exception");
-        }
-        return new ModelAndView("redirect:/classroom/" + classId);
-    }
+//    @RequestMapping(value = "/classroom/{classId}", method = RequestMethod.POST)
+//    public ModelAndView publishPost(@PathVariable("classId") final Long classId, @ModelAttribute("classUploadForm") @Valid final ClassUploadForm form,
+//                                    final BindingResult errors, HttpServletRequest request) throws IOException {
+//        if (form.getMessage().isEmpty() && form.getFile().isEmpty()) errors.rejectValue("message", "form.upload.empty");
+//        if (errors.hasErrors()) return accessClassroom(classId, form);
+//        Lecture currentLecture = checkLectureExistence(classId);
+//        User currentUser = checkCurrentUser();
+//        checkAccessToClassroom(currentUser, currentLecture);
+//        Optional<Post> maybePost = postService.post(currentUser.getId(), classId, form.getFile().getOriginalFilename(), form.getFile().getBytes(), form.getMessage(), form.getFile().getContentType());
+//        if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
+//        String localAddress = localAddress(request, "/classroom");
+//        try {
+//            emailService.sendNewPostMessage(currentUser, currentLecture, localAddress);
+//        } catch (RuntimeException exception) {
+//            throw new OperationFailedException("exception");
+//        }
+//        return new ModelAndView("redirect:/classroom/" + classId);
+//    }
 
     private String localAddress(HttpServletRequest request, String path) {
         String url;
