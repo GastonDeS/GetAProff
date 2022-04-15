@@ -32,12 +32,12 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (currentUser) {
-      let url = 'teachers';
+      let url = '/users';
       if (!currentUser.teacher) {
         url = 'students';
         setIsTeacher(false);
       }
-      axios.get('/' + url + '/' + currentUser.id).then(res => {
+      axios.get(url + '/' + currentUser.id).then(res => {
         reset({
           nameInput: res.data.name
         })
@@ -48,9 +48,9 @@ const EditProfile = () => {
           })
         }
       });
-      axios.get('images/' + currentUser.id)
+      //TODO: Revisar este endpoint
+      axios.get( 'images/' + currentUser.id)
         .then(res => {
-          console.log(res);
           setImage('data:image/png;base64,' + res.data.image);
         })
         .catch(error => {});

@@ -63,7 +63,7 @@ public class AuthController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response register(@Valid @RequestBody RegisterDto registerDto) {
         Optional<User> newUser = userService.create(registerDto.getName(), registerDto.getMail(), registerDto.getPassword(),
-               registerDto.getDescription(),registerDto.getSchedule(), 1L);
+               registerDto.getDescription(),registerDto.getSchedule(), (Long)registerDto.getUserRole());
         if( !newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
