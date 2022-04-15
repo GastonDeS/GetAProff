@@ -19,6 +19,7 @@ const Navbar = ({ empty }) => {
   const onLogout = () => {
     AuthService.logout();
     navigate('/');
+    window.location.reload();
   };
   
   const endOption = {name: i18next.t('navbar.logout'), callback: onLogout}

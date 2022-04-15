@@ -22,7 +22,7 @@ const TutorCard = ({ user }) => {
   }, [])
 
   return (
-    <Card onClick={() => navigate('/profile/' + user.id)}>
+    <Card onClick={() => navigate('/users/' + user.id)}>
       <TutorImg variant="top" src={image} alt='tutorImage'/> 
       <CardBody>
         <Name>{user.name}</Name>
