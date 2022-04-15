@@ -22,6 +22,7 @@ import Default from "../../assets/img/add_img.png";
 import {useForm} from "react-hook-form";
 import {Error} from "../Login/Login.styles";
 import AuthService from "../../services/authService";
+import axios from "axios";
 
 
 const Register = () => {
@@ -34,17 +35,35 @@ const Register = () => {
 
 
   const onS = data => {
+      let userImg = data.ImgInput[0];
       AuthService
           .register(data.NameInput ,data.MailInput, data.PassInput,
               data.DescriptionInput, data.ScheduleInput, data.Role)
           .then(
-              () => navigate("/"),
-              () => {}
+              (res) => {
+                  let userId = res.headers.location.split("/").pop();
+                  let data = new FormData();
+                  data.append("image", userImg);
+                  console.log(data);
+                  console.log(userImg);
+                  axios.post('/users/' + userId + '/image',
+                       data ,
+                      {
+                          headers: {
+                              'Content-Type': 'multipart/form-data'
+                          }
+                      })
+                      .then(
+                      () => console.log("A") )
+                      .catch(
+                          err => console.log(err)
+                      );
+                  navigate("/");
+              }
           )
           .catch(
               () => navigate("/error")
           )
-
 
   };
 

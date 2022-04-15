@@ -6,11 +6,16 @@ import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
 import ar.edu.itba.paw.webapp.requestDto.EditTeacherDto;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +29,9 @@ public class TeacherController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private UserRoleService userRoleService;
@@ -64,6 +72,14 @@ public class TeacherController {
         }
         response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build().toString(), "first");
         return response.build();
+    }
+
+    @POST
+    @Path("/{uid}/image")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream image) throws IOException {
+        imageService.createOrUpdate(uid, IOUtils.toByteArray(image));
+        return Response.created(uriInfo.getAbsolutePath()).build();
     }
 
     @GET
