@@ -35,34 +35,21 @@ const Register = () => {
 
   const onSubmit = data => {
       let userImg = data.ImgInput[0];
+      let formData = new FormData();
+      formData.append("name", data.NameInput);
+      formData.append("mail", data.MailInput);
+      formData.append("password", data.PassInput);
+      formData.append("description", data.DescriptionInput);
+      formData.append("schedule", data.ScheduleInput);
+      formData.append("role", data.Role);
+      formData.append("image", userImg);
       AuthService
-          .register(data.NameInput ,data.MailInput, data.PassInput,
-              data.DescriptionInput, data.ScheduleInput, data.Role)
-          .then(
-              (res) => {
-                  let userId = res.headers.location.split("/").pop();
-                  let data = new FormData();
-                  data.append("image", userImg);
-                  axios.post('/users/' + userId + '/image',
-                       data ,
-                      {
-                          headers: {
-                              'Content-Type': 'multipart/form-data'
-                          }
-                      })
-                      .then()
-                      .catch(
-                          err => console.log(err)
-                      );
-                  navigate("/");
-              }
-          )
+          .register(formData)
+          .then( navigate("/"))
           .catch(
               () => navigate("/error")
           )
-
   };
-
   return (
     <Wrapper>
       <Navbar empty={true} />

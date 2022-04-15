@@ -17,16 +17,11 @@ const login = async (mail, password) => {
 };
 
 
-const register = async (name, mail, password, description, schedule, userRole) => {
+const register = async (formData) => {
   return await axios
-      .post(API_URL, {
-        name,
-        mail,
-        password,
-        description,
-        schedule,
-        userRole
-      })
+      .post(API_URL, formData, { headers: {
+              'Content-Type': 'multipart/form-data'
+          }})
       .then( response => {return response;});
 }
 const logout = () => {

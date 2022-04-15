@@ -7,6 +7,8 @@ import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.requestDto.LoginDto;
 import ar.edu.itba.paw.webapp.requestDto.RegisterDto;
 import ar.edu.itba.paw.webapp.util.JwtUtils;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Optional;
@@ -37,6 +40,9 @@ public class AuthController {
 
     @Context
     private UriInfo uriInfo;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -60,12 +66,17 @@ public class AuthController {
     }
 
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response register(@Valid @RequestBody RegisterDto registerDto) {
-        Optional<User> newUser = userService.create(registerDto.getName(), registerDto.getMail(), registerDto.getPassword(),
-               registerDto.getDescription(),registerDto.getSchedule(), (Long)registerDto.getUserRole());
+    @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
+    public Response register(@FormDataParam("name") String name, @FormDataParam("mail") String mail,
+                             @FormDataParam("password") String password, @FormDataParam("description") String description, @FormDataParam("role") Long role,
+                             @FormDataParam("schedule") String schedule, @FormDataParam("image") InputStream image) throws IOException {
+        Optional<User> mayBeUser = userService.findByEmail(mail);
+        if(mayBeUser.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        Optional<User> newUser = userService.create(name, mail, password, description, schedule, role);
         if( !newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
+        imageService.createOrUpdate(newUser.get().getId(), IOUtils.toByteArray(image));
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         return Response.created(location).build();
     }
