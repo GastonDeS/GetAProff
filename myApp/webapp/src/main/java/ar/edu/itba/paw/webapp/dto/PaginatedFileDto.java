@@ -1,17 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.SubjectFile;
-
 import javax.ws.rs.core.UriInfo;
 
 public class PaginatedFileDto {
 
     private String uri, name;
 
-    public static PaginatedFileDto getPaginatedFileDto(UriInfo uri, SubjectFile subjectFile) {
+    public static PaginatedFileDto getPaginatedFileDto(UriInfo uri, String prefix, String postfix, String name, Long id) {
         PaginatedFileDto paginatedFileDto = new PaginatedFileDto();
-        paginatedFileDto.name = subjectFile.getFileName();
-        paginatedFileDto.uri = uri.getBaseUriBuilder().path("/files/"+subjectFile.getFileId()).build().toString();
+        paginatedFileDto.name = name;
+        paginatedFileDto.uri = uri.getBaseUriBuilder().path("/"+prefix+"/"+id.toString()).path(postfix).build().toString();
         return paginatedFileDto;
     }
 

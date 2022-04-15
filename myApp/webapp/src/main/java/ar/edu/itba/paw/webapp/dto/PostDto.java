@@ -6,17 +6,29 @@ import javax.ws.rs.core.UriInfo;
 import java.sql.Timestamp;
 
 public class PostDto {
-    private String filePath, message;
+    private String message;
     private Timestamp time;
     private Long uploader;
+    private PaginatedFileDto file;
 
     public static PostDto getPostDto(UriInfo uri, Post post) {
         PostDto postDto = new PostDto();
-        postDto.filePath = uri.getBaseUriBuilder().path("/files/"/*TODO id del file para saber direccionar*/).build().toString();;
+        if (post.getFilename() == null || post.getFilename().isEmpty())
+            postDto.file = null;
+        else
+            postDto.file = PaginatedFileDto.getPaginatedFileDto(uri, "posts", "/file/", post.getFilename(), post.getPostId());
         postDto.message = post.getMessage();
         postDto.time = post.getTime();
         postDto.uploader = post.getUploader().getId();
         return postDto;
+    }
+
+    public PaginatedFileDto getFile() {
+        return file;
+    }
+
+    public void setFile(PaginatedFileDto file) {
+        this.file = file;
     }
 
     public Long getUploader() {
@@ -25,14 +37,6 @@ public class PostDto {
 
     public void setUploader(Long uploader) {
         this.uploader = uploader;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public String getMessage() {

@@ -66,7 +66,7 @@ public class ClassroomController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
         Lecture lecture = checkLectureExistence(classId);
-        final List<PaginatedFileDto> ans = lecture.getSharedFilesByTeacher().stream().map(e -> PaginatedFileDto.getPaginatedFileDto(uriInfo, e)).collect(Collectors.toList());
+        final List<PaginatedFileDto> ans = lecture.getSharedFilesByTeacher().stream().map(e -> PaginatedFileDto.getPaginatedFileDto(uriInfo, "files", "",e.getFileName(), e.getFileId())).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<PaginatedFileDto>>(ans){}).build();
     }
 
