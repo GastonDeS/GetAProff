@@ -3,12 +3,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.interfaces.services.PostService;
+import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.webapp.dto.ClassroomDto;
-import ar.edu.itba.paw.webapp.dto.PaginatedFileDto;
-import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +15,9 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
@@ -39,6 +40,9 @@ public class ClassroomController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private SubjectFileService subjectFileService;
 
     @Context
     private UriInfo uriInfo;
@@ -76,9 +80,21 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-        Lecture lecture = checkLectureExistence(classId);
+        Lecture lecture = checkLectureExistence(classId); //TODO if user is student or teacher return only shared or all files
         final List<PaginatedFileDto> ans = lecture.getSharedFilesByTeacher().stream().map(e -> PaginatedFileDto.getPaginatedFileDto(uriInfo, "files", "",e.getFileName(), e.getFileId())).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<PaginatedFileDto>>(ans){}).build();
+    }
+
+    @POST
+    @Path("/{classId}/files")
+    public Response changeFileVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody FileIdDto fileId) {
+        List<Long> sFilesIds = lectureService.getSharedFilesByTeacher(classId).stream().map(e -> e.getFileId()).collect(Collectors.toList());
+        if (sFilesIds.contains(fileId.getFileId())) {
+            lectureService.addSharedFileToLecture(fileId.getFileId(), classId);
+        } else {
+            lectureService.stopSharingFileInLecture(fileId.getFileId(), classId);
+        }
+        return Response.ok().build();
     }
 
     @POST
@@ -96,6 +112,23 @@ public class ClassroomController {
         if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + maybePost.get().getPostId());
         return Response.created(location).build();
+    }
+
+    @POST
+    @Path("/{classId}/status")
+    @Consumes( value = {MediaType.APPLICATION_JSON})
+    public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
+//        Lecture lecture = checkLectureExistence(classId);
+        //TODO logica de negocio de si es valido subir el archivo o no creo que va en la capa de servicios
+        lectureService.setStatus(classId, newStatus.getStatus());
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("")
+    public Response as() throws IOException {
+
+        return Response.ok().build();
     }
 
     private Lecture checkLectureExistence(Long classId) throws ClassNotFoundException {
