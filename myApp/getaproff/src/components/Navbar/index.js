@@ -15,6 +15,7 @@ const Navbar = ({ empty }) => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
   const [options, setOptions] = useState();
+  const [userPath, setUserPath]  = useState();
 
   const onLogout = () => {
     AuthService.logout();
@@ -29,6 +30,8 @@ const Navbar = ({ empty }) => {
     if (curr) {
       setAuth(true);
       setOptions([{name: 'navbar.myProfile', path: '/users/' + curr.id}, {name: 'navbar.myFiles', path: '/my-files'}]);
+      setUserPath('/users/' + curr.id);
+
     }
   }, []);
 
@@ -44,8 +47,8 @@ const Navbar = ({ empty }) => {
             <Container>
               <Container style={{gap: '1em'}}>
                 <NavLink to="/">{i18next.t('navbar.explore')}</NavLink>
-                <NavLink to="/my-classes">{i18next.t('navbar.myClasses')}</NavLink>
-                <NavLink to="/">{i18next.t('navbar.myFavourites')}</NavLink>
+                <NavLink to={userPath +'/classes'}>{i18next.t('navbar.myClasses')}</NavLink>
+                <NavLink to={ userPath+'/favorites'}>{i18next.t('navbar.myFavourites')}</NavLink>
               </Container>
               <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={endOption} weight="bold"/>
             </Container> :

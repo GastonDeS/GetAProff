@@ -14,7 +14,7 @@ const TutorCard = ({ user }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('images/' + user.id)
+    axios.get('/images/' + user.id)
     .then(res => {
       setImage('data:image/png;base64,' + res.data.image);
     })

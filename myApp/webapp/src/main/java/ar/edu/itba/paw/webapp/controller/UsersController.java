@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
 import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Path("users")
 @Component
-public class TeacherController {
+public class UsersController {
 
     @Autowired
     private TeachesService teachesService;
@@ -36,6 +37,9 @@ public class TeacherController {
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private LectureService lectureService;
 
     @Context
     private UriInfo uriInfo;
@@ -149,6 +153,7 @@ public class TeacherController {
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    //Edit profile
     @POST
     @Path("/{id}")
     @Produces(value = { MediaType.MULTIPART_FORM_DATA, })
@@ -190,5 +195,26 @@ public class TeacherController {
                                      @PathParam("price") int price, @PathParam("level") int level) {
         final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, subjectId, price, level);
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    //Returns all the classes that involve the user
+    @GET
+    @Path("/{uid}/classes")
+    public Response getClassesFromUser(@PathParam("uid") Long uid){
+        List<Lecture> lectures = lectureService.findClassesByTeacherAndStatus(uid, 3);
+        if (lectures.isEmpty())
+            return Response.status(Response.Status.NO_CONTENT).build();
+        List<ClassroomDto> dtos = lectures.stream().map(lecture -> ClassroomDto.getClassroom(uriInfo,lecture)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
+    }
+    //Return all favorite users of user with uid
+    @GET
+    @Path("/{uid}/favorites")
+    public Response getUserFavorites(@PathParam("uid") Long uid){
+        List<TeacherInfo> favoriteTeachers = userService.getFavourites(uid);
+        if(favoriteTeachers.isEmpty())
+            return Response.status(Response.Status.NO_CONTENT).build();
+        List<TeacherDto> dtos = favoriteTeachers.stream().map( user -> TeacherDto.getTeacher(uriInfo, user)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TeacherDto>>(dtos){}).build();
     }
 }

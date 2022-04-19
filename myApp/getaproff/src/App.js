@@ -30,7 +30,8 @@ const App = () => {
         <Route path='/' element={ <Home/> }/> 
         <Route path='/users/login' element={ <Login/> }/>
         <Route path='/users/new' element={ <Register/> }/>
-        <Route path='/my-classes' element={ <MyClasses/> }/>
+        <Route path='/users/:id/favorites' element={ <Favorites/> }/>
+        <Route path='/users/:id/classes' element={ <MyClasses/> }/>
         <Route path='/users/:id' element={ <Profile/> }/>
         <Route path='/edit-subjects' element={ <EditSubjects/> }/>
         <Route path='/my-files' element={ <MyFiles/> } />
@@ -40,7 +41,6 @@ const App = () => {
         <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />
         <Route path='/classroom' element={ <Classroom/> }/>
-        <Route path='/favorites' element={ <Favorites/> }/>
       </Routes>
     </Router>
   );

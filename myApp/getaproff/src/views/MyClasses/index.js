@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
 
 import { Content, FilterContainer, CardContainer, Filter, SelectContainer } from './MyClasses.styles';
 import Navbar from '../../components/Navbar';
@@ -8,11 +7,29 @@ import Tab from '../../components/Tab';
 import TabItem from '../../components/TabItem'
 import SelectDropdown from '../../components/SelectDropdown';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
+import AuthService from "../../services/authService";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const MyClasses = () => {
+  const navigate = useNavigate();
   const [tabIndex, setTabIndex] = useState(0);
   const [filterIndex, setFilterIndex] = useState(0);
+  const [favUsers, setFavUsers] = useState([])
   const options = ['Any', 'Pending', 'Active', 'Finished'];
+
+  useEffect(() => {
+    let currUser = AuthService.getCurrentUser();
+    axios.get('/users/' + currUser.id + '/classes')
+        .then(ans => {
+          console.log(ans.data)
+        })
+        .catch(err => {
+          console.log(err);
+          navigate('/error');
+        })
+
+  });
 
   return (
     <Wrapper>
