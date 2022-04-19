@@ -94,12 +94,12 @@ const Profile = () => {
     let teacherId = window.location.pathname.split('/').pop();
     axios.get('/users/' + current.id + "/favorites")
         .then( res => {
-          res.data.forEach(
-              user => {
-                if(user.id === Number(teacherId))
-                  setIsFaved(true)
-              }
-          )
+          res.data && res.data.forEach(
+                user => {
+                  if(user.id === Number(teacherId))
+                    setIsFaved(true)
+                }
+            )
         })
   }, [])
 
