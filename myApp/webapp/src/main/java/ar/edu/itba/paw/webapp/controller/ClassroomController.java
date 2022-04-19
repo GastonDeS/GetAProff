@@ -87,12 +87,12 @@ public class ClassroomController {
 
     @POST
     @Path("/{classId}/files")
-    public Response changeFileVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody FileIdDto fileId) {
+    public Response changeFileVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody IdDto fileId) {
         List<Long> sFilesIds = lectureService.getSharedFilesByTeacher(classId).stream().map(e -> e.getFileId()).collect(Collectors.toList());
-        if (sFilesIds.contains(fileId.getFileId())) {
-            lectureService.addSharedFileToLecture(fileId.getFileId(), classId);
+        if (sFilesIds.contains(fileId.getId())) {
+            lectureService.addSharedFileToLecture(fileId.getId(), classId);
         } else {
-            lectureService.stopSharingFileInLecture(fileId.getFileId(), classId);
+            lectureService.stopSharingFileInLecture(fileId.getId(), classId);
         }
         return Response.ok().build();
     }

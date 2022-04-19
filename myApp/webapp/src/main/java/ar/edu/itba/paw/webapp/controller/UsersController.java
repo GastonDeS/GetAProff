@@ -2,10 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.dto.ClassroomDto;
-import ar.edu.itba.paw.webapp.dto.SubjectInfoDto;
-import ar.edu.itba.paw.webapp.dto.SubjectLevelDto;
-import ar.edu.itba.paw.webapp.dto.TeacherDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.requestDto.EditTeacherDto;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -26,6 +23,8 @@ import java.util.stream.Collectors;
 @Component
 public class UsersController {
 
+    private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0
+            ;
     @Autowired
     private TeachesService teachesService;
 
@@ -216,5 +215,24 @@ public class UsersController {
             return Response.status(Response.Status.NO_CONTENT).build();
         List<TeacherDto> dtos = favoriteTeachers.stream().map( user -> TeacherDto.getTeacher(uriInfo, user)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(dtos){}).build();
+    }
+
+    //Add/remove new user to user with uid favorites list
+    @POST
+    @Path("/{uid}/favorites")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    public Response addNewFavoriteUser(@PathParam("uid") Long uid, IdDto teacherId) {
+        int result = userService.addFavourite(teacherId.getId(), uid);
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @Path("/{uid}/favorites/{favTeacherId}")
+    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("favTeacherId") Long teacherId){
+        int result = userService.removeFavourite(teacherId, uid);
+        if(result == NO_CONTENT_TO_DELETE)
+            return Response.status(Response.Status.NO_CONTENT).build();
+        return Response.ok().build();
+
     }
 }

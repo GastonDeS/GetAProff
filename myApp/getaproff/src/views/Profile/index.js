@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import i18next from "i18next";
 import axios from "axios";
 import AuthService from "../../services/authService";
-import { useNavigate, useParams } from 'react-router-dom';
-import {useForm} from "react-hook-form";
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 
 import Navbar from "../../components/Navbar";
 import {
@@ -31,6 +30,7 @@ import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 import ImagesService from "../../services/imagesService";
 import FilesService from "../../services/filesService";
 import Dropdown from "../../components/DropDown";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
@@ -42,6 +42,8 @@ const Profile = () => {
   const [certifications, setCertifications] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [isTeacher, setIsTeacher] = useState(true);
+  const [isFaved, setIsFaved] = useState(false);
+  const location = useLocation();
   const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
     {name: 'profile.edit.certifications', path: '/edit-certifications'},
     {name: 'profile.edit.subjects', path: '/edit-subjects'}];
@@ -63,7 +65,7 @@ const Profile = () => {
         setIsTeacher(false);
       }
     }
-    axios.get('/' + url + '/' + id).then(res => {setUser(res.data)}).catch(error => {console.log("pi")});
+    axios.get('/' + url + '/' + id).then(res => {setUser(res.data)}).catch(error => {console.log(error)});
   }, [currentUser]);
   
   useEffect(() => {
@@ -83,9 +85,54 @@ const Profile = () => {
         });
         axios.get("/ratings/" + user.id).then(res => setReviews(res.data));
         axios.get("/user-files/" + user.id).then(res => setCertifications(res.data));
-      };
+      }
     }
   },[user]);
+
+  useEffect(() => {
+    let current = AuthService.getCurrentUser();
+    let teacherId = window.location.pathname.split('/').pop();
+    axios.get('/users/' + current.id + "/favorites")
+        .then( res => {
+          res.data.forEach(
+              user => {
+                if(user.id === Number(teacherId))
+                  setIsFaved(true)
+              }
+          )
+        })
+  }, [])
+
+  const removeFromFavorites = (teacherId) => {
+    axios.delete('/users/' + currentUser.id + '/favorites/' + teacherId)
+        .then()
+        .catch(err => {
+          console.log("Profile" + err);
+          navigate("/error");
+        })
+  }
+
+  const addToFavorites = (teacherId) => {
+    axios.post('/users/' + currentUser.id + "/favorites", {
+      'id': teacherId,
+    })
+        .then()
+        .catch(err => {
+          console.log(err);
+          navigate('/error');
+        })
+  }
+
+  const handeFavoriteState = () => {
+    let teacherId = window.location.pathname.split('/').pop();
+    if (isFaved){
+      removeFromFavorites(teacherId)
+    }
+    else {
+      addToFavorites(teacherId);
+    }
+    setIsFaved(!isFaved);
+  }
 
   return (
     <Wrapper>
@@ -125,7 +172,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <Button text="Request class" fontSize="1rem"/>
-                    <Button text="Add to favorites" fontSize="1rem"/>
+                    <Button text={!isFaved? "Add to favorites": "Remove from favorites"} callback={handeFavoriteState} fontSize="1rem"/>
                     <Button text="Share profile" fontSize="1rem"/>
                   </>
                 )}
