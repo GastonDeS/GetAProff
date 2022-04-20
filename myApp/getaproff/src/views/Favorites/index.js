@@ -7,27 +7,26 @@ import {
 } from "./Favorites.styles";
 import TutorCard from "../../components/TutorCard";
 import {useNavigate} from "react-router-dom";
-import axios from "axios";
 import {TutorContainer} from "../Home/Home.styles";
+import userService from "../../services";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);
     const navigate = useNavigate();
-    useEffect( () =>
-    {
-        let currUser = AuthService.getCurrentUser();
-        axios.get('/users' + '/' + currUser.id + '/favorites' )
-            .then(res => {
-                if(res.data && res.data.length !== 0)
-                    setFavoriteUsersList(res.data);
+    const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser())
 
-            })
-            .catch( err => {
-                console.log(err);
-                navigate('/error');
-            })
-
-    })
+    useEffect( () => {
+        if(currentUser)
+            userService.getFavoriteTeachers(currentUser.id)
+                .then(
+                    teachersList => setFavoriteUsersList(teachersList)
+                )
+                .catch(error => {
+                    console.log(error);
+                    navigate("/error");
+                })
+        else navigate("/login");
+    },[])
 
     return (
         <Wrapper>

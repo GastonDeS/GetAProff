@@ -94,8 +94,9 @@ public class UsersController {
         final Optional<User> mayBeUser = userService.findById(id);
         if(!mayBeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         User user = mayBeUser.get();
-        TeacherInfo teacherInfo = new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
-                user.getMail(), 0);
+        TeacherInfo teacherInfo = teachesService.getTeacherInfo(user.getId())
+                    .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
+                            user.getMail(), 0));
         return Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo)).build();
     }
 

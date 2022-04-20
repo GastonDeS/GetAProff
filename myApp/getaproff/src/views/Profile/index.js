@@ -30,7 +30,7 @@ import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 import ImagesService from "../../services/imagesService";
 import FilesService from "../../services/filesService";
 import Dropdown from "../../components/DropDown";
-import {forEach} from "react-bootstrap/ElementChildren";
+import userService from "../../services/index";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
@@ -48,16 +48,12 @@ const Profile = () => {
     {name: 'profile.edit.certifications', path: '/edit-certifications'},
     {name: 'profile.edit.subjects', path: '/edit-subjects'}];
 
-
   const navigate = useNavigate();
   const { id } = useParams();
   const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
 
   useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
-  }, []);
-
-  useEffect(() => {
     let url = 'users';
     if (currentUser){
       if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
@@ -65,26 +61,30 @@ const Profile = () => {
         setIsTeacher(false);
       }
     }
-    axios.get('/' + url + '/' + id).then(res => {setUser(res.data)}).catch(error => {console.log(error)});
-  }, [currentUser]);
+   userService.getUserInfo(id)
+       .then(data => {{
+         setUser(data);
+       }})
+       .catch(error => {console.log(error)});
+  }, []);
   
   useEffect(() => {
     if (user) {
       setLoading(false);
       ImagesService.getImage(user.id, setImage);
       if (isTeacher) {
-        //TODO: esto seria users/id/subjects y me retorna lista con ref a subjects
-        axios.get("/users/subjects/" + user.id).then(res => {
-          res.data.forEach(item => {
-            setSubjects([...subjects, {
-              first: item.subject,
-              second: '$' + item.price + '/' + i18next.t('subjects.hour'),
-              third: i18next.t('subjects.levels.' + item.level)
-            }]);
-          });
-        });
-        axios.get("/ratings/" + user.id).then(res => setReviews(res.data));
-        axios.get("/user-files/" + user.id).then(res => setCertifications(res.data));
+        userService.getUserSubjects(user.id)
+            .then(data => setSubjects(data))
+            .catch(err => navigate("/error"))
+
+        userService.getUserReviews(user.id)
+            .then(data => setReviews(data))
+            .catch(err => navigate("/error"));
+
+
+        userService.getUserCertifications(user.id)
+            .then(data => setCertifications(data))
+            .catch(err => navigate("/error"));
       }
     }
   },[user]);
@@ -92,45 +92,20 @@ const Profile = () => {
   useEffect(() => {
     let current = AuthService.getCurrentUser();
     let teacherId = window.location.pathname.split('/').pop();
-    axios.get('/users/' + current.id + "/favorites")
-        .then( res => {
-          res.data.forEach(
-              user => {
-                if(user.id === Number(teacherId))
-                  setIsFaved(true)
-              }
-          )
+    userService.checkIfTeacherIsFaved(current.id, teacherId)
+        .then(value => {
+          setIsFaved(value);
         })
-  }, [])
+  },[])
 
-  const removeFromFavorites = (teacherId) => {
-    axios.delete('/users/' + currentUser.id + '/favorites/' + teacherId)
-        .then()
-        .catch(err => {
-          console.log("Profile" + err);
-          navigate("/error");
-        })
-  }
-
-  const addToFavorites = (teacherId) => {
-    axios.post('/users/' + currentUser.id + "/favorites", {
-      'id': teacherId,
-    })
-        .then()
-        .catch(err => {
-          console.log(err);
-          navigate('/error');
-        })
-  }
-
-  const handeFavoriteState = () => {
+  const handleFavoriteState = () => {
     let teacherId = window.location.pathname.split('/').pop();
+    let setFavoriteStatus = userService.addTeacherToFavorites;
     if (isFaved){
-      removeFromFavorites(teacherId)
+      setFavoriteStatus = userService.removeTeacherFromFavorites;
     }
-    else {
-      addToFavorites(teacherId);
-    }
+    setFavoriteStatus(teacherId, currentUser.id)
+        .catch(err => console.log(err));
     setIsFaved(!isFaved);
   }
 
@@ -172,7 +147,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <Button text="Request class" fontSize="1rem"/>
-                    <Button text={!isFaved? "Add to favorites": "Remove from favorites"} callback={handeFavoriteState} fontSize="1rem"/>
+                    <Button text={!isFaved? "Add to favorites": "Remove from favorites"} callback={handleFavoriteState} fontSize="1rem"/>
                     <Button text="Share profile" fontSize="1rem"/>
                   </>
                 )}
@@ -204,7 +179,7 @@ const Profile = () => {
                     <ul>
                       {certifications.map((certification) => {
                         return (
-                        <li key={certification.fileId}>
+                        <li key={certification.id}>
                           <Request>
                             <button onClick={() => window.open(URL.createObjectURL(new Blob([FilesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
                           </Request>
@@ -234,6 +209,7 @@ const Profile = () => {
                 <SectionInfo>
                   {
                     reviews.map((option) => {
+                      console.log(option)
                       return <ProfileDataContainer>
                         <ReviewTitle>
                           <h3>{option.student}</h3>
