@@ -1,21 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.TeacherInfo;
+import ar.edu.itba.paw.models.Teaches;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.requestDto.EditTeacherDto;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -216,6 +216,15 @@ public class UsersController {
             return Response.status(Response.Status.NO_CONTENT).build();
         List<TeacherDto> dtos = favoriteTeachers.stream().map( user -> TeacherDto.getTeacher(uriInfo, user)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(dtos){}).build();
+    }
+
+
+    @GET
+    @Path("/{uid}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response isFaved(@PathParam("uid") Long teacherId, @QueryParam("favedBy") Long uid) {
+        boolean isFaved = userService.isFaved(teacherId, uid);
+        return Response.ok(IsFavedDto.createIsFavedDto(isFaved)).build();
     }
 
     //Add/remove new user to user with uid favorites list

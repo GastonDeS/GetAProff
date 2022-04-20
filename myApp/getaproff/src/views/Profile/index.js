@@ -209,7 +209,6 @@ const Profile = () => {
                 <SectionInfo>
                   {
                     reviews.map((option) => {
-                      console.log(option)
                       return <ProfileDataContainer>
                         <ReviewTitle>
                           <h3>{option.student}</h3>
