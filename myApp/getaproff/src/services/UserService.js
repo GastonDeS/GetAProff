@@ -5,24 +5,6 @@ const PATH = '/users'
 
 
 export class UserService {
-
-    // async f() {
-    //     if (isTeacher) {
-    //         //TODO: esto seria users/id/subjects y me retorna lista con ref a subjects
-    //         axios.get("/users/subjects/" + user.id).then(res => {
-    //             res.data.forEach(item => {
-    //                 setSubjects([...subjects, {
-    //                     first: item.subject,
-    //                     second: '$' + item.price + '/' + i18next.t('subjects.hour'),
-    //                     third: i18next.t('subjects.levels.' + item.level)
-    //                 }]);
-    //             });
-    //         });
-    //         axios.get("/ratings/" + user.id).then(res => setReviews(res.data));
-    //         axios.get("/user-files/" + user.id).then(res => setCertifications(res.data));
-    //     }
-    // }
-
     async getUserSubjects(uid){
         try {
             let subjects = []

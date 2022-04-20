@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import i18next from "i18next";
-import axios from "axios";
 import AuthService from "../../services/authService";
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 
@@ -66,7 +65,7 @@ const Profile = () => {
          setUser(data);
        }})
        .catch(error => {console.log(error)});
-  }, []);
+  }, [id]);
   
   useEffect(() => {
     if (user) {

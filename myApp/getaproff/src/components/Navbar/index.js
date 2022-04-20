@@ -26,7 +26,7 @@ const Navbar = ({ empty }) => {
   const endOption = {name: i18next.t('navbar.logout'), callback: onLogout}
 
   useEffect(() => {
-    var curr = AuthService.getCurrentUser();
+    let curr = AuthService.getCurrentUser();
     if (curr) {
       setAuth(true);
       setOptions([{name: 'navbar.myProfile', path: '/users/' + curr.id}, {name: 'navbar.myFiles', path: '/my-files'}]);
