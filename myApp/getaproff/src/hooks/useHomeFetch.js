@@ -9,9 +9,7 @@ export const useHomeFetch = () => {
   const fetchTopRated = () => {
     axios.get('/users/top-rated')
       .then(res => {
-        res.data.forEach(item => {
-          setTopRated(previous => [...previous, item])
-        })
+          setTopRated([...res.data])
       })
       .catch(error => {});
   }
@@ -19,9 +17,8 @@ export const useHomeFetch = () => {
   const fetchMostRequested = () => {
     axios.get('/users/most-requested')
       .then(res => {
-        res.data.forEach(item => {
-          setMostRequested(previous => [...previous, item])
-        })
+          setMostRequested([...res.data])
+
       })
       .catch(error => {});
   }
@@ -29,9 +26,7 @@ export const useHomeFetch = () => {
   const fetchSubjects = () => {
     axios.get('/subjects/most-requested')
       .then(res => {
-        res.data.forEach(item => {
-          setSubjects(previous => [...previous, item])
-        })
+          setSubjects([...res.data])
       })
       .catch(error => {});
   }

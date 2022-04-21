@@ -43,10 +43,7 @@ export class UserService {
     async getUserCertifications(uid) {
        return this.getUserSpecificInfo("user-files", uid)
     }
-    async getUserClasses(uid){
-        return this.getUserSpecificInfo("subjects", uid);
-    }
-
+    
     async getUserImg(uid) {
         try {
             let image = "";
