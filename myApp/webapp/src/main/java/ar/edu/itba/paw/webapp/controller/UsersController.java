@@ -128,7 +128,7 @@ public class UsersController {
     }
 
     @GET
-    @Path("/subjects/{id}")
+    @Path("/{id}/subjects")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
         final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
@@ -218,14 +218,14 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<TeacherDto>>(dtos){}).build();
     }
 
-
-    @GET
-    @Path("/{uid}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response isFaved(@PathParam("uid") Long teacherId, @QueryParam("favedBy") Long uid) {
-        boolean isFaved = userService.isFaved(teacherId, uid);
-        return Response.ok(IsFavedDto.createIsFavedDto(isFaved)).build();
-    }
+//TODO: esto colisiona
+//    @GET
+//    @Path("/{uid}")
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response isFaved(@PathParam("uid") Long teacherId, @QueryParam("favedBy") Long uid) {
+//        boolean isFaved = userService.isFaved(teacherId, uid);
+//        return Response.ok(IsFavedDto.createIsFavedDto(isFaved)).build();
+//    }
 
     //Add/remove new user to user with uid favorites list
     @POST

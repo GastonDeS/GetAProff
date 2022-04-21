@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("subjects")
+@Path("/subjects")
 @Component
 public class SubjectController {
 
@@ -27,7 +27,6 @@ public class SubjectController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getAllSubjects() {
         final List<SubjectDto> subjectDtos = subjectService.list().stream()

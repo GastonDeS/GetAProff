@@ -36,7 +36,7 @@ const App = () => {
         <Route path='/edit-subjects' element={ <EditSubjects/> }/>
         <Route path='/my-files' element={ <MyFiles/> } />
         <Route path='/request-subject' element={ <RequestSubject/> }/>
-        <Route path='/request-class' element={ <RequestClass/> } />
+        <Route path='/users/:id/class-request' element={ <RequestClass/> } />
         <Route path='/edit-certifications' element={ <EditCertifications/> } />
         <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />

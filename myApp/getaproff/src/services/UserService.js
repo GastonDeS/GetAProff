@@ -8,13 +8,13 @@ export class UserService {
     async getUserSubjects(uid){
         try {
             let subjects = []
-            await axios.get(`/users/subjects/${uid}`)
+            await axios.get(`/users/${uid}/subjects`)
                 .then(res => {
                     res.data.forEach(item => {
                         subjects.push( {
-                            first: item.subject,
-                            second: '$' + item.price + '/' + i18next.t('subjects.hour'),
-                            third: i18next.t('subjects.levels.' + item.level)
+                            name: item.subject,
+                            price: '$' + item.price + '/' + i18next.t('subjects.hour'),
+                            level: i18next.t('subjects.levels.' + item.level)
                         });
                     });
             });
@@ -28,7 +28,6 @@ export class UserService {
             let data;
             await axios.get(`/${info}/${uid}`)
                 .then(res => {
-                    console.log(res.data);
                     data = res.data
                 })
             return data;
@@ -43,6 +42,9 @@ export class UserService {
     }
     async getUserCertifications(uid) {
        return this.getUserSpecificInfo("user-files", uid)
+    }
+    async getUserClasses(uid){
+        return this.getUserSpecificInfo("subjects", uid);
     }
 
     async getUserImg(uid) {
@@ -122,5 +124,16 @@ export class UserService {
             console.log(err);
         }
     }
+
+
+
+    // async requestClassTo(uid) {
+    //     try {
+    //         await axios.post()
+    //     }
+    //     catch (err) {
+    //         console.log(err)
+    //     }
+    // }
 }
 

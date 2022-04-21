@@ -108,6 +108,9 @@ const Profile = () => {
     setIsFaved(!isFaved);
   }
 
+  const requestClass = () => {
+    navigate(`/users/${id}/class-request`)
+  }
   return (
     <Wrapper>
       <Navbar/>
@@ -145,7 +148,7 @@ const Profile = () => {
                   <Button text="Edit profile" fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
                   <>
-                    <Button text="Request class" fontSize="1rem"/>
+                    <Button text="Request class" fontSize="1rem" callback={() => requestClass()}/>
                     <Button text={!isFaved? "Add to favorites": "Remove from favorites"} callback={handleFavoriteState} fontSize="1rem"/>
                     <Button text="Share profile" fontSize="1rem"/>
                   </>
