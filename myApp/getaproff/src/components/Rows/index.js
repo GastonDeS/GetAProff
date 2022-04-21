@@ -19,6 +19,13 @@ const Data = styled.td`
 `;
 
 const Rows = ({ edit, data, multi, type, handleCheck, checked }) => {
+
+  let jsonValues = [];
+  for (let key in data) {
+    jsonValues.push(data[key]);
+  }
+  console.log(jsonValues)
+
   const handleChange = (event) => {
     handleCheck(event.target.checked, data.id);  
   };
@@ -33,18 +40,19 @@ const Rows = ({ edit, data, multi, type, handleCheck, checked }) => {
         {multi ? (
           edit ? (
             <>
-              <Data style={{ width: "45%" }}>{data.first}</Data>
-              <Data style={{ width: "20%" }}>{data.second}</Data>
-              <Data style={{ width: "30%" }}>{data.third}</Data>
+
+              <Data style={{ width: "45%" }}>{jsonValues[0]}</Data>
+              <Data style={{ width: "20%" }}>{jsonValues[1]}</Data>
+              <Data style={{ width: "30%" }}>{jsonValues[2]}</Data>
               <Data style={{ width: "5%", textAlign: "end" }}>
                 <CheckBox handleCheck={handleChange} checked={checked}/>
               </Data>
             </>
           ) : (
             <>
-              <Data style={{ width: "50%" }}>{data.first}</Data>
-              <Data style={{ width: "20%" }}>{data.second}</Data>
-              <Data style={{ width: "30%" }}>{data.third}</Data>
+              <Data style={{ width: "50%" }}>{jsonValues[0]}</Data>
+              <Data style={{ width: "20%" }}>{jsonValues[1]}</Data>
+              <Data style={{ width: "30%" }}>{jsonValues[2]}</Data>
             </>
           )
         ) : (

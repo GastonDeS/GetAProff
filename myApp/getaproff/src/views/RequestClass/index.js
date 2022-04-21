@@ -12,9 +12,9 @@ import {useParams} from "react-router-dom";
 const RequestClass = () => {
   const [subject, setSubject] = useState();
   const [level, setLevel] = useState();
-  const levels = [1, 2, 4];
-  const [subjects, setSubjects] = useState([])
-  const id = useParams()
+  const [levels, setLevels] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const id = useParams();
 
   useEffect( () => {
     console.log(id);
@@ -22,6 +22,10 @@ const RequestClass = () => {
         .then(data => {setSubjects(data)
         console.log(data);})
   }, [])
+
+  useEffect( () => {
+      setLevels(subjects.map(s => s.level))
+  }, [subject])
   
   return (
     <Wrapper>
@@ -33,7 +37,7 @@ const RequestClass = () => {
             <p>Select subject</p>
             <SelectDropdown type="Subjects" setIndex={setSubject} options={subjects.map( s => s.name)}/>
             <p>Select Level</p>
-            <SelectDropdown type="Levels" setIndex={setLevel} options={subjects.map(s => s.level)}/>
+            <SelectDropdown type="Levels" setIndex={setLevel} options={levels}/>
           </InputContainer>
           <Button text='Send request' fontSize='1rem'/>
         </Content>

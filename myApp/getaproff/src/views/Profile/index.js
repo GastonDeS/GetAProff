@@ -69,7 +69,6 @@ const Profile = () => {
   
   useEffect(() => {
     if (user) {
-      setLoading(false);
       ImagesService.getImage(user.id, setImage);
       if (isTeacher) {
         userService.getUserSubjects(user.id)
@@ -85,9 +84,12 @@ const Profile = () => {
             .then(data => setCertifications(data))
             .catch(err => navigate("/error"));
       }
+      setLoading(false);
+
     }
   },[user]);
 
+  //TODO: esto tiene que venir de un service
   useEffect(() => {
     let current = AuthService.getCurrentUser();
     let teacherId = window.location.pathname.split('/').pop();
@@ -98,7 +100,7 @@ const Profile = () => {
   },[])
 
   const handleFavoriteState = () => {
-    let teacherId = window.location.pathname.split('/').pop();
+    let teacherId = id;
     let setFavoriteStatus = userService.addTeacherToFavorites;
     if (isFaved){
       setFavoriteStatus = userService.removeTeacherFromFavorites;
