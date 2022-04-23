@@ -111,7 +111,6 @@ export class UserService {
             let favoritesList = []
             await axios.get(`${PATH}/${uid}/favorites`)
                 .then(res => {
-                    console.log(res);
                     if (res.data && res.data.length !== 0)
                         favoritesList = res.data;
 
@@ -124,13 +123,26 @@ export class UserService {
 
 
 
-    // async requestClassTo(uid) {
-    //     try {
-    //         await axios.post()
-    //     }
-    //     catch (err) {
-    //         console.log(err)
-    //     }
-    // }
+    async requestClass(uid) {
+        try {
+            await axios.post(`${PATH}/${uid}/classes`)
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
+    async getUserClasses(uid, asTeacher, status) {
+        try {
+            let params = { status : status };
+            params[asTeacher? 'teacherId' : 'studentId'] = uid;
+            return await axios.get('/classes', {
+                   params
+                })
+        }
+        catch(err) {
+            console.log(err);
+        }
+    }
 }
 

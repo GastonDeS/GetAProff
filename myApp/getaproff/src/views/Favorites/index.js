@@ -8,7 +8,7 @@ import {
 import TutorCard from "../../components/TutorCard";
 import {useNavigate} from "react-router-dom";
 import {TutorContainer} from "../Home/Home.styles";
-import userService from "../../services";
+import { userService } from "../../services";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);

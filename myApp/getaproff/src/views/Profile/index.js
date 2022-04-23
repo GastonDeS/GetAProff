@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import i18next from "i18next";
 import AuthService from "../../services/authService";
@@ -6,30 +6,30 @@ import {useLocation, useNavigate, useParams} from 'react-router-dom';
 
 import Navbar from "../../components/Navbar";
 import {
-  ProfileInfoButtons,
-  StarsReviews,
-  ProfileInfo,
-  ProfileContainer,
   InfoContainer,
-  ProfileName,
-  TabInfoContainer,
-  SectionInfo,
+  ProfileContainer,
   ProfileDataContainer,
+  ProfileInfo,
+  ProfileInfoButtons,
+  ProfileName,
   ProfileSubjects,
   ReviewTitle,
+  SectionInfo,
+  StarsReviews,
   TabContainer,
+  TabInfoContainer,
 } from './Profile.styles';
 import RatingStar from "react-stars";
 import Button from "../../components/Button";
 import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
-import { Wrapper, MainContainer, Row, Headers, Table, Request } from "../../GlobalStyle";
+import {Headers, MainContainer, Request, Row, Table, Wrapper} from "../../GlobalStyle";
 import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 import ImagesService from "../../services/imagesService";
 import FilesService from "../../services/filesService";
 import Dropdown from "../../components/DropDown";
-import userService from "../../services/index";
+import {userService} from "../../services/index";
 
 const Profile = () => {
   const [index, setIndex] = useState(0);
@@ -53,10 +53,8 @@ const Profile = () => {
 
   useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
-    let url = 'users';
     if (currentUser){
       if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
-        url = 'placeholder';
         setIsTeacher(false);
       }
     }
@@ -89,11 +87,9 @@ const Profile = () => {
     }
   },[user]);
 
-  //TODO: esto tiene que venir de un service
   useEffect(() => {
     let current = AuthService.getCurrentUser();
-    let teacherId = window.location.pathname.split('/').pop();
-    userService.checkIfTeacherIsFaved(current.id, teacherId)
+    userService.checkIfTeacherIsFaved(current.id, id)
         .then(value => {
           setIsFaved(value);
         })

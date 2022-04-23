@@ -15,6 +15,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 
 
 @Path("/classroom")
-@Component
+@Controller
 public class ClassroomController {
     @Autowired
     private UserService userService;
@@ -125,9 +126,7 @@ public class ClassroomController {
     }
 
     @POST
-    @Path("")
     public Response as() throws IOException {
-
         return Response.ok().build();
     }
 

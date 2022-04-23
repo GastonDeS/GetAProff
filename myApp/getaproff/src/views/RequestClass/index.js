@@ -6,8 +6,8 @@ import { Wrapper, MainContainer, Title } from '../../GlobalStyle';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import SelectDropdown from '../../components/SelectDropdown'
-import userService from "../../services";
-import {useParams} from "react-router-dom";
+import { userService }  from "../../services";
+import { useNavigate,  useParams} from "react-router-dom";
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
@@ -15,6 +15,12 @@ const RequestClass = () => {
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const id = useParams();
+  const navigate = useNavigate();
+
+  const handleClassRequest = () => {
+    userService.requestClass(id.id)
+        .then(res => navigate(`classes/${res.id}`))
+  }
 
   useEffect( () => {
     console.log(id);
@@ -39,7 +45,7 @@ const RequestClass = () => {
             <p>Select Level</p>
             <SelectDropdown type="Levels" setIndex={setLevel} options={levels}/>
           </InputContainer>
-          <Button text='Send request' fontSize='1rem'/>
+          <Button text='Send request' fontSize='1rem' callback={handleClassRequest}/>
         </Content>
       </MainContainer>
     </Wrapper>

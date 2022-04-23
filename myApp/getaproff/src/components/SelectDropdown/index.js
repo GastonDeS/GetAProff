@@ -32,13 +32,13 @@ const SelectDropdown = ({ type, options, handler, value }) => {
       }
       {
         options && options.map((option, index) => {
-          var name;
+          let name;
           if (i18next.t(option.index)) {
             name = i18next.t(option.index)
           } else {
             name = option
           }
-          return <option key={index} value={option.id}>{name}</option>
+          return <option key={index} value={index}>{name}</option>
         })
       }
     </Select>

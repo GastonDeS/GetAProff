@@ -198,15 +198,15 @@ public class UsersController {
     }
 
     //Returns all the classes that involve the user
-    @GET
-    @Path("/{uid}/classes")
-    public Response getClassesFromUser(@PathParam("uid") Long uid){
-        List<Lecture> lectures = lectureService.findClassesByTeacherAndStatus(uid, 3);
-        if (lectures.isEmpty())
-            return Response.status(Response.Status.NO_CONTENT).build();
-        List<ClassroomDto> dtos = lectures.stream().map(lecture -> ClassroomDto.getClassroom(uriInfo,lecture)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
-    }
+//    @GET
+//    @Path("/{uid}/classes")
+//    public Response getClassesFromUser(@PathParam("uid") Long uid){
+//        List<Lecture> lectures = lectureService.findClassesByTeacherAndStatus(uid, 3);
+//        if (lectures.isEmpty())
+//            return Response.status(Response.Status.NO_CONTENT).build();
+//        List<ClassroomDto> dtos = lectures.stream().map(lecture -> ClassroomDto.getClassroom(uriInfo,lecture)).collect(Collectors.toList());
+//        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
+//    }
     //Return all favorite users of user with uid
     @GET
     @Path("/{uid}/favorites")
@@ -238,11 +238,18 @@ public class UsersController {
 
     @DELETE
     @Path("/{uid}/favorites/{favTeacherId}")
-    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("favTeacherId") Long teacherId){
+    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("favTeacherId") Long teacherId) {
         int result = userService.removeFavourite(teacherId, uid);
-        if(result == NO_CONTENT_TO_DELETE)
+        if (result == NO_CONTENT_TO_DELETE)
             return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok().build();
-
     }
 }
+
+//    @POST
+//    @Path("/{uid}/classes")
+//    public Response requestClass(@PathParam("uid") Long uid, ClassRequestDto classRequest){
+//        lectureService.create(,uid)
+//
+//    }
+//}
