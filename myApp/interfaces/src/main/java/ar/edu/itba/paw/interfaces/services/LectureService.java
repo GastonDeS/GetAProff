@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.utils.Pair;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +20,9 @@ public interface LectureService {
 
     int refreshTime(Long classId, int role);
 
-    int addSharedFileToLecture(Long subjectFileId, Long lectureId);
+    int changeFileVisibility(Long subjectFileId, Long lectureId);
 
-    int stopSharingFileInLecture(Long subjectFileId, Long lectureId);
+    Pair<List<SubjectFile>, List<SubjectFile>> getTeacherFiles(Long lectureId, Long userId);
 
     List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId);
 

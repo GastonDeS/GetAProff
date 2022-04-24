@@ -7,6 +7,8 @@ import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Post;
+import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
@@ -14,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -81,20 +82,15 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-        Lecture lecture = checkLectureExistence(classId); //TODO if user is student or teacher return only shared or all files
-        final List<PaginatedFileDto> ans = lecture.getSharedFilesByTeacher().stream().map(e -> PaginatedFileDto.getPaginatedFileDto(uriInfo, "files", "",e.getFileName(), e.getFileId())).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<PaginatedFileDto>>(ans){}).build();
+        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 52L/*TODO id from authentication*/);
+        final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(uriInfo, files.getValue1(), files.getValue2());
+        return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
     @POST
     @Path("/{classId}/files")
     public Response changeFileVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody IdDto fileId) {
-        List<Long> sFilesIds = lectureService.getSharedFilesByTeacher(classId).stream().map(e -> e.getFileId()).collect(Collectors.toList());
-        if (sFilesIds.contains(fileId.getId())) {
-            lectureService.addSharedFileToLecture(fileId.getId(), classId);
-        } else {
-            lectureService.stopSharingFileInLecture(fileId.getId(), classId);
-        }
+        lectureService.changeFileVisibility(fileId.getId(), classId);
         return Response.ok().build();
     }
 
