@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Rating;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Pair;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface RatingService {
@@ -13,5 +12,5 @@ public interface RatingService {
 
     Optional<Rating> addRating(Long teacherId, Long studentId, float rate, String review);
 
-    List<Rating> getTeacherRatings(Long teacherId);
+    Page<Rating> getTeacherRatings(Long teacherId, Integer page, Integer pageSize);
 }
