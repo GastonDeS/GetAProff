@@ -5,14 +5,12 @@ import ar.edu.itba.paw.interfaces.daos.SubjectFileDao;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -78,15 +76,26 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public int addSharedFileToLecture(Long subjectFileId, Long lectureId) {
+    public int changeFileVisibility(Long subjectFileId, Long lectureId) {
+        if (lectureDao.getSharedFilesByTeacher(lectureId).stream().map(e -> e.getFileId().equals(subjectFileId)).count() == 1) {
+            return lectureDao.stopSharingFileInLecture(subjectFileId,lectureId);
+        }
         return lectureDao.addSharedFileToLecture(subjectFileId, lectureId);
     }
 
-    @Transactional
     @Override
-    public int stopSharingFileInLecture(Long subjectFileId, Long lectureId) {
-        return lectureDao.stopSharingFileInLecture(subjectFileId,lectureId);
+    public Pair<List<SubjectFile>, List<SubjectFile>> getTeacherFiles(Long lectureId, Long userId) {
+        Pair<List<SubjectFile>, List<SubjectFile>> lectureFiles = new Pair<>(null, null);
+        Optional<Lecture> lecture = lectureDao.get(lectureId);
+        if (!lecture.isPresent())
+            throw new NoSuchElementException();
+        if (lecture.get().getTeacher().getId().equals(userId)) {
+            lectureFiles.setValue2(this.getFilesNotSharedInLecture(lectureId, userId));
+        }
+        lectureFiles.setValue1(this.getSharedFilesByTeacher(lectureId));
+        return lectureFiles;
     }
+
 
     @Transactional
     @Override
