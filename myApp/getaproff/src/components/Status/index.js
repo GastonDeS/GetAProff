@@ -23,10 +23,11 @@ const Dot = styled.span`
   display: inline-block;
 `
 
-const Status = ({ color, status }) => {
+const Status = ({color, status}) => {
+
   return (
     <Wrapper>
-      <Dot className='dot' style={{backgroundColor: color}}></Dot>
+      <Dot className='dot' style={{backgroundColor: color}}/>
       <p>{status}</p>
     </Wrapper>
   );

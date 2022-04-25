@@ -5,25 +5,43 @@ import ar.edu.itba.paw.models.Lecture;
 import javax.ws.rs.core.UriInfo;
 
 public class ClassroomDto {
-//    private String
 
     private String subjectName, posts, files;
-    private Long studentId, teacherId, classId;
+    private Long classId;
+    private StudentDto teacher;
+    private StudentDto student;
     private int level, price, status;
 
 
 
     public static ClassroomDto getClassroom(UriInfo uri, Lecture lecture) {
         ClassroomDto classroomDto = new ClassroomDto();
-        classroomDto.studentId = lecture.getStudent().getId();
-        classroomDto.teacherId = lecture.getTeacher().getId();
+        classroomDto.student = StudentDto.fromUser(uri, lecture.getStudent());
+        classroomDto.teacher = StudentDto.fromUser(uri, lecture.getTeacher());
         classroomDto.classId = lecture.getClassId();
         classroomDto.subjectName = lecture.getSubject().getName();
         classroomDto.price = lecture.getPrice();
         classroomDto.status = lecture.getStatus();
+        classroomDto.level = lecture.getLevel();
         classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"/posts").build().toString();
         classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"/files").build().toString();
         return classroomDto;
+    }
+
+    public StudentDto getStudent() {
+        return student;
+    }
+
+    public StudentDto getTeacher() {
+        return teacher;
+    }
+
+    public void setStudent(StudentDto student) {
+        this.student = student;
+    }
+
+    public void setTeacher(StudentDto teacher) {
+        this.teacher = teacher;
     }
 
     public String getFiles() {
@@ -42,21 +60,6 @@ public class ClassroomDto {
         this.posts = posts;
     }
 
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
-
-    public Long getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
-    }
 
     public Long getClassId() {
         return classId;

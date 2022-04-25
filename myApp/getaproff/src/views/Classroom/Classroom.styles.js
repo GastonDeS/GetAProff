@@ -37,6 +37,9 @@ export const ClassroomContainer = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-evenly;
+    ${'p'} {
+        margin: 10px 0;
+    }
 `;
 
 export const ClassroomSidePanel = styled.div`

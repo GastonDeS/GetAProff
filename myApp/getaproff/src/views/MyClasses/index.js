@@ -23,11 +23,26 @@ const MyClasses = () => {
   const handleFilter = e => {
     setFilterIndex(e.target.value);
   }
+  const handleRate = e => {
+    console.log("rate");
+  }
+  const handleEnterClassroom = classId => {
+    navigate(`/classroom/${classId}`);
+  }
+  const handleFinishClass= e => {
+    console.log("finish");
+  }
+
+  const handler = {
+    rateClass: handleRate,
+    enterClassroom: handleEnterClassroom,
+    finishClass: handleFinishClass
+  }
 
   useEffect( () => {
     let asTeacher = tabIndex === 1;
     let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
-    userService.getUserClasses(currUser.id, asTeacher, filterIndex)
+    userService.getUserClasses(currUser.id, asTeacher, filterIndex - 1)
         .then(res => setClasses([...res.data]))
   }, [tabIndex, filterIndex]);
 
@@ -52,13 +67,13 @@ const MyClasses = () => {
           <CardContainer>
             {tabIndex === 1 ?
                 offeredClasses.map((Class, index) => {
-                  return <ClassCard key={index} subject={Class.subjectName} teacherId={Class.teacherId}
-                    price={Class.price} level={Class.level} status={Class.status}/>
+                  return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.student}
+                    price={Class.price} level={Class.level} statusCode={Class.status} canRate={false} handlers={handler}/>
                 })
                 :
                 requestedClasses.map((Class, index) => {
-                  return <ClassCard key={index} subject={Class.subjectName} teacherId={Class.teacherId}
-                                    price={Class.price} level={Class.level} status={Class.status}/>
+                  return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}
+                                    price={Class.price} level={Class.level} statusCode={Class.status} canRate={true} handlers={handler}/>
                 })}
             {/*<ClassCard subject="Programación Orientada a Objetos"/>*/}
             {/*<ClassCard subject="Programación Imperativa"/>*/}
