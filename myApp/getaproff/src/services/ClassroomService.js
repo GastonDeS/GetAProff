@@ -14,4 +14,17 @@ export class ClassroomService {
         }
     }
 
+    async fetchClassroomInfo(classId) {
+        try {
+            let data;
+            await axios.get(`${PATH}/${classId}`)
+                .then(res => data = res.data);
+            return data;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 }
+
+

@@ -36,7 +36,7 @@ public class ClassesController {
     @Consumes(value = MediaType.APPLICATION_JSON)
     public Response getClassesFromUser(@QueryParam("studentId") @DefaultValue("0") Long studentId,
                                        @QueryParam("teacherId") @DefaultValue("0") Long teacherId,
-                                       @QueryParam("status") @DefaultValue("3") int status) {
+                                       @QueryParam("status") @DefaultValue("-1") int status) {
         List<Lecture> lectures = new ArrayList<>();
         //TODO: chequear esto cuadno ande la auth
 //        Optional<User> mayBeUser = userService.getCurrentUser();

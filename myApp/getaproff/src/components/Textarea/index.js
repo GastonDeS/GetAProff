@@ -44,5 +44,8 @@ Textarea.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.string
 };
+Textarea.defaultProps = {
+  register: (x) => x
+}
 
 export default Textarea

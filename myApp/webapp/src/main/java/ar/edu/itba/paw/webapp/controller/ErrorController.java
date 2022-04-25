@@ -21,7 +21,7 @@ public class ErrorController {
     @Autowired
     private MessageSource messageSource;
 
-    @RequestMapping("/403")
+    @RequestMapping("/error")
     public ModelAndView error() {
         Optional<User> curr = userService.getCurrentUser();
         final ModelAndView mav = new ModelAndView("403");

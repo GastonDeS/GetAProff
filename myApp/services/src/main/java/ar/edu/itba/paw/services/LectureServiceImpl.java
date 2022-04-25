@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class LectureServiceImpl implements LectureService {
 
-    public static final int ANY_STATUS = 3;
+    public static final int ANY_STATUS = -1;
 
     @Autowired
     private LectureDao lectureDao;
@@ -33,12 +33,10 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status) {
         List<Lecture> lectureList = new ArrayList<>();
-        if (status == 3) {
+        if (status == ANY_STATUS) {
             lectureList.addAll(lectureDao.findClassesByStudentId(studentId));
         }
-        else if (status == 2) {
-             lectureList.addAll(lectureDao.findClassesByStudentAndMultipleStatus(studentId, status));
-        } else {
+        else {
             lectureList.addAll(lectureDao.findClassesByStudentAndStatus(studentId, status));
         }
         lectureList.forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),1)));
@@ -52,12 +50,10 @@ public class LectureServiceImpl implements LectureService {
         if (status == ANY_STATUS) {
             lectureList.addAll(lectureDao.findClassesByTeacherId(teacherId));
         }
-        else if (status == 2) {
-            lectureList.addAll(lectureDao.findClassesByTeacherAndMultipleStatus(teacherId, status));
-        }else {
+        else {
             lectureList.addAll(lectureDao.findClassesByTeacherAndStatus(teacherId, status));
         }
-        lectureList.forEach((e) -> {e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),0));});
+        lectureList.forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),0)));
         Collections.reverse(lectureList);
         return lectureList;
     }
