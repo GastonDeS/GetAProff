@@ -1,21 +1,17 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.PostDao;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Repository
-public class PostDaoJpa implements PostDao {
+public class PostDaoJpa extends BasePaginationDaoImpl<Post> implements PostDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -30,10 +26,11 @@ public class PostDaoJpa implements PostDao {
     }
 
     @Override
-    public List<Post> retrievePosts(Long classId) {
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.id = :classId", Lecture.class);
-        query.setParameter("classId", classId);
-        return query.getSingleResult().getClassPosts();
+    public Page<Post> retrievePosts(Long classId, PageRequest pageRequest) {
+        final Lecture lecture = entityManager.getReference(Lecture.class, classId);
+        final TypedQuery<Post> query = entityManager.createQuery("from Post p where p.associatedLecture = :lecture order by time DESC", Post.class);
+        query.setParameter("lecture", lecture);
+        return listBy(query, pageRequest);
     }
 
     @Override
