@@ -10,7 +10,7 @@ public class ClassroomDto {
     private Long classId;
     private StudentDto teacher;
     private StudentDto student;
-    private int level, price, status;
+    private int level, price, status, notifications;
 
 
 
@@ -23,9 +23,18 @@ public class ClassroomDto {
         classroomDto.price = lecture.getPrice();
         classroomDto.status = lecture.getStatus();
         classroomDto.level = lecture.getLevel();
-        classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"/posts").build().toString();
-        classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"/files").build().toString();
+        classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"posts").build().toString();
+        classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"files").build().toString();
+        classroomDto.notifications = lecture.getNotifications();
         return classroomDto;
+    }
+
+    public int getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
     }
 
     public StudentDto getStudent() {

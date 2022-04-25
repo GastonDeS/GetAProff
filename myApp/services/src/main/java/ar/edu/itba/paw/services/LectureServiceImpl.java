@@ -4,13 +4,18 @@ import ar.edu.itba.paw.interfaces.daos.LectureDao;
 import ar.edu.itba.paw.interfaces.daos.SubjectFileDao;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.PageRequest;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -29,31 +34,35 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public List<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status) {
-        List<Lecture> lectureList = new ArrayList<>();
-        if (status == ANY_STATUS) {
-            lectureList.addAll(lectureDao.findClassesByStudentId(studentId));
-        }
-        else {
-            lectureList.addAll(lectureDao.findClassesByStudentAndStatus(studentId, status));
-        }
-        lectureList.forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),1)));
-        Collections.reverse(lectureList);
-        return lectureList;
+    public Page<Lecture> findClasses(Long uid, boolean asTeacher, Integer status, Integer page, Integer pageSize) {
+        if (asTeacher)
+            return findClassesByTeacherAndStatus(uid, status, new PageRequest(page, pageSize));
+        else
+            return findClassesByStudentAndStatus(uid, status, new PageRequest(page, pageSize));
     }
 
-    @Override
-    public List<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status) {
-        List<Lecture> lectureList = new ArrayList<>();
+    private Page<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status, PageRequest pageRequest) {
+        Page<Lecture> lecturepage = null;
         if (status == ANY_STATUS) {
-            lectureList.addAll(lectureDao.findClassesByTeacherId(teacherId));
+            lecturepage = lectureDao.findClassesByStudentId(studentId, pageRequest);
         }
         else {
-            lectureList.addAll(lectureDao.findClassesByTeacherAndStatus(teacherId, status));
+            lecturepage = lectureDao.findClassesByStudentAndStatus(studentId, status, pageRequest);
         }
-        lectureList.forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),0)));
-        Collections.reverse(lectureList);
-        return lectureList;
+        lecturepage.getContent().forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),1)));
+        return lecturepage;
+    }
+
+    private Page<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status, PageRequest pageRequest) {
+        Page<Lecture> lecturepage = null;
+        if (status == ANY_STATUS) {
+            lecturepage = lectureDao.findClassesByTeacherId(teacherId, pageRequest);
+        }
+        else {
+            lecturepage = lectureDao.findClassesByTeacherAndStatus(teacherId, status, pageRequest);
+        }
+        lecturepage.getContent().forEach((e) -> e.setNotifications(lectureDao.getNotificationsCount(e.getClassId(),0)));
+        return lecturepage;
     }
 
     @Transactional
