@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TeachesDaoJpa implements TeachesDao {
+public class TeachesDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements TeachesDao {
 
     private static final Integer PAGE_SIZE = 9;
 
@@ -86,7 +86,7 @@ public class TeachesDaoJpa implements TeachesDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<TeacherInfo> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, Integer offset) {
+    public Page<TeacherInfo> filterUsers(String searchedSubject, Integer price, Integer minLevel, Integer maxLevel, Integer rate, Integer order, PageRequest pageRequest) {
         String queryStr = "select a3.teacherid as id, u.name as name, a3.maxPrice as maxPrice, a3.minPrice as minPrice, " +
                 "coalesce(u.description, '') as desc, a3.rate as rate, coalesce(u.schedule, '') as sch, u.mail as mail, " +
                 "a3.reviews as reviews from (select a2.teacherid as teacherid, max(a2.price) as maxPrice, min(a2.price) as minPrice, " +
@@ -104,11 +104,7 @@ public class TeachesDaoJpa implements TeachesDao {
                 .setParameter("minLevel", minLevel)
                 .setParameter("maxLevel", maxLevel)
                 .setParameter("rate", rate);
-        if (offset > 0) {
-            query.setFirstResult((offset - 1) * PAGE_SIZE)
-                    .setMaxResults(PAGE_SIZE);
-        }
-        return (List<TeacherInfo>) query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     private String checkOrdering(int order){

@@ -6,12 +6,14 @@ import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
+import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -25,7 +27,6 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,10 +73,15 @@ public class ClassroomController {
     public Response getClassroomComments(@PathParam("classId") final Long classId,
                                          @QueryParam("page") @DefaultValue("1") Integer page,
                                          @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        Lecture lecture = checkLectureExistence(classId);
-        lecture.getClassPosts().sort(Comparator.comparing(Post::getTime));
-        final List<PostDto> ans = lecture.getClassPosts().stream().map(post -> PostDto.getPostDto(uriInfo, post)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<PostDto>>(ans){}).build();
+//        try {
+            final Page<Post> posts = postService.retrievePosts(classId, page, pageSize);
+            Response.ResponseBuilder builder = Response.ok(
+                    new GenericEntity<List<PostDto>>(posts.getContent().stream().map(post -> PostDto.getPostDto(uriInfo, post)).collect(Collectors.toList())) {
+                    });
+            return PaginationBuilder.build(posts, builder, uriInfo, pageSize);
+//        } catch (IllegalArgumentException exception) { //TODO mensaje exacto
+//            return Response.status(Response.Status.BAD_REQUEST).build();
+//        }
     }
 
     @GET

@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Repository
-public class LectureDaoJpa implements LectureDao {
+public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements LectureDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -23,52 +23,53 @@ public class LectureDaoJpa implements LectureDao {
         return Optional.ofNullable(entityManager.find(Lecture.class, id));
     }
 
+
     @Override
-    public List<Lecture> findClassesByStudentId(Long studentId) {
+    public Page<Lecture> findClassesByStudentId(Long studentId, PageRequest pageRequest) {
         final User student = entityManager.getReference(User.class, studentId);
         final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student", Lecture.class);
         query.setParameter("student", student);
-        return query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override
-    public List<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status) {
+    public Page<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status, PageRequest pageRequest) {
         final User student = entityManager.getReference(User.class, studentId);
         final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student and c.status = :status", Lecture.class);
         query.setParameter("student", student).setParameter("status", status);
-        return query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override
-    public List<Lecture> findClassesByStudentAndMultipleStatus(Long studentId, Integer status) {
+    public Page<Lecture> findClassesByStudentAndMultipleStatus(Long studentId, Integer status, PageRequest pageRequest) {
         final User student = entityManager.getReference(User.class, studentId);
         final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student and c.status >= :status", Lecture.class);
         query.setParameter("student", student).setParameter("status", status);
-        return query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override
-    public List<Lecture> findClassesByTeacherId(Long teacherId) {
+    public Page<Lecture> findClassesByTeacherId(Long teacherId, PageRequest pageRequest) {
         final User teacher = entityManager.getReference(User.class, teacherId);
         final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher", Lecture.class);
         query.setParameter("teacher", teacher);
-        return query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override
-    public List<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status) {
+    public Page<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status, PageRequest pageRequest) {
         final User teacher = entityManager.getReference(User.class, teacherId);
         final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher and c.status = :status", Lecture.class);
         query.setParameter("teacher", teacher).setParameter("status", status);
-        return query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override
-    public List<Lecture> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status) {
+    public Page<Lecture> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status, PageRequest pageRequest) {
         final User teacher = entityManager.getReference(User.class, teacherId);
         final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher and c.status >= :status", Lecture.class);
         query.setParameter("teacher", teacher).setParameter("status", status);
-        return query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override

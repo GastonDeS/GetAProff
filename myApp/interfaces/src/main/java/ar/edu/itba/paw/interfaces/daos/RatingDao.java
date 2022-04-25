@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.interfaces.daos;
 
+import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.PageRequest;
 import ar.edu.itba.paw.models.Rating;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Pair;
-
-import java.util.List;
 
 public interface RatingDao {
 
@@ -12,5 +11,5 @@ public interface RatingDao {
 
     Pair<Float, Integer> getRatingById(Long teacherId);
 
-    List<Rating> getTeacherRatings(Long teacherId);
+    Page<Rating> getTeacherRatings(Long teacherId, PageRequest pageRequest);
 }

@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.TeacherInfo;
-import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +42,37 @@ public class UsersController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/subject")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findBySubject(@QueryParam("page") int page, @QueryParam("search") String search) {
-        final List<TeacherDto> filteredTeachers = teachesService.findTeachersTeachingSubject(search, page).stream()
-                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
-        int total = teachesService.getPageQty(search);
-        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
-    }
+    public Response findBySubject(@QueryParam("search") String search,
+                                  @QueryParam("price") @DefaultValue("10000") Integer price, //TODO define better defaults not my
+                                  @QueryParam("level") @DefaultValue("0") Integer level,
+                                  @QueryParam("rating") @DefaultValue("0") Integer rating,
+                                  @QueryParam("order") @DefaultValue("0") Integer order,
+                                  @QueryParam("page") @DefaultValue("1") Integer page,
+                                  @QueryParam("pageSize") @DefaultValue("10") Integer pageSize ) {
+        try {
+            final Page<TeacherInfo> filteredTeaches = teachesService.filterUsers(search, order, price, level, rating, page, pageSize);
+            Response.ResponseBuilder builder = Response.ok(
+                    new GenericEntity<List<TeacherDto>>(filteredTeaches.getContent().stream()
+                            .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo))
+                            .collect(Collectors.toList())) {
+                    });
+            return PaginationBuilder.build(filteredTeaches, builder, uriInfo, pageSize);
+        } catch (IllegalArgumentException exception) { //TODO mensaje exacto
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+   }
 
-    @GET
-    @Path("/filters")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response filterTeachers(@QueryParam("page") int page, @QueryParam("search") String search, @QueryParam("price") Integer price,
-                                   @QueryParam("level") Integer level, @QueryParam("rating") Integer rating, @QueryParam("order") Integer order) {
-        final List<TeacherDto> filteredTeachers = teachesService.filterUsers(search, order, price, level, rating, page).stream()
-                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
-        int total = teachesService.getPageQty(search, price, level, rating);
-        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
-    }
+//    @GET
+//    @Path("/filters")
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response filterTeachers(@QueryParam("page") int page, @QueryParam("search") String search, @QueryParam("price") Integer price,
+//                                   @QueryParam("level") Integer level, @QueryParam("rating") Integer rating, @QueryParam("order") Integer order) {
+//        final List<TeacherDto> filteredTeachers = teachesService.filterUsers(search, order, price, level, rating, page).stream()
+//                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
+//        int total = teachesService.getPageQty(search, price, level, rating);
+//        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
+//    }
 
     private Response addPaginationHeaders(int current, int total, Response.ResponseBuilder response) {
         if (current + 1 <= total) {
@@ -98,15 +108,6 @@ public class UsersController {
                     .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
                             user.getMail(), 0));
         return Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo)).build();
-    }
-
-    @GET
-    @Path("/{id}/favourites")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getUserFavourites(@PathParam("id") Long id) {
-        final List<TeacherDto> favourites = userService.getFavourites(id).stream()
-                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TeacherDto>>(favourites){}).build();
     }
 
     @GET
@@ -210,12 +211,20 @@ public class UsersController {
     //Return all favorite users of user with uid
     @GET
     @Path("/{uid}/favorites")
-    public Response getUserFavorites(@PathParam("uid") Long uid){
-        List<TeacherInfo> favoriteTeachers = userService.getFavourites(uid);
-        if(favoriteTeachers.isEmpty())
-            return Response.status(Response.Status.NO_CONTENT).build();
-        List<TeacherDto> dtos = favoriteTeachers.stream().map( user -> TeacherDto.getTeacher(uriInfo, user)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TeacherDto>>(dtos){}).build();
+    public Response getUserFavorites(@PathParam("uid") Long uid,
+                                    @QueryParam("page") @DefaultValue("1") Integer page,
+                                    @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
+        try {
+            final Page<TeacherInfo> favourites = userService.getFavourites(uid, page, pageSize);
+            Response.ResponseBuilder builder = Response.ok(
+                    new GenericEntity<List<TeacherDto>>(favourites.getContent().stream()
+                            .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo))
+                            .collect(Collectors.toList())) {
+                    });
+            return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
+        } catch (IllegalArgumentException exception) { // TODO mensaje exacto
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
 //TODO: esto colisiona

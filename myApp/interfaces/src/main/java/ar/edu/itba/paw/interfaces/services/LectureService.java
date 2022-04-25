@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.utils.Pair;
 
@@ -10,9 +11,11 @@ import java.util.Optional;
 public interface LectureService {
     Optional<Lecture> findById(Long id);
 
-    List<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status);
+    Page<Lecture> findClasses(Long uid, boolean asTeacher, Integer status, Integer page, Integer pageSize);
 
-    List<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status);
+//    List<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status);
+
+//    List<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status);
 
     Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price);
 

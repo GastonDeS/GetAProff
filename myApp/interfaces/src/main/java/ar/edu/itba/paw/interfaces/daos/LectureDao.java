@@ -2,6 +2,8 @@ package ar.edu.itba.paw.interfaces.daos;
 
 
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.PageRequest;
 import ar.edu.itba.paw.models.SubjectFile;
 
 import java.util.List;
@@ -11,17 +13,17 @@ public interface LectureDao {
 
     Optional<Lecture> get(Long id);
 
-    List<Lecture> findClassesByStudentId(Long studentId);
+    Page<Lecture> findClassesByStudentId(Long studentId, PageRequest pageRequest);
 
-    List<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status);
+    Page<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status, PageRequest pageRequest);
 
-    List<Lecture> findClassesByStudentAndMultipleStatus(Long studentId, Integer status);
+    Page<Lecture> findClassesByStudentAndMultipleStatus(Long studentId, Integer status, PageRequest pageRequest);
 
-    List<Lecture> findClassesByTeacherId(Long teacherId);
+    Page<Lecture> findClassesByTeacherId(Long teacherId, PageRequest pageRequest);
 
-    List<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status);
+    Page<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status, PageRequest pageRequest);
 
-    List<Lecture> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status);
+    Page<Lecture> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status, PageRequest pageRequest);
 
     Lecture create(Long studentId, Long teacherId, int level, Long subjectId, int price);
 
