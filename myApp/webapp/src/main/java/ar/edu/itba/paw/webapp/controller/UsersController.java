@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.Teaches;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,15 +99,6 @@ public class UsersController {
                     .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
                             user.getMail(), 0));
         return Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo)).build();
-    }
-
-    @GET
-    @Path("/{id}/favourites")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getUserFavourites(@PathParam("id") Long id) {
-        final List<TeacherDto> favourites = userService.getFavourites(id).stream()
-                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TeacherDto>>(favourites){}).build();
     }
 
     @GET
@@ -210,12 +202,20 @@ public class UsersController {
     //Return all favorite users of user with uid
     @GET
     @Path("/{uid}/favorites")
-    public Response getUserFavorites(@PathParam("uid") Long uid){
-        List<TeacherInfo> favoriteTeachers = userService.getFavourites(uid);
-        if(favoriteTeachers.isEmpty())
-            return Response.status(Response.Status.NO_CONTENT).build();
-        List<TeacherDto> dtos = favoriteTeachers.stream().map( user -> TeacherDto.getTeacher(uriInfo, user)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TeacherDto>>(dtos){}).build();
+    public Response getUserFavorites(@PathParam("uid") Long uid,
+                                    @QueryParam("page") @DefaultValue("1") Integer page,
+                                    @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
+        try {
+            final Page<TeacherInfo> favourites = userService.getFavourites(uid, page, pageSize);
+            Response.ResponseBuilder builder = Response.ok(
+                    new GenericEntity<List<TeacherDto>>(favourites.getContent().stream()
+                            .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo))
+                            .collect(Collectors.toList())) {
+                    });
+            return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
+        } catch (IllegalArgumentException exception) { // TODO mensaje exacto
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
 //TODO: esto colisiona

@@ -37,7 +37,7 @@ public class RatingController {
                     new GenericEntity<List<RatingDto>>(ratingDtos.getContent().stream().map(RatingDto::fromRating).collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(ratingDtos, builder, uriInfo, pageSize);
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException exception) { //TODO mensaje exacto
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

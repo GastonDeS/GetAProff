@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
+import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.PageRequest;
 import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
@@ -9,11 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDaoJpa implements UserDao {
+public class UserDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -25,7 +26,7 @@ public class UserDaoJpa implements UserDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<TeacherInfo> getFavourites(Long userId) {
+    public Page<TeacherInfo> getFavourites(Long userId, PageRequest pageRequest) {
         final String queryStr = "select a2.teacherid as id, a2.name as name, a2.maxPrice as maxPrice, a2.minPrice as minPrice, " +
                 "a2.description as desc, coalesce(a3.rate, 0) as rate, a2.schedule as sch, a2.mail as mail, " +
                 "coalesce(a3.rate, 0) as reviews from (select a1.teacherid as teacherid, a1.name as name, max(t.price) as maxPrice, " +
@@ -39,7 +40,7 @@ public class UserDaoJpa implements UserDao {
                 "a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, a2.schedule, a2.mail, rate, reviews";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping");
         query.setParameter("userId", userId);
-        return (List<TeacherInfo>) query.getResultList();
+        return listBy(query, pageRequest);
     }
 
     @Override

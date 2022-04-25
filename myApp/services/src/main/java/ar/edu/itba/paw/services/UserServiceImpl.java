@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public List<TeacherInfo> getFavourites(Long userId) {
-        return userDao.getFavourites(userId);
+    public Page<TeacherInfo> getFavourites(Long userId, Integer page, Integer pageSize) {
+        return userDao.getFavourites(userId, new PageRequest(page, pageSize));
     }
 
     @Transactional
