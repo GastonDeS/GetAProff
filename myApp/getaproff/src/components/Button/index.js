@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 const StyledButton = styled.button`
   width: fit-content;
-  border-radius: 2rem;
+  border-radius: 1.2rem;
   color: white;
   height: fit-content;
   border: transparent;

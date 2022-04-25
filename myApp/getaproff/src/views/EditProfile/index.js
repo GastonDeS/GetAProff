@@ -65,11 +65,12 @@ const EditProfile = () => {
     formData.append("schedule", data.schedule);
     formData.append("image", data.image[0]);
     formData.append("wantToTeach", isTeacher? "true" : "false");
+
+    //TODO: service
     axios.post('/users' + '/' + currentUser.id, formData, {
       headers: { 'Content-Type' : 'multipart/form-data' }
     })
         .then( () => {
-          console.log("Todo en orden");
           navigate("/users/"+ currentUser.id);
         })
         .catch( err => console.log(err));

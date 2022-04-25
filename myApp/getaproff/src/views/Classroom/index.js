@@ -15,13 +15,15 @@ import {
     InputPostContainer,
     BigBox,
     PostBox,
-    ButtonHolder, Ul, ClassSideSection,
+    ButtonHolder, Ul, ClassSideSection, ButtonContainer, PostFormContainer,
 } from "./Classroom.styles";
 import Banner from '../../assets/img/matematica_banner.png';
 import Button from "../../components/Button";
 import Textarea from "../../components/Textarea";
 import {classroomService} from "../../services"
+import authService from "../../services/authService";
 import {useParams} from "react-router-dom";
+import {useForm} from "react-hook-form";
 
 const Classroom = () => {
     const teach = Math.round(Math.random());
@@ -29,7 +31,17 @@ const Classroom = () => {
     const files = 1;
     const finished = 0;
     const [classInfo, setClassInfo] = useState();
+    const [classPosts, setClassPosts] = useState();
+    const {register, handleSubmit, watch} = useForm()
     const id = useParams();
+    const watchFileName = watch("file");
+    const user = authService.getCurrentUser();
+
+    const publishPost = (data) => {
+        classroomService.createPost(id.id, data, user.id)
+            .then(response => console.log(response))
+        console.log(watchFileName);
+    }
 
     useEffect( () => {
         classroomService.fetchClassroomInfo(id.id)
@@ -37,6 +49,8 @@ const Classroom = () => {
                 setClassInfo(data);
             })
             .catch(err => console.log(err))
+        classroomService.fetchClassroomPosts(id.id)
+            .then(data => setClassPosts(data))
     }, [])
 
 
@@ -88,8 +102,8 @@ const Classroom = () => {
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
                             {(finished === 0) ?
-                                <InputPostContainer>
-                                    <Textarea type="text" placeholder={"Hola! Te consulto sobre este examen..."} style={{
+                                <PostFormContainer onSubmit={handleSubmit(publishPost)}>
+                                    <Textarea name="postTextInput" register={register} placeholder="Hola! Te consulto sobre este examen..." style={{
                                         borderRadius: "10px",
                                         fontSize: "16px",
                                         fontFamily: "Roboto Light, sans-serif",
@@ -99,39 +113,26 @@ const Classroom = () => {
                                         resize: "none"
                                     }}>
                                     </Textarea>
-                                    <div style={{
-                                        marginTop: "10px",
-                                        width: "100%",
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        justifyContent: "space-between"
-                                    }}>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            justifyContent: "center",
-                                            alignItems: "center"
-                                        }}>
-                                            <Button text="Upload file" fontSize="15px">
-                                                <input type="file" accept="image/*,.pdf" name="file"
-                                                       style={{display: "none"}}
-                                                       path="file"
-                                                       id="file"/>
-                                            </Button>
-                                            <p style={{margin: "0 5px 0"}} id="fileName">file</p>
+                                    <ButtonContainer>
+                                        <div style={{display: 'flex', 'flex-direction': 'row', 'align-items': 'center'}}>
+                                            <Button type="button" text="Upload file" fontSize="15px" callback={() => document.getElementById("file").click()}/>
+                                            <input id="file" {...register("file")} type="file" accept="image/*,.pdf"
+                                                   style={{display: "none"}}
+                                            />
+                                            <p style={{margin: "0 9px"}} id="fileName">{watchFileName && watchFileName[0] && watchFileName[0].name}</p>
                                         </div>
                                         <Button fontSize="15px" text="Publish"/>
-                                    </div>
-                                </InputPostContainer>
+                                    </ButtonContainer>
+                                </PostFormContainer>
                                 :
                                 <div></div>
                             }
                             <BigBox>
-                                {classInfo.posts.map(p => {
+                                {classPosts && classPosts.map(post => {
                                 return(
                                     <PostBox>
                                     <ButtonHolder>
-                                    <h3>Gaston De Schant</h3>
+                                    <h3>{post.uploader}</h3>
                                     <p style={{fontSize: "0.8em"}}>Hoy a las 16:32</p>
                                     </ButtonHolder>
                                     <p>Buenos dias profesor necesito ayuda el miercoles a las 5 de la tarde podria ser
@@ -141,7 +142,7 @@ const Classroom = () => {
                                     color: "blue",
                                     textDecoration: "underline",
                                     marginTop: "5px"
-                                }}>tarea.pdf</a>
+                                }}>{post.file && post.file.name}</a>
                                     </PostBox>
                                     )})}
                             </BigBox>

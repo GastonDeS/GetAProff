@@ -94,7 +94,7 @@ export const SubjectsRow = styled.div`
     width: 100%;
 `;
 
-export const InputPostContainer = styled.div`
+export const PostFormContainer = styled.form`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -104,8 +104,16 @@ export const InputPostContainer = styled.div`
     padding: 5px 10px;
     background-color: white;
     border-radius: 10px;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px 0; 
+`;
 
+export const ButtonContainer = styled.div `
+    marginTop: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flexDirection: row;
+    alignItems: center;
 `;
 
 export const BigBox = styled.div`
