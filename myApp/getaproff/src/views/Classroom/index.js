@@ -4,9 +4,9 @@ import {
     Wrapper,
     MainContainer,
     PageContainer,
-    ImageHeader, 
-    ClassroomContainer, 
-    ClassroomSidePanel, 
+    ImageHeader,
+    ClassroomContainer,
+    ClassroomSidePanel,
     ClassContentSide,
     ClassStatus,
     ClassroomCenterPanel,
@@ -15,7 +15,7 @@ import {
     InputPostContainer,
     BigBox,
     PostBox,
-    ButtonHolder,
+    ButtonHolder, Ul, ClassSideSection,
 } from "./Classroom.styles";
 import Banner from '../../assets/img/matematica_banner.png';
 import Button from "../../components/Button";
@@ -61,11 +61,11 @@ const Classroom = () => {
                                 <p>Price: ${classInfo.price}/hour</p>
                             </ClassContentSide>
                             <ClassContentSide>
-                                {(profile > 0.66) ?
+                                {(classInfo.status === 0) ?
                                     <ClassStatus style={{background: "darkorange"}}>
                                         <h6 style={{color: "black", margin: "0"}}>Pending</h6>
                                     </ClassStatus>
-                                    : (profile > 0.33) ? <ClassStatus style={{background: "green"}}>
+                                    : (classInfo.status === 1) ? <ClassStatus style={{background: "green"}}>
                                             <h6 style={{color: "black", margin: "0"}}>Active</h6>
                                         </ClassStatus>
                                         : <ClassStatus style={{background: "white"}}>
@@ -82,19 +82,19 @@ const Classroom = () => {
                                         <Button text={"Cancel"}/>
                                     </>
                                 ) : (
-                                    <Button text={"Finish"}/>
+                                    <Button text={"Finish"} color={'#ffc107'} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
                             {(finished === 0) ?
                                 <InputPostContainer>
-                                    <Textarea type="text" style={{
+                                    <Textarea type="text" placeholder={"Hola! Te consulto sobre este examen..."} style={{
                                         borderRadius: "10px",
                                         fontSize: "16px",
                                         fontFamily: "Roboto Light, sans-serif",
-                                        height: "fit-content",
                                         width: "100%",
+                                        height: '20vh',
                                         margin: "8px 0 8px 0",
                                         resize: "none"
                                     }}>
@@ -118,7 +118,7 @@ const Classroom = () => {
                                                        path="file"
                                                        id="file"/>
                                             </Button>
-                                            <p style={{margin: "0 5px 0"}} id="fileName"></p>
+                                            <p style={{margin: "0 5px 0"}} id="fileName">file</p>
                                         </div>
                                         <Button fontSize="15px" text="Publish"/>
                                     </div>
@@ -127,20 +127,23 @@ const Classroom = () => {
                                 <div></div>
                             }
                             <BigBox>
-                                <PostBox>
+                                {classInfo.posts.map(p => {
+                                return(
+                                    <PostBox>
                                     <ButtonHolder>
-                                        <h3>Gaston De Schant</h3>
-                                        <p style={{fontSize: "0.8em"}}>Hoy a las 16:32</p>
+                                    <h3>Gaston De Schant</h3>
+                                    <p style={{fontSize: "0.8em"}}>Hoy a las 16:32</p>
                                     </ButtonHolder>
                                     <p>Buenos dias profesor necesito ayuda el miercoles a las 5 de la tarde podria ser
-                                        ?</p>
+                                    ?</p>
                                     <a target="_blank" href=""
-                                       style={{
-                                           color: "blue",
-                                           textDecoration: "underline",
-                                           marginTop: "5px"
-                                       }}>tarea.pdf</a>
-                                </PostBox>
+                                    style={{
+                                    color: "blue",
+                                    textDecoration: "underline",
+                                    marginTop: "5px"
+                                }}>tarea.pdf</a>
+                                    </PostBox>
+                                    )})}
                             </BigBox>
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
@@ -153,9 +156,9 @@ const Classroom = () => {
                                         <h6 style={{margin: "2px 0 2px 0"}}>Choose the files you want to share in this
                                             class</h6>
                                         <SharedFilesContainer>
-                                            <ul style={{padding: 0, margin: 0}}>
-                                                <SubjectsRow>
+                                            <Ul>
                                                     <li>
+                                                        <SubjectsRow>
                                                         <a style={{fontWeight: "bold"}}
                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                                            target="_blank">File name</a>
@@ -168,9 +171,9 @@ const Classroom = () => {
                                                                }}
                                                                value="${file.fileId}"
                                                                onclick="showButton(this.name,'share-button')"/>
+                                                        </SubjectsRow>
                                                     </li>
-                                                </SubjectsRow>
-                                            </ul>
+                                            </Ul>
                                             <Button text="Share Files" fontSize="8" type="submit" id="share-button"
                                                     style={{alignSelf: "center", marginTop: "10px", display: "none"}}>
                                             </Button>
@@ -183,12 +186,10 @@ const Classroom = () => {
                                 {(files === 0) ?
                                     <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>You haven't shared any files yet</span>
                                     :
-                                    <div>
-
                                         <SharedFilesContainer>
-                                            <ul style={{padding: 0, margin: 0}}>
-                                                <SubjectsRow>
-                                                    <li>
+                                            <Ul>
+                                                <li>
+                                                    <SubjectsRow>
                                                         <a style={{fontWeight: "bold"}}
                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                                            target="_blank">File name</a>
@@ -201,14 +202,13 @@ const Classroom = () => {
                                                                }}
                                                                value="${file.fileId}"
                                                                onclick="showButton(this.name,'share-button')"/>
-                                                    </li>
-                                                </SubjectsRow>
-                                            </ul>
+                                                    </SubjectsRow>
+                                                </li>
+                                            </Ul>
                                             <Button text="Stop sharing" fontSize="8" type="submit" id="share-button"
                                                     style={{alignSelf: "center", marginTop: "10px", display: "none"}}>
                                             </Button>
                                         </SharedFilesContainer>
-                                    </div>
                                 }
                             </ClassContentSide>
                             <ClassContentSide>
@@ -217,15 +217,15 @@ const Classroom = () => {
                                     <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>Teacher hasn't shared files yet</span>
                                     :
                                     <SharedFilesContainer>
-                                        <ul style={{padding: 0, margin: 0}}>
-                                            <SubjectsRow>
-                                                <li>
+                                        <Ul>
+                                            <li>
+                                                <SubjectsRow>
                                                     <a style={{fontWeight: "bold"}}
                                                        href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                                        target="_blank">File name</a>
-                                                </li>
-                                            </SubjectsRow>
-                                        </ul>
+                                                </SubjectsRow>
+                                            </li>
+                                        </Ul>
                                     </SharedFilesContainer>
                                 }
                             </ClassContentSide>

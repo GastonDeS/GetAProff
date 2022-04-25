@@ -25,7 +25,7 @@ const StyledTextarea = styled.textarea`
 
   &:focus {
     display: inline-block;
-    box-shadow: 0 0 0 0.2rem var(--secondary);
+    box-shadow: 0 0 0 0.1rem var(--secondary);
     backdrop-filter: blur(12rem);
     border-radius: 2rem;
   }

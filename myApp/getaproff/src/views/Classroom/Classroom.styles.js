@@ -51,7 +51,7 @@ export const ClassroomSidePanel = styled.div`
 export const ClassContentSide = styled.div`
     background-color: white;
     border-radius: 10px;
-    margin: 10px;
+    margin: 0 0 10px 0 ;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -98,8 +98,14 @@ export const InputPostContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    width: 94%;
+    align-items: center;
+    width: 90%;
+    flex: 0 0 auto;
+    padding: 5px 10px;
+    background-color: white;
+    border-radius: 10px;
+    margin: 0 0 10px 0;
+
 `;
 
 export const BigBox = styled.div`
@@ -109,6 +115,11 @@ export const BigBox = styled.div`
     justify-content: center;
     align-items: center;
 `;
+
+export const Ul = styled.ul`
+    list-style: none;
+    padding: 0;
+;`
 
 export const PostBox = styled.div`
     width: 100%;

@@ -19,6 +19,9 @@ export class ClassroomService {
             let data;
             await axios.get(`${PATH}/${classId}`)
                 .then(res => data = res.data);
+            await axios.get(`${PATH}/${classId}/posts`).then(
+                res => data.posts = res.data
+            )
             return data;
         }
         catch (err) {
