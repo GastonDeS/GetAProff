@@ -50,16 +50,16 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
     }
 
-    @Transactional
-    @Override
-    public List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer offset) {
-        return teachesDao.filterUsers(searchedSubject,
-                teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, offset);
-    }
+//    @Transactional
+//    @Override
+//    public List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer offset) {
+//        return teachesDao.filterUsers(searchedSubject,
+//                teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, offset);
+//    }
 
     @Transactional
     @Override
-    public List<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer offset) {
+    public Page<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer page, Integer pageSize) {
         int maxLevel = level, minLevel = level;
         if (level <= 0 || level > MAX_LEVEL){
             maxLevel = MAX_LEVEL;
@@ -67,19 +67,19 @@ public class TeachesServiceImpl implements TeachesService {
         }
         Integer maxPrice = teachesDao.getMostExpensiveUserFee(searchedSubject);
         if (price > maxPrice) price = maxPrice;
-        return teachesDao.filterUsers(searchedSubject, price, minLevel, maxLevel, rating, order, offset);
+        return teachesDao.filterUsers(searchedSubject, price, minLevel, maxLevel, rating, order, new PageRequest(page, pageSize));
     }
 
-    @Override
-    public Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating) {
-        List<TeacherInfo> teachersListResult = filterUsers(searchedSubject, RAND_ORDER, price, level, rating, GET_ALL);
-        return (int) Math.ceil(teachersListResult.size()/(double) PAGE_SIZE);
-    }
+//    @Override
+//    public Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating) {
+//        List<TeacherInfo> teachersListResult = filterUsers(searchedSubject, RAND_ORDER, price, level, rating, GET_ALL);
+//        return (int) Math.ceil(teachersListResult.size()/(double) PAGE_SIZE);
+//    }
 
-    @Override
-    public Integer getPageQty(String searchedSubject) {
-        return (int) Math.ceil(findTeachersTeachingSubject(searchedSubject, GET_ALL).size()/(double) PAGE_SIZE);
-    }
+//    @Override
+//    public Integer getPageQty(String searchedSubject) {
+//        return (int) Math.ceil(findTeachersTeachingSubject(searchedSubject, GET_ALL).size()/(double) PAGE_SIZE);
+//    }
 
     @Override
     public List<TeacherInfo> getTopRatedTeachers() {

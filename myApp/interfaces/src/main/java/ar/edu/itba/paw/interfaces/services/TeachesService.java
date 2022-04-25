@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.TeacherInfo;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.Teaches;
 
 import java.util.List;
@@ -21,15 +22,15 @@ public interface TeachesService {
 
     List<Teaches> get(Long teacherId);
 
-    List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer offset);
+//    Page<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer page, Integer pageSize);
 
-    List<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
+    Page<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer page, Integer pageSize);
 
     Integer getMostExpensiveUserFee(String searchedSubject);
 
-    Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating);
+//    Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating);
 
-    Integer getPageQty(String searchedSubject);
+//    Integer getPageQty(String searchedSubject);
 
     List<TeacherInfo> getTopRatedTeachers();
 
