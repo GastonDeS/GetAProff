@@ -20,7 +20,7 @@ const RequestClass = () => {
 
   const handleClassRequest = () => {
     userService.requestClass(id.id)
-        .then(res => navigate(`classes/${res.id}`))
+        .then(res => navigate(`classroom/${res.id}`))
   }
 
   const handleSubject = e => setSubject(subjects[e.target.value]);

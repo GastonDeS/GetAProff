@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -13,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -262,6 +264,19 @@ public class UsersController {
             return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(ImageDto.fromUser(uriInfo, img.get())).build();
 
+    }
+
+    @POST
+    @Path("/{uid}/classes")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    public Response requestClass(@PathParam("uid") Long teacherId, ClassRequestDto classRequestDto){
+        Optional<Lecture> newLecture = lectureService.create(classRequestDto.getStudentId(), teacherId, classRequestDto.getLevel(),
+                classRequestDto.getSubjectId(), classRequestDto.getPrice());
+        if(!newLecture.isPresent()){
+          return Response.status(Response.Status.CONFLICT).build();
+        }
+        URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
+        return Response.created(location).build();
     }
 }
 
