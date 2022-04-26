@@ -25,7 +25,7 @@ public class ClassroomDto {
         classroomDto.level = lecture.getLevel();
         classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"posts").build().toString();
         classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"files").build().toString();
-        classroomDto.notifications = lecture.getNotifications();
+        //classroomDto.notifications = lecture.getNotifications();
         return classroomDto;
     }
 

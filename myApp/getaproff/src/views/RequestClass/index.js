@@ -11,6 +11,7 @@ import { useNavigate,  useParams} from "react-router-dom";
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
+  const [subjectIdx, setSubjectIdx] = useState();
   const [level, setLevel] = useState();
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -22,6 +23,8 @@ const RequestClass = () => {
         .then(res => navigate(`classes/${res.id}`))
   }
 
+  const handleSubject = e => setSubject(subjects[e.target.value]);
+
   useEffect( () => {
     console.log(id);
     userService.getUserSubjects(id.id)
@@ -30,7 +33,7 @@ const RequestClass = () => {
   }, [])
 
   useEffect( () => {
-      setLevels(subjects.map(s => s.level))
+      setLevels(subjects.filter(o => o.name === subject.name).map(value => value.level))
   }, [subject])
   
   return (
@@ -41,9 +44,9 @@ const RequestClass = () => {
           <Title>Request class</Title>
           <InputContainer>
             <p>Select subject</p>
-            <SelectDropdown type="Subjects" setIndex={setSubject} options={subjects.map( s => s.name)}/>
+            <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject} options={subjects.map( s => s.name)}/>
             <p>Select Level</p>
-            <SelectDropdown type="Levels" setIndex={setLevel} options={levels}/>
+            <SelectDropdown type="Levels" handler={setLevel} options={levels} disabled={levels.length === 1 }/>
           </InputContainer>
           <Button text='Send request' fontSize='1rem' callback={handleClassRequest}/>
         </Content>

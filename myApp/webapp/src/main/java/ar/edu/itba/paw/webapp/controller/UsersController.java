@@ -253,12 +253,15 @@ public class UsersController {
             return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok().build();
     }
+
+    @GET
+    @Path("/{uid}/image")
+    public Response getUserImage(@PathParam("uid") Long uid){
+        Optional<Image> img = imageService.findImageById(uid);
+        if (!img.isPresent())
+            return Response.status(Response.Status.NO_CONTENT).build();
+        return Response.ok(ImageDto.fromUser(uriInfo, img.get())).build();
+
+    }
 }
 
-//    @POST
-//    @Path("/{uid}/classes")
-//    public Response requestClass(@PathParam("uid") Long uid, ClassRequestDto classRequest){
-//        lectureService.create(,uid)
-//
-//    }
-//}

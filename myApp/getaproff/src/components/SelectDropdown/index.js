@@ -12,6 +12,15 @@ const Select = styled.select`
   font-size: var(--fontSmall);
   border: 1px solid var(--secondary);
   border-radius: 0.625rem;
+  
+  &:disabled {
+    background: #DEDEDE;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+   
+  }
 
   option {
     color: black;
@@ -23,12 +32,12 @@ const Select = styled.select`
   }
 `;
 
-const SelectDropdown = ({ type, options, handler, value }) => {
+const SelectDropdown = ({ type, options, handler, value, disabled }) => {
 
   return (
-    <Select onChange={handler} value={value}>
+    <Select onChange={handler} value={value} disabled={disabled}>
       {
-        type ? <option value="" hidden>{type}</option> : <></>
+        type && !disabled ? <option value="" hidden>{type}</option> : <></>
       }
       {
         options && options.map((option, index) => {

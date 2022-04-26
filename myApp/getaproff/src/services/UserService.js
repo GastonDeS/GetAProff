@@ -134,8 +134,11 @@ export class UserService {
 
     async getUserClasses(uid, asTeacher, status) {
         try {
-            let params = { status : status };
-            params[asTeacher? 'teacherId' : 'studentId'] = uid;
+            let params = {
+                status : status,
+                asTeacher: asTeacher,
+                userId: uid
+            };
             return await axios.get('/classes', {
                    params
                 })

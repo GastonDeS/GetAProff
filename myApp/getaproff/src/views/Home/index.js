@@ -24,8 +24,8 @@ const Home = () => {
           </SearchBarContainer>
           <ButtonContainer>
             {
-              subjects && subjects.map(item => {
-                return <Button text={item.name} fontSize='1rem' callback={() => navigate('tutors', {state: {subject: item}})}/>
+              subjects && subjects.map((item, index) => {
+                return <Button key={index} text={item.name} fontSize='1rem' callback={() => navigate('tutors', {state: {subject: item}})}/>
               })
             }
           </ButtonContainer>
@@ -33,7 +33,7 @@ const Home = () => {
         <Content>
           <h2>Top Rated Teachers</h2>
           <TutorContainer>
-            {topRated.map(item => {
+            {topRated && topRated.map(item => {
               return <TutorCard key={item.id} user={item}/>
             })}
           </TutorContainer>
@@ -41,7 +41,7 @@ const Home = () => {
         <Content>
           <h2>Most requested teachers</h2>
           <TutorContainer>
-          {mostRequested.map(item => {
+          {mostRequested && mostRequested.map(item => {
               return <TutorCard key={item.id} user={item}/>
             })}
           </TutorContainer>
@@ -49,9 +49,6 @@ const Home = () => {
       </MainContainer>
     </Wrapper>
   )
-}
-
-Home.propTypes = {
 }
 
 export default Home
