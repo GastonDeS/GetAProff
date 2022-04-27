@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -135,7 +136,8 @@ public class UsersController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
         final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
-                .map(SubjectInfoDto::fromSubjectInfo).collect(Collectors.toList());
+                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
+                .map(k -> SubjectInfoDto.fromSubjectInfo(k.getKey(), k.getValue())).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 

@@ -1,52 +1,71 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.Teaches;
+import ar.edu.itba.paw.models.utils.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SubjectInfoDto {
-    private String subject;
+    private String subjectName;
 
-    private Long id;
+    private Long teacherId, subjectId;
 
-    private int price, level;
+    private List<Integer> levels, prices;
 
-    public static SubjectInfoDto fromSubjectInfo(Teaches subject) {
+    public static SubjectInfoDto fromSubjectInfo(String subject, List<Teaches> subjectData) {
         SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
-        subjectInfoDto.id = subject.getTeacher().getId();
-        subjectInfoDto.subject = subject.getSubject().getName();
-        subjectInfoDto.level = subject.getLevel();
-        subjectInfoDto.price = subject.getPrice();
+        subjectInfoDto.levels = new ArrayList<>();
+        subjectInfoDto.prices = new ArrayList<>();
+        subjectInfoDto.teacherId = subjectData.get(0).getTeacher().getId();
+        subjectInfoDto.subjectId = subjectData.get(0).getSubject().getSubjectId();
+        subjectInfoDto.subjectName = subject;
+        subjectData.forEach(teaches -> {
+            subjectInfoDto.levels.add(teaches.getLevel());
+            subjectInfoDto.prices.add(teaches.getPrice());
+        });
         return subjectInfoDto;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getSubjectName() {
+        return subjectName;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
-    public Long getId() {
-        return id;
+    public Long getTeacherId() {
+        return teacherId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
     }
 
-    public int getPrice() {
-        return price;
+    public Long getSubjectId() {
+        return subjectId;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
-    public int getLevel() {
-        return level;
+    public List<Integer> getLevels() {
+        return levels;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setLevels(List<Integer> levels) {
+        this.levels = levels;
+    }
+
+    public List<Integer> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(List<Integer> prices) {
+        this.prices = prices;
     }
 }
+

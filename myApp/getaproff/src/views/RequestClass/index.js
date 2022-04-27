@@ -7,33 +7,46 @@ import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import SelectDropdown from '../../components/SelectDropdown'
 import { userService }  from "../../services";
+import authService from "../../services/authService";
 import { useNavigate,  useParams} from "react-router-dom";
+import {useForm} from "react-hook-form";
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
   const [subjectIdx, setSubjectIdx] = useState();
-  const [level, setLevel] = useState();
+  const [levelIndex, setLevelIndex] = useState();
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const { register} = useForm();
   const id = useParams();
   const navigate = useNavigate();
+  const currUser = authService.getCurrentUser();
 
   const handleClassRequest = () => {
-    userService.requestClass(id.id)
-        .then(res => navigate(`classroom/${res.id}`))
+    const requestData = {
+      subject: subject,
+      levelIdx: levelIndex,
+      studentId: currUser.id
+    }
+    userService.requestClass(id.id, requestData)
+        .then(res => navigate(`/classroom/${res.headers.location.split('/').pop()}`));
   }
 
-  const handleSubject = e => setSubject(subjects[e.target.value]);
+  const handleLevel = e => setLevelIndex(e.target.value);
+
+  const handleSubject = e => {
+    setSubject(subjects[e.target.value]);
+  }
 
   useEffect( () => {
-    console.log(id);
     userService.getUserSubjects(id.id)
-        .then(data => {setSubjects(data)
-        console.log(data);})
+        .then(data => setSubjects(data))
   }, [])
 
   useEffect( () => {
-      setLevels(subjects.filter(o => o.name === subject.name).map(value => value.level))
+    if(subject)
+      setLevels(subject.levels)
+    setLevelIndex('0')
   }, [subject])
   
   return (
@@ -44,9 +57,9 @@ const RequestClass = () => {
           <Title>Request class</Title>
           <InputContainer>
             <p>Select subject</p>
-            <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject} options={subjects.map( s => s.name)}/>
+            <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject} options={subjects.map( s => s.subjectName)}/>
             <p>Select Level</p>
-            <SelectDropdown type="Levels" handler={setLevel} options={levels} disabled={levels.length === 1 }/>
+            <SelectDropdown type="Levels" handler={handleLevel} options={levels} disabled={levels.length === 1 }/>
           </InputContainer>
           <Button text='Send request' fontSize='1rem' callback={handleClassRequest}/>
         </Content>

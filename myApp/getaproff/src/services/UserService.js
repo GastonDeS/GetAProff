@@ -10,14 +10,8 @@ export class UserService {
             let subjects = []
             await axios.get(`/users/${uid}/subjects`)
                 .then(res => {
-                    res.data.forEach(item => {
-                        subjects.push( {
-                            name: item.subject,
-                            price: '$' + item.price + '/' + i18next.t('subjects.hour'),
-                            level: i18next.t('subjects.levels.' + item.level)
-                        });
-                    });
-            });
+                    subjects = res.data
+                    })
             return subjects;
         }
         catch (err) { console.log(err) }
@@ -123,9 +117,18 @@ export class UserService {
 
 
 
-    async requestClass(uid) {
+    async requestClass(uid, requestData) {
         try {
-            await axios.post(`${PATH}/${uid}/classes`)
+            let response;
+            let priceAndLevelIdx = parseInt(requestData.levelIdx);
+            await axios.post(`${PATH}/${uid}/classes`, {
+                studentId: requestData.studentId,
+                subjectId: requestData.subject.subjectId,
+                level: requestData.subject.levels[priceAndLevelIdx],
+                price: requestData.subject.prices[priceAndLevelIdx],
+            })
+                .then(res => response = res);
+            return response;
         }
         catch (err) {
             console.log(err)
