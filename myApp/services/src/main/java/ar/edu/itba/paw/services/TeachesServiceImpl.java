@@ -117,7 +117,11 @@ public class TeachesServiceImpl implements TeachesService {
             Subject subject = teaches.getSubject();
             List<Integer> newLevels = availableSubjects.get(subject);
             newLevels.remove(new Integer(teaches.getLevel()));
-            availableSubjects.replace(subject, newLevels);
+            if (newLevels.isEmpty()) {
+                availableSubjects.remove(subject);
+            } else {
+                availableSubjects.replace(subject, newLevels);
+            }
         });
         return availableSubjects;
     }

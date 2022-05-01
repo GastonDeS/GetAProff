@@ -26,6 +26,7 @@ const EditSubjects = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
+  const [deleted, setDeleted] = useState([])
 
   const navigate = useNavigate();
 
@@ -39,9 +40,15 @@ const EditSubjects = () => {
     } else {
       setError(false);
       await axios.post("/users/145/" + subject.id + "/" + price + "/" + level.id).catch(error => {});
+      setSubjectsTaught([...subjectsTaught, {
+        name: subject.name,
+        price: '$' + price + '/' + i18next.t('subjects.hour'),
+        level: i18next.t('subjects.levels.' + level.id),
+        url: '/' + subject.id + '/' + level.id,
+        checked: false
+      }])
       setPrice("");
-      fetchAvailableSubjects();
-      fetchSubjectsTaught();
+      setLoading(true);
     }
   }
 
@@ -72,7 +79,17 @@ const EditSubjects = () => {
   }
 
   const handleDeleteSubjects = () => {
-    
+    setDeleted([]);
+    subjectsTaught.forEach((subject) => {
+      if (subject.checked) {
+        axios
+        .delete("/users/145" + subject.url)
+        .then(() => {
+          setDeleted((previous) => [...previous, subject.url]);
+        })
+        .catch((error) => {});
+      }
+    });
   }
 
   const handleLevelChange = (event) => {
@@ -117,6 +134,13 @@ const EditSubjects = () => {
   }
 
   useEffect(() => {
+    deleted.forEach((url) => {
+      setSubjectsTaught(subjectsTaught.filter((item) => item.url !== url));
+    });
+    fetchAvailableSubjects();
+  }, [deleted]);
+
+  useEffect(() => {
     level && setLoading(false);
   }, [level])
 
@@ -129,12 +153,15 @@ const EditSubjects = () => {
   }, [availableSubjects]);
 
   useEffect(() => {
-    console.log(subjectsTaught)
-  }, [subjectsTaught])
+    loading && fetchAvailableSubjects();
+  }, [loading]);
+
+  useEffect(() => {
+    if (subjectsTaught && subjectsTaught.length === 0) setCheckAll(false);
+  }, [subjectsTaught]);
 
   useEffect(async () => {
     fetchSubjectsTaught();
-    fetchAvailableSubjects();
   }, []);
 
   return (

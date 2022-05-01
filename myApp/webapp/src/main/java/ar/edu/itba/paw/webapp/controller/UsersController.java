@@ -147,10 +147,10 @@ public class UsersController {
     }
 
     @DELETE
-    @Path("/{userId}/{id}/{level}")
+    @Path("/{userId}/{subjectId}/{level}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("id") Long id, @PathParam("level") int level) {
-        return teachesService.removeSubjectToUser(userId, id, level) == 1 ?
+    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
+        return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
