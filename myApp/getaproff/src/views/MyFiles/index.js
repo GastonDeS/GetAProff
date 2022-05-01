@@ -88,13 +88,13 @@ const MyFiles = () => {
     setNewFiles(newFiles.concat(uploaded));
   };
 
-  const removeNewFile = (name) => {
-    setNewFiles(newFiles.filter(item => item.name !== name));
+  const removeNewFile = (file) => {
+    setNewFiles(newFiles.filter(item => item.name !== file.name));
   };
 
-  const handleCheckedFile = (checked, id) => {
+  const handleCheckedFile = (checked, checkedFile) => {
     setFilteredFiles(filteredFiles.map(file => {
-      if (Number(file.id) === id ) file.selected = checked;
+      if (Number(file.id) === Number(checkedFile.id)) file.selected = checked;
       return file;
     }));
   };
@@ -113,13 +113,20 @@ const MyFiles = () => {
     });
   };
 
-  const handleDeleteAll = (event) => {
+  const handleCheckAll = (event) => {
     setCheckAll(event.target.checked);
     if (event.target.checked) {
       setFilteredFiles(filteredFiles.map(file => {
         return {
           ...file,
           selected: true
+        }
+      }));
+    } else {
+      setFilteredFiles(filteredFiles.map(file => {
+        return {
+          ...file,
+          selected: false
         }
       }));
     };
@@ -181,7 +188,7 @@ const MyFiles = () => {
                   {i18next.t("files.level")}
                 </Headers>
                 <Headers style={{ width: "5%" }}>
-                  <CheckBox checked={checkAll} handleCheck={handleDeleteAll}/>
+                  <CheckBox checked={checkAll} handleCheck={handleCheckAll}/>
                 </Headers>
               </Row>
             </thead>

@@ -19,12 +19,13 @@ import CheckBox from "../../components/CheckBox";
 
 const EditSubjects = () => {
   const [subject, setSubject] = useState();
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState("");
   const [level, setLevel] = useState();
   const [availableSubjects, setAvailableSubjects] = useState([]);
   const [subjectsTaught, setSubjectsTaught] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [checkAll, setCheckAll] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,21 +33,46 @@ const EditSubjects = () => {
     setPrice(event.target.value);
   }
 
-  const handleAddSubject = () => {
-    console.log(subject + ' ' + price + ' ' + level)
+  const handleAddSubject = async() => {
     if (!price || price <= 0) {
       setError(true);
     } else {
       setError(false);
-      // TODO: POST SUBJECT
+      await axios.post("/users/145/" + subject.id + "/" + price + "/" + level.id).catch(error => {});
+      setPrice("");
+      fetchAvailableSubjects();
+      fetchSubjectsTaught();
     }
   }
 
-  const remove = (rowId, url) => {
-    // Array.prototype.filter returns new array
-    // so we aren't mutating state here
-    // const arrayCopy = rows.data.filter((row) => row.id !== rowId);
-    // setRows({ data: arrayCopy });
+  const handleCheckedsubject = (checked, subject) => {
+    setSubjectsTaught(subjectsTaught.map(item => {
+      if (item.url === subject.url) item.checked = checked;
+      return item;
+    }));
+  }
+
+  const handleCheckAll = (event) => {
+    setCheckAll(event.target.checked);
+    if (event.target.checked) {
+      setSubjectsTaught(subjectsTaught.map(subject => {
+        return {
+          ...subject,
+          checked: true
+        }
+      }));
+    } else {
+      setSubjectsTaught(subjectsTaught.map(subject => {
+        return {
+          ...subject,
+          checked: false
+        }
+      }));
+    }
+  }
+
+  const handleDeleteSubjects = () => {
+    
   }
 
   const handleLevelChange = (event) => {
@@ -56,6 +82,39 @@ const EditSubjects = () => {
   const handleSubjectChange = (event) => {
     setSubject(availableSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0]);
   };
+
+  const fetchSubjectsTaught = async (id) => {
+    await axios.get("/users/145/subjects").then(res => {
+      setSubjectsTaught(res.data.map((item) => {
+        return { 
+          name: item.subject,
+          price: '$' + item.price + '/' + i18next.t('subjects.hour'),
+          level: i18next.t('subjects.levels.' + item.level),
+          url: '/' + item.id + '/' + item.level,
+          checked: false
+        };
+      }))
+    });
+  }
+
+  const fetchAvailableSubjects = async (id) => {
+    await axios.get("/users/available-subjects/145").then(res => {
+      setAvailableSubjects(res.data.map((item) => {
+        var levels = []
+        item.levels.forEach(level => {
+          levels.push({
+            id: level,
+            name: i18next.t('subjects.levels.' + level)
+          })
+        })
+        return {
+          name: item.name,
+          id: item.subjectId,
+          levels: levels
+        }
+      }))
+    });
+  }
 
   useEffect(() => {
     level && setLoading(false);
@@ -69,33 +128,13 @@ const EditSubjects = () => {
     availableSubjects && setSubject(availableSubjects[0]);
   }, [availableSubjects]);
 
+  useEffect(() => {
+    console.log(subjectsTaught)
+  }, [subjectsTaught])
+
   useEffect(async () => {
-    axios.get("/teachers/subjects/145").then(res => {
-      setSubjectsTaught(res.data.map((item) => {
-        return { 
-          first: item.subject,
-          second: '$' + item.price + '/' + i18next.t('subjects.hour'),
-          third: i18next.t('subjects.levels.' + item.level),
-          url: item.id + '/' + item.level,
-        };
-      }))
-    });
-    axios.get("/teachers/available-subjects/145").then(res => {
-      setAvailableSubjects(res.data.map((item) => {
-        var levels = []
-        item.levels.forEach(level => {
-          levels.push({
-            id: level,
-            name: "subjects.levels." + level
-          })
-        })
-        return {
-          name: item.subject.name,
-          id: item.subject.subjectId,
-          levels: levels
-        }
-      }))
-    })
+    fetchSubjectsTaught();
+    fetchAvailableSubjects();
   }, []);
 
   return (
@@ -110,7 +149,7 @@ const EditSubjects = () => {
             }
             <SingleSelect>
               <p>{i18next.t('editSubjects.price')}</p>
-              <input type="text" placeholder="0" onChange={onChangePrice}/>
+              <input type="text" placeholder="0" onChange={onChangePrice} value={price}/>
             </SingleSelect>
             {
               error && <ErrorMsg>{i18next.t('errors.price')}</ErrorMsg>
@@ -137,15 +176,24 @@ const EditSubjects = () => {
                 <Headers style={{ width: "45%" }}>{i18next.t('subjects.subject')}</Headers>
                 <Headers style={{ width: "20%" }}>{i18next.t('subjects.price')}</Headers>
                 <Headers style={{ width: "30%" }}>{i18next.t('subjects.level')}</Headers>
-                <Headers style={{ width: "5%" }}><CheckBox/></Headers>
+                <Headers style={{ width: "5%" }}><CheckBox checked={checkAll} handleCheck={handleCheckAll}/></Headers>
               </Row>
             </thead>
             <tbody>
               {subjectsTaught.map((item, index) => {
-                return <Rows key={index} remove={remove} data={item} rowId={index}/>
+                return <Rows key={index} handleCheck={handleCheckedsubject} data={item} checked={item.checked}/>
               })}
             </tbody>
           </Table>
+          {subjectsTaught.filter(subject => subject.checked).length === 0 ? (
+              <></>
+            ) : (
+              <Button
+                callback={handleDeleteSubjects}
+                text="Borrar Materias"
+                fontSize="1rem"
+              />
+          )}
         </Content>
       </MainContainer>
     </Wrapper>

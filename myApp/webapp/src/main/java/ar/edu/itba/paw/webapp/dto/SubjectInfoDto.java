@@ -11,7 +11,7 @@ public class SubjectInfoDto {
 
     public static SubjectInfoDto fromSubjectInfo(Teaches subject) {
         SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
-        subjectInfoDto.id = subject.getTeacher().getId();
+        subjectInfoDto.id = subject.getSubject().getSubjectId();
         subjectInfoDto.subject = subject.getSubject().getName();
         subjectInfoDto.level = subject.getLevel();
         subjectInfoDto.price = subject.getPrice();
