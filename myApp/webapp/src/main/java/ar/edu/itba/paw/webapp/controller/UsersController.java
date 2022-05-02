@@ -3,12 +3,15 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.requestDto.NewSubjectDto;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
@@ -190,11 +193,12 @@ public class UsersController {
     }
 
     @POST
-    @Path("/{userId}/{subjectId}/{price}/{level}")
+    @Path("/{userId}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response addSubjectToUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId,
-                                     @PathParam("price") int price, @PathParam("level") int level) {
-        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, subjectId, price, level);
+    public Response addSubjectToUser(@PathParam("userId") Long userId, @Valid @RequestBody NewSubjectDto newSubjectDto) {
+        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
+                newSubjectDto.getPrice(), newSubjectDto.getLevel());
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 

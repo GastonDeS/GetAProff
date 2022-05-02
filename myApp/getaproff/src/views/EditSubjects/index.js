@@ -39,7 +39,11 @@ const EditSubjects = () => {
       setError(true);
     } else {
       setError(false);
-      await axios.post("/users/145/" + subject.id + "/" + price + "/" + level.id).catch(error => {});
+      await axios.post("/users/145/", {
+        subjectId: subject.id,
+        price: price,
+        level: level.id
+      }).catch(error => {});
       setSubjectsTaught([...subjectsTaught, {
         name: subject.name,
         price: '$' + price + '/' + i18next.t('subjects.hour'),
