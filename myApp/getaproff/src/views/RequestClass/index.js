@@ -57,9 +57,11 @@ const RequestClass = () => {
           <Title>Request class</Title>
           <InputContainer>
             <p>Select subject</p>
-            <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject} options={subjects.map( s => s.subjectName)}/>
+            <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject}
+                            options={subjects.map( s => s.subjectName)} usingIndexAsValue={true}/>
             <p>Select Level</p>
-            <SelectDropdown type="Levels" handler={handleLevel} options={levels} disabled={levels.length === 1 }/>
+            <SelectDropdown type="Levels" handler={handleLevel} options={levels} disabled={levels.length === 1 }
+            usingIndexAsValue={true}/>
           </InputContainer>
           <Button text='Send request' fontSize='1rem' callback={handleClassRequest}/>
         </Content>

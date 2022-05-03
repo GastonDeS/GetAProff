@@ -32,7 +32,7 @@ const Select = styled.select`
   }
 `;
 
-const SelectDropdown = ({ type, options, handler, value, disabled }) => {
+const SelectDropdown = ({ type, options, handler, value, disabled, usingIndexAsValue=false }) => {
 
   return (
     <Select onChange={handler} value={value} disabled={disabled}>
@@ -41,7 +41,13 @@ const SelectDropdown = ({ type, options, handler, value, disabled }) => {
       }
       {
         options && options.map((option, index) => {
-          return <option key={index} value={option.id}>{option.name}</option>
+          let name;
+          if (i18next.t(option.index)) {
+            name = i18next.t(option.index)
+          } else {
+            name = option
+          }
+          return <option key={index} value={usingIndexAsValue? index : options.id}>{option.name? option.name : name}</option>
         })
       }
     </Select>
@@ -51,7 +57,8 @@ const SelectDropdown = ({ type, options, handler, value, disabled }) => {
 SelectDropdown.propTypes = {
   options: PropTypes.array,
   type: PropTypes.string,
-  handler: PropTypes.func
+  handler: PropTypes.func,
+  usingIndexAsValue: PropTypes.bool
 };
 
 export default SelectDropdown;

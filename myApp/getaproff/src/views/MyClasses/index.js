@@ -61,7 +61,7 @@ const MyClasses = () => {
             </Tab>
             <Filter>Filter by:</Filter>
             <SelectContainer>
-              <SelectDropdown options={options} handler={handleFilter} type='Status'/>
+              <SelectDropdown options={options} handler={handleFilter} type='Status' usingIndexAsValue={true}/>
             </SelectContainer>
           </FilterContainer>
           <CardContainer>
