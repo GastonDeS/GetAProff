@@ -27,19 +27,36 @@ import {set, useForm} from "react-hook-form";
 
 const Classroom = () => {
     const files = 1;
-    const finished = 0;
+    const FINISHED = 3;
     const [classInfo, setClassInfo] = useState();
+    const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
     const [refreshPosts, setRefreshPosts] = useState();
-
     const {register, handleSubmit, watch, reset} = useForm()
     const id = useParams();
     const watchFileName = watch("file");
     const user = authService.getCurrentUser();
     const [isTeacherClassroom, setIsTeacherClassroom] = useState(false)
 
+    const acceptClass = () =>{
+        classroomService.changeClassStatus(id.id, 1, user.id).
+        then(
+            data => {
+                console.log(data);
+                setClassStatus(1)
+            })
+    }
 
-    const publishPost = (data) => {
+    const cancelClass = () => {
+        classroomService.changeClassStatus(id.id, FINISHED, user.id).
+        then(
+            data => {
+                console.log(data);
+                setClassStatus(3)
+            })
+    }
+
+    const publishPost = data => {
         classroomService.createPost(id.id, data, user.id)
             .then(
                 response => {
@@ -56,7 +73,7 @@ const Classroom = () => {
                 setClassInfo(data);
             })
             .catch(err => console.log(err));
-    }, [])
+    }, [classStatus])
 
     useEffect(() => {
         if(classInfo && classInfo.teacher)
@@ -93,24 +110,25 @@ const Classroom = () => {
                                     : (classInfo.status === 1) ? <ClassStatus style={{background: "green"}}>
                                             <h6 style={{color: "black", margin: "0"}}>Active</h6>
                                         </ClassStatus>
-                                        : <ClassStatus style={{background: "white"}}>
+                                        : <ClassStatus style={{background: "#d3d3d3"}}>
                                             <h6 style={{color: "black", margin: "0"}}>Finished</h6>
                                         </ClassStatus>
                                 }
                                 {classInfo.status === 0 ? (
                                     <ButtonContainer>
                                         {isTeacherClassroom &&
-                                            <Button text={"Accept"}/>
+                                            <Button text={"Accept"} callback={acceptClass}/>
                                         }
                                         <Button text={"Cancel"} color={'#FFC300'} fontColor={'black'}/>
                                     </ButtonContainer>
-                                ) : (
-                                    <Button text={"Cancel"} color={'#ffc107'} fontColor={'black'}/>
+                                ) :
+                                    classInfo.status !== FINISHED && (
+                                    <Button text={"Finish"} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
-                            {(finished === 0) ?
+                            {(classInfo.status !== FINISHED) ?
                                 <PostFormContainer onSubmit={handleSubmit(publishPost)}>
                                     <Textarea name="postTextInput" register={register} placeholder="Hola! Te consulto sobre este examen..." style={{
                                         borderRadius: "10px",
@@ -134,7 +152,7 @@ const Classroom = () => {
                                     </ButtonContainer>
                                 </PostFormContainer>
                                 :
-                                <div/>
+                                <h2>La clase termino</h2>
                             }
                             <BigBox>
                                 {classPosts && classPosts.map(post => {
@@ -160,7 +178,7 @@ const Classroom = () => {
                             </BigBox>
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
-                            {isTeacherClassroom &&
+                            {isTeacherClassroom && classInfo.status !== FINISHED &&
                             <>
                                 <ClassContentSide>
                                     <h2>My Files</h2>

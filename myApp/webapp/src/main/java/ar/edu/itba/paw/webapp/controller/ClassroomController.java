@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
+import jdk.net.SocketFlow;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -121,8 +123,10 @@ public class ClassroomController {
     @Path("/{classId}/status")
     @Consumes( value = {MediaType.APPLICATION_JSON})
     public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
-//        Lecture lecture = checkLectureExistence(classId);
-        //TODO logica de negocio de si es valido subir el archivo o no creo que va en la capa de servicios
+        Lecture lecture = checkLectureExistence(classId);
+        //TODO: el alumno no la puede cancelar?
+        if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
+            return Response.status(Response.Status.FORBIDDEN).build();
         lectureService.setStatus(classId, newStatus.getStatus());
         return Response.ok().build();
     }

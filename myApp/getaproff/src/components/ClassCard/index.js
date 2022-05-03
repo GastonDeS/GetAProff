@@ -20,6 +20,10 @@ const ClassCard = ({ subject, user, level, price, statusCode, canRate, classId, 
       color = 'red';
       status= 'Finished';
       break;
+    case 3:
+      color = 'red';
+      status= 'Finished';
+      break;
     default:
       color = 'red';
       status = 'Error'

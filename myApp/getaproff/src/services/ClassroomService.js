@@ -45,6 +45,23 @@ export class ClassroomService {
             console.log(err);
         }
     }
+
+    async changeClassStatus(classId, newStatus, uid) {
+        try {
+            let postData = {
+                status: newStatus,
+                userId: uid
+            }
+            let data;
+            await axios.post(`${PATH}/${classId}/status`, postData)
+                .then(res => data = res.data
+                )
+            return data;
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
 }
 
 
