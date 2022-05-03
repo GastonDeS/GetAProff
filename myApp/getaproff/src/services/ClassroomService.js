@@ -10,7 +10,7 @@ export class ClassroomService {
             let response;
             let formData = new FormData();
             formData.append("message", data.postTextInput);
-            formData.append("file", data.file);
+            formData.append("file", data.file[0]);
             formData.append("uploader", uid);
             await axios.post(`${PATH}/${classId}/posts`, formData, {
                 headers: { 'Content-Type' : 'multipart/form-data' }

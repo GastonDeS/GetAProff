@@ -23,41 +23,52 @@ import Textarea from "../../components/Textarea";
 import {classroomService} from "../../services"
 import authService from "../../services/authService";
 import {useParams} from "react-router-dom";
-import {useForm} from "react-hook-form";
+import {set, useForm} from "react-hook-form";
 
 const Classroom = () => {
-    const teach = Math.round(Math.random());
-    const profile = Math.random();
     const files = 1;
     const finished = 0;
     const [classInfo, setClassInfo] = useState();
     const [classPosts, setClassPosts] = useState();
-    const {register, handleSubmit, watch, resetField} = useForm()
+    const [refreshPosts, setRefreshPosts] = useState();
+
+    const {register, handleSubmit, watch, reset} = useForm()
     const id = useParams();
     const watchFileName = watch("file");
     const user = authService.getCurrentUser();
+    const [isTeacherClassroom, setIsTeacherClassroom] = useState(false)
+
 
     const publishPost = (data) => {
         classroomService.createPost(id.id, data, user.id)
-            .then(response => console.log(response));
-        resetField('postTextInput');
+            .then(
+                response => {
+                    console.log(response);
+                    setRefreshPosts(true);
+                })
+            .catch(err => console.log(err))
+        reset()
     }
 
-    useEffect( () => {
+    useEffect(() => {
         classroomService.fetchClassroomInfo(id.id)
             .then(data => {
                 setClassInfo(data);
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err));
     }, [])
+
+    useEffect(() => {
+        if(classInfo && classInfo.teacher)
+            setIsTeacherClassroom(classInfo.teacher.id === user.id)
+    },[classInfo])
 
     useEffect(() => {
         classroomService.fetchClassroomPosts(id.id)
             .then(data => setClassPosts(data))
-    }, [classPosts])
+    }, [refreshPosts])
 
 
-    let currId = 1;
     return (
         <Wrapper>
             <Navbar/>
@@ -70,11 +81,8 @@ const Classroom = () => {
                             <ClassContentSide>
                                 <h2>Classroom</h2>
                                 <p>Subject: {classInfo.subjectName}</p>
-                                {(teach === 1) ?
-                                    <p>Student: {classInfo.student.name}</p>
-                                    :
-                                    <p>Teacher: {classInfo.teacher.name}</p>
-                                }
+                                <p>Student: {classInfo.student.name}</p>
+                                <p>Teacher: {classInfo.teacher.name}</p>
                                 <p>Price: ${classInfo.price}/hour</p>
                             </ClassContentSide>
                             <ClassContentSide>
@@ -90,16 +98,14 @@ const Classroom = () => {
                                         </ClassStatus>
                                 }
                                 {classInfo.status === 0 ? (
-                                    <>
-                                        {classInfo.teacher.id === currId ? (
-                                            <></>
-                                        ) : (
+                                    <ButtonContainer>
+                                        {isTeacherClassroom &&
                                             <Button text={"Accept"}/>
-                                        )}
-                                        <Button text={"Cancel"}/>
-                                    </>
+                                        }
+                                        <Button text={"Cancel"} color={'#FFC300'} fontColor={'black'}/>
+                                    </ButtonContainer>
                                 ) : (
-                                    <Button text={"Finish"} color={'#ffc107'} fontColor={'black'}/>
+                                    <Button text={"Cancel"} color={'#ffc107'} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
@@ -128,7 +134,7 @@ const Classroom = () => {
                                     </ButtonContainer>
                                 </PostFormContainer>
                                 :
-                                <div></div>
+                                <div/>
                             }
                             <BigBox>
                                 {classPosts && classPosts.map(post => {
@@ -139,41 +145,47 @@ const Classroom = () => {
                                     <p style={{fontSize: "0.8em"}}>{post.time.split('T')[0]}</p>
                                     </ButtonHolder>
                                     <p>{post.message}</p>
-                                    <a target="_blank" href=""
-                                    style={{
-                                    color: "blue",
-                                    textDecoration: "underline",
-                                    marginTop: "5px"
-                                }}>{post.file && post.file.name}</a>
+                                        {post.file &&
+                                        <a target="_blank" href={post.file.uri}
+                                           style={{
+                                           color: "blue",
+                                           textDecoration: "underline",
+                                           marginTop: "5px"
+                                           }}>
+                                            {post.file.name}
+                                        </a>}
                                     </PostBox>
-                                    )})}
+                                )
+                                })}
                             </BigBox>
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
-                            <ClassContentSide>
-                                <h2>My Files</h2>
-                                {(files === 0) ?
-                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>There are no files to share.</span>
-                                    :
-                                    <div>
-                                        <h6 style={{margin: "2px 0 2px 0"}}>Choose the files you want to share in this
-                                            class</h6>
-                                        <SharedFilesContainer>
-                                            <Ul>
+                            {isTeacherClassroom &&
+                            <>
+                                <ClassContentSide>
+                                    <h2>My Files</h2>
+                                    {(files === 0) ?
+                                        <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>There are no files to share.</span>
+                                        :
+                                        <div>
+                                            <h6 style={{margin: "2px 0 2px 0"}}>Choose the files you want to share in
+                                                this
+                                                class</h6>
+                                            <SharedFilesContainer>
+                                                <Ul>
                                                     <li>
                                                         <SubjectsRow>
                                                         <a style={{fontWeight: "bold"}}
                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                                            target="_blank">File name</a>
                                                         <input type="checkbox" name="sharedFiles"
-                                                               class="form-check-input"
                                                                style={{
                                                                    width: "18px",
                                                                    height: "18px",
                                                                    marginRight: "4px"
                                                                }}
                                                                value="${file.fileId}"
-                                                               onclick="showButton(this.name,'share-button')"/>
+                                                               />
                                                         </SubjectsRow>
                                                     </li>
                                             </Ul>
@@ -214,6 +226,8 @@ const Classroom = () => {
                                         </SharedFilesContainer>
                                 }
                             </ClassContentSide>
+                            </>
+                            }
                             <ClassContentSide>
                                 <h2>Class files</h2>
                                 {(files === 0) ?
