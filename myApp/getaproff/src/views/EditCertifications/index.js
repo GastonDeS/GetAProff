@@ -95,7 +95,7 @@ const EditCertifications = () => {
             multiple
           />
         </label>
-        <Button text="Save changes" fontSize="1rem" callback={() => navigate('/profile/' + currentUser.id)}/>
+        <Button text="Save changes" fontSize="1rem" callback={() => navigate('/users/' + currentUser.id)}/>
       </ButtonContainer>
     );
   };

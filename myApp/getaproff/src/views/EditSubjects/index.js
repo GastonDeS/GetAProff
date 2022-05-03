@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import i18next from "i18next";
 import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/authService";
 
 import {
   MainContainer,
   Content,
   SelectContainer,
   SingleSelect,
-  ErrorMsg
+  ErrorMsg,
+  ButtonContainer
 } from "./EditSubjects.styles";
 import Navbar from "../../components/Navbar";
 import Rows from '../../components/Rows';
@@ -26,7 +28,8 @@ const EditSubjects = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
-  const [deleted, setDeleted] = useState([])
+  const [deleted, setDeleted] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
 
   const navigate = useNavigate();
 
@@ -166,6 +169,7 @@ const EditSubjects = () => {
 
   useEffect(async () => {
     fetchSubjectsTaught();
+    setCurrentUser(AuthService.getCurrentUser());
   }, []);
 
   return (
@@ -216,15 +220,23 @@ const EditSubjects = () => {
               })}
             </tbody>
           </Table>
-          {subjectsTaught.filter(subject => subject.checked).length === 0 ? (
-              <></>
-            ) : (
-              <Button
-                callback={handleDeleteSubjects}
-                text="Borrar Materias"
-                fontSize="1rem"
-              />
-          )}
+          <ButtonContainer>
+            <Button
+              text="Volver"
+              fontSize="1rem"
+              callback={() => {navigate('/users/' + currentUser.id)}}
+            />
+            {subjectsTaught.filter(subject => subject.checked).length === 0 ? (
+                <></>
+              ) : (
+                <Button
+                  callback={handleDeleteSubjects}
+                  text="Borrar Materias"
+                  fontSize="1rem"
+                  color="red"
+                />
+            )}
+          </ButtonContainer>
         </Content>
       </MainContainer>
     </Wrapper>

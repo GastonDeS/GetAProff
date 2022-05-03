@@ -48,5 +48,13 @@
     "price": "Ingresar precio por hora:",
     "level": "Seleccionar nivel:",
     "title": "Editar materias"
+  },
+  "myClasses": {
+    "status": {
+      "any": "Todos",
+      "pending": "Pendiente",
+      "active": "Activo",
+      "finished": "Finalizado"
+    }
   }
 }

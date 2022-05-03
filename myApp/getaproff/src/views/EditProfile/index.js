@@ -20,6 +20,7 @@ const EditProfile = () => {
   const [change, setChange] = useState(false);
   const [image, setImage] = useState(Default);
   const [currentUser, setCurrentUser] = useState();
+  // const [url, setUrl] = useState('users/')
   const {register, formState: { errors }, handleSubmit, reset, setValue} = useForm({defaultValues : { nameInput: "", schedule: "", description: ""}});
 
   const handleRoleChange = () => {
@@ -34,11 +35,11 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (currentUser) {
-      let url = '/users';
+      let getUserUrl = '/users';
       if (!currentUser.teacher) {
         setIsTeacher(false);
       }
-      axios.get(url + '/' + currentUser.id).then(res => {
+      axios.get(getUserUrl + '/' + currentUser.id).then(res => {
         reset({
           nameInput: res.data.name
         })
@@ -50,7 +51,7 @@ const EditProfile = () => {
         }
       });
       //TODO: Revisar este endpoint
-      axios.get( '/images/' + currentUser.id)
+      axios.get( `/users/${currentUser.id}/image`)
         .then(res => {
           setImage('data:image/png;base64,' + res.data.image);
         })
@@ -59,21 +60,19 @@ const EditProfile = () => {
   }, [currentUser]);
 
   const onSubmit = (data) => {
-    let formData = new FormData();
+    var formData = new FormData();
     formData.append("name", data.nameInput);
     formData.append("description", data.description);
     formData.append("schedule", data.schedule);
     formData.append("image", data.image[0]);
-    formData.append("wantToTeach", isTeacher? "true" : "false");
+    formData.append("wantToTeach", change? "true" : "false");
 
     //TODO: service
-    axios.post('/users' + '/' + currentUser.id, formData, {
+    axios.post('/users/' + currentUser.id, formData, {
       headers: { 'Content-Type' : 'multipart/form-data' }
-    })
-        .then( () => {
-          navigate("/users/"+ currentUser.id);
-        })
-        .catch( err => console.log(err));
+    }).then( () => {
+      navigate("/users/"+ currentUser.id);
+    }).catch( err => console.log(err));
   }
 
   return (
@@ -97,7 +96,7 @@ const EditProfile = () => {
                   {errors.schedule && <Error>{errors.schedule.message}</Error>}
                 </>
               }
-              <Button type="submit" text="Save changes" />
+              <Button type="Submit" text="Save changes" callback={() => {navigate('/users/' + currentUser.id)}}/>
             </Form>
           {!isTeacher && (<>
             <Request>

@@ -10,18 +10,35 @@ import { Wrapper, MainContainer } from "../../GlobalStyle";
 import AuthService from "../../services/authService";
 import {classroomService, userService} from "../../services";
 import {useNavigate} from "react-router-dom";
+import i18next from "i18next";
 
 const MyClasses = () => {
   const navigate = useNavigate();
   const [tabIndex, setTabIndex] = useState(0);
-  const [filterIndex, setFilterIndex] = useState(0);
+  const [status, setStatus] = useState(0);
   const [requestedClasses, setRequestedClasses] = useState([]);
   const [offeredClasses, setOfferedClasses] = useState([]);
   const currUser = AuthService.getCurrentUser();
-  const options = ['Any', 'Pending', 'Active', 'Finished'];
+  const options = [
+    {
+      name: i18next.t('myClasses.status.any'),
+      id: 0
+    },
+    {
+      name: i18next.t('myClasses.status.pending'),
+      id: 1
+    },
+    {
+      name: i18next.t('myClasses.status.active'),
+      id: 2
+    },
+    {
+      name: i18next.t('myClasses.status.finished'),
+      id: 3
+    }];
 
   const handleFilter = e => {
-    setFilterIndex(e.target.value);
+    setStatus(e.target.value);
   }
   const handleRate = e => {
     console.log("rate");
@@ -42,9 +59,9 @@ const MyClasses = () => {
   useEffect( () => {
     let asTeacher = tabIndex === 1;
     let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
-    userService.getUserClasses(currUser.id, asTeacher, filterIndex - 1)
+    userService.getUserClasses(currUser.id, asTeacher, status - 1)
         .then(res => setClasses([...res.data]))
-  }, [tabIndex, filterIndex]);
+  }, [tabIndex, status]);
 
 
   return (
@@ -57,11 +74,13 @@ const MyClasses = () => {
               {/* index = 0 */}
               <TabItem style={{ borderRadius: '0.625rem' }} fontSize="1.1rem">Requested</TabItem>
               {/* index = 1 */}
-              <TabItem fontSize="1.1rem">Offered</TabItem>
+              {
+                currUser.teacher ? <TabItem fontSize="1.1rem">Offered</TabItem> : <></>
+              }
             </Tab>
-            <Filter>Filter by:</Filter>
+            <Filter>Filter status:</Filter>
             <SelectContainer>
-              <SelectDropdown options={options} handler={handleFilter} type='Status' usingIndexAsValue={true}/>
+              <SelectDropdown options={options} handler={handleFilter}/>
             </SelectContainer>
           </FilterContainer>
           <CardContainer>
@@ -75,8 +94,6 @@ const MyClasses = () => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}
                                     price={Class.price} level={Class.level} statusCode={Class.status} canRate={true} handlers={handler}/>
                 })}
-            {/*<ClassCard subject="Programación Orientada a Objetos"/>*/}
-            {/*<ClassCard subject="Programación Imperativa"/>*/}
           </CardContainer>
         </Content>
       </MainContainer>

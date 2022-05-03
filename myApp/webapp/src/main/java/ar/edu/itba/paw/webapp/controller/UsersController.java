@@ -170,20 +170,18 @@ public class UsersController {
                                        @FormDataParam("teach") String wantToTeach ) throws IOException {
 
         boolean added = false;
-        int desc =0, sch =0, name = 0;
-        Optional<User> currUser = userService.getCurrentUser();
-//            if (wantToTeach.equals("true")) {
-//                added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
-//            }
-//            userService.setTeacherAuthorityToUser();
-            desc = userService.setUserDescription(id, newDescription);
-            sch = userService.setUserSchedule(id, newSchedule);
-            name = userService.setUserName(id, newName);
-            //TODO: hacerlo solo si mandan imagen
-            imageService.createOrUpdate(id, IOUtils.toByteArray(newImage));
+        if (wantToTeach.equals("true")) {
+            added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
+        }
+        userService.setTeacherAuthorityToUser();
+        int desc = userService.setUserDescription(id, newDescription);
+        int sch = userService.setUserSchedule(id, newSchedule);
+        int name = userService.setUserName(id, newName);
+        //TODO: hacerlo solo si mandan imagen
+        imageService.createOrUpdate(id, IOUtils.toByteArray(newImage));
 
         //TODO: Chequear esto?
-        return (desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        return (desc == 1 && sch == 1 && name == 1 && added) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 

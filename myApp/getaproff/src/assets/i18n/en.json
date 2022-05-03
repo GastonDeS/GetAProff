@@ -48,5 +48,13 @@
     "price": "Enter price per hour:",
     "level": "Select level:",
     "title": "Edit subjects"
+  },
+  "myClasses": {
+    "status": {
+      "any": "Any",
+      "pending": "Pending",
+      "active": "Active",
+      "finished": "Finished"
+    }
   }
 }

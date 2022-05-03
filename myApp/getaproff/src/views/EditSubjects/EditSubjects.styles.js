@@ -70,3 +70,10 @@ export const SingleSelect = styled.div`
 export const ErrorMsg = styled.p`
   color: red;
 `;
+
+export const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+`;

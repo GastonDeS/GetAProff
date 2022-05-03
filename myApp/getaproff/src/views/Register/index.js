@@ -22,7 +22,6 @@ import Default from "../../assets/img/add_img.png";
 import {useForm} from "react-hook-form";
 import {Error} from "../Login/Login.styles";
 import AuthService from "../../services/authService";
-import axios from "axios";
 
 
 const Register = () => {

@@ -52,13 +52,16 @@ const Profile = () => {
   const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
 
   useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-    if (currentUser){
+    if (currentUser) {
       if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
         setIsTeacher(false);
       }
     }
-   userService.getUserInfo(id)
+  }, [currentUser])
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+    userService.getUserInfo(id)
        .then(data => {{
          setUser(data);
        }})
