@@ -32,15 +32,15 @@ const Classroom = () => {
     const finished = 0;
     const [classInfo, setClassInfo] = useState();
     const [classPosts, setClassPosts] = useState();
-    const {register, handleSubmit, watch} = useForm()
+    const {register, handleSubmit, watch, resetField} = useForm()
     const id = useParams();
     const watchFileName = watch("file");
     const user = authService.getCurrentUser();
 
     const publishPost = (data) => {
         classroomService.createPost(id.id, data, user.id)
-            .then(response => console.log(response))
-        console.log(watchFileName);
+            .then(response => console.log(response));
+        resetField('postTextInput');
     }
 
     useEffect( () => {
@@ -49,9 +49,12 @@ const Classroom = () => {
                 setClassInfo(data);
             })
             .catch(err => console.log(err))
+    }, [])
+
+    useEffect(() => {
         classroomService.fetchClassroomPosts(id.id)
             .then(data => setClassPosts(data))
-    }, [])
+    }, [classPosts])
 
 
     let currId = 1;
@@ -133,10 +136,9 @@ const Classroom = () => {
                                     <PostBox>
                                     <ButtonHolder>
                                     <h3>{post.uploader}</h3>
-                                    <p style={{fontSize: "0.8em"}}>Hoy a las 16:32</p>
+                                    <p style={{fontSize: "0.8em"}}>{post.time.split('T')[0]}</p>
                                     </ButtonHolder>
-                                    <p>Buenos dias profesor necesito ayuda el miercoles a las 5 de la tarde podria ser
-                                    ?</p>
+                                    <p>{post.message}</p>
                                     <a target="_blank" href=""
                                     style={{
                                     color: "blue",
