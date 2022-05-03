@@ -85,17 +85,17 @@ export const useMyFilesFetch = () => {
   };
 
   const fetchSubjects = async () => {
-    const subjects = await axios.get("/teachers/subjects/levels/145");
+    const subjects = await axios.get("/users/subjects/levels/145");
     var allLevels = [];
     subjects.data.forEach((item) => {
       addAllLevels(allLevels, item.levels);
       setCurrentSubjects((previous) => [
         ...previous,
         {
-          name: item.subject.name,
-          id: item.subject.subjectId,
+          name: item.name,
+          id: item.subjectId,
           levels: item.levels,
-        },
+        }
       ]);
     });
     setInitialState({

@@ -24,14 +24,13 @@ const Rows = ({ edit, data, multi, type, handleCheck, checked }) => {
   for (let key in data) {
     jsonValues.push(data[key]);
   }
-  console.log(jsonValues)
 
   const handleChange = (event) => {
-    handleCheck(event.target.checked, data.id);  
+    handleCheck(event.target.checked, data);  
   };
 
   const handleRemove = () => {
-    handleCheck(data.name);
+    handleCheck(data);
   };
 
   return (

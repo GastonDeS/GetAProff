@@ -76,7 +76,7 @@ const DropDown = ({ brand, options, endOption, background, radius, padding, size
 DropDown.propTypes = {
   brand: PropTypes.string,
   options: PropTypes.array,
-  endOption: PropTypes.string,
+  endOption: PropTypes.object,
   background: PropTypes.string,
   padding: PropTypes.string,
   radius: PropTypes.string,
