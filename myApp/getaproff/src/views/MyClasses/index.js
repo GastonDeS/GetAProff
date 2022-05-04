@@ -12,6 +12,8 @@ import {classroomService, userService} from "../../services";
 import {useNavigate} from "react-router-dom";
 import i18next from "i18next";
 import authService from "../../services/authService";
+import {StyledPagination} from "../Tutors/Tutors.styles";
+import {PageItem} from "react-bootstrap";
 
 const MyClasses = () => {
   const navigate = useNavigate();
@@ -19,6 +21,9 @@ const MyClasses = () => {
   const [status, setStatus] = useState(0);
   const [requestedClasses, setRequestedClasses] = useState([]);
   const [offeredClasses, setOfferedClasses] = useState([]);
+  const [reloadCards, setReloadCards] = useState(false)
+  const [page, setPage] = useState(1)
+  const [pageQty, setPageQty] = useState(1)
   const currUser = AuthService.getCurrentUser();
   const options = [
     {
@@ -52,15 +57,29 @@ const MyClasses = () => {
         .then(r => console.log(r) )
   }
   const handleCancelClass = classId => {
+    setReloadCards(!reloadCards)
     classroomService.cancelClass(classId, currUser.id)
         .then(r => console.log(r) )
   }
 
   const handleAcceptClass = classId => {
+    setReloadCards(!reloadCards)
     classroomService.acceptClass(classId, currUser.id)
         .then(r => console.log(r) )
   }
 
+  let items = [];
+  for (let number = 1; number <= pageQty; number++) {
+    items.push(
+        <PageItem
+            key={number}
+            active={number === page}
+            onClick={() => setPage(number)}
+        >
+          {number}
+        </PageItem>
+    );
+  }
 
   const handler = {
     rateClass: handleRate,
@@ -71,11 +90,18 @@ const MyClasses = () => {
   }
 
   useEffect( () => {
+    setPage(1)
+  }, [tabIndex, status])
+
+  useEffect( () => {
     let asTeacher = tabIndex === 1;
     let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
-    userService.getUserClasses(currUser.id, asTeacher, status - 1)
-        .then(res => setClasses([...res.data]))
-  }, [tabIndex, status]);
+    userService.getUserClasses(currUser.id, asTeacher, status - 1, page)
+        .then(res => {
+          setClasses([...res.data]);
+          setPageQty((parseInt(res.headers['x-total-pages']) + 1));
+        })
+  }, [tabIndex, status, reloadCards, page]);
 
 
   return (
@@ -108,6 +134,7 @@ const MyClasses = () => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}
                                     price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={false} handlers={handler}/>
                 })}
+            {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
           </CardContainer>
         </Content>
       </MainContainer>

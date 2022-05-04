@@ -24,6 +24,8 @@ import {classroomService} from "../../services"
 import authService from "../../services/authService";
 import {useNavigate, useParams} from "react-router-dom";
 import {set, useForm} from "react-hook-form";
+import {StyledPagination} from "../Tutors/Tutors.styles";
+import {PageItem} from "react-bootstrap";
 
 const Classroom = () => {
     const files = 1;
@@ -34,12 +36,27 @@ const Classroom = () => {
     const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
     const [refreshPosts, setRefreshPosts] = useState();
+    const [page, setPage] = useState(1)
+    const [pageQty, setPageQty] = useState(1)
     const {register, handleSubmit, watch, reset} = useForm()
     const id = useParams();
     const watchFileName = watch("file");
     const user = authService.getCurrentUser();
     const navigate = useNavigate();
     const [isTeacherClassroom, setIsTeacherClassroom] = useState(false)
+
+    let items = [];
+    for (let number = 1; number <= pageQty; number++) {
+        items.push(
+            <PageItem
+                key={number}
+                active={number === page}
+                onClick={() => setPage(number)}
+            >
+                {number}
+            </PageItem>
+        );
+    }
 
     const acceptClass = () =>{
         classroomService.changeClassStatus(id.id, 1, user.id).
@@ -88,9 +105,12 @@ const Classroom = () => {
     },[classInfo])
 
     useEffect(() => {
-        classroomService.fetchClassroomPosts(id.id)
-            .then(data => setClassPosts(data))
-    }, [refreshPosts])
+        classroomService.fetchClassroomPosts(id.id, page)
+            .then(res => {
+                setClassPosts(res.data);
+                setPageQty(res.pageQty)
+            })
+    }, [refreshPosts, page])
 
 
     function navigateToMyClasses() {
@@ -140,7 +160,7 @@ const Classroom = () => {
                                         <Button text={"Cancel"} color={'#FFC300'} fontColor={'black'}/>
                                     </ButtonContainer>
                                 ) :
-                                    classInfo.status !== FINISHED ||  classInfo.status !== RATED  && (
+                                    classInfo.status !== FINISHED &&  classInfo.status !== RATED  && (
                                     <Button text={"Finish"} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
@@ -172,11 +192,14 @@ const Classroom = () => {
                                 :
                                 <div style={{
                                     display: 'flex',
+                                    backgroundColor: 'white',
+                                    padding: '10px 0',
+                                    borderRadius: '10px',
                                     'flex-direction': 'column',
                                     'text-align': 'center',
                                     'width': '90%',
                                     'justify-content' : 'space-between',
-                                    'gap': '3px'}}>
+                                    'gap': '10px'}}>
                                     <h2>La clase se termino</h2>
                                     <Button text={"Volver a Mis Clases"} callback={navigateToMyClasses}/>
                                     {!isTeacherClassroom && classInfo.status !== RATED &&
@@ -205,6 +228,7 @@ const Classroom = () => {
                                 )
                                 })}
                             </BigBox>
+                            {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
                             {isTeacherClassroom && classInfo.status !== FINISHED &&
@@ -294,6 +318,7 @@ const Classroom = () => {
                                 }
                             </ClassContentSide>
                         </ClassroomSidePanel>
+
                     </ClassroomContainer>
                 </PageContainer>
                 }

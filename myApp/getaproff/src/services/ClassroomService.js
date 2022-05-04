@@ -33,13 +33,16 @@ export class ClassroomService {
             console.log(err);
         }
     }
-    async fetchClassroomPosts(classId) {
+    async fetchClassroomPosts(classId, page) {
         try {
-            let data;
-            await axios.get(`${PATH}/${classId}/posts`).then(
-                res => data = res.data
+            let response = {}
+            await axios.get(`${PATH}/${classId}/posts`, {params: {page: page, pageSize: 5}}).then(
+                res => {
+                    response['data'] = res.data;
+                    response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
+                }
             )
-            return data;
+            return response;
         }
         catch (err) {
             console.log(err);
