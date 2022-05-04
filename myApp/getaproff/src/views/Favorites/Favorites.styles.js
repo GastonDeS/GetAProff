@@ -17,7 +17,7 @@ export const PageContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 90%;
+    width: 100%;
     height: 85%;
     margin: 10px 10px 10px 0;
 

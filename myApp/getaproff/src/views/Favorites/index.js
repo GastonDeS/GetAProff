@@ -9,17 +9,37 @@ import TutorCard from "../../components/TutorCard";
 import {useNavigate} from "react-router-dom";
 import {TutorContainer} from "../Home/Home.styles";
 import { userService } from "../../services";
+import {StyledPagination} from "../Tutors/Tutors.styles";
+import {PageItem} from "react-bootstrap";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser())
+    const [page, setPage] = useState(1)
+    const [pageQty, setPageQty] = useState(1)
+
+    let items = [];
+    for (let number = 1; number <= pageQty; number++) {
+        items.push(
+            <PageItem
+                key={number}
+                active={number === page}
+                onClick={() => setPage(number)}
+            >
+                {number}
+            </PageItem>
+        );
+    }
 
     useEffect( () => {
         if(currentUser)
             userService.getFavoriteTeachers(currentUser.id)
                 .then(
-                    teachersList => setFavoriteUsersList(teachersList)
+                    res => {
+                        setFavoriteUsersList(res.data);
+                        setPageQty(res.pageQty)
+                    }
                 )
                 .catch(error => {
                     console.log(error);
@@ -41,6 +61,7 @@ const Favorites = () => {
                 })
             }
             </TutorContainer>
+            {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
         </PageContainer>
     </Wrapper>);
 }

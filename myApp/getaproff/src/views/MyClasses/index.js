@@ -41,6 +41,14 @@ const MyClasses = () => {
     {
       name: i18next.t('myClasses.status.finished'),
       id: 3
+    },
+    {
+      name: i18next.t('myClasses.status.rated'),
+      id: 4
+    },
+    {
+      name: i18next.t('myClasses.status.canceled'),
+      id: 5
     }];
 
   const handleFilter = e => {
@@ -125,10 +133,13 @@ const MyClasses = () => {
           </FilterContainer>
           <CardContainer>
             {tabIndex === 1 ?
-                offeredClasses.map((Class, index) => {
+                <>
+                  {offeredClasses.length === 0 && <h1>Parece que aun no tenes clases</h1>}
+                  {offeredClasses.map((Class, index) => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.student}
-                    price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={true} handlers={handler}/>
-                })
+                  price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={true} handlers={handler}/>
+                })}
+                </>
                 :
                 requestedClasses.map((Class, index) => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}

@@ -99,16 +99,19 @@ export class UserService {
         }
     }
 
-    async getFavoriteTeachers(uid) {
+    async getFavoriteTeachers(uid, page) {
         try {
-            let favoritesList = []
-            await axios.get(`${PATH}/${uid}/favorites`)
+            let response = {}
+            await axios.get(`${PATH}/${uid}/favorites`, {
+                params: {
+                    page: page,
+                    pageSize: 5,
+                }})
                 .then(res => {
-                    if (res.data && res.data.length !== 0)
-                        favoritesList = res.data;
-
+                    response['data'] = res.data
+                    response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
                 })
-            return favoritesList;
+            return response;
         } catch (err) {
             console.log(err);
         }
