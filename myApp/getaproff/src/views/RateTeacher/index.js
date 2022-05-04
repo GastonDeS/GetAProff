@@ -6,7 +6,7 @@ import {FormContainer, FormInput, PageContainer} from "./RateTeacher.styles";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import {useForm} from "react-hook-form";
-import {userService} from "../../services";
+import {classroomService, userService} from "../../services";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../services/authService";
 import {Error} from "../Login/Login.styles";
@@ -14,25 +14,30 @@ import {Error} from "../Login/Login.styles";
 const RateTeacher = () => {
     const navigate = useNavigate()
     const {register, handleSubmit, formState: {errors}} = useForm()
+    const [teacherInfo, setTeacherInfo] = useState();
     const currUser = AuthService.getCurrentUser();
     const teacher = useParams()
 
     const onSubmit = (data) => {
         userService.createReview(currUser.id, teacher.id, data)
             .then(r => {
-                console.log(r);
-                navigate(`/users/${currUser.id}/classes`)
+                navigate(`/users/${currUser.id}/classes`);
             })
             .catch(err => console.log(err))
 
     }
+
+    useEffect( () => {
+        userService.getUserInfo(teacher.id)
+            .then( data => setTeacherInfo(data))
+    }, [])
 
     return (
         <Wrapper>
             <Navbar/>
             <MainContainer>
                 <PageContainer>
-                    <h1>Calificar la clase de Messi</h1>
+                    {teacherInfo && <h1>Calificar la clase de {teacherInfo.name}</h1>}
                     <FormContainer  onSubmit={handleSubmit(onSubmit)}>
                         <FormInput>
                             <label style={{alignSelf:'flex-start'}}>Rate</label>

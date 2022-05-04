@@ -46,6 +46,22 @@ export class ClassroomService {
         }
     }
 
+    async acceptClass(classId, uid) {
+        return await this.changeClassStatus(classId, 1, uid);
+    }
+
+    async finishClass(classId, uid){
+        return await this.changeClassStatus(classId, 2, uid);
+    }
+
+    async cancelClass(classId, uid){
+        return await this.changeClassStatus(classId, 4, uid);
+    }
+
+    async rateClass(classId, uid){
+        return await this.changeClassStatus(classId, 3, uid);
+    }
+
     async changeClassStatus(classId, newStatus, uid) {
         try {
             let postData = {

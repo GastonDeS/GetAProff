@@ -11,6 +11,7 @@ import AuthService from "../../services/authService";
 import {classroomService, userService} from "../../services";
 import {useNavigate} from "react-router-dom";
 import i18next from "i18next";
+import authService from "../../services/authService";
 
 const MyClasses = () => {
   const navigate = useNavigate();
@@ -40,20 +41,33 @@ const MyClasses = () => {
   const handleFilter = e => {
     setStatus(e.target.value);
   }
-  const handleRate = e => {
-    console.log("rate");
+  const handleRate = uid => {
+    navigate(`/users/${uid}/reviews`);
   }
   const handleEnterClassroom = classId => {
     navigate(`/classroom/${classId}`);
   }
-  const handleFinishClass= e => {
-    console.log("finish");
+  const handleFinishClass= classId => {
+    classroomService.finishClass(classId, currUser.id)
+        .then(r => console.log(r) )
   }
+  const handleCancelClass = classId => {
+    classroomService.cancelClass(classId, currUser.id)
+        .then(r => console.log(r) )
+  }
+
+  const handleAcceptClass = classId => {
+    classroomService.acceptClass(classId, currUser.id)
+        .then(r => console.log(r) )
+  }
+
 
   const handler = {
     rateClass: handleRate,
     enterClassroom: handleEnterClassroom,
-    finishClass: handleFinishClass
+    finishClass: handleFinishClass,
+    acceptClass: handleAcceptClass,
+    cancelClass: handleCancelClass
   }
 
   useEffect( () => {
@@ -87,12 +101,12 @@ const MyClasses = () => {
             {tabIndex === 1 ?
                 offeredClasses.map((Class, index) => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.student}
-                    price={Class.price} level={Class.level} statusCode={Class.status} canRate={false} handlers={handler}/>
+                    price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={true} handlers={handler}/>
                 })
                 :
                 requestedClasses.map((Class, index) => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}
-                                    price={Class.price} level={Class.level} statusCode={Class.status} canRate={true} handlers={handler}/>
+                                    price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={false} handlers={handler}/>
                 })}
           </CardContainer>
         </Content>

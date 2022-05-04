@@ -9,9 +9,8 @@ export class UserService {
         try {
             let subjects = []
             await axios.get(`/users/${uid}/subjects`)
-                .then(res => {
-                    subjects = res.data
-                    })
+                .then(res => res.data.forEach(subject => subjects.push(subject)))
+            console.log(subjects)
             return subjects;
         }
         catch (err) { console.log(err) }
@@ -120,12 +119,13 @@ export class UserService {
     async requestClass(uid, requestData) {
         try {
             let response;
-            let priceAndLevelIdx = parseInt(requestData.levelIdx);
+            let level = parseInt(requestData.level)
+            let priceIdx = requestData.subject.levels.indexOf(level)
             await axios.post(`${PATH}/${uid}/classes`, {
                 studentId: requestData.studentId,
-                subjectId: requestData.subject.subjectId,
-                level: requestData.subject.levels[priceAndLevelIdx],
-                price: requestData.subject.prices[priceAndLevelIdx],
+                subjectId: requestData.subject.id,
+                level: requestData.level,
+                price: requestData.subject.prices[priceIdx],
             })
                 .then(res => response = res);
             return response;
@@ -156,7 +156,7 @@ export class UserService {
             let params = {
                 studentId: uid,
                 teacherId: parseInt(teacherId),
-                rating: data.rating,
+                rate: parseFloat(data.rating),
                 review: data.review
             };
             return await axios.post(`${PATH}/${uid}/reviews`, params);

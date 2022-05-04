@@ -27,7 +27,9 @@ import {set, useForm} from "react-hook-form";
 
 const Classroom = () => {
     const files = 1;
-    const FINISHED = 3;
+    const ACCEPTED = 1;
+    const FINISHED = 2;
+    const RATED = 3;
     const [classInfo, setClassInfo] = useState();
     const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
@@ -91,6 +93,10 @@ const Classroom = () => {
     }, [refreshPosts])
 
 
+    function navigateToMyClasses() {
+        navigate(`/users/${user.id}/classes`)
+    }
+
     return (
         <Wrapper>
             <Navbar/>
@@ -115,9 +121,16 @@ const Classroom = () => {
                                     : (classInfo.status === 1) ? <ClassStatus style={{background: "green"}}>
                                             <h6 style={{color: "black", margin: "0"}}>Active</h6>
                                         </ClassStatus>
-                                        : <ClassStatus style={{background: "#d3d3d3"}}>
-                                            <h6 style={{color: "black", margin: "0"}}>Finished</h6>
-                                        </ClassStatus>
+                                        : <> {classInfo.status === FINISHED &&
+                                                    <ClassStatus style={{background: "#d3d3d3"}}>
+                                                        <h6 style={{color: "black", margin: "0"}}>Finished</h6>
+                                                    </ClassStatus>}
+                                             {classInfo.status === RATED &&
+                                                 <ClassStatus style={{background: "#d3d3d3"}}>
+                                                 <h6 style={{color: "black", margin: "0"}}>Rated</h6>
+                                                 </ClassStatus>
+                                             }
+                                        </>
                                 }
                                 {classInfo.status === 0 ? (
                                     <ButtonContainer>
@@ -127,13 +140,13 @@ const Classroom = () => {
                                         <Button text={"Cancel"} color={'#FFC300'} fontColor={'black'}/>
                                     </ButtonContainer>
                                 ) :
-                                    classInfo.status !== FINISHED && (
+                                    classInfo.status !== FINISHED ||  classInfo.status !== RATED  && (
                                     <Button text={"Finish"} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
-                            {(classInfo.status !== FINISHED) ?
+                            {(classInfo.status !== FINISHED && classInfo.status !== RATED) ?
                                 <PostFormContainer onSubmit={handleSubmit(publishPost)}>
                                     <Textarea name="postTextInput" register={register} placeholder="Hola! Te consulto sobre este examen..." style={{
                                         borderRadius: "10px",
@@ -165,8 +178,8 @@ const Classroom = () => {
                                     'justify-content' : 'space-between',
                                     'gap': '3px'}}>
                                     <h2>La clase se termino</h2>
-                                    <Button text={"Volver a Mis Clases"}/>
-                                    {!isTeacherClassroom &&
+                                    <Button text={"Volver a Mis Clases"} callback={navigateToMyClasses}/>
+                                    {!isTeacherClassroom && classInfo.status !== RATED &&
                                     <Button text={"Puntuar al profesor"} callback={rateTeacher}/>}
                                 </div>
                             }
