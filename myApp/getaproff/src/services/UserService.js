@@ -150,5 +150,20 @@ export class UserService {
             console.log(err);
         }
     }
+
+    async createReview(uid, teacherId, data) {
+        try {
+            let params = {
+                studentId: uid,
+                teacherId: parseInt(teacherId),
+                rating: data.rating,
+                review: data.review
+            };
+            return await axios.post(`${PATH}/${uid}/reviews`, params);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 }
 

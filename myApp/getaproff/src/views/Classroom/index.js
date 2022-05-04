@@ -22,7 +22,7 @@ import Button from "../../components/Button";
 import Textarea from "../../components/Textarea";
 import {classroomService} from "../../services"
 import authService from "../../services/authService";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {set, useForm} from "react-hook-form";
 
 const Classroom = () => {
@@ -36,6 +36,7 @@ const Classroom = () => {
     const id = useParams();
     const watchFileName = watch("file");
     const user = authService.getCurrentUser();
+    const navigate = useNavigate();
     const [isTeacherClassroom, setIsTeacherClassroom] = useState(false)
 
     const acceptClass = () =>{
@@ -54,6 +55,10 @@ const Classroom = () => {
                 console.log(data);
                 setClassStatus(3)
             })
+    }
+
+    const rateTeacher = () => {
+        navigate(`/users/${classInfo.teacher.id}/reviews`)
     }
 
     const publishPost = data => {
@@ -152,7 +157,18 @@ const Classroom = () => {
                                     </ButtonContainer>
                                 </PostFormContainer>
                                 :
-                                <h2>La clase termino</h2>
+                                <div style={{
+                                    display: 'flex',
+                                    'flex-direction': 'column',
+                                    'text-align': 'center',
+                                    'width': '90%',
+                                    'justify-content' : 'space-between',
+                                    'gap': '3px'}}>
+                                    <h2>La clase se termino</h2>
+                                    <Button text={"Volver a Mis Clases"}/>
+                                    {!isTeacherClassroom &&
+                                    <Button text={"Puntuar al profesor"} callback={rateTeacher}/>}
+                                </div>
                             }
                             <BigBox>
                                 {classPosts && classPosts.map(post => {

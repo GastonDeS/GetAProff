@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
+import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
 import ar.edu.itba.paw.webapp.requestDto.NewSubjectDto;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
@@ -31,6 +32,9 @@ public class UsersController {
             ;
     @Autowired
     private TeachesService teachesService;
+
+    @Autowired
+    private RatingService ratingService;
 
     @Autowired
     private UserService userService;
@@ -280,6 +284,23 @@ public class UsersController {
           return Response.status(Response.Status.CONFLICT).build();
         }
         URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
+        return Response.created(location).build();
+    }
+
+    @POST
+    @Path("/{uid}/reviews")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response rateTeacher(@PathParam("uid") Long teacherId, NewRatingDto newRatingDto){
+        //TODO: validar que exista la clase entre alumno y teacher y que este en estado terminado
+        final Optional<Rating> rating = ratingService.addRating(newRatingDto.getTeacherId(), newRatingDto.getStudentId(),
+                    newRatingDto.getRate(), newRatingDto.getReview());
+        if (!rating.isPresent())
+            return Response.status(Response.Status.CONFLICT).build();
+        if(newRatingDto.getTeacherId().equals(newRatingDto.getStudentId()))
+            return Response.status(Response.Status.FORBIDDEN).build();
+        //TODO: cual seria el id de la review?
+        URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
         return Response.created(location).build();
     }
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import styled from "styled-components"
-import Input, {StyledInput} from "../Input";
 
 const Textarea = ({ register, name, options, ...rest }) => {
   return (

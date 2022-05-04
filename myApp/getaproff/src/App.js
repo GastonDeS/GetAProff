@@ -21,6 +21,7 @@ import Tutors from "./views/Tutors";
 import Classrom from './views/Classroom';
 import Favorites from './views/Favorites';
 import Classroom from "./views/Classroom";
+import RateTeacher from "./views/RateTeacher";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
         <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />
         <Route path='/classroom/:id' element={ <Classroom/> }/>
+        <Route path='/users/:id/reviews' element={<RateTeacher/>}/>
       </Routes>
     </Router>
   );
