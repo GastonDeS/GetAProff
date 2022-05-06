@@ -32,8 +32,8 @@ const Login = () => {
     AuthService
         .login(event.username, event.password)
         .then(
-            () => {
-              navigate("/");
+            (token) => {
+              navigate(`/`);
             },
             () => {
               setInvalidCredentials(true)
