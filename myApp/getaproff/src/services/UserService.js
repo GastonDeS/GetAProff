@@ -9,9 +9,8 @@ export class UserService {
         try {
             let subjects = []
             await axios.get(`/users/${uid}/subjects`)
-                .then(res => {
-                    subjects = res.data
-                    })
+                .then(res => res.data.forEach(subject => subjects.push(subject)))
+            console.log(subjects)
             return subjects;
         }
         catch (err) { console.log(err) }
@@ -103,16 +102,19 @@ export class UserService {
         }
     }
 
-    async getFavoriteTeachers(uid) {
+    async getFavoriteTeachers(uid, page) {
         try {
-            let favoritesList = []
-            await axios.get(`${PATH}/${uid}/favorites`)
+            let response = {}
+            await axios.get(`${PATH}/${uid}/favorites`, {
+                params: {
+                    page: page,
+                    pageSize: 5,
+                }})
                 .then(res => {
-                    if (res.data && res.data.length !== 0)
-                        favoritesList = res.data;
-
+                    response['data'] = res.data
+                    response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
                 })
-            return favoritesList;
+            return response;
         } catch (err) {
             console.log(err);
         }
@@ -123,12 +125,13 @@ export class UserService {
     async requestClass(uid, requestData) {
         try {
             let response;
-            let priceAndLevelIdx = parseInt(requestData.levelIdx);
+            let level = parseInt(requestData.level)
+            let priceIdx = requestData.subject.levels.indexOf(level)
             await axios.post(`${PATH}/${uid}/classes`, {
                 studentId: requestData.studentId,
-                subjectId: requestData.subject.subjectId,
-                level: requestData.subject.levels[priceAndLevelIdx],
-                price: requestData.subject.prices[priceAndLevelIdx],
+                subjectId: requestData.subject.id,
+                level: requestData.level,
+                price: requestData.subject.prices[priceIdx],
             })
                 .then(res => response = res);
             return response;
@@ -138,12 +141,14 @@ export class UserService {
         }
     }
 
-    async getUserClasses(uid, asTeacher, status) {
+    async getUserClasses(uid, asTeacher, status, page) {
         try {
             let params = {
                 status : status,
                 asTeacher: asTeacher,
-                userId: uid
+                userId: uid,
+                page: page,
+                pageSize: 5
             };
             const token = localStorage.getItem("token")
             const headers = { Authorization: "Bearer " +  token}
@@ -153,6 +158,21 @@ export class UserService {
                 })
         }
         catch(err) {
+            console.log(err);
+        }
+    }
+
+    async createReview(uid, teacherId, data) {
+        try {
+            let params = {
+                studentId: uid,
+                teacherId: parseInt(teacherId),
+                rate: parseFloat(data.rating),
+                review: data.review
+            };
+            return await axios.post(`${PATH}/${uid}/reviews`, params);
+        }
+        catch (err) {
             console.log(err);
         }
     }

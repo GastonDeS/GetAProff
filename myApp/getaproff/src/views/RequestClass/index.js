@@ -14,7 +14,7 @@ import {useForm} from "react-hook-form";
 const RequestClass = () => {
   const [subject, setSubject] = useState();
   const [subjectIdx, setSubjectIdx] = useState();
-  const [levelIndex, setLevelIndex] = useState();
+  const [level, setLevel] = useState();
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const { register} = useForm();
@@ -25,17 +25,19 @@ const RequestClass = () => {
   const handleClassRequest = () => {
     const requestData = {
       subject: subject,
-      levelIdx: levelIndex,
+      level: level,
       studentId: currUser.id
     }
+    console.log(requestData)
     userService.requestClass(id.id, requestData)
         .then(res => navigate(`/classroom/${res.headers.location.split('/').pop()}`));
   }
 
-  const handleLevel = e => setLevelIndex(e.target.value);
+  const handleLevel = e => setLevel(e.target.value);
 
   const handleSubject = e => {
-    setSubject(subjects[e.target.value]);
+    console.log(e.target.value)
+    setSubject(subjects.filter(s => s.id == e.target.value)[0])
   }
 
   useEffect( () => {
@@ -44,9 +46,10 @@ const RequestClass = () => {
   }, [])
 
   useEffect( () => {
-    if(subject)
+    if(subject) {
       setLevels(subject.levels)
-    setLevelIndex('0')
+      setLevel(subject.levels[0])
+    }
   }, [subject])
   
   return (
@@ -58,10 +61,9 @@ const RequestClass = () => {
           <InputContainer>
             <p>Select subject</p>
             <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject}
-                            options={subjects.map( s => s.subjectName)} usingIndexAsValue={true}/>
+                            options={subjects}/>
             <p>Select Level</p>
-            <SelectDropdown type="Levels" handler={handleLevel} options={levels} disabled={levels.length === 1 }
-            usingIndexAsValue={true}/>
+            <SelectDropdown type="Levels" handler={handleLevel} options={levels} disabled={levels.length === 1 }/>
           </InputContainer>
           <Button text='Send request' fontSize='1rem' callback={handleClassRequest}/>
         </Content>

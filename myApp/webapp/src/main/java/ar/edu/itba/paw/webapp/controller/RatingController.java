@@ -42,14 +42,5 @@ public class RatingController {
         }
     }
 
-   //TODO cambiar este endpoint
-    @POST
-    @Path("/new-rating")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
-    public Response addRating(NewRatingDto newRatingDto) {
-        final Optional<Rating> rating = ratingService.addRating(newRatingDto.getTeacherId(), newRatingDto.getStudentId(),
-                newRatingDto.getRate(), newRatingDto.getReview());
-        return rating.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
-    }
+
 }

@@ -52,13 +52,6 @@ public class ClassroomController {
     @Context
     private UriInfo uriInfo;
 
-//    @GET
-//    @Path("/")
-//    public Response getClassroom() {
-//        lectureService.findClassesByStudentAndStatus()
-//        return Response.ok().build();
-//    }
-
     @GET
     @Path("/{classId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -125,8 +118,9 @@ public class ClassroomController {
     public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
         Lecture lecture = checkLectureExistence(classId);
         //TODO: el alumno no la puede cancelar?
-        if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
-            return Response.status(Response.Status.FORBIDDEN).build();
+//        if( newStatus.getStatus() == 4)
+//            if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
+//                return Response.status(Response.Status.FORBIDDEN).build();
         lectureService.setStatus(classId, newStatus.getStatus());
         return Response.ok().build();
     }

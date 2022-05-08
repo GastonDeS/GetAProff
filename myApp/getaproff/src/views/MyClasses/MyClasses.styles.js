@@ -34,4 +34,6 @@ export const SelectContainer = styled.div`
 export const CardContainer = styled.div`
   width: 65%;
   height: fit-content;
+  text-align: center;
+
 `;

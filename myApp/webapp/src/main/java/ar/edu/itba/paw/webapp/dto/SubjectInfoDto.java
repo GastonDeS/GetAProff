@@ -1,16 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectInfoDto {
-    private String subjectName;
+    private String name;
 
-    private Long teacherId, subjectId;
+    private Long teacherId, id;
 
     private List<Integer> levels, prices;
 
@@ -19,8 +17,8 @@ public class SubjectInfoDto {
         subjectInfoDto.levels = new ArrayList<>();
         subjectInfoDto.prices = new ArrayList<>();
         subjectInfoDto.teacherId = subjectData.get(0).getTeacher().getId();
-        subjectInfoDto.subjectId = subjectData.get(0).getSubject().getSubjectId();
-        subjectInfoDto.subjectName = subject;
+        subjectInfoDto.id = subjectData.get(0).getSubject().getSubjectId();
+        subjectInfoDto.name = subject;
         subjectData.forEach(teaches -> {
             subjectInfoDto.levels.add(teaches.getLevel());
             subjectInfoDto.prices.add(teaches.getPrice());
@@ -28,12 +26,12 @@ public class SubjectInfoDto {
         return subjectInfoDto;
     }
 
-    public String getSubjectName() {
-        return subjectName;
+    public String getName() {
+        return name;
     }
 
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
+    public void setName(String subjectName) {
+        this.name = subjectName;
     }
 
     public Long getTeacherId() {
@@ -44,12 +42,12 @@ public class SubjectInfoDto {
         this.teacherId = teacherId;
     }
 
-    public Long getSubjectId() {
-        return subjectId;
+    public Long getId() {
+        return id;
     }
 
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
+    public void setId(Long subjectId) {
+        this.id = subjectId;
     }
 
     public List<Integer> getLevels() {

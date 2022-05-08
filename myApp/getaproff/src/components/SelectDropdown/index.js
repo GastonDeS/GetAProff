@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from "styled-components";
 import i18next from "i18next";
 
+
 const Select = styled.select`
   width: 100%;
   height: fit-content;
@@ -32,10 +33,10 @@ const Select = styled.select`
   }
 `;
 
-const SelectDropdown = ({ type, options, handler, value, disabled}) => {
+const SelectDropdown = ({ register, name, registerOptions, type, options, handler, value, disabled }) => {
 
   return (
-    <Select onChange={handler} value={value} disabled={disabled}>
+    <Select {...register(name, registerOptions)} onChange={handler} value={value} disabled={disabled}>
       {
         type && !disabled ? <option value="" hidden>{type}</option> : <></>
       }
@@ -59,5 +60,11 @@ SelectDropdown.propTypes = {
   type: PropTypes.string,
   handler: PropTypes.func
 };
+
+SelectDropdown.defaultProps = {
+  register: (x) => x,
+  registerOptions: {}
+}
+
 
 export default SelectDropdown;

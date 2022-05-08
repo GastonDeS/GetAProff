@@ -55,6 +55,7 @@ export const Grid = styled.div`
 
 export const StyledPagination = styled(Pagination)`
   align-self: center;
+  margin-top: 10px;
   span {
     background-color: var(--secondary) !important;
     border-color: var(--secondary) !important;
