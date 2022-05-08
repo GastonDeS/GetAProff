@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -79,20 +78,6 @@ public class UsersController {
 //        int total = teachesService.getPageQty(search, price, level, rating);
 //        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
 //    }
-
-    private Response addPaginationHeaders(int current, int total, Response.ResponseBuilder response) {
-        if (current + 1 <= total) {
-            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", current + 1).build().toString(), "next");
-        }
-        if (current - 1 > 0) {
-            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", current - 1).build().toString(), "prev");
-        }
-        if (total > 1) {
-            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", total).build().toString(), "last");
-        }
-        response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build().toString(), "first");
-        return response.build();
-    }
 
     //Esto no se usa mas?
     @POST

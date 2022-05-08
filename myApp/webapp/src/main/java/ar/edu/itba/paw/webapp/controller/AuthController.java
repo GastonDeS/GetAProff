@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
 
-@Path("/users")
+@Path("/auth")
 @Component
 public class AuthController {
     @Autowired

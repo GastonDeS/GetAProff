@@ -9,9 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.management.OperatingSystemMXBean;
 import java.util.Optional;
 
+
+//TODO REMOVE ERROR CONTROLLER
 @Controller
 public class ErrorController {
 

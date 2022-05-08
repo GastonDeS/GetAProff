@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -105,8 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
         http
-//                .cors()
-//                .and()
                 .csrf()
                     .disable()
                 .exceptionHandling()
@@ -116,7 +115,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
+                    .authorizeRequests()//TODO ADD GRANULARITY
+//                        .antMatchers("/users/login").authenticated()
+
+                .antMatchers(HttpMethod.GET,"/auth/login").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,"/classes").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
+                        .antMatchers(HttpMethod.GET, "/classroom").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
+                        .antMatchers(HttpMethod.GET, "/classroom/{classId}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET, "/classroom/{classId}/posts").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET, "/classroom/{classId}/files").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST, "/classroom/{classId}/files").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
+                        .antMatchers(HttpMethod.POST, "/classroom/{classId}/posts").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
+                        .antMatchers(HttpMethod.POST, "/classroom/{classId}/status").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
+                        .antMatchers(HttpMethod.GET,"/post/{postId}/file").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,"/files/user/{id}").hasAuthority("USER_STUDENT") //TODO VERIFY THIS AUTH
+                        .antMatchers(HttpMethod.POST,"/ratings/new-rating").hasAuthority("USER_STUDENNT") //TODO ONLY IF HAS AN OPEN CLASS
+                        .antMatchers(HttpMethod.GET, "/subject-files/{id}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER AND IF SHARED
+                        .antMatchers(HttpMethod.DELETE, "/subject-files/{file}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
+                        .antMatchers(HttpMethod.POST, "/subject-files/{id}/{subject}/{level}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
+                        .antMatchers(HttpMethod.DELETE,"/user-files/{file}").hasAuthority("USER_STUDENT") // TODO OWNER
+                        .antMatchers(HttpMethod.POST, "/user-files/{id}").hasAuthority("USER_STUDENT")//TODO OWNER
+                        .antMatchers(HttpMethod.POST,"/users/").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,"/users/{uid}/image").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.DELETE,"/users/{userId}/{subjectId}/{level}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,"/users/{id}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,"/users/{userId}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,"/users/{uid}/favorites").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,"/users/{uid}/favorites").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.DELETE,"/users/{uid}/favorites/{favTeacherId}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,"/users/{uid}/classes").hasAuthority("USER_STUDENT")
                         .antMatchers("/**").permitAll()
                 .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -138,6 +165,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) throws Exception {
         web
                 .ignoring()
+                .antMatchers(HttpMethod.GET,"/user-files/{id}")
+                .antMatchers(HttpMethod.GET,"/ratings/{id}")
+                .antMatchers(HttpMethod.GET,"/subjects/**" /*all public*/)
+                .antMatchers(HttpMethod.GET,"/users")
+                .antMatchers(HttpMethod.GET,"/users/{id}") // TODO CHANGE this endpoinnt so it doesnt crash
+                .antMatchers(HttpMethod.GET,"/users/most-requested")
+                .antMatchers(HttpMethod.GET,"/users/{id}/subjects")
+                .antMatchers(HttpMethod.GET,"/users/subjects/levels/{id}")
+                .antMatchers(HttpMethod.GET,"/users/available-subjects/{id}")
+                .antMatchers(HttpMethod.GET,"/users/{uid}/image")
+                .antMatchers(HttpMethod.GET,"/users/top-rated")
                 .antMatchers("/")
                 .antMatchers("/*.js")
                 .antMatchers("/*.css")

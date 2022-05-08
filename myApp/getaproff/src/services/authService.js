@@ -2,7 +2,7 @@ import axios from "axios";
 import { set } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 
-const API_URL = "/users";
+const API_URL = "/auth";
 
 const login = async (mail, password) => {
   const credentials = mail+":"+password;
@@ -45,6 +45,7 @@ const register = async (formData) => {
 }
 const logout = () => {
   localStorage.removeItem('user');
+  localStorage.removeItem('token');
 };
 
 const getCurrentUser = () => {

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("ratings")
+@Path("/ratings")
 @Component
 public class RatingController {
 

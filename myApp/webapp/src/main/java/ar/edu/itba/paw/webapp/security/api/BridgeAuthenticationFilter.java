@@ -20,7 +20,7 @@ public class BridgeAuthenticationFilter extends AbstractAuthenticationProcessing
 
     @Override
     protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        return super.requiresAuthentication(request, response);
+        return true;
     }
 
     @Override

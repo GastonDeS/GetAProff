@@ -67,7 +67,10 @@ export class UserService {
     async checkIfTeacherIsFaved(uid, teacherId) {
         try {
             let retVal = false
-            const res = await axios.get(`${PATH}/${uid}/favorites`);
+            const token = localStorage.getItem("token")
+            const res = await axios.get(`${PATH}/${uid}/favorites`,
+                {headers: { Authorization: "Bearer "+token }}
+            );
             res.data && res.data.forEach(
                 user => {
                     if (user.id === Number(teacherId)) {
@@ -142,8 +145,11 @@ export class UserService {
                 asTeacher: asTeacher,
                 userId: uid
             };
+            const token = localStorage.getItem("token")
+            const headers = { Authorization: "Bearer " +  token}
             return await axios.get('/classes', {
-                   params
+                   params,
+                   headers: {Authorization: "Bearer " + token}
                 })
         }
         catch(err) {
