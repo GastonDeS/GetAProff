@@ -118,7 +118,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()//TODO ADD GRANULARITY
 //                        .antMatchers("/users/login").authenticated()
 
-                .antMatchers(HttpMethod.GET,"/auth/login").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,"/auth/login").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET,"/classes").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
                         .antMatchers(HttpMethod.GET, "/classroom").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
                         .antMatchers(HttpMethod.GET, "/classroom/{classId}").hasAuthority("USER_STUDENT")
@@ -176,6 +176,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/users/available-subjects/{id}")
                 .antMatchers(HttpMethod.GET,"/users/{uid}/image")
                 .antMatchers(HttpMethod.GET,"/users/top-rated")
+                .antMatchers(HttpMethod.POST, "/auth")
                 .antMatchers("/")
                 .antMatchers("/*.js")
                 .antMatchers("/*.css")

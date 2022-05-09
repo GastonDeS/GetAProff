@@ -1,6 +1,7 @@
 import axios from "axios";
 import { set } from "react-hook-form";
 import { Navigate } from "react-router-dom";
+import {axiosWrapper, GET, getBasicToken, POST} from "./axios.service";
 
 const API_URL = "/auth";
 
@@ -8,8 +9,10 @@ const login = async (mail, password) => {
   const credentials = mail+":"+password;
   const hash = btoa(credentials);
   try {
-    const response = await axios.get(API_URL+"/login", {headers: { Authorization: "Basic "+hash }})
-    
+    // const response = await axios.get(API_URL+"/login", {headers: { Authorization: "Basic "+hash }})
+    // const path = 
+    // const headers = {Authorization: getBasicToken()}
+    const response = await axiosWrapper(GET, API_URL+"/login", {}, {Authorization: getBasicToken(mail, password)});
     const token = response.headers.authorization.split(" ")[1];
 
     if (token) localStorage.setItem('token', token);
@@ -37,12 +40,13 @@ const login = async (mail, password) => {
 
 
 const register = async (formData) => {
-  return await axios
-      .post(API_URL, formData, { headers: {
-              'Content-Type': 'multipart/form-data'
-          }})
-      .then( response => {return response;});
+  return await axiosWrapper(POST, API_URL, formData, {'Content-Type': 'multipart/form-data'});
+      // .post(API_URL, formData, { headers: {
+      //         'Content-Type': 'multipart/form-data'
+      //     }})
+      // .then( response => {return response;});
 }
+
 const logout = () => {
   localStorage.removeItem('user');
   localStorage.removeItem('token');
