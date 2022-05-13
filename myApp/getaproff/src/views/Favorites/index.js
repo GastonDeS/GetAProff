@@ -34,7 +34,7 @@ const Favorites = () => {
 
     useEffect( () => {
         if(currentUser)
-            userService.getFavoriteTeachers(currentUser.id)
+            userService.getFavoriteTeachers(currentUser.id, page)
                 .then(
                     res => {
                         setFavoriteUsersList(res.data);
@@ -46,7 +46,7 @@ const Favorites = () => {
                     navigate("/error");
                 })
         else navigate("/login");
-    },[])
+    },[page])
 
     return (
         <Wrapper>

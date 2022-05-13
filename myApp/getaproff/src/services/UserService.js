@@ -1,4 +1,3 @@
-import axios from "axios";
 import {axiosService} from "./index";
 
 const PATH = '/users'
@@ -8,10 +7,9 @@ export class UserService {
     async getUserSubjects(uid){
         try {
             let subjects = []
-            await axiosService.axiosWrapper(axiosService.GET, `/users/${uid}/subjects`)
-            await axios.get(`/users/${uid}/subjects`)
+            let config = {}
+            await axiosService.axiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
                 .then(res => res.data.forEach(subject => subjects.push(subject)))
-            console.log(subjects)
             return subjects;
         }
         catch (err) { console.log(err) }
@@ -20,7 +18,8 @@ export class UserService {
     async getUserSpecificInfo(info, uid){
         try {
             let data;
-            await axios.get(`/${info}/${uid}`)
+            let config = {}
+            await axiosService.axiosWrapper(axiosService.GET, `/${info}/${uid}`, config)
                 .then(res => {
                     data = res.data
                 })
@@ -41,7 +40,8 @@ export class UserService {
     async getUserImg(uid) {
         try {
             let image = "";
-            await axios.get(`${PATH}/${uid}/image`)
+            let  config = {}
+            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, config)
                 .then(
                     res => {
                         image = 'data:image/png;base64,' + res.data.image;
@@ -68,10 +68,8 @@ export class UserService {
     async checkIfTeacherIsFaved(uid, teacherId) {
         try {
             let retVal = false
-            const token = localStorage.getItem("token")
-            const res = await axios.get(`${PATH}/${uid}/favorites`,
-                {headers: { Authorization: "Bearer "+token }}
-            );
+            let config = {}
+            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config )
             res.data && res.data.forEach(
                 user => {
                     if (user.id === Number(teacherId)) {
@@ -87,7 +85,8 @@ export class UserService {
 
     async removeTeacherFromFavorites(teacherId, uid) {
         try {
-            await axios.delete(`${PATH}/${uid}/favorites/${teacherId}`);
+            let config = {}
+            await axiosService.axiosWrapper(axiosService.DELETE, `${PATH}/${uid}/favorites/${teacherId}`, config )
         } catch (err) {
             console.log(err)
         }
@@ -96,9 +95,9 @@ export class UserService {
 
     async addTeacherToFavorites(teacherId, uid) {
         try {
-            await axios.post(`${PATH}/${uid}/favorites`, {
-                'id': teacherId,
-            })
+            let config = {}
+            let data = {'id' : teacherId}
+            await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/favorites`, config, data )
         } catch (err) {
             console.log(err);
         }
@@ -107,11 +106,12 @@ export class UserService {
     async getFavoriteTeachers(uid, page) {
         try {
             let response = {}
-            await axios.get(`${PATH}/${uid}/favorites`, {
+            let config = {
                 params: {
                     page: page,
                     pageSize: 5,
-                }})
+                }}
+            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config)
                 .then(res => {
                     response['data'] = res.data
                     response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
@@ -178,7 +178,7 @@ export class UserService {
                 rate: parseFloat(data.rating),
                 review: data.review
             };
-            return await axios.post(`${PATH}/${uid}/reviews`, params);
+            return await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`, params);
         }
         catch (err) {
             console.log(err);

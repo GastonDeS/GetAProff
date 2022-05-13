@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AuthService from "../../services/authService";
-import { axiosWrapper, getBearerToken, POST } from "../../services/axios.service"
-
+import {axiosService} from "../../services";
 import { Wrapper, MainContainer, Title, Request } from "../../GlobalStyle";
 import { useForm } from "react-hook-form";
 import Navbar from "../../components/Navbar";
@@ -71,14 +70,14 @@ const EditProfile = () => {
     formData.append("description", data.description);
     formData.append("schedule", data.schedule);
     formData.append("teach", change ? "true" : "false");
-    
+
     if (image !== Default) {
       var imgData = new FormData().append("image", image);
-      await axiosWrapper(POST, '/users/' + currentUser.id + '/image', imgData, {'Content-Type': 'multipart/form-data', 'Authorization': getBearerToken()})
+      await axiosService.axiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, imgData)
         .catch( err => console.log(err));
     }
     //TODO: service
-    await axiosWrapper(POST, '/users/' + currentUser.id, formData, {'Content-Type': 'multipart/form-data', 'Authorization': getBearerToken()})
+    await axiosService.axiosWrapper(axiosService.POST, `/users/${currentUser.id}`, formData )
       .then( () => {
         navigate("/users/"+ currentUser.id);
       }).catch( err => console.log(err));
