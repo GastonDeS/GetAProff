@@ -114,7 +114,7 @@ export class UserService {
             await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config)
                 .then(res => {
                     response['data'] = res.data
-                    response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
+                    response['pageQty'] =(parseInt(res.headers['x-total-pages']))
                 })
             return response;
         } catch (err) {

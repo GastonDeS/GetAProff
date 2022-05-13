@@ -1,4 +1,5 @@
 import axios from "axios";
+import {axiosService} from "./index";
 
 const PATH = '/classroom'
 
@@ -12,9 +13,11 @@ export class ClassroomService {
             formData.append("message", data.postTextInput);
             formData.append("file", data.file[0]);
             formData.append("uploader", uid);
-            await axios.post(`${PATH}/${classId}/posts`, formData, {
-                headers: { 'Content-Type' : 'multipart/form-data' }
-            }).then(res => response = res)
+            let config = {
+                headers:  {'Content-Type' : 'multipart/form-data'}
+            }
+            await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${classId}/posts`, config, formData )
+                .then(res => response = res)
             return response;
         }
         catch (err) {
@@ -25,7 +28,8 @@ export class ClassroomService {
     async fetchClassroomInfo(classId) {
         try {
             let data;
-            await axios.get(`${PATH}/${classId}`)
+            let config = {}
+            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${classId}`, config)
                 .then(res => data = res.data);
             return data;
         }
@@ -36,12 +40,14 @@ export class ClassroomService {
     async fetchClassroomPosts(classId, page) {
         try {
             let response = {}
-            await axios.get(`${PATH}/${classId}/posts`, {params: {page: page, pageSize: 5}}).then(
-                res => {
-                    response['data'] = res.data;
-                    response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
-                }
-            )
+            let config = {params: {page: page, pageSize: 5}}
+            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${classId}/posts`, config)
+                .then(
+                    res => {
+                        response['data'] = res.data;
+                        response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
+                    }
+                )
             return response;
         }
         catch (err) {
@@ -72,7 +78,8 @@ export class ClassroomService {
                 userId: uid
             }
             let data;
-            await axios.post(`${PATH}/${classId}/status`, postData)
+            let config = {}
+            await axiosService.axiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData )
                 .then(res => data = res.data
                 )
             return data;

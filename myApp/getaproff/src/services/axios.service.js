@@ -16,8 +16,11 @@ export class AxiosService {
     }
 
      async axiosWrapper(action, path, config, data = {}) {
-        if (!config.hasOwnProperty('headers'))
-            config['headers'] = { Authorization : this.getBearerToken()}
+        if(!config.hasOwnProperty('headers'))
+            config.headers = {}
+        if (!config.headers.hasOwnProperty('Authorization')) {
+            config.headers['Authorization'] = this.getBearerToken()
+        }
         switch (action) {
             case this.GET:
                 return await axios.get(path, config);
