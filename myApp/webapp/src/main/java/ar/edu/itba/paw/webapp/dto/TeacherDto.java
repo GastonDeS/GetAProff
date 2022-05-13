@@ -14,6 +14,7 @@ public class TeacherDto {
 
     private float rate;
 
+
     public static TeacherDto getTeacher(UriInfo uri, TeacherInfo teacher) {
         TeacherDto teacherDto = new TeacherDto();
         teacherDto.maxPrice = teacher.getMaxPrice();

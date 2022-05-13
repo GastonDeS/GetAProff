@@ -1,7 +1,6 @@
-
 import axios from "axios";
 import {axiosService} from "./index";
-import i18next from "i18next";
+
 const PATH = '/users'
 
 
@@ -57,8 +56,9 @@ export class UserService {
     async getUserInfo(uid) {
         try {
             let data;
-            await axios.get(`${PATH}/${uid}`)
-                .then(res => data = res.data);
+            let config = {}
+            await axiosService.axiosWrapper(axiosService.GET,`${PATH}/${uid}`, config)
+                .then(res => data = res.data)
             return data;
         } catch (err) {
             console.log(err);
@@ -129,19 +129,20 @@ export class UserService {
             // let response;
             let level = parseInt(requestData.level)
             let priceIdx = requestData.subject.levels.indexOf(level)
-            const response = await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/classes`, {
+            let response;
+            await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/classes`, {
                 studentId: requestData.studentId,
                 subjectId: requestData.subject.id,
                 level: requestData.level,
                 price: requestData.subject.prices[priceIdx],
-            }, {Authorization: axiosService.getBearerToken()});
+            }, {Authorization: axiosService.getBearerToken()})
             // await axios.post(`${PATH}/${uid}/classes`, {
             //     studentId: requestData.studentId,
             //     subjectId: requestData.subject.id,
             //     level: requestData.level,
             //     price: requestData.subject.prices[priceIdx],
             // })
-            //     .then(res => response = res);
+                .then(res => response = res);
             return response;
         }
         catch (err) {
@@ -151,19 +152,18 @@ export class UserService {
 
     async getUserClasses(uid, asTeacher, status, page) {
         try {
-            let params = {
-                status : status,
+            let config = {}
+            config['params'] = {
+                status: status,
                 asTeacher: asTeacher,
                 userId: uid,
                 page: page,
                 pageSize: 5
-            };
-            const token = localStorage.getItem("token")
-            const headers = { Authorization: "Bearer " +  token}
-            return await axios.get('/classes', {
-                   params,
-                   headers: {Authorization: "Bearer " + token}
-                })
+            }
+            let response;
+            await axiosService.axiosWrapper(axiosService.GET, '/classes', config)
+                .then(r => response = r)
+            return response
         }
         catch(err) {
             console.log(err);
