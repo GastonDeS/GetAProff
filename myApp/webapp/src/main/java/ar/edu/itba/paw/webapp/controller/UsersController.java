@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
 import ar.edu.itba.paw.webapp.requestDto.NewSubjectDto;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -85,12 +87,13 @@ public class UsersController {
 //        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
 //    }
 
-    //Esto no se usa mas?
     @POST
     @Path("/{uid}/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream image) throws IOException {
-        imageService.createOrUpdate(uid, IOUtils.toByteArray(image));
+    public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
+                              @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
+        System.out.println(Arrays.toString(IOUtils.toByteArray(fileStream)));
+        imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
         return Response.created(uriInfo.getAbsolutePath()).build();
     }
 
@@ -156,9 +159,11 @@ public class UsersController {
     @POST
     @Path("/{id}")
     @Produces(value = { MediaType.MULTIPART_FORM_DATA })
-    public Response editTeacherProfile(@PathParam("id") Long id, @FormDataParam("name") String newName, @FormDataParam("description") String newDescription,
-                                       @FormDataParam("schedule") String newSchedule, @FormDataParam("image") InputStream newImage,
-                                       @FormDataParam("teach") String wantToTeach ) throws IOException {
+    public Response editProfile(@PathParam("id") Long id,
+                                       @FormDataParam("name") String newName,
+                                       @FormDataParam("description") String newDescription,
+                                       @FormDataParam("schedule") String newSchedule,
+                                       @FormDataParam("teach") String wantToTeach) throws IOException {
 
         boolean added = false;
         if (wantToTeach.equals("true")) {
@@ -168,8 +173,9 @@ public class UsersController {
         int desc = userService.setUserDescription(id, newDescription);
         int sch = userService.setUserSchedule(id, newSchedule);
         int name = userService.setUserName(id, newName);
-        //TODO: hacerlo solo si mandan imagen
-        imageService.createOrUpdate(id, IOUtils.toByteArray(newImage));
+//        //TODO: hacerlo solo si mandan imagen
+//
+//        imageService.createOrUpdate(id, IOUtils.toByteArray(newImage));
 
         //TODO: Chequear esto?
         return (desc == 1 && sch == 1 && name == 1 && added) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();

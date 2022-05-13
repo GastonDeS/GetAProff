@@ -16,7 +16,7 @@ export const axiosWrapper = async (action, path, options, headers) => {
             return await axios.put(path, {headers: headers})
             break;
         case POST:
-            return await axios.post(path, options,{headers: headers});
+            return await axios.post(path, options, {headers: headers});
             break;
         case DELETE:
             return await axios.delete(path, {headers: headers});
