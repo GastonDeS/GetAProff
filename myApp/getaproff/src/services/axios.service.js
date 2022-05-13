@@ -9,16 +9,24 @@ export class AxiosService {
     POST = 2
     DELETE = 3
 
-     async axiosWrapper(action, path, options, headers) {
+
+    async authAxiosWrapper() {
+        //add header
+        return await this.axiosWrapper()
+    }
+
+     async axiosWrapper(action, path, config, data = {}) {
+        if (!config.hasOwnProperty('headers'))
+            config['headers'] = { Authorization : this.getBearerToken()}
         switch (action) {
             case this.GET:
-                return await axios.get(path, {headers: headers});
+                return await axios.get(path, config);
             case this.PUT:
-                return await axios.put(path, {headers: headers})
+                return await axios.put(path, data, config)
             case this.POST:
-                return await axios.post(path, options, {headers: headers});
+                return await axios.post(path, data, config);
             case this.DELETE:
-                return await axios.delete(path, {headers: headers});
+                return await axios.delete(path, config);
             default:
                 break;
         }
