@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AuthService from "../../services/authService";
+import { axiosWrapper, getBearerToken, POST } from "../../services/axios.service"
 
 import { Wrapper, MainContainer, Title, Request } from "../../GlobalStyle";
 import { useForm } from "react-hook-form";
@@ -13,20 +14,25 @@ import Button from "../../components/Button";
 import Default from "../../assets/img/add_img.png";
 import {Error} from "../Login/Login.styles";
 import {useNavigate} from "react-router-dom";
+import { act } from "react-dom/test-utils";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
   const navigate = useNavigate();
   const [change, setChange] = useState(false);
   const [image, setImage] = useState(Default);
+  const [isNewImage, setIsNewImage] = useState(false);
   const [currentUser, setCurrentUser] = useState();
-  // const [url, setUrl] = useState('users/')
   const {register, formState: { errors }, handleSubmit, reset, setValue} = useForm({defaultValues : { nameInput: "", schedule: "", description: ""}});
 
   const handleRoleChange = () => {
     setChange(current => !current);
     setIsTeacher(current => !current);
   }
+
+  useEffect(() => {
+    console.log(image === Default);
+  }, [isNewImage])
 
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
@@ -59,21 +65,24 @@ const EditProfile = () => {
     }
   }, [currentUser]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     var formData = new FormData();
     formData.append("name", data.nameInput);
     formData.append("description", data.description);
     formData.append("schedule", data.schedule);
-    formData.append("image", data.image[0]);
     formData.append("teach", change ? "true" : "false");
-    var token = AuthService.getCurrentToken();
-    console.log(token)
+    
+    if (image !== Default) {
+      var imgData = new FormData().append("image", image);
+      await axiosWrapper(POST, '/users/' + currentUser.id + '/image', imgData, {'Content-Type': 'multipart/form-data', 'Authorization': getBearerToken()})
+        .catch( err => console.log(err));
+    }
     //TODO: service
-    axios.post('/users/' + currentUser.id, formData, {
-      headers: { 'Content-Type' : 'multipart/form-data' }
-    }).then( () => {
-      navigate("/users/"+ currentUser.id);
-    }).catch( err => console.log(err));
+    await axiosWrapper(POST, '/users/' + currentUser.id, formData, {'Content-Type': 'multipart/form-data', 'Authorization': getBearerToken()})
+      .then( () => {
+        navigate("/users/"+ currentUser.id);
+      }).catch( err => console.log(err));
+
   }
 
   return (

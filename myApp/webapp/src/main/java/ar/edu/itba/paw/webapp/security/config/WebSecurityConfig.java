@@ -139,6 +139,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,"/users/{uid}/image").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.DELETE,"/users/{userId}/{subjectId}/{level}").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.POST,"/users/{id}").hasAnyAuthority("USER_STUDENT", "USER_TEACHER")
+                        .antMatchers(HttpMethod.POST,"/users/{id}/subjects").hasAnyAuthority("USER_STUDENT", "USER_TEACHER")
 //                        .antMatchers(HttpMethod.POST,"/users/{userId}").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET,"/users/{uid}/favorites").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/favorites").hasAuthority("USER_STUDENT")
