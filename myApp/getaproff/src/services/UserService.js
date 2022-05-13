@@ -1,7 +1,7 @@
 
 import axios from "axios";
+import {axiosService} from "./index";
 import i18next from "i18next";
-import { getBearerToken, POST, axiosWrapper } from "./axios.service";
 const PATH = '/users'
 
 
@@ -9,6 +9,7 @@ export class UserService {
     async getUserSubjects(uid){
         try {
             let subjects = []
+            await axiosService.axiosWrapper(axiosService.GET, `/users/${uid}/subjects`)
             await axios.get(`/users/${uid}/subjects`)
                 .then(res => res.data.forEach(subject => subjects.push(subject)))
             console.log(subjects)
@@ -128,12 +129,12 @@ export class UserService {
             // let response;
             let level = parseInt(requestData.level)
             let priceIdx = requestData.subject.levels.indexOf(level)
-            const response = await axiosWrapper(POST, `${PATH}/${uid}/classes`, {
+            const response = await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/classes`, {
                 studentId: requestData.studentId,
                 subjectId: requestData.subject.id,
                 level: requestData.level,
                 price: requestData.subject.prices[priceIdx],
-            }, {Authorization: getBearerToken()});
+            }, {Authorization: axiosService.getBearerToken()});
             // await axios.post(`${PATH}/${uid}/classes`, {
             //     studentId: requestData.studentId,
             //     subjectId: requestData.subject.id,
