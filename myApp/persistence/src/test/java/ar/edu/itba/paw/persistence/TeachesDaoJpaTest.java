@@ -153,72 +153,85 @@ public class TeachesDaoJpaTest {
         Assert.assertEquals(teachesExtra.getPrice(), maxFee);
     }
 
-//    @Test
-//    @Rollback
-//    public void testFilterUsers() {
-//        entityManager.persist(teaches);
-//        final User userExtra = InstanceProvider.getNewUser(1);
-//        entityManager.persist(userExtra);
-//        final Rating rating = InstanceProvider.getNewHighRating(user, userExtra);
-//        entityManager.persist(rating);
-//        final Teaches teachesExtra = InstanceProvider.getNewLowLevelTeaches(userExtra, subject);
-//        entityManager.persist(teachesExtra);
-//        final List<Object> teachersFiltered = teachesDao.filterUsers(teaches.getSubject().getName(), FILTER_PRICE, teaches.getLevel(), teaches.getLevel(), FILTER_RATE, RAND_ORDER, GET_ALL);
-//
-//        final Object[] expectedTeacherInfo = new Object[] {user.getId(), user.getName(), teaches.getPrice(), teaches.getPrice(), user.getDescription(), rating.getRate()};
-//
-//        teachersFiltered.forEach((teacherInfo) -> {
-//            Object[] teacherInfoRaw = (Object[]) teacherInfo;
-//            Assert.assertEquals(((Number) expectedTeacherInfo[0]).longValue(), ((Number) teacherInfoRaw[0]).longValue());
-//            Assert.assertEquals(expectedTeacherInfo[1].toString(), teacherInfoRaw[1].toString());
-//            Assert.assertEquals(((Number) expectedTeacherInfo[2]).intValue(), ((Number) teacherInfoRaw[2]).intValue());
-//            Assert.assertEquals(((Number) expectedTeacherInfo[3]).intValue(), ((Number) teacherInfoRaw[3]).intValue());
-//            Assert.assertEquals(expectedTeacherInfo[4].toString(), teacherInfoRaw[4].toString());
-//            Assert.assertEquals(((Number) expectedTeacherInfo[5]).floatValue(), ((Number) teacherInfoRaw[5]).floatValue(), DELTA);
-//        });
-//    }
+    @Test
+    @Rollback
+    public void testFilterUsers() {
+        entityManager.persist(teaches);
+        final User userExtra = InstanceProvider.getNewUser(1);
+        entityManager.persist(userExtra);
+        final Rating rating = InstanceProvider.getNewHighRating(user, userExtra);
+        entityManager.persist(rating);
+        final Teaches teachesExtra = InstanceProvider.getNewLowLevelTeaches(userExtra, subject);
+        entityManager.persist(teachesExtra);
+        PageRequest pageRequest = InstanceProvider.getNewPageRequest();
+        final Page<TeacherInfo> teachersFiltered = teachesDao.filterUsers(teaches.getSubject().getName(), FILTER_PRICE, teaches.getLevel(), teaches.getLevel(), FILTER_RATE, RAND_ORDER, pageRequest);
 
-//    @Test
-//    @Rollback
-//    public void testGetTopRatedTeachers() {
-//        for (int i = 1; i < 6; i++) {
-//            final User userExtra = InstanceProvider.getNewUser(i);
-//            entityManager.persist(userExtra);
-//            final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
-//                    InstanceProvider.getNewLowRating(userExtra, user);
-//            entityManager.persist(rating);
-//            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
-//        }
-//        final List<Object> topRatedTeachers = teachesDao.getTopRatedTeachers();
-//
-//        Assert.assertEquals(4, topRatedTeachers.size());
-//        for (int i = 0; i < 4; i++) {
-//            Object[] teacherInfoRaw = (Object[]) topRatedTeachers.get(i);
-//            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
-//        }
-//    }
+        TeacherInfo teacherInfo = InstanceProvider.getNewTeacherInfo(user, rating.getRate());
+        final Page<TeacherInfo> expectedTeachersFiltered = InstanceProvider.getNewPage(new ArrayList<>(Collections.singletonList(teacherInfo)), pageRequest);
+        Assert.assertEquals(expectedTeachersFiltered, teachersFiltered);
+    }
 
-//    @Test
-//    @Rollback
-//    public void testGetMostRequested() {
-//        for (int i = 1; i < 6; i++) {
-//            final User userExtra = InstanceProvider.getNewUser(i);
-//            entityManager.persist(userExtra);
-//            if (i < 5) {
-//                final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
-//                entityManager.persist(lectureExtra);
-//            }
-//            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
-//        }
-//        final List<Object> mostRequested = teachesDao.getMostRequested();
-//
-//        Assert.assertEquals(4, mostRequested.size());
-//        for (int i = 0; i < 4; i++) {
-//            Object[] teacherInfoRaw = (Object[]) mostRequested.get(i);
-//            Assert.assertEquals("user " + (i + 1), teacherInfoRaw[1].toString());
-//        }
-//    }
+    @Test
+    @Rollback
+    public void testGetTopRatedTeachers() {
+        List<TeacherInfo> expectedTopRatedTeachers = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            final User userExtra = InstanceProvider.getNewUser(i);
+            entityManager.persist(userExtra);
+            final Rating rating = i < 5 ? InstanceProvider.getNewHighRating(userExtra, user) :
+                    InstanceProvider.getNewLowRating(userExtra, user);
+            entityManager.persist(rating);
+            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
+            if (i < 5) {
+                expectedTopRatedTeachers.add(InstanceProvider.getNewTeacherInfo(userExtra, rating.getRate()));
+            }
+        }
+        final List<TeacherInfo> topRatedTeachers = teachesDao.getTopRatedTeachers();
+        Assert.assertEquals(expectedTopRatedTeachers, topRatedTeachers);
+    }
 
+    @Test
+    @Rollback
+    public void testGetMostRequested() {
+        List<TeacherInfo> expectedMostRequestedTeachers = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            final User userExtra = InstanceProvider.getNewUser(i);
+            entityManager.persist(userExtra);
+            if (i < 5) {
+                final Lecture lectureExtra = InstanceProvider.getNewLecture(userExtra, user, subject);
+                entityManager.persist(lectureExtra);
+            }
+            entityManager.persist(InstanceProvider.getNewTeaches(userExtra, subject));
+            if (i < 5) {
+                expectedMostRequestedTeachers.add(InstanceProvider.getNewTeacherInfo(userExtra, 0F));
+            }
+        }
+        final List<TeacherInfo> mostRequestedTeachers = teachesDao.getMostRequested();
+        for (int t = 0; t < 4; t++) {
+            System.out.println(mostRequestedTeachers.get(t).getDescription().equals(expectedMostRequestedTeachers.get(t).getDescription()));
+        }
+        Assert.assertEquals(expectedMostRequestedTeachers, mostRequestedTeachers);
+    }
+
+    @Test
+    @Rollback
+    public void testGetTeacherInfo() {
+        final Subject subjectExtra = InstanceProvider.getNewSubject(2);
+        entityManager.persist(subjectExtra);
+        entityManager.persist(teaches);
+        final Rating rating = InstanceProvider.getNewHighRating(user, InstanceProvider.getNewUser(1));
+        entityManager.persist(rating);
+        final Teaches teachesExtra = InstanceProvider.getNewTeaches(user, subjectExtra);
+        entityManager.persist(teachesExtra);
+
+        final Optional<TeacherInfo> teacherInfo = teachesDao.getTeacherInfo(user.getId());
+        Assert.assertTrue(teacherInfo.isPresent());
+
+        final TeacherInfo expectedTeacherInfo = InstanceProvider.getNewTeacherInfo(user, rating.getRate());
+        Assert.assertEquals(expectedTeacherInfo, teacherInfo.get());
+    }
+
+    // TODO: BORRAR?
 //    @Test
 //    @Rollback
 //    public void testGetSubjectInfoListByUser() {

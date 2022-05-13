@@ -155,7 +155,7 @@ public class UsersController {
     //Edit profile
     @POST
     @Path("/{id}")
-    @Produces(value = { MediaType.MULTIPART_FORM_DATA, })
+    @Produces(value = { MediaType.MULTIPART_FORM_DATA })
     public Response editTeacherProfile(@PathParam("id") Long id, @FormDataParam("name") String newName, @FormDataParam("description") String newDescription,
                                        @FormDataParam("schedule") String newSchedule, @FormDataParam("image") InputStream newImage,
                                        @FormDataParam("teach") String wantToTeach ) throws IOException {
@@ -186,10 +186,10 @@ public class UsersController {
     }
 
     @POST
-    @Path("/{userId}")
+    @Path("/{uid}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response addSubjectToUser(@PathParam("userId") Long userId, @Valid @RequestBody NewSubjectDto newSubjectDto) {
+    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody NewSubjectDto newSubjectDto) {
         final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel());
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
@@ -205,6 +205,7 @@ public class UsersController {
 //        List<ClassroomDto> dtos = lectures.stream().map(lecture -> ClassroomDto.getClassroom(uriInfo,lecture)).collect(Collectors.toList());
 //        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
 //    }
+
     //Return all favorite users of user with uid
     @GET
     @Path("/{uid}/favorites")

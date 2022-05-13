@@ -15,13 +15,24 @@ public class StudentDto {
 
     private Long id;
 
+    private boolean isTeacher;
+
     public static StudentDto fromUser(UriInfo uri, User user) {
         StudentDto studentDto = new StudentDto();
         studentDto.mail = user.getMail();
         studentDto.name = user.getName();
         studentDto.id = user.getId();
+        studentDto.isTeacher = user.isTeacher();
         studentDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
         return studentDto;
+    }
+
+    public boolean isTeacher() {
+        return isTeacher;
+    }
+
+    public void setTeacher(boolean teacher) {
+        isTeacher = teacher;
     }
 
     public String getName() {

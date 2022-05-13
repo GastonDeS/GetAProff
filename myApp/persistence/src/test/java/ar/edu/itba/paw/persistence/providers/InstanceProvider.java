@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class InstanceProvider {
 
@@ -25,6 +26,8 @@ public class InstanceProvider {
     private static final Integer STATUS = 1;
     private static final Integer ANY_LEVEL = 0;
     private static final String FILENAME = "FILENAME";
+    private static final Integer PAGE = 1;
+    private static final Integer PAGE_SIZE = 9;
 
     public InstanceProvider() {
         //
@@ -111,6 +114,21 @@ public class InstanceProvider {
                 .file(new byte[]{})
                 .fileName(FILENAME)
                 .build();
+    }
+
+    public static TeacherInfo getNewTeacherInfo(User user, float rate) {
+        return new TeacherInfo.Builder(user.getMail(), user.getName(), user.getId())
+                .reviews(1).maxPrice(PRICE).minPrice(PRICE).rate(rate)
+                .description(user.getDescription()).schedule(user.getSchedule()).build();
+    }
+
+    public static <T> Page<T> getNewPage(List<T> content, PageRequest pageRequest) {
+        return new Page.Builder<T>().content(content).page(pageRequest.getPage())
+                .size(pageRequest.getPageSize()).total(pageRequest.getPage()/ pageRequest.getPageSize()).build();
+    }
+
+    public static PageRequest getNewPageRequest() {
+        return new PageRequest(PAGE, PAGE_SIZE);
     }
 
 }

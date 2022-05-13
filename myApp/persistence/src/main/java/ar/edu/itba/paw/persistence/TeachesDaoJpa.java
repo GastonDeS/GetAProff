@@ -160,6 +160,7 @@ public class TeachesDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements
         return (List<TeacherInfo>) query.getResultList();
     }
 
+    // TODO: BORRAR?
 //    @Override
 //    public List<Teaches> getSubjectInfoListByUser(Long teacherId) {
 ////        String queryStr = "select s.subjectid as id, s.name as name, t.price as price, t.level as level from teaches t join subject s on t.subjectid = s.subjectid where t.userid = :teacherId";

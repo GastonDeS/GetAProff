@@ -275,8 +275,8 @@ public class User {
         private Long userId;
         private final String mail;
         private String name;
-        private String description;
-        private String schedule;
+        private String description = "";
+        private String schedule = "";
         private String password;
         private List<User> favourites;
 
