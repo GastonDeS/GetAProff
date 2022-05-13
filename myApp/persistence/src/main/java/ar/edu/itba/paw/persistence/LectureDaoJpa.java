@@ -128,7 +128,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
         if(currentLecture.getSharedFilesByTeacher().contains(subjectFile))
             return 0;
         currentLecture.getSharedFilesByTeacher().add(subjectFile);
-        return 1;
+        return currentLecture.getSharedFilesByTeacher().contains(subjectFile) ? 1 : 0;
     }
 
     @Override
@@ -138,7 +138,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
         if(!currentLecture.getSharedFilesByTeacher().contains(subjectFile))
             return 0;
         currentLecture.getSharedFilesByTeacher().remove(subjectFile);
-        return 1;
+        return currentLecture.getSharedFilesByTeacher().contains(subjectFile) ? 0 : 1;
     }
 
     @Override

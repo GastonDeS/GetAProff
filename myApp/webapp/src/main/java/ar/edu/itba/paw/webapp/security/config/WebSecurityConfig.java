@@ -135,11 +135,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST, "/subject-files/{id}/{subject}/{level}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
                         .antMatchers(HttpMethod.DELETE,"/user-files/{file}").hasAuthority("USER_STUDENT") // TODO OWNER
                         .antMatchers(HttpMethod.POST, "/user-files/{id}").hasAuthority("USER_STUDENT")//TODO OWNER
-                        .antMatchers(HttpMethod.POST,"/users/").hasAuthority("USER_STUDENT")
+//                        .antMatchers(HttpMethod.POST,"/users/").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/image").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.DELETE,"/users/{userId}/{subjectId}/{level}").hasAuthority("USER_STUDENT")
-                        .antMatchers(HttpMethod.POST,"/users/{id}").hasAuthority("USER_STUDENT")
-                        .antMatchers(HttpMethod.POST,"/users/{userId}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,"/users/{id}").hasAnyAuthority("USER_STUDENT", "USER_TEACHER")
+//                        .antMatchers(HttpMethod.POST,"/users/{userId}").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET,"/users/{uid}/favorites").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/favorites").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.DELETE,"/users/{uid}/favorites/{favTeacherId}").hasAuthority("USER_STUDENT")

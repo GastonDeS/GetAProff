@@ -65,8 +65,9 @@ const EditProfile = () => {
     formData.append("description", data.description);
     formData.append("schedule", data.schedule);
     formData.append("image", data.image[0]);
-    formData.append("wantToTeach", change? "true" : "false");
-
+    formData.append("teach", change ? "true" : "false");
+    var token = AuthService.getCurrentToken();
+    console.log(token)
     //TODO: service
     axios.post('/users/' + currentUser.id, formData, {
       headers: { 'Content-Type' : 'multipart/form-data' }
@@ -96,12 +97,12 @@ const EditProfile = () => {
                   {errors.schedule && <Error>{errors.schedule.message}</Error>}
                 </>
               }
-              <Button type="Submit" text="Save changes" callback={() => {navigate('/users/' + currentUser.id)}}/>
+              <Button type="Submit" text="Save changes"/>
             </Form>
           {!isTeacher && (<>
             <Request>
               <p>Want to become a teacher?</p>
-              <button onClick={handleRoleChange}>Click here</button>
+              <button onClick={handleRoleChange} type="button">Click here</button>
             </Request>
           </>)}
         </Content>

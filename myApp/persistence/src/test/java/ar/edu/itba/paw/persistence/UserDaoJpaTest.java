@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
-import ar.edu.itba.paw.models.Subject;
-import ar.edu.itba.paw.models.Teaches;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.providers.InstanceProvider;
 import org.junit.Assert;
@@ -22,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +63,7 @@ public class UserDaoJpaTest {
 
     @Test
     @Rollback
-    public void testGetUser() {
+    public void testGet() {
         entityManager.persist(user);
 
         Optional<User> maybeUser = userDao.get(user.getId());
@@ -126,22 +125,25 @@ public class UserDaoJpaTest {
                 "favourites","teacherid = " + user.getId() + " AND studentid = " + userExtra.getId()));
     }
 
-//    @Test
-//    @Rollback
-//    public void testGetFavourites() {
-//        entityManager.persist(user);
-//        List<User> faves = new ArrayList<>();
-//        faves.add(user);
-//        userExtra.setFavourites(faves);
-//        entityManager.persist(userExtra);
-//        entityManager.persist(teaches);
-//
-////        List<Object> favourites = userDao.getFavourites(userExtra.getId());
-//
-//        Assert.assertEquals(1,favourites.size());
-//        Assert.assertEquals( (long) user.getId()
-//                ,((Number)((Object[])favourites.get(0))[0]).longValue());
-//    }
+    @Test
+    @Rollback
+    public void testGetFavourites() {
+        entityManager.persist(user);
+        List<User> faves = new ArrayList<>();
+        faves.add(user);
+        userExtra.setFavourites(faves);
+        entityManager.persist(userExtra);
+        entityManager.persist(teaches);
+        final Rating rating = InstanceProvider.getNewHighRating(user, userExtra);
+        entityManager.persist(rating);
+
+        PageRequest pageRequest = InstanceProvider.getNewPageRequest();
+        final Page<TeacherInfo> favourites = userDao.getFavourites(userExtra.getId(), pageRequest);
+
+        TeacherInfo teacherInfo = InstanceProvider.getNewTeacherInfo(user, rating.getRate());
+        final Page<TeacherInfo> expectedFavourites = InstanceProvider.getNewPage(new ArrayList<>(Collections.singletonList(teacherInfo)), pageRequest);
+        Assert.assertEquals(expectedFavourites, favourites);
+    }
 
     @Test
     @Rollback
