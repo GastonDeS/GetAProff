@@ -8,7 +8,7 @@ export class UserService {
         try {
             let subjects = []
             let config = {}
-            await axiosService.axiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
                 .then(res => res.data.forEach(subject => subjects.push(subject)))
             return subjects;
         }
@@ -19,7 +19,7 @@ export class UserService {
         try {
             let data;
             let config = {}
-            await axiosService.axiosWrapper(axiosService.GET, `/${info}/${uid}`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `/${info}/${uid}`, config)
                 .then(res => {
                     data = res.data
                 })
@@ -41,7 +41,7 @@ export class UserService {
         try {
             let image = "";
             let  config = {}
-            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, config)
                 .then(
                     res => {
                         image = 'data:image/png;base64,' + res.data.image;
@@ -57,7 +57,7 @@ export class UserService {
         try {
             let data;
             let config = {}
-            await axiosService.axiosWrapper(axiosService.GET,`${PATH}/${uid}`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, config)
                 .then(res => data = res.data)
             return data;
         } catch (err) {
@@ -69,7 +69,7 @@ export class UserService {
         try {
             let retVal = false
             let config = {}
-            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config )
+            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config )
             res.data && res.data.forEach(
                 user => {
                     if (user.id === Number(teacherId)) {
@@ -86,7 +86,7 @@ export class UserService {
     async removeTeacherFromFavorites(teacherId, uid) {
         try {
             let config = {}
-            await axiosService.axiosWrapper(axiosService.DELETE, `${PATH}/${uid}/favorites/${teacherId}`, config )
+            await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${uid}/favorites/${teacherId}`, config )
         } catch (err) {
             console.log(err)
         }
@@ -97,7 +97,7 @@ export class UserService {
         try {
             let config = {}
             let data = {'id' : teacherId}
-            await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/favorites`, config, data )
+            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/favorites`, config, data )
         } catch (err) {
             console.log(err);
         }
@@ -111,7 +111,7 @@ export class UserService {
                     page: page,
                     pageSize: 5,
                 }}
-            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config)
                 .then(res => {
                     response['data'] = res.data
                     response['pageQty'] =(parseInt(res.headers['x-total-pages']))
@@ -130,18 +130,13 @@ export class UserService {
             let level = parseInt(requestData.level)
             let priceIdx = requestData.subject.levels.indexOf(level)
             let response;
-            await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/classes`, {
+            let config = {}
+            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/classes`,config, {
                 studentId: requestData.studentId,
                 subjectId: requestData.subject.id,
                 level: requestData.level,
                 price: requestData.subject.prices[priceIdx],
-            }, {Authorization: axiosService.getBearerToken()})
-            // await axios.post(`${PATH}/${uid}/classes`, {
-            //     studentId: requestData.studentId,
-            //     subjectId: requestData.subject.id,
-            //     level: requestData.level,
-            //     price: requestData.subject.prices[priceIdx],
-            // })
+            })
                 .then(res => response = res);
             return response;
         }
@@ -161,7 +156,7 @@ export class UserService {
                 pageSize: 5
             }
             let response;
-            await axiosService.axiosWrapper(axiosService.GET, '/classes', config)
+            await axiosService.authAxiosWrapper(axiosService.GET, '/classes', config)
                 .then(r => response = r)
             return response
         }
@@ -178,7 +173,7 @@ export class UserService {
                 rate: parseFloat(data.rating),
                 review: data.review
             };
-            return await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`, params);
+            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`, params);
         }
         catch (err) {
             console.log(err);

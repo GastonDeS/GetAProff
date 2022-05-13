@@ -16,7 +16,7 @@ export class ClassroomService {
             let config = {
                 headers:  {'Content-Type' : 'multipart/form-data'}
             }
-            await axiosService.axiosWrapper(axiosService.POST, `${PATH}/${classId}/posts`, config, formData )
+            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classId}/posts`, config, formData )
                 .then(res => response = res)
             return response;
         }
@@ -29,7 +29,7 @@ export class ClassroomService {
         try {
             let data;
             let config = {}
-            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${classId}`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classId}`, config)
                 .then(res => data = res.data);
             return data;
         }
@@ -41,11 +41,11 @@ export class ClassroomService {
         try {
             let response = {}
             let config = {params: {page: page, pageSize: 5}}
-            await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${classId}/posts`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classId}/posts`, config)
                 .then(
                     res => {
                         response['data'] = res.data;
-                        response['pageQty'] =(parseInt(res.headers['x-total-pages']) + 1)
+                        response['pageQty'] =(parseInt(res.headers['x-total-pages']))
                     }
                 )
             return response;
@@ -79,7 +79,7 @@ export class ClassroomService {
             }
             let data;
             let config = {}
-            await axiosService.axiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData )
+            await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData )
                 .then(res => data = res.data
                 )
             return data;

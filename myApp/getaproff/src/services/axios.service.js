@@ -10,17 +10,16 @@ export class AxiosService {
     DELETE = 3
 
 
-    async authAxiosWrapper() {
-        //add header
-        return await this.axiosWrapper()
-    }
-
-     async axiosWrapper(action, path, config, data = {}) {
+    async authAxiosWrapper(action, path, config, data = {}) {
         if(!config.hasOwnProperty('headers'))
             config.headers = {}
         if (!config.headers.hasOwnProperty('Authorization')) {
             config.headers['Authorization'] = this.getBearerToken()
         }
+        return await this.axiosWrapper(action, path, config, data)
+    }
+
+     async axiosWrapper(action, path, config, data = {}) {
         switch (action) {
             case this.GET:
                 return await axios.get(path, config);
