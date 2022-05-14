@@ -30,11 +30,20 @@
     "personal": "Information",
     "subjects": "Subjects",
     "reviews": "Reviews",
+    "share": "Share profile",
     "edit": {
+      "edit": "Edit",
       "profile": "Profile",
       "certifications": "Certifications",
       "subjects": "Subjects"
-    }
+    },
+    "editProfile": "Edit profile",
+    "request": "Request class", 
+    "addFavourites": "Add to favourites",
+    "removeFavourites": "Remove from favourites",
+    "description": "Description",
+    "schedule": "Schedule",
+    "certifications": "Certifications"
   },
   "errors": {
     "price": "Price value must be greater than zero"

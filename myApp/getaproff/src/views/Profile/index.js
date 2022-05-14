@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import i18next from "i18next";
-import AuthService from "../../services/authService";
-import {useLocation, useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Navbar from "../../components/Navbar";
 import {
@@ -25,24 +24,12 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
 import {Headers, MainContainer, Request, Row, Table, Wrapper} from "../../GlobalStyle";
-import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
-import ImagesService from "../../services/imagesService";
 import FilesService from "../../services/filesService";
 import Dropdown from "../../components/DropDown";
-import {userService} from "../../services/index";
+import { userService } from "../../services/index";
+import { useProfileFetch } from "../../hooks/useProfileFetch";
 
 const Profile = () => {
-  const [index, setIndex] = useState(0);
-  const [subjects, setSubjects] = useState([]);
-  const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
-  const [reviews, setReviews] = useState([]);
-  const [image, setImage] = useState(ProfileImg);
-  const [certifications, setCertifications] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
-  const [isTeacher, setIsTeacher] = useState(true);
-  const [isFaved, setIsFaved] = useState(false);
-  const location = useLocation();
   const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
     {name: 'profile.edit.certifications', path: '/edit-certifications'},
     {name: 'profile.edit.subjects', path: '/edit-subjects'}];
@@ -51,75 +38,35 @@ const Profile = () => {
   const { id } = useParams();
   const tabs = ['profile.personal', 'profile.subjects', 'profile.reviews'];
 
-  useEffect(() => {
-    if (currentUser) {
-      if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
-        setIsTeacher(false);
-      }
-    }
-  }, [currentUser])
-
-  useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-    userService.getUserInfo(id)
-       .then(data => {{
-         setUser(data);
-       }})
-       .catch(error => {console.log(error)});
-  }, [id]);
-  
-  useEffect(() => {
-    if (user) {
-      ImagesService.getImage(user.id, setImage);
-      if (isTeacher) {
-        userService.getUserSubjects(user.id)
-            .then(data => {
-              setSubjects(data.map((item) => {
-                return { 
-                  name: item.subject,
-                  price: '$' + item.price + '/' + i18next.t('subjects.hour'),
-                  level: i18next.t('subjects.levels.' + item.level),
-                };
-              }))
-            })
-            .catch(err => navigate("/error"))
-
-        userService.getUserReviews(user.id)
-            .then(data => setReviews(data))
-            .catch(err => navigate("/error"));
-
-
-        userService.getUserCertifications(user.id)
-            .then(data => setCertifications(data))
-            .catch(err => navigate("/error"));
-      }
-      setLoading(false);
-
-    }
-  },[user]);
-
-  useEffect(() => {
-    let current = AuthService.getCurrentUser();
-    userService.checkIfTeacherIsFaved(current.id, id)
-        .then(value => {
-          setIsFaved(value);
-        })
-  },[])
+  const {
+    currentUser,
+    isFaved,
+    image,
+    user,
+    isTeacher,
+    reviews,
+    certifications,
+    index,
+    loading,
+    subjects,
+    setIndex,
+    setIsFaved
+  } = useProfileFetch(id);
 
   const handleFavoriteState = () => {
     let teacherId = id;
     let setFavoriteStatus = userService.addTeacherToFavorites;
-    if (isFaved){
+    if (isFaved) {
       setFavoriteStatus = userService.removeTeacherFromFavorites;
     }
-    setFavoriteStatus(teacherId, currentUser.id)
-        .catch(err => console.log(err));
+    setFavoriteStatus(teacherId, currentUser.id);
     setIsFaved(!isFaved);
   }
 
   const requestClass = () => {
     navigate(`/users/${id}/class-request`)
   }
+
   return (
     <Wrapper>
       <Navbar/>
@@ -140,7 +87,7 @@ const Profile = () => {
                   isTeacher && 
                   <StarsReviews>
                     <RatingStar count={5} value={user.rate} size={18} edit={false} />
-                    <p>({user.reviewsQty} Reviews)</p>
+                    <p>({user.reviewsQty} {i18next.t('profile.reviews')})</p>
                   </StarsReviews>
                 }
               </ProfileName>
@@ -148,18 +95,15 @@ const Profile = () => {
                 {currentUser && currentUser.id === user.id ? (
                   isTeacher ? 
                   <>
-                    {/* <Button text="Edit profile" fontSize="1rem"/>
-                    <Button text="Edit subjects" fontSize="1rem"/>
-                    <Button text="Edit certifications" fontSize="1rem"/> */}
-                    <Dropdown brand="Edit" options={editOptions} size="1rem" color="white" background="var(--secondary)" radius="2rem" padding="0.45em 1.3em"/>
-                    <Button text="Share profile" fontSize="1rem"/> 
+                    <Dropdown brand={i18next.t('profile.edit.edit')} options={editOptions} size="1rem" color="white" background="var(--secondary)" radius="2rem" padding="0.45em 1.3em"/>
+                    <Button text={i18next.t('profile.share')} fontSize="1rem"/> 
                   </> : 
-                  <Button text="Edit profile" fontSize="1rem" callback={() => navigate('/edit-profile')}/>
+                  <Button text={i18next.t('profile.editProfile')} fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
                   <>
-                    <Button text="Request class" fontSize="1rem" callback={() => requestClass()}/>
-                    <Button text={!isFaved? "Add to favorites": "Remove from favorites"} callback={handleFavoriteState} fontSize="1rem"/>
-                    <Button text="Share profile" fontSize="1rem"/>
+                    <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>
+                    <Button text={!isFaved ? i18next.t('profile.addFavourites') : i18next.t('profile.removeFavourites')} callback={handleFavoriteState} fontSize="1rem"/>
+                    <Button text={i18next.t('profile.share')} fontSize="1rem"/>
                   </>
                 )}
               </ProfileInfoButtons>
@@ -175,18 +119,17 @@ const Profile = () => {
             </Tab>
             <TabInfoContainer>
               {index === 0 ? (
-                // TODO Personal Info
                 <SectionInfo>
                   <ProfileDataContainer>
-                    <h3>Description</h3>
+                    <h3>{i18next.t('profile.description')}</h3>
                     <p>{user.description}</p>
                   </ProfileDataContainer>
                   <ProfileDataContainer>
-                    <h3>Schedule</h3>
+                    <h3>{i18next.t('profile.schedule')}</h3>
                     <p>{user.schedule}</p>
                   </ProfileDataContainer>
                   <ProfileDataContainer> 
-                    <h3>Certifications</h3>
+                    <h3>{i18next.t('profile.certifications')}</h3>
                     <ul>
                       {certifications.map((certification) => {
                         return (
