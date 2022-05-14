@@ -119,7 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                        .antMatchers(HttpMethod.GET,"/auth/login").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,"/user").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET,"/classes").hasAuthority("USER_STUDENT") // asi esta bien limito cuando se pide cada uno con los links despues
 //                        .antMatchers(HttpMethod.GET, "/classroom").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
                         .antMatchers(HttpMethod.GET, "/classroom/{classId}").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
@@ -130,7 +130,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST, "/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
                         .antMatchers(HttpMethod.GET,"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
 //                        .antMatchers(HttpMethod.GET,"/files/user/{id}").hasAuthority("USER_STUDENT") //TODO VERIFY THIS AUTH
-                        .antMatchers(HttpMethod.POST,"/ratings/new-rating").hasAuthority("USER_STUDENNT") //TODO ONLY IF HAS AN OPEN CLASS
+//                        .antMatchers(HttpMethod.POST,"/ratings/new-rating").hasAuthority("USER_STUDENNT") //TODO ONLY IF HAS AN OPEN CLASS
 
                         .antMatchers(HttpMethod.GET, "/subject-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.DELETE, "/subject-files/{file}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
@@ -178,7 +178,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/users/subjects/levels/{id}")
                 .antMatchers(HttpMethod.GET,"/users/{uid}/image")
                 .antMatchers(HttpMethod.GET,"/users/top-rated")
-                .antMatchers(HttpMethod.POST, "/auth")
+                .antMatchers(HttpMethod.POST, "/users")
                 .antMatchers(HttpMethod.GET,"/files/user/{id}")
                 .antMatchers("/")
                 .antMatchers("/*.js")

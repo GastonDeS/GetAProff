@@ -6,6 +6,8 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
 import ar.edu.itba.paw.webapp.requestDto.SubjectRequestDto;
+import ar.edu.itba.paw.webapp.security.api.models.Authority;
+import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -20,16 +22,21 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("users")
 @Component
 public class UsersController {
 
-    private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0
-            ;
+    private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0;
+
+    @Autowired
+    AuthenticationTokenService authenticationTokenService;
+
     @Autowired
     private TeachesService teachesService;
 
@@ -50,6 +57,26 @@ public class UsersController {
 
     @Context
     private UriInfo uriInfo;
+
+    @POST
+    @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
+    public Response register(@FormDataParam("name") String name, @FormDataParam("mail") String mail,
+                             @FormDataParam("password") String password, @FormDataParam("description") String description, @FormDataParam("role") Long role,
+                             @FormDataParam("schedule") String schedule) throws IOException {
+        Optional<User> mayBeUser = userService.findByEmail(mail);
+        if(mayBeUser.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        Optional<User> newUser = userService.create(name, mail, password, description, schedule, role);
+        if(!newUser.isPresent())
+            return Response.status(Response.Status.CONFLICT).build();
+        URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
+        Response.ResponseBuilder response = Response.created(location);
+        response.entity(AuthDto.fromUser(uriInfo, newUser.get()));
+        Set<Authority> authoritySet = new HashSet<>();
+        authoritySet.add(Authority.USER_STUDENT);
+        if (newUser.get().isTeacher()) authoritySet.add(Authority.USER_TEACHER);
+        return response.header("Authorization", authenticationTokenService.issueToken(newUser.get().getMail(), authoritySet)).build();
+    }
 
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })

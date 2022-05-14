@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosService } from "../../services";
+import { axiosService, userService } from "../../services";
 
 import Navbar from "../../components/Navbar";
 import Tab from "../../components/Tab";
@@ -50,7 +50,7 @@ const Register = () => {
       formData.append("schedule", data.ScheduleInput);
       formData.append("role", data.Role);
       
-      await AuthService.register(formData).catch((error) => { navigate("/error") })
+      await userService.register(formData).catch((error) => { navigate("/error") })
       
       if (image) {
         var imgData = new FormData();

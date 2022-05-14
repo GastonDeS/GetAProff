@@ -163,6 +163,18 @@ export class UserService {
         }
     }
 
+    async register(formData) {
+        try {
+          await axiosService.axiosWrapper(axiosService.POST, API_URL, {'Content-Type': 'multipart/form-data'}, formData)
+          .then( (res) => {
+            console.log(res)
+            localStorage.setItem('token', res.headers.authorization);
+            localStorage.setItem('user', JSON.stringify(res.data));
+          });
+        } catch (err) {
+          console.log(err);
+        }
+    }
 
 
     async requestClass(uid, requestData) {
