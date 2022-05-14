@@ -11,7 +11,6 @@ import AuthService from "../../services/authService";
 import {classroomService, userService} from "../../services";
 import {useNavigate} from "react-router-dom";
 import i18next from "i18next";
-import authService from "../../services/authService";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 
@@ -146,7 +145,7 @@ const MyClasses = () => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}
                                     price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={false} handlers={handler}/>
                 })}
-            {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
+            {pageQty > 1 && <StyledPagination>{items}</StyledPagination>}
           </CardContainer>
         </Content>
       </MainContainer>
