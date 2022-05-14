@@ -65,17 +65,24 @@
   "myClasses": {
     "status": {
       "any": "Todos",
-      "pending": "Pendiente",
-      "active": "Activo",
-      "finished": "Finalizado"
-    }
+      "pending": "Pendientes",
+      "active": "Activas",
+      "finished": "Finalizadas",
+      "rated": "Calificadas",
+      "cancelled": "Canceladas"
+    },
+    "requested": "Solicitadas",
+    "offered": "Ofrecidas",
+    "filter": "Filtrar por estado:",
+    "noOffered": "Parece que aún no tienes clases"
   },
   "classCard": {
     "status": {
       "pending": "Pendiente",
-      "active": "Activo",
-      "finished": "Finalizado",
-      "cancelled": "Cancelado",
+      "active": "Activa",
+      "finished": "Finalizada",
+      "rated": "Calificada",
+      "cancelled": "Cancelada",
       "error": "Error"
     },
     "enter": "Ingresar",

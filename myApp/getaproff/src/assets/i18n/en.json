@@ -67,15 +67,22 @@
       "any": "Any",
       "pending": "Pending",
       "active": "Active",
-      "finished": "Finished"
-    }
+      "finished": "Finished",
+      "rated": "Rated",
+      "cancelled": "Cancelled"
+    },
+    "requested": "Requested",
+    "offered": "Ofered",
+    "filter": "Filter by State:",
+    "noOffered": "You have no classes"
   },
   "classCard": {
     "status": {
       "pending": "Pending",
       "active": "Active",
       "finished": "Finished",
-      "cancelled": "Canceled",
+      "rated": "Rated",
+      "cancelled": "Cancelled",
       "error": "Error"
     },
     "enter": "Enter",
@@ -103,7 +110,7 @@
       "pending": "Pending",
       "active": "Active",
       "finished": "Finished",
-      "cancelled": "Canceled",
+      "cancelled": "Cancelled",
       "error": "Error"
     },
     "post": {
