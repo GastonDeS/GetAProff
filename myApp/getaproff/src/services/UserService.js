@@ -1,21 +1,61 @@
 import {axiosService} from "./index";
 
 const PATH = '/users'
-
+const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 export class UserService {
-    async getUserSubjects(uid){
+    async getUserSubjects(uid) {
         try {
             let subjects = []
             let config = {}
             await axiosService.authAxiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
-                .then(res => res.data.forEach(subject => subjects.push(subject)))
+                .then(res => {
+                    res.data.forEach(subject => subjects.push(subject));
+                    return subjects;
+                })
             return subjects;
         }
         catch (err) { console.log(err) }
     }
 
-    async getUserSpecificInfo(info, uid){
+    async getUserAvailableSubjects(uid) {
+        try {
+            let subjects = []
+            let config = {}
+            await axiosService.authAxiosWrapper(axiosService.GET, `/users/available-subjects/${uid}`, config)
+                .then(res => {
+                    res.data.forEach(subject => subjects.push(subject));
+                    return subjects;
+                })
+            return subjects;
+        }
+        catch (err) { console.log(err) }
+    }
+
+    async addSubjectToUser(uid, subjecId, price, level) {
+        try {
+            let config = {
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            }
+            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}`, config, {
+                subjectId: subjecId,
+                price: price,
+                level: level
+            });
+        } catch(error) {console.log(error)};
+    }
+
+    async deleteSubjectsFromUser(uid, subjects) {
+        try {
+            for (const subject of subjects) {
+                if (subject.checked) {
+                    await axiosService.authAxiosWrapper(axiosService.DELETE, "/users/" + uid + subject.url, {});
+                }
+            }
+        } catch(error) {console.log(error)};
+    }
+
+    async getUserSpecificInfo(info, uid) {
         try {
             let data;
             let config = {}
@@ -49,6 +89,14 @@ export class UserService {
             return image;
         }
         catch (err) {
+            console.log(err);
+        }
+    }
+
+    async addUserImg (uid, imgData) {
+        try {
+            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}/image`, {}, imgData);
+        } catch (err) {
             console.log(err);
         }
     }
@@ -122,6 +170,24 @@ export class UserService {
         }
     }
 
+    async register(formData) {
+        try {
+          let config = {
+            headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+          }
+          var url = API_URL + '/student';
+          if (formData.role === 1) {
+            url = API_URL + '/teacher';
+          }
+          await axiosService.axiosWrapper(axiosService.POST, url, config, formData)
+          .then( (res) => {
+            localStorage.setItem('token', res.headers.authorization);
+            localStorage.setItem('user', JSON.stringify(res.data));
+          });
+        } catch (err) {
+          console.log(err);
+        }
+    }
 
 
     async requestClass(uid, requestData) {

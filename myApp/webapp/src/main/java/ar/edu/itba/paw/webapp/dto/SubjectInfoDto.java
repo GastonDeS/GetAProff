@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectInfoDto {
-    private String name;
+    private String subject;
 
-    private Long teacherId, id;
+    private Long id;
 
     private List<Integer> levels, prices;
 
@@ -16,38 +16,13 @@ public class SubjectInfoDto {
         SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
         subjectInfoDto.levels = new ArrayList<>();
         subjectInfoDto.prices = new ArrayList<>();
-        subjectInfoDto.teacherId = subjectData.get(0).getTeacher().getId();
         subjectInfoDto.id = subjectData.get(0).getSubject().getSubjectId();
-        subjectInfoDto.name = subject;
+        subjectInfoDto.subject = subject;
         subjectData.forEach(teaches -> {
             subjectInfoDto.levels.add(teaches.getLevel());
             subjectInfoDto.prices.add(teaches.getPrice());
         });
         return subjectInfoDto;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String subjectName) {
-        this.name = subjectName;
-    }
-
-    public Long getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long subjectId) {
-        this.id = subjectId;
     }
 
     public List<Integer> getLevels() {
@@ -64,6 +39,22 @@ public class SubjectInfoDto {
 
     public void setPrices(List<Integer> prices) {
         this.prices = prices;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long subjectId) {
+        this.id = subjectId;
     }
 }
 

@@ -5,7 +5,7 @@ import styled from "styled-components"
 
 const Textarea = ({ register, name, options, ...rest }) => {
   return (
-      <StyledTextarea {...register(name)} {...rest}/>
+      <StyledTextarea {...register(name, options)} {...rest}/>
   );
 };
 

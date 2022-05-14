@@ -5,15 +5,14 @@ import {axiosService} from "../../services";
 import { Wrapper, MainContainer, Title, Request } from "../../GlobalStyle";
 import { useForm } from "react-hook-form";
 import Navbar from "../../components/Navbar";
-import {Content, Form, InputContainer} from "./EditProfile.styles";
-import Input, {StyledInput} from "../../components/Input";
+import {Content, Form} from "./EditProfile.styles";
+import Input from "../../components/Input";
 import DisplayImage from "../../components/DisplayImage";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import Default from "../../assets/img/add_img.png";
 import {Error} from "../Login/Login.styles";
 import {useNavigate} from "react-router-dom";
-import { act } from "react-dom/test-utils";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
@@ -61,7 +60,9 @@ const EditProfile = () => {
       //TODO: Revisar este endpoint
       axios.get( `/users/${currentUser.id}/image`)
         .then(res => {
-          setDisplayImage('data:image/png;base64,' + res.data.image);
+          if (res.data.image) {
+            setDisplayImage('data:image/png;base64,' + res.data.image);
+          }
         })
         .catch(error => {});
     }

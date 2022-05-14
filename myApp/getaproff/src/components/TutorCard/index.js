@@ -9,16 +9,17 @@ import { useNavigate } from 'react-router-dom';
 
 const TutorCard = ({ user }) => {
   const [image, setImage] = useState(ProfileImg);
-  const [error, setError] = useState();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/users/${user.id}/image`)
     .then(res => {
-      setImage('data:image/png;base64,' + res.data.image);
+      if (res.data.image) {
+        setImage('data:image/png;base64,' + res.data.image); 
+      }
     })
-    .catch(error => setError(error));
+    .catch((error) => {});
   }, [])
 
   return (

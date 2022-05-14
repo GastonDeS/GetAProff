@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
 
-public class NewSubjectDto {
+public class SubjectRequestDto {
 
     private Long subjectId;
 

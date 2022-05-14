@@ -123,8 +123,9 @@ public class InstanceProvider {
     }
 
     public static <T> Page<T> getNewPage(List<T> content, PageRequest pageRequest) {
+        int size = content.size();
         return new Page.Builder<T>().content(content).page(pageRequest.getPage())
-                .size(pageRequest.getPageSize()).total(pageRequest.getPage()/ pageRequest.getPageSize()).build();
+                .size(pageRequest.getPageSize()).total(size / pageRequest.getPageSize() + (size% pageRequest.getPageSize() > 0 ? 1: 0)).build();
     }
 
     public static PageRequest getNewPageRequest() {

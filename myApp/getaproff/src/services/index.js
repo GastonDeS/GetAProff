@@ -1,6 +1,6 @@
-import { UserService} from "./UserService";
-import { ClassroomService } from "./ClassroomService";
-import {AxiosService} from "./axios.service";
+import { UserService} from "./userService";
+import { ClassroomService } from "./classroomService";
+import { AxiosService } from "./axios.service";
 
 
 const userService = new UserService();
