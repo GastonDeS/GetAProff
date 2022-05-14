@@ -29,7 +29,7 @@ public class SubjectFilesController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response getUserSubjectFiles(@PathParam("id") Long id) {
         final List<SubjectFileDto> subjectFileDtos = subjectFileService.getAllSubjectFilesFromUser(id).stream()
                 .map(subjectFile -> SubjectFileDto.fromUser(uriInfo, subjectFile)).collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class SubjectFilesController {
 
     @DELETE
     @Path("/{file}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response deleteUserSubjectFile(@PathParam("file") Long file) {
         int success = subjectFileService.deleteSubjectFile(file);
         return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
@@ -47,7 +47,7 @@ public class SubjectFilesController {
     @POST
     @Path("/{id}/{subject}/{level}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response uploadUserSubjectFiles(@PathParam("id") Long id, @PathParam("subject") Long subject,
                                            @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {

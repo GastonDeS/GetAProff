@@ -21,7 +21,7 @@ public class PostFileController {
 
     @GET
     @Path("/{postId}/file")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getPostFile(@PathParam("postId") final Long postId) {
         Post post = postService.getFileData(postId);
         Response.ResponseBuilder response = Response.ok(new ByteArrayInputStream(post.getFile()));
