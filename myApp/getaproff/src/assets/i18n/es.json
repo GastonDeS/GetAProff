@@ -215,5 +215,21 @@
     "signUp": "Registrarse",
     "alreadyRegistered": "Ya tienes una cuenta?",
     "login": "Ingresar"
+  },
+  "requestClass": {
+    "title": "Solicitar clase a",
+    "selectSubject": "Seleccionar materia",
+    "selectLevel": "Seleccionar nivel",
+    "subjects": "Materias",
+    "levels": "Niveles",
+    "sendRequest": "Enviar solicitud"
+  },
+  "requestSubject": {
+    "title": "Solicitar materia",
+    "insertSubject": "Ingresar materia",
+    "insertSubjectPlaceholder": "Álgebra",
+    "insertMessage": "Ingresar mensaje",
+    "insertMessagePlaceholder": "Cuéntanos porque quieres agregar esta materia",
+    "sendRequest": "Enviar solicitud"
   }
 }

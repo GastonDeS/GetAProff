@@ -215,5 +215,21 @@
     "signUp": "Sign Up",
     "alreadyRegistered": "Already have an account?",
     "login": "Login"
+  },
+  "requestClass": {
+    "title": "Request Class from",
+    "selectSubject": "Select subject",
+    "selectLevel": "Select level",
+    "subjects": "Subjects",
+    "levels": "Levels",
+    "sendRequest": "Send Request"
+  },
+  "requestSubject": {
+    "title": "Request Subject",
+    "insertSubject": "Insert subject",
+    "insertSubjectPlaceholder": "Algebra",
+    "insertMessage": "Insert message",
+    "insertMessagePlaceholder": "Tell us why you want to add this subject",
+    "sendRequest": "Send Request"
   }
 }
