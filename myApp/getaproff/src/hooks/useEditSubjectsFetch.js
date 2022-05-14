@@ -14,65 +14,6 @@ export const useEditSubjectsFetch = () => {
   const [checkAll, setCheckAll] = useState(false);
   const [currentUser, setCurrentUser] = useState();
 
-  const onChangePrice = (event) => {
-    setPrice(event.target.value);
-  }
-
-  const handleAddSubject = async() => {
-    if (!price || price <= 0) {
-      setError(true);
-    } else {
-      setError(false);
-      await userService.addSubjectToUser(currentUser.id, subject.id, price, level.id)
-      .then(() => {
-        setPrice("");
-        setSubjectsTaught([]);
-        setLoading(true);
-      });
-    };
-  }
-
-  const handleCheckedsubject = (checked, subject) => {
-    setSubjectsTaught(subjectsTaught.map(item => {
-      if (item.url === subject.url) item.checked = checked;
-      return item;
-    }));
-  }
-
-  const handleCheckAll = (event) => {
-    setCheckAll(event.target.checked);
-    if (event.target.checked) {
-      setSubjectsTaught(subjectsTaught.map(subject => {
-        return {
-          ...subject,
-          checked: true
-        }
-      }));
-    } else {
-      setSubjectsTaught(subjectsTaught.map(subject => {
-        return {
-          ...subject,
-          checked: false
-        }
-      }));
-    }
-  }
-
-  const handleDeleteSubjects = async () => {
-    await userService.deleteSubjectsFromUser(currentUser.id, subjectsTaught).then(() => {
-      setSubjectsTaught([]);
-      setLoading(true);
-    })
-  }
-
-  const handleLevelChange = (event) => {
-    setLevel(subject.levels.filter(level => Number(level.id) === Number(event.target.value))[0]);
-  }
-
-  const handleSubjectChange = (event) => {
-    setSubject(availableSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0]);
-  };
-
   const fetchSubjectsTaught = async (id) => {
     await userService.getUserSubjects(id)
     .then(data => {
@@ -147,12 +88,12 @@ export const useEditSubjectsFetch = () => {
     subject,
     checkAll,
     currentUser,
-    handleCheckAll,
-    handleSubjectChange,
-    onChangePrice,
-    handleCheckedsubject,
-    handleAddSubject,
-    handleDeleteSubjects,
-    handleLevelChange
+    setPrice,
+    setError,
+    setSubjectsTaught,
+    setLoading,
+    setCheckAll,
+    setLevel,
+    setSubject
   };
 };

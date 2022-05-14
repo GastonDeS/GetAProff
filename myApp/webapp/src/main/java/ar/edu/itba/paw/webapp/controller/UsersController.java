@@ -145,7 +145,6 @@ public class UsersController {
 
     @DELETE
     @Path("/{userId}/{subjectId}/{level}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
         return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
@@ -186,9 +185,8 @@ public class UsersController {
 
     @POST
     @Path("/{uid}")
-    @Consumes(value = { "application/vnd.getaproff.api.v1+json", })
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
-    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody NewSubjectDto newSubjectDto) {
+    @Consumes("application/vnd.getaproff.api.v1+json")
+    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody SubjectRequestDto newSubjectDto) {
         final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel());
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();

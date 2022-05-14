@@ -1,6 +1,7 @@
 import {axiosService} from "./index";
 
 const PATH = '/users'
+const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 
 export class UserService {
@@ -34,7 +35,10 @@ export class UserService {
 
     async addSubjectToUser(uid, subjecId, price, level) {
         try {
-            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}`, {}, {
+            let config = {
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            }
+            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}`, config, {
                 subjectId: subjecId,
                 price: price,
                 level: level
