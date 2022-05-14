@@ -67,5 +67,12 @@
       "active": "Activo",
       "finished": "Finalizado"
     }
+  },
+  "certifications": {
+    "title": "Editar certificaciones",
+    "files": "Archivos",
+    "save": "Guardar cambios",
+    "delete": "Borrar archivos",
+    "choose": "Subir archivos"
   }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AuthService from "../../services/authService";
-import axios from "axios";
 import { userService } from "../../services";
+import i18next from "i18next";
 
 import {
   Wrapper,
@@ -50,10 +50,6 @@ const EditCertifications = () => {
     }
     setCertifications([]);
     setReload(true);
-    // certifications.filter((file) => file.selected).forEach((file) => {
-    //   axios.delete('/user-files/' + file.id);
-    // });
-    // setCertifications(certifications.filter(file => !file.selected));
   };
 
   const handleUpload = async (event) => {
@@ -82,7 +78,7 @@ const EditCertifications = () => {
     return (
       <DeleteButton>
         {displayButtons()}
-        <Button text="Delete" fontSize="1rem" color="red" callback={handleDelete}/>
+        <Button text={i18next.t('certifications.delete')} fontSize="1rem" color="red" callback={handleDelete}/>
       </DeleteButton>
     )
   };
@@ -91,7 +87,7 @@ const EditCertifications = () => {
     return (
       <ButtonContainer>
         <label>
-          <Button text="Upload file" fontSize="1rem" callback={openFile} />
+          <Button text={i18next.t('certifications.choose')} fontSize="1rem" callback={openFile} />
           <input
             type="file"
             id="certification"
@@ -101,7 +97,7 @@ const EditCertifications = () => {
             multiple
           />
         </label>
-        <Button text="Save changes" fontSize="1rem" callback={() => navigate('/users/' + currentUser.id)}/>
+        <Button text={i18next.t('certifications.save')} fontSize="1rem" callback={() => navigate('/users/' + currentUser.id)}/>
       </ButtonContainer>
     );
   };
@@ -131,12 +127,6 @@ const EditCertifications = () => {
     }
   }, [reload, currentUser]);
 
-  // useEffect(async () => {
-  //   if (currentUser) {
-  //     fetchCertifications();
-  //   }
-  // }, [currentUser]);
-
   useEffect(() => {
     if (certifications && certifications.length === 0) setCheckAll(false) 
   }, [certifications]);
@@ -146,11 +136,11 @@ const EditCertifications = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Edit certifications</Title>
+          <Title>{i18next.t('certifications.title')}</Title>
           <Table>
             <thead>
               <Row>
-                <Headers style={{ width: "95%" }}>Files</Headers>
+                <Headers style={{ width: "95%" }}>{i18next.t('certifications.files')}</Headers>
                 <Headers style={{ width: "5%" }}>
                   <CheckBox checked={checkAll} handleCheck={handleDeleteAll}/>
                 </Headers>
