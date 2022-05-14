@@ -70,11 +70,30 @@ export class UserService {
         }
     }
 
-    async getUserReviews(uid) {
+    async getUserReviews (uid) {
       return this.getUserSpecificInfo("ratings", uid)
     }
-    async getUserCertifications(uid) {
+
+    async getUserCertifications (uid) {
        return this.getUserSpecificInfo("user-files", uid)
+    }
+
+    async addCertification (uid, form) {
+        try {
+            await axiosService.authAxiosWrapper(axiosService.POST, `/user-files/${uid}`, {}, form);
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async removeCertification (fileId) {
+        try {
+            await axiosService.authAxiosWrapper(axiosService.DELETE, `/user-files/${fileId}`, {});
+            return;
+        } catch (err) {
+            console.log(err);
+        }
     }
     
     async getUserImg(uid) {

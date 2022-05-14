@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AuthService from "../../services/authService";
 import axios from "axios";
+import { userService } from "../../services";
 
 import {
   Wrapper,
@@ -21,6 +22,7 @@ const EditCertifications = () => {
   const [currentUser, setCurrentUser] = useState();
   const [certifications, setCertifications] = useState([]);
   const [checkAll, setCheckAll] = useState(false);
+  const [reload, setReload] = useState(true);
   const inputFile = useRef(null);
 
   const navigate = useNavigate();
@@ -41,11 +43,17 @@ const EditCertifications = () => {
     };
   };
 
-  const handleDelete = () => {
-    certifications.filter((file) => file.selected).forEach((file) => {
-      axios.delete('/user-files/' + file.id);
-    });
-    setCertifications(certifications.filter(file => !file.selected));
+  const handleDelete = async () => {
+    const files = certifications.filter((file) => file.selected);
+    for (var i = 0; i < files.length; i++) {
+      await userService.removeCertification(files[i].id);
+    }
+    setCertifications([]);
+    setReload(true);
+    // certifications.filter((file) => file.selected).forEach((file) => {
+    //   axios.delete('/user-files/' + file.id);
+    // });
+    // setCertifications(certifications.filter(file => !file.selected));
   };
 
   const handleUpload = async (event) => {
@@ -54,19 +62,17 @@ const EditCertifications = () => {
       if (certifications.filter(item => item.name === files[i].name).length === 0) {
         const form = new FormData();
         form.append("file", files[i]);
-        const res = await axios.post('/user-files/' + currentUser.id, form);
-        setCertifications(previous => [...previous, {
-          ...res.data,
-          selected: false
-        }]);
+        await userService.addCertification(currentUser.id, form);
       };
     };
+    setCertifications([]);
+    setReload(true);
   };
 
-  const handleCheckedFile = (checked, id) => {
+  const handleCheckedFile = (checked, data) => {
     setCertifications(
       certifications.map((file) => {
-        if (Number(file.id) === id) file.selected = checked;
+        if (Number(file.id) === data.id) file.selected = checked;
         return file;
       })
     );
@@ -100,14 +106,9 @@ const EditCertifications = () => {
     );
   };
 
-  useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-  }, []);
-
-  useEffect(async () => {
-    if (currentUser) {
-      const res = await axios.get("/user-files/" + currentUser.id);
-      res.data.forEach((file) => {
+  const fetchCertifications = async () => {
+    await userService.getUserCertifications(currentUser.id).then(res => {
+      res.forEach((file) => {
         setCertifications((previous) => [
           ...previous,
           {
@@ -116,8 +117,25 @@ const EditCertifications = () => {
           },
         ]);
       });
+    })
+    setReload(false);
+  }
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+  }, []);
+
+  useEffect(() => {
+    if (reload && currentUser) {
+      fetchCertifications();
     }
-  }, [currentUser]);
+  }, [reload, currentUser]);
+
+  // useEffect(async () => {
+  //   if (currentUser) {
+  //     fetchCertifications();
+  //   }
+  // }, [currentUser]);
 
   useEffect(() => {
     if (certifications && certifications.length === 0) setCheckAll(false) 

@@ -27,19 +27,15 @@ const Login = () => {
   const navigate = useNavigate();
 
 
-  const handleLogin = event => {
+  const handleLogin = async (event) => {
     setInvalidCredentials(false)
-    AuthService
-        .login(event.username, event.password)
-        .then(
-            (token) => {
-              navigate(`/`);
-            },
-            () => {
-              setInvalidCredentials(true)
-            }
-        )
-        .catch(() => navigate("/error"))
+    await AuthService.login(event.username, event.password)
+        .then((token) => {
+          if (token) {
+            navigate(`/`);
+          }
+          setInvalidCredentials(true);
+        });
   };
 
 
