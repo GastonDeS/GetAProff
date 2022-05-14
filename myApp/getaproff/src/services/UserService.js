@@ -145,11 +145,18 @@ export class UserService {
         }
     }
 
-    async getUsers(queryParams) {
+    async getUsers(queryParams, page) {
         try {
             let config = {};
             let response;
-            config['params'] = queryParams
+            config['params'] = {
+                maxPrice : queryParams.maxPrice,
+                level : parseInt(queryParams.level),
+                rating : parseInt(queryParams.rating),
+                search: queryParams.search,
+                page: page,
+                pageSize: 9
+            };
             await axiosService.axiosWrapper(axiosService.GET, '/users', config)
                 .then(res => response = res)
             return response;

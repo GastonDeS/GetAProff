@@ -46,7 +46,7 @@ export const SearchBarContainer = styled.div`
 `;
 
 export const Grid = styled.div`
-  margin: 30px 0;
+  margin: 40px 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;

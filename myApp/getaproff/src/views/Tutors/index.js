@@ -18,17 +18,19 @@ import RatingStars from "../../components/RatingStars";
 import Button from "../../components/Button";
 import TutorCard from "../../components/TutorCard";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
-import {useForm, Controller} from "react-hook-form";
+import {useForm, Controller, useFormState, get} from "react-hook-form";
 import {userService} from "../../services";
 
 const Tutors = () => {
   const [order, setOrder] = useState(0);
   const [level, setLevel] = useState(0);
   const [page, setPage] = useState(1);
+  const [pageQty, setPageQty] = useState(0)
   const [subject, setSubject] = useState();
+  const [isFormReseted, setIsFormReseted] = useState(false)
   const [tutors, setTutors] = useState([]);
-  const {register, handleSubmit, getValues} = useForm({defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1}});
+  const {register, handleSubmit, getValues, reset, control} = useForm({defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1}});
+  const {isDirty} = useFormState({control})
   const orders = [
     {name: "Price Ascending", id: 1},
     {name: "Price Descending", id: 2},
@@ -40,22 +42,11 @@ const Tutors = () => {
   const myURL = window.location.search;
 
   //TODO: revisar esto de los parametros para filtros
-  const haveParams = myURL.indexOf("?") > -1;
   const location = useLocation();
 
   useEffect(() => {
     setSubject(location.state.subject.name);
   }, []);
-
-  useEffect(() => {
-    userService.getUsers()
-    subject && axios.get('/teachers/subject/?page=1&search=' + subject)
-      .then(res => {
-        res.data.forEach(item => {
-          setTutors(previous => [...previous, item]);
-        })
-      });
-  }, [subject]);
 
   //Funciones
 
@@ -63,21 +54,31 @@ const Tutors = () => {
     setPage(parseInt(event.currentTarget.innerHTML));
 
   const cleanFilters = () => {
-    document.getElementById("filterForm").reset();
+    setIsFormReseted(true)
+    reset()
   };
 
-  const submitForm = () => {
-    document.getElementById("filterForm").submit();
-  };
+
+  useEffect( () => {
+    userService.getUsers(getValues(), page)
+        .then( res => {
+          setTutors(res.data);
+          setPageQty((parseInt(res.headers['x-total-pages'])));
+        })
+  }, [page, isFormReseted])
+
 
   const onSubmit = (data, e) => {
-    console.log(data);
-    userService.getUsers(data)
-    console.log(e);
+    userService.getUsers(data, page)
+        .then( res => {
+          setTutors(res.data);
+          setPageQty((parseInt(res.headers['x-total-pages'])));
+        })
+    setPage(1)
   };
 
   let items = [];
-  for (let number = 1; number <= 5; number++) {
+  for (let number = 1; number <= pageQty; number++) {
     items.push(
       <PageItem
         key={number}
@@ -170,7 +171,7 @@ const Tutors = () => {
             <div style={{ alignSelf: "center" }}>
               <Button text={"Aplicar filtros"}/>
             </div>
-            {haveParams && (
+            {isDirty && (
               <div style={{ alignSelf: "center", marginTop: "8px" }}>
                 <Button text={"Limpiar filtros"} callback={cleanFilters} />
               </div>
@@ -179,14 +180,14 @@ const Tutors = () => {
         </FiltersContainer>
         <TutorsWrapper>
           <SearchBarContainer>
-            <SearchBar />
+            <SearchBar register={register} name={"search"}/>
           </SearchBarContainer>
           <Grid>
             {tutors && tutors.map(tutor => {
               return <TutorCard key={tutor.id} user={tutor}/>
             })}
           </Grid>
-          <StyledPagination>{items}</StyledPagination>
+          {pageQty > 1 && <StyledPagination>{items}</StyledPagination>}
         </TutorsWrapper>
       </MainContainer>
     </Wrapper>

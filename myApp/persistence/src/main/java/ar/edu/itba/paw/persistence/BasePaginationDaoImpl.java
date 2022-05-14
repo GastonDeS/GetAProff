@@ -13,7 +13,7 @@ public class BasePaginationDaoImpl<T> implements BasePaginationDao<T> {
         int totalPages = getTotalPageCount(query, pageRequest.getPageSize());
         query.setFirstResult((pageRequest.getPage() - 1) * pageRequest.getPageSize());
         query.setMaxResults(pageRequest.getPageSize());
-        return new Page<T>((List<T>) query.getResultList(), pageRequest.getPageSize(), pageRequest.getPage(), totalPages);
+        return new Page<>((List<T>) query.getResultList(), pageRequest.getPageSize(), pageRequest.getPage(), totalPages);
     }
 
     public int getTotalPageCount(Query query, Integer pageSize) {

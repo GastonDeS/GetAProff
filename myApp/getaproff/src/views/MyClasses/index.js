@@ -105,7 +105,6 @@ const MyClasses = () => {
     let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
     userService.getUserClasses(currUser.id, asTeacher, status - 1, page)
         .then(res => {
-          console.log(res)
           setClasses([...res.data]);
           setPageQty((parseInt(res.headers['x-total-pages'])));
         })

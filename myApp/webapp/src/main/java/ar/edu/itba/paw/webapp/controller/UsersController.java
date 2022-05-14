@@ -57,7 +57,7 @@ public class UsersController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findBySubject(@QueryParam("search") String search,
-                                  @QueryParam("price") @DefaultValue("10000") Integer price, //TODO define better defaults not my
+                                  @QueryParam("maxPrice") @DefaultValue("10000") Integer price, //TODO define better defaults not my
                                   @QueryParam("level") @DefaultValue("0") Integer level,
                                   @QueryParam("rating") @DefaultValue("0") Integer rating,
                                   @QueryParam("order") @DefaultValue("0") Integer order,
@@ -75,7 +75,6 @@ public class UsersController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
    }
-
 //    @GET
 //    @Path("/filters")
 //    @Produces(value = { MediaType.APPLICATION_JSON, })
