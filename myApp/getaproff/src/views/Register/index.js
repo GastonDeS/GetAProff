@@ -135,7 +135,7 @@ const Register = () => {
             </ButtonContainer>
             <Request>
               <p>Already have an account?</p>
-              <button onClick={() => { navigate('/login')}}>Login</button>
+              <button onClick={() => { navigate('/users/login')}}>Login</button>
             </Request>
           </Form>
         </FormContainer>

@@ -47,7 +47,9 @@
     "addSubject": "Add subject",
     "price": "Enter price per hour:",
     "level": "Select level:",
-    "title": "Edit subjects"
+    "title": "Edit subjects",
+    "deleteSubject": "Delete subjects",
+    "back": "Go Back"
   },
   "myClasses": {
     "status": {

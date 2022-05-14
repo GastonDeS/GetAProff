@@ -9,7 +9,10 @@ export class UserService {
             let subjects = []
             let config = {}
             await axiosService.authAxiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
-                .then(res => res.data.forEach(subject => subjects.push(subject)))
+                .then(res => {
+                    res.data.forEach(subject => subjects.push(subject));
+                    return subjects;
+                })
             return subjects;
         }
         catch (err) { console.log(err) }
@@ -21,14 +24,35 @@ export class UserService {
             let config = {}
             await axiosService.authAxiosWrapper(axiosService.GET, `/users/available-subjects/${uid}`, config)
                 .then(res => {
-                    console.log(res)
-                    res.data.forEach(subject => subjects.push(subject))})
+                    res.data.forEach(subject => subjects.push(subject));
+                    return subjects;
+                })
             return subjects;
         }
         catch (err) { console.log(err) }
     }
 
-    async getUserSpecificInfo(info, uid){
+    async addSubjectToUser(uid, subjecId, price, level) {
+        try {
+            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}`, {}, {
+                subjectId: subjecId,
+                price: price,
+                level: level
+            });
+        } catch(error) {console.log(error)};
+    }
+
+    async deleteSubjectsFromUser(uid, subjects) {
+        try {
+            for (const subject of subjects) {
+                if (subject.checked) {
+                    await axiosService.authAxiosWrapper(axiosService.DELETE, "/users/" + uid + subject.url, {});
+                }
+            }
+        } catch(error) {console.log(error)};
+    }
+
+    async getUserSpecificInfo(info, uid) {
         try {
             let data;
             let config = {}

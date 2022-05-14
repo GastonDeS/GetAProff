@@ -10,31 +10,35 @@ public class SubjectInfoDto {
 
     private Long id;
 
-    private int price, level;
+    private List<Integer> levels, prices;
 
-    public static SubjectInfoDto fromSubjectInfo(Teaches teaches) {
+    public static SubjectInfoDto fromSubjectInfo(String subject, List<Teaches> subjectData) {
         SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
-        subjectInfoDto.level = teaches.getLevel();
-        subjectInfoDto.price = teaches.getPrice();
-        subjectInfoDto.id = teaches.getSubject().getSubjectId();
-        subjectInfoDto.subject = teaches.getSubject().getName();
+        subjectInfoDto.levels = new ArrayList<>();
+        subjectInfoDto.prices = new ArrayList<>();
+        subjectInfoDto.id = subjectData.get(0).getSubject().getSubjectId();
+        subjectInfoDto.subject = subject;
+        subjectData.forEach(teaches -> {
+            subjectInfoDto.levels.add(teaches.getLevel());
+            subjectInfoDto.prices.add(teaches.getPrice());
+        });
         return subjectInfoDto;
     }
 
-    public int getPrice() {
-        return price;
+    public List<Integer> getLevels() {
+        return levels;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setLevels(List<Integer> levels) {
+        this.levels = levels;
     }
 
-    public int getLevel() {
-        return level;
+    public List<Integer> getPrices() {
+        return prices;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setPrices(List<Integer> prices) {
+        this.prices = prices;
     }
 
     public String getSubject() {

@@ -96,7 +96,7 @@ const Login = () => {
             <Request>
               <p>Don't have an account yet?</p>
               <button onClick={() => {
-                navigate('/register')
+                navigate('/users/new')
               }}>Sign Up
               </button>
             </Request>

@@ -47,7 +47,9 @@
     "addSubject": "Agregar materia",
     "price": "Ingresar precio por hora:",
     "level": "Seleccionar nivel:",
-    "title": "Editar materias"
+    "title": "Editar materias",
+    "deleteSubject": "Borrar materias",
+    "back": "Volver"
   },
   "myClasses": {
     "status": {

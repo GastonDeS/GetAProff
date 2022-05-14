@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
-import ar.edu.itba.paw.webapp.requestDto.NewSubjectDto;
+import ar.edu.itba.paw.webapp.requestDto.SubjectRequestDto;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -20,11 +20,8 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Path("users")
@@ -132,8 +129,8 @@ public class UsersController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
         final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
-//                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
-                .map(SubjectInfoDto::fromSubjectInfo).collect(Collectors.toList());
+                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
+                .map(k -> SubjectInfoDto.fromSubjectInfo(k.getKey(), k.getValue())).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 
@@ -191,9 +188,9 @@ public class UsersController {
     @Path("/{uid}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody NewSubjectDto newSubjectDto) {
-        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
-                newSubjectDto.getPrice(), newSubjectDto.getLevel());
+    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody SubjectRequestDto subjectRequestDto) {
+        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, subjectRequestDto.getSubjectId(),
+                subjectRequestDto.getPrice(), subjectRequestDto.getLevel());
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 

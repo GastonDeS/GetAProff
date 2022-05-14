@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import i18next from "i18next";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../../services/authService";
-import {axiosService} from "../../services";
-import { userService } from "../../services";
 
 import {
   MainContainer,
@@ -20,144 +16,30 @@ import SelectDropdown from "../../components/SelectDropdown";
 import Button from "../../components/Button";
 import { Request, Wrapper, Title, Levels, Row, Headers, Table } from "../../GlobalStyle";
 import CheckBox from "../../components/CheckBox";
+import { useEditSubjectsFetch } from "../../hooks/useEditSubjectsFetch";
 
 const EditSubjects = () => {
-  const [subject, setSubject] = useState();
-  const [price, setPrice] = useState("");
-  const [level, setLevel] = useState();
-  const [availableSubjects, setAvailableSubjects] = useState([]);
-  const [subjectsTaught, setSubjectsTaught] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [checkAll, setCheckAll] = useState(false);
-  const [currentUser, setCurrentUser] = useState();
+
+  const {
+    error,
+    loading,
+    availableSubjects,
+    price,
+    subjectsTaught,
+    level,
+    subject,
+    checkAll,
+    currentUser,
+    handleCheckAll,
+    handleSubjectChange,
+    onChangePrice,
+    handleCheckedsubject,
+    handleAddSubject,
+    handleDeleteSubjects,
+    handleLevelChange
+  } = useEditSubjectsFetch();
 
   const navigate = useNavigate();
-
-  const onChangePrice = (event) => {
-    setPrice(event.target.value);
-  }
-
-  const handleAddSubject = async() => {
-    if (!price || price <= 0) {
-      setError(true);
-    } else {
-      setError(false);
-      await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}`, {}, {
-        subjectId: subject.id,
-        price: price,
-        level: level.id
-      }).catch(error => {});
-      setPrice("");
-      setLoading(true);
-    }
-  }
-
-  const handleCheckedsubject = (checked, subject) => {
-    setSubjectsTaught(subjectsTaught.map(item => {
-      if (item.url === subject.url) item.checked = checked;
-      return item;
-    }));
-  }
-
-  const handleCheckAll = (event) => {
-    setCheckAll(event.target.checked);
-    if (event.target.checked) {
-      setSubjectsTaught(subjectsTaught.map(subject => {
-        return {
-          ...subject,
-          checked: true
-        }
-      }));
-    } else {
-      setSubjectsTaught(subjectsTaught.map(subject => {
-        return {
-          ...subject,
-          checked: false
-        }
-      }));
-    }
-  }
-
-  const handleDeleteSubjects = () => {
-    subjectsTaught.forEach(async (subject) => {
-      if (subject.checked) {
-        await axiosService.authAxiosWrapper(axiosService.DELETE, "/users/" + currentUser.id + subject.url, {}).catch(error => {});
-      }
-    });
-    setSubjectsTaught(subjectsTaught.filter(subject => !subject.checked));
-    fetchAvailableSubjects(currentUser.id);
-  }
-
-  const handleLevelChange = (event) => {
-    setLevel(subject.levels.filter(level => Number(level.id) === Number(event.target.value))[0]);
-  }
-
-  const handleSubjectChange = (event) => {
-    setSubject(availableSubjects.filter((item) => Number(item.id) === Number(event.target.value))[0]);
-  };
-
-  const fetchSubjectsTaught = async (id) => {
-    await userService.getUserSubjects(id)
-    .then(data => {
-      setSubjectsTaught(data.map((item) => {
-        return { 
-          name: item.subject,
-          price: '$' + item.price + '/' + i18next.t('subjects.hour'),
-          level: i18next.t('subjects.levels.' + item.level),
-          url: '/' + item.id + '/' + item.level,
-          checked: false
-        };
-      }))
-    });
-  }
-
-  const fetchAvailableSubjects = async (id) => {
-    await userService.getUserAvailableSubjects(id)
-    .then(data => {
-      setAvailableSubjects(data.map((item) => {
-        var levels = []
-        item.levels.forEach(level => {
-          levels.push({
-            id: level,
-            name: i18next.t('subjects.levels.' + level)
-          })
-        })
-        return {
-          name: item.name,
-          id: item.subjectId,
-          levels: levels
-        }
-      }))
-    });
-  }
-
-  useEffect(() => {
-    level && setLoading(false);
-  }, [level])
-
-  useEffect(() => {
-    subject && setLevel(subject.levels[0]);
-  }, [subject]);
-
-  useEffect(() => {
-    availableSubjects && setSubject(availableSubjects[0]);
-  }, [availableSubjects]);
-
-  useEffect(() => {
-    if (loading && currentUser) {
-      fetchAvailableSubjects(currentUser.id);
-      fetchSubjectsTaught(currentUser.id);
-    }
-  }, [loading, currentUser]);
-
-  useEffect(() => {
-    if (subjectsTaught && subjectsTaught.length === 0) setCheckAll(false);
-  }, [subjectsTaught]);
-
-  useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-  }, []);
 
   return (
     <Wrapper>
@@ -209,7 +91,7 @@ const EditSubjects = () => {
           </Table>
           <ButtonContainer>
             <Button
-              text="Volver"
+              text={i18next.t('editSubjects.back')}
               fontSize="1rem"
               callback={() => {navigate('/users/' + currentUser.id)}}
             />
@@ -218,7 +100,7 @@ const EditSubjects = () => {
               ) : (
                 <Button
                   callback={handleDeleteSubjects}
-                  text="Borrar Materias"
+                  text={i18next.t('editSubjects.deleteSubject')}
                   fontSize="1rem"
                   color="red"
                 />
