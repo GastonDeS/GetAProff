@@ -52,7 +52,7 @@ public class UsersController {
     private UriInfo uriInfo;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response findBySubject(@QueryParam("search") String search,
                                   @QueryParam("price") @DefaultValue("10000") Integer price, //TODO define better defaults not my
                                   @QueryParam("level") @DefaultValue("0") Integer level,
@@ -75,7 +75,7 @@ public class UsersController {
 
 //    @GET
 //    @Path("/filters")
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
 //    public Response filterTeachers(@QueryParam("page") int page, @QueryParam("search") String search, @QueryParam("price") Integer price,
 //                                   @QueryParam("level") Integer level, @QueryParam("rating") Integer rating, @QueryParam("order") Integer order) {
 //        final List<TeacherDto> filteredTeachers = teachesService.filterUsers(search, order, price, level, rating, page).stream()
@@ -95,7 +95,7 @@ public class UsersController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response getTeacherInfo(@PathParam("id") Long id) {
         final Optional<User> mayBeUser = userService.findById(id);
         if(!mayBeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
@@ -108,7 +108,7 @@ public class UsersController {
 
     @GET
     @Path("/top-rated")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response listTopRatedTeachers() {
         final List<TeacherDto> topRatedTeachers = teachesService.getTopRatedTeachers().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
@@ -117,7 +117,7 @@ public class UsersController {
 
     @GET
     @Path("/most-requested")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response listMostRequestedTeachers() {
         final List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
@@ -126,7 +126,7 @@ public class UsersController {
 
     @GET
     @Path("/{id}/subjects")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
         final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
                 .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
@@ -136,7 +136,7 @@ public class UsersController {
 
     @GET
     @Path("/subjects/levels/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
         final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
                 .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
@@ -145,7 +145,7 @@ public class UsersController {
 
     @DELETE
     @Path("/{userId}/{subjectId}/{level}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
         return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
@@ -155,7 +155,7 @@ public class UsersController {
     @POST
     @Path("/{id}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
     public Response editProfile(@PathParam("id") Long id,
                                 @FormDataParam("name") String newName,
                                 @FormDataParam("description") String newDescription,
@@ -177,7 +177,7 @@ public class UsersController {
 
     @GET
     @Path("/available-subjects/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response getSubjectAndLevelsAvailableForUser(@PathParam("id") Long id) {
         final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsAvailableForUser(id)
                 .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
@@ -186,11 +186,11 @@ public class UsersController {
 
     @POST
     @Path("/{uid}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody SubjectRequestDto subjectRequestDto) {
-        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, subjectRequestDto.getSubjectId(),
-                subjectRequestDto.getPrice(), subjectRequestDto.getLevel());
+    @Consumes(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody NewSubjectDto newSubjectDto) {
+        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
+                newSubjectDto.getPrice(), newSubjectDto.getLevel());
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -227,7 +227,7 @@ public class UsersController {
 //TODO: esto colisiona
 //    @GET
 //    @Path("/{uid}")
-//    @Produces({MediaType.APPLICATION_JSON})
+//    @Produces({"application/vnd.getaproff.api.v1+json"})
 //    public Response isFaved(@PathParam("uid") Long teacherId, @QueryParam("favedBy") Long uid) {
 //        boolean isFaved = userService.isFaved(teacherId, uid);
 //        return Response.ok(IsFavedDto.createIsFavedDto(isFaved)).build();
@@ -236,7 +236,7 @@ public class UsersController {
     //Add/remove new user to user with uid favorites list
     @POST
     @Path("/{uid}/favorites")
-    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Consumes(value = "application/vnd.getaproff.api.v1+json")
     public Response addNewFavoriteUser(@PathParam("uid") Long uid, IdDto teacherId) {
         int result = userService.addFavourite(teacherId.getId(), uid);
         return Response.ok().build();
@@ -262,7 +262,7 @@ public class UsersController {
 
     @POST
     @Path("/{uid}/classes")
-    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Consumes(value = "application/vnd.getaproff.api.v1+json")
     public Response requestClass(@PathParam("uid") Long teacherId, ClassRequestDto classRequestDto){
         Optional<Lecture> newLecture = lectureService.create(classRequestDto.getStudentId(), teacherId, classRequestDto.getLevel(),
                 classRequestDto.getSubjectId(), classRequestDto.getPrice());
@@ -275,8 +275,8 @@ public class UsersController {
 
     @POST
     @Path("/{uid}/reviews")
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
+    @Consumes(value = { "application/vnd.getaproff.api.v1+json" })
     public Response rateTeacher(@PathParam("uid") Long teacherId, NewRatingDto newRatingDto){
         //TODO: validar que exista la clase entre alumno y teacher y que este en estado terminado
         final Optional<Rating> rating = ratingService.addRating(newRatingDto.getTeacherId(), newRatingDto.getStudentId(),

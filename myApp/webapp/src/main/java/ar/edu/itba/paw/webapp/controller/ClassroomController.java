@@ -52,7 +52,7 @@ public class ClassroomController {
 
     @GET
     @Path("/{classId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
         Lecture lecture = checkLectureExistence(classId);
         return Response.ok(
@@ -62,7 +62,7 @@ public class ClassroomController {
 
     @GET
     @Path("/{classId}/posts")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomComments(@PathParam("classId") final Long classId,
                                          @QueryParam("page") @DefaultValue("1") Integer page,
                                          @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
@@ -79,7 +79,7 @@ public class ClassroomController {
 
     @GET
     @Path("/{classId}/files")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
         Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 52L/*TODO id from authentication*/);
         final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(uriInfo, files.getValue1(), files.getValue2());
@@ -112,7 +112,7 @@ public class ClassroomController {
 
     @POST
     @Path("/{classId}/status")
-    @Consumes( value = {MediaType.APPLICATION_JSON})
+    @Consumes( value = {"application/vnd.getaproff.api.v1+json"})
     public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
         Lecture lecture = checkLectureExistence(classId);
         //TODO: el alumno no la puede cancelar?

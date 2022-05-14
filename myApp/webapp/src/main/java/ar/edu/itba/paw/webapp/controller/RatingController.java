@@ -27,7 +27,7 @@ public class RatingController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response getTeacherRatings(@PathParam("id") Long id,
                                       @QueryParam("page") @DefaultValue("1") Integer page,
                                       @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {

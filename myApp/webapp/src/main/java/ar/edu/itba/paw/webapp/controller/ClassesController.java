@@ -33,8 +33,8 @@ public class ClassesController {
     private AuthFacade authFacade;
 
     @GET
-    @Produces(value = MediaType.APPLICATION_JSON)
-    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces("application/vnd.getaproff.api.v1+json")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response getClassesFromUser(
                                        @QueryParam("asTeacher") @DefaultValue("false") Boolean asTeacher,
                                        @QueryParam("status") @DefaultValue("-1") int status,
