@@ -1,7 +1,7 @@
 import axios from "axios";
 import { set } from "react-hook-form";
 import { Navigate } from "react-router-dom";
-import {axiosService} from "./index";
+import { axiosService } from "./index";
 
 const API_URL = "/auth";
 
@@ -38,13 +38,12 @@ const login = async (mail, password) => {
 //     });
 // };
 
+const toTeacher = (user) => {
+  localStorage.setItem('user', JSON.stringify(user));
+}
 
 const register = async (formData) => {
   return await axiosService.axiosWrapper(axiosService.POST, API_URL, formData, {'Content-Type': 'multipart/form-data'});
-      // .post(API_URL, formData, { headers: {
-      //         'Content-Type': 'multipart/form-data'
-      //     }})
-      // .then( response => {return response;});
 }
 
 const logout = () => {
@@ -60,5 +59,6 @@ export default {
   login,
   getCurrentUser,
   logout,
-  register
+  register,
+  toTeacher
 };

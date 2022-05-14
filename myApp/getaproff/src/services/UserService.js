@@ -12,7 +12,6 @@ export class UserService {
             await axiosService.axiosWrapper(axiosService.GET, `/users/${uid}/subjects`)
             await axios.get(`/users/${uid}/subjects`)
                 .then(res => res.data.forEach(subject => subjects.push(subject)))
-            console.log(subjects)
             return subjects;
         }
         catch (err) { console.log(err) }

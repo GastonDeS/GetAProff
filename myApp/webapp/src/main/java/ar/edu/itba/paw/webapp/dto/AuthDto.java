@@ -6,28 +6,38 @@ import javax.ws.rs.core.UriInfo;
 
 public class AuthDto {
 
-    private String token, url;
+    private String url;
 
-    private boolean isTeacher;
+    private String name, mail;
 
     private Long id;
 
-    public static AuthDto login(UriInfo uri, User user, String token) {
+    private boolean isTeacher;
+
+    public static AuthDto fromUser(UriInfo uri, User user) {
         AuthDto authDto = new AuthDto();
+        authDto.mail = user.getMail();
+        authDto.name = user.getName();
         authDto.id = user.getId();
-        authDto.token = token;
         authDto.isTeacher = user.isTeacher();
-        String urlStr = user.isTeacher() ? "teachers" : "students";
-        authDto.url = uri.getBaseUriBuilder().path(urlStr).path(user.getId().toString()).build().toString();
+        authDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
         return authDto;
     }
 
-    public String getToken() {
-        return token;
+    public String getName() {
+        return name;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getUrl() {

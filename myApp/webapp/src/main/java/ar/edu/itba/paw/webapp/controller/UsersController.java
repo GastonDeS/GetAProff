@@ -92,9 +92,8 @@ public class UsersController {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
                               @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
-        System.out.println(Arrays.toString(IOUtils.toByteArray(fileStream)));
-        imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
-        return Response.created(uriInfo.getAbsolutePath()).build();
+        Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
+        return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @GET
@@ -158,27 +157,25 @@ public class UsersController {
     //Edit profile
     @POST
     @Path("/{id}")
-    @Produces(value = { MediaType.MULTIPART_FORM_DATA })
+    @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response editProfile(@PathParam("id") Long id,
-                                       @FormDataParam("name") String newName,
-                                       @FormDataParam("description") String newDescription,
-                                       @FormDataParam("schedule") String newSchedule,
-                                       @FormDataParam("teach") String wantToTeach) throws IOException {
-
-        boolean added = false;
-        if (wantToTeach.equals("true")) {
-            added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
-        }
-        userService.setTeacherAuthorityToUser();
+                                @FormDataParam("name") String newName,
+                                @FormDataParam("description") String newDescription,
+                                @FormDataParam("schedule") String newSchedule,
+                                @FormDataParam("teach") String toTeacher) {
         int desc = userService.setUserDescription(id, newDescription);
         int sch = userService.setUserSchedule(id, newSchedule);
         int name = userService.setUserName(id, newName);
-//        //TODO: hacerlo solo si mandan imagen
-//
-//        imageService.createOrUpdate(id, IOUtils.toByteArray(newImage));
+        if (!toTeacher.equals("true")) {
+            return (desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        Optional<User> user = userService.findById(id);
+        boolean added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
+        userService.setTeacherAuthorityToUser();
 
-        //TODO: Chequear esto?
-        return (desc == 1 && sch == 1 && name == 1 && added) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
+                Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 
