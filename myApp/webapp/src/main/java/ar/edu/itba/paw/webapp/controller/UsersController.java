@@ -132,8 +132,8 @@ public class UsersController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
         final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
-                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
-                .map(k -> SubjectInfoDto.fromSubjectInfo(k.getKey(), k.getValue())).collect(Collectors.toList());
+//                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
+                .map(SubjectInfoDto::fromSubjectInfo).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 
@@ -158,7 +158,7 @@ public class UsersController {
     @POST
     @Path("/{id}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON })
     public Response editProfile(@PathParam("id") Long id,
                                 @FormDataParam("name") String newName,
                                 @FormDataParam("description") String newDescription,
@@ -173,7 +173,6 @@ public class UsersController {
         Optional<User> user = userService.findById(id);
         boolean added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
         userService.setTeacherAuthorityToUser();
-
         return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -257,11 +256,10 @@ public class UsersController {
 
     @GET
     @Path("/{uid}/image")
-    public Response getUserImage(@PathParam("uid") Long uid){
-        Optional<Image> img = imageService.findImageById(uid);
-        if (!img.isPresent())
-            return Response.status(Response.Status.NO_CONTENT).build();
-        return Response.ok(ImageDto.fromUser(uriInfo, img.get())).build();
+    public Response getUserImage(@PathParam("uid") Long uid) {
+        Optional<Image> maybeImage = imageService.findImageById(uid);
+        return maybeImage.isPresent() ? Response.ok(ImageDto.fromUser(uriInfo, maybeImage.get())).build()
+                : Response.status(Response.Status.NO_CONTENT).build();
 
     }
 
