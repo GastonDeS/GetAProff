@@ -30,11 +30,20 @@
     "personal": "Información",
     "subjects": "Materias",
     "reviews": "Reseñas",
+    "share": "Compartir perfil",
     "edit": {
+      "edit": "Editar",
       "profile": "Perfil",
       "certifications": "Certificationes",
       "subjects": "Materias"
-    }
+    },
+    "editProfile": "Editar perfil",
+    "request": "Pedir clase", 
+    "addFavourites": "Agregar a favoritos",
+    "removeFavourites": "Remover de favoritos",
+    "description": "Descripción",
+    "schedule": "Horarios",
+    "certifications": "Certificaciones"
   },
   "errors": {
     "price": "El valor del precio debe ser mayor a cero"

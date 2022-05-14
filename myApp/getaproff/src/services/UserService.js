@@ -80,12 +80,14 @@ export class UserService {
     
     async getUserImg(uid) {
         try {
-            let image = "";
+            let image;
             let  config = {}
             await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, config)
                 .then(
                     res => {
-                        image = 'data:image/png;base64,' + res.data.image;
+                        if (res.status === 200) {
+                            image = 'data:image/png;base64,' + res.data.image;
+                        }
                     })
             return image;
         }

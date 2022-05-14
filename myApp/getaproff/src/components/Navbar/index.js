@@ -48,7 +48,7 @@ const Navbar = ({ empty }) => {
               <Container style={{gap: '1em'}}>
                 <NavLink to="/">{i18next.t('navbar.explore')}</NavLink>
                 <NavLink to={userPath +'/classes'}>{i18next.t('navbar.myClasses')}</NavLink>
-                <NavLink to={ userPath+'/favorites'}>{i18next.t('navbar.myFavourites')}</NavLink>
+                <NavLink to={ userPath +'/favorites'}>{i18next.t('navbar.myFavourites')}</NavLink>
               </Container>
               <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={endOption} weight="bold"/>
             </Container> :
