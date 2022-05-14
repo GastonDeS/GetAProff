@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosService, userService } from "../../services";
+import { userService } from "../../services";
 
 import Navbar from "../../components/Navbar";
 import Tab from "../../components/Tab";

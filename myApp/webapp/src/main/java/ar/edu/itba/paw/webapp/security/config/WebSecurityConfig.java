@@ -135,7 +135,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.GET, "/subject-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.DELETE, "/subject-files/{file}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
                         .antMatchers(HttpMethod.POST, "/subject-files/{id}/{subject}/{level}").access("@antMatcherVoter.canAccessPostFile(authentication, #id)")
-                        .antMatchers(HttpMethod.DELETE,"/user-files/{file}").hasAuthority("USER_STUDENT") // TODO OWNER
+                        .antMatchers(HttpMethod.DELETE,"/user-files/{file}").hasAuthority("USER_TEACHER") // TODO OWNER
                         .antMatchers(HttpMethod.POST, "/user-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/image").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,"/users/{userId}/{subjectId}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #userId)")
