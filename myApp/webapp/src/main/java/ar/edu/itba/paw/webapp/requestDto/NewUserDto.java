@@ -1,35 +1,31 @@
 package ar.edu.itba.paw.webapp.requestDto;
 
-import ar.edu.itba.paw.webapp.forms.RegisterForm;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class RegisterDto {
-    @Email(regexp = "^$|^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", groups = {RegisterForm.Teacher.class, RegisterForm.Student.class})
-    @NotBlank(groups = {RegisterForm.Teacher.class, RegisterForm.Student.class})
+public class NewUserDto {
+    @Email(regexp = "^$|^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @NotBlank
     private String mail;
 
-    @NotBlank(groups = {RegisterForm.Teacher.class, RegisterForm.Student.class})
-    @Pattern(regexp = "^$|^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$", groups = {RegisterForm.Teacher.class, RegisterForm.Student.class})
+    @NotBlank
+    @Pattern(regexp = "^$|^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$")
     private String name;
 
-    @Size(min = 8, groups = {RegisterForm.Teacher.class, RegisterForm.Student.class})
+    @Size(min = 8)
     private String password;
 
     private Long userRole;
 
-    @NotBlank(groups = {RegisterForm.Teacher.class})
+    @NotNull
     private String description;
 
-    @NotBlank(groups = {RegisterForm.Teacher.class})
+    @NotNull
     private String schedule;
-
-    public interface Teacher {}
-
-    public interface Student {}
 
     public String getDescription() {
         return description;

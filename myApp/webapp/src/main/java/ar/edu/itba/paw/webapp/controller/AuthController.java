@@ -2,9 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.StudentDto;
 import ar.edu.itba.paw.webapp.security.api.models.Authority;
+import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
 import org.apache.commons.io.IOUtils;
@@ -12,6 +14,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -49,7 +52,7 @@ public class AuthController {
     @Path("/login")
     public Response login() {
         User user = authFacade.getCurrentUser();
-        return Response.ok(StudentDto.fromUser(uriInfo, user)).build();
+        return Response.ok(AuthDto.fromUser(uriInfo, user)).build();
     }
 
     @POST
@@ -61,11 +64,14 @@ public class AuthController {
         if(mayBeUser.isPresent())
             return Response.status(Response.Status.BAD_REQUEST).build();
         Optional<User> newUser = userService.create(name, mail, password, description, schedule, role);
-        if( !newUser.isPresent())
+        if(!newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
-        imageService.createOrUpdate(newUser.get().getId(), IOUtils.toByteArray(image));
+        Optional<Image> maybeImage = imageService.createOrUpdate(newUser.get().getId(), IOUtils.toByteArray(image));
+        if(!maybeImage.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         Response.ResponseBuilder response = Response.created(location);
+        response.entity(AuthDto.fromUser(uriInfo, newUser.get()));
         Set<Authority> authoritySet = new HashSet<>();
         authoritySet.add(Authority.USER_STUDENT);
         if (newUser.get().isTeacher()) authoritySet.add(Authority.USER_TEACHER);

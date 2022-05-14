@@ -18,7 +18,8 @@ const RequestClass = () => {
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const { register} = useForm();
-  const id = useParams();
+  const teacher = useParams();
+  const [teacherInfo , setTeacherInfo] = useState()
   const navigate = useNavigate();
   const currUser = authService.getCurrentUser();
 
@@ -29,7 +30,7 @@ const RequestClass = () => {
       studentId: currUser.id
     }
     console.log(requestData)
-    userService.requestClass(id.id, requestData)
+    userService.requestClass(teacher.id, requestData)
         .then(res => navigate(`/classroom/${res.headers.location.split('/').pop()}`));
   }
 
@@ -41,7 +42,8 @@ const RequestClass = () => {
   }
 
   useEffect( () => {
-    userService.getUserSubjects(id.id)
+    userService.getUserInfo(teacher.id).then(data => setTeacherInfo(data))
+    userService.getUserSubjects(teacher.id)
         .then(data => setSubjects(data))
   }, [])
 
@@ -57,7 +59,7 @@ const RequestClass = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Request class</Title>
+          <Title>Request class to {teacherInfo && teacherInfo.name}</Title>
           <InputContainer>
             <p>Select subject</p>
             <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject}
