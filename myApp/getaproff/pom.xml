@@ -40,7 +40,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                     </execution>
-                    &lt;!&ndash;<execution>
+                    <execution>
                         <id>npm test</id>
                         <goals>
                             <goal>npm</goal>
@@ -52,7 +52,7 @@
                                 <CI>true</CI>
                             </environmentVariables>
                         </configuration>
-                    </execution>&ndash;&gt;
+                    </execution>
                     <execution>
                         <id>npm run build</id>
                         <goals>
