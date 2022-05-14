@@ -4,12 +4,25 @@ const PATH = '/users'
 
 
 export class UserService {
-    async getUserSubjects(uid){
+    async getUserSubjects(uid) {
         try {
             let subjects = []
             let config = {}
             await axiosService.authAxiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
                 .then(res => res.data.forEach(subject => subjects.push(subject)))
+            return subjects;
+        }
+        catch (err) { console.log(err) }
+    }
+
+    async getUserAvailableSubjects(uid) {
+        try {
+            let subjects = []
+            let config = {}
+            await axiosService.authAxiosWrapper(axiosService.GET, `/users/available-subjects/${uid}`, config)
+                .then(res => {
+                    console.log(res)
+                    res.data.forEach(subject => subjects.push(subject))})
             return subjects;
         }
         catch (err) { console.log(err) }

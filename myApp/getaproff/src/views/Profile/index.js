@@ -73,7 +73,15 @@ const Profile = () => {
       ImagesService.getImage(user.id, setImage);
       if (isTeacher) {
         userService.getUserSubjects(user.id)
-            .then(data => setSubjects(data))
+            .then(data => {
+              setSubjects(data.map((item) => {
+                return { 
+                  name: item.subject,
+                  price: '$' + item.price + '/' + i18next.t('subjects.hour'),
+                  level: i18next.t('subjects.levels.' + item.level),
+                };
+              }))
+            })
             .catch(err => navigate("/error"))
 
         userService.getUserReviews(user.id)

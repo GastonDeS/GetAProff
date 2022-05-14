@@ -3,6 +3,8 @@ import axios from "axios";
 import i18next from "i18next";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/authService";
+import {axiosService} from "../../services";
+import { userService } from "../../services";
 
 import {
   MainContainer,
@@ -28,7 +30,6 @@ const EditSubjects = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
-  const [deleted, setDeleted] = useState([]);
   const [currentUser, setCurrentUser] = useState();
 
   const navigate = useNavigate();
@@ -42,18 +43,11 @@ const EditSubjects = () => {
       setError(true);
     } else {
       setError(false);
-      await axios.post("/users/145/", {
+      await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}`, {}, {
         subjectId: subject.id,
         price: price,
         level: level.id
       }).catch(error => {});
-      setSubjectsTaught([...subjectsTaught, {
-        name: subject.name,
-        price: '$' + price + '/' + i18next.t('subjects.hour'),
-        level: i18next.t('subjects.levels.' + level.id),
-        url: '/' + subject.id + '/' + level.id,
-        checked: false
-      }])
       setPrice("");
       setLoading(true);
     }
@@ -86,17 +80,13 @@ const EditSubjects = () => {
   }
 
   const handleDeleteSubjects = () => {
-    setDeleted([]);
-    subjectsTaught.forEach((subject) => {
+    subjectsTaught.forEach(async (subject) => {
       if (subject.checked) {
-        axios
-        .delete("/users/145" + subject.url)
-        .then(() => {
-          setDeleted((previous) => [...previous, subject.url]);
-        })
-        .catch((error) => {});
+        await axiosService.authAxiosWrapper(axiosService.DELETE, "/users/" + currentUser.id + subject.url, {}).catch(error => {});
       }
     });
+    setSubjectsTaught(subjectsTaught.filter(subject => !subject.checked));
+    fetchAvailableSubjects(currentUser.id);
   }
 
   const handleLevelChange = (event) => {
@@ -108,8 +98,9 @@ const EditSubjects = () => {
   };
 
   const fetchSubjectsTaught = async (id) => {
-    await axios.get("/users/145/subjects").then(res => {
-      setSubjectsTaught(res.data.map((item) => {
+    await userService.getUserSubjects(id)
+    .then(data => {
+      setSubjectsTaught(data.map((item) => {
         return { 
           name: item.subject,
           price: '$' + item.price + '/' + i18next.t('subjects.hour'),
@@ -122,8 +113,9 @@ const EditSubjects = () => {
   }
 
   const fetchAvailableSubjects = async (id) => {
-    await axios.get("/users/available-subjects/145").then(res => {
-      setAvailableSubjects(res.data.map((item) => {
+    await userService.getUserAvailableSubjects(id)
+    .then(data => {
+      setAvailableSubjects(data.map((item) => {
         var levels = []
         item.levels.forEach(level => {
           levels.push({
@@ -141,13 +133,6 @@ const EditSubjects = () => {
   }
 
   useEffect(() => {
-    deleted.forEach((url) => {
-      setSubjectsTaught(subjectsTaught.filter((item) => item.url !== url));
-    });
-    fetchAvailableSubjects();
-  }, [deleted]);
-
-  useEffect(() => {
     level && setLoading(false);
   }, [level])
 
@@ -160,15 +145,17 @@ const EditSubjects = () => {
   }, [availableSubjects]);
 
   useEffect(() => {
-    loading && fetchAvailableSubjects();
-  }, [loading]);
+    if (loading && currentUser) {
+      fetchAvailableSubjects(currentUser.id);
+      fetchSubjectsTaught(currentUser.id);
+    }
+  }, [loading, currentUser]);
 
   useEffect(() => {
     if (subjectsTaught && subjectsTaught.length === 0) setCheckAll(false);
   }, [subjectsTaught]);
 
-  useEffect(async () => {
-    fetchSubjectsTaught();
+  useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
 

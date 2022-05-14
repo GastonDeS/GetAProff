@@ -6,40 +6,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectInfoDto {
-    private String name;
+    private String subject;
 
-    private Long teacherId, id;
+    private Long id;
 
-    private List<Integer> levels, prices;
+    private int price, level;
 
-    public static SubjectInfoDto fromSubjectInfo(String subject, List<Teaches> subjectData) {
+    public static SubjectInfoDto fromSubjectInfo(Teaches teaches) {
         SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
-        subjectInfoDto.levels = new ArrayList<>();
-        subjectInfoDto.prices = new ArrayList<>();
-        subjectInfoDto.teacherId = subjectData.get(0).getTeacher().getId();
-        subjectInfoDto.id = subjectData.get(0).getSubject().getSubjectId();
-        subjectInfoDto.name = subject;
-        subjectData.forEach(teaches -> {
-            subjectInfoDto.levels.add(teaches.getLevel());
-            subjectInfoDto.prices.add(teaches.getPrice());
-        });
+        subjectInfoDto.level = teaches.getLevel();
+        subjectInfoDto.price = teaches.getPrice();
+        subjectInfoDto.id = teaches.getSubject().getSubjectId();
+        subjectInfoDto.subject = teaches.getSubject().getName();
         return subjectInfoDto;
     }
 
-    public String getName() {
-        return name;
+    public int getPrice() {
+        return price;
     }
 
-    public void setName(String subjectName) {
-        this.name = subjectName;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public Long getTeacherId() {
-        return teacherId;
+    public int getLevel() {
+        return level;
     }
 
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public Long getId() {
@@ -48,22 +51,6 @@ public class SubjectInfoDto {
 
     public void setId(Long subjectId) {
         this.id = subjectId;
-    }
-
-    public List<Integer> getLevels() {
-        return levels;
-    }
-
-    public void setLevels(List<Integer> levels) {
-        this.levels = levels;
-    }
-
-    public List<Integer> getPrices() {
-        return prices;
-    }
-
-    public void setPrices(List<Integer> prices) {
-        this.prices = prices;
     }
 }
 
