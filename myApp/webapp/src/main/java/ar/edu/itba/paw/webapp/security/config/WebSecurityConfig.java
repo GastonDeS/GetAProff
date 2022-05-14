@@ -145,7 +145,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.GET,"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,"/users/{uid}/favorites/{favTeacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                .antMatchers(HttpMethod.POST,"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
+                        .antMatchers(HttpMethod.POST,"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/classes").hasAuthority("USER_STUDENT")
                         .antMatchers("/**").permitAll() //TODO check why this doesnt work
                 .and()
@@ -178,7 +178,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/users/subjects/levels/{id}")
                 .antMatchers(HttpMethod.GET,"/users/{uid}/image")
                 .antMatchers(HttpMethod.GET,"/users/top-rated")
-                .antMatchers(HttpMethod.POST, "/auth")
+                .antMatchers(HttpMethod.POST, "/auth/**")
                 .antMatchers(HttpMethod.GET,"/files/user/{id}")
                 .antMatchers("/")
                 .antMatchers("/*.js")

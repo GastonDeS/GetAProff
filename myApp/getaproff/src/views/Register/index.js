@@ -30,9 +30,13 @@ const Register = () => {
   const navigate = useNavigate();
   const [image, setImage] = useState();
   const [displayImage, setDisplayImage] = useState(Default);
-  const {register, formState: {errors}, handleSubmit, getValues, setValue} = useForm( {defaultValues: {"Role" : 1, "DescriptionInput": "", "ScheduleInput": ""}});
+  const {register, formState: {errors}, handleSubmit, getValues, setValue, clearErrors} = useForm( {defaultValues: {"Role" : 1}});
 
   const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+  const onTabChange = () => {
+    clearErrors();
+  }
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -42,13 +46,20 @@ const Register = () => {
   };
 
   const onSubmit = async (data) => {
-      let formData = new FormData();
-      formData.append("name", data.NameInput);
-      formData.append("mail", data.MailInput);
-      formData.append("password", data.PassInput);
-      formData.append("description", data.DescriptionInput);
-      formData.append("schedule", data.ScheduleInput);
-      formData.append("role", data.Role);
+
+      let formData = {
+        "mail": data.MailInput,
+        "name": data.NameInput,
+        "password": data.PassInput,
+        "role": data.Role,
+      }
+
+      if (data.Role === 1) {
+        formData = {...formData, 
+          "description": data.DescriptionInput,
+          "schedule": data.ScheduleInput
+        }
+      }
       
       await AuthService.register(formData).catch((error) => { navigate("/error") })
       
@@ -69,7 +80,7 @@ const Register = () => {
         <FormContainer>
           <TabContainer>
             <WelcomeText>Welcome</WelcomeText>
-            <Tab setIndex={setIndex} setValue={setValue} style={{ borderRadius: "2rem" }}>
+            <Tab setIndex={setIndex} setValue={setValue} style={{ borderRadius: "2rem" }} onChange={onTabChange}>
               {/* index = 0 */}
               <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
                   Teacher
@@ -122,8 +133,20 @@ const Register = () => {
                 {errors.ConfirmPassInput && <Error>{errors.ConfirmPassInput.message}</Error>}
                 {index === 0 ? (
                   <>
-                    <Textarea register={register} name="DescriptionInput" placeholder="Description" />
-                    <Textarea register={register} name="ScheduleInput" placeholder="Schedule" />
+                    <Textarea register={register} options={{
+                         required: {
+                           value: true,
+                           message: "This field is required"
+                         }
+                       }} name="DescriptionInput" placeholder="Description" />
+                    {errors.DescriptionInput && <Error>{errors.DescriptionInput.message}</Error>}
+                    <Textarea register={register} options={{
+                         required: {
+                           value: true,
+                           message: "This field is required"
+                         }
+                       }} name="ScheduleInput" placeholder="Schedule" />
+                    {errors.ScheduleInput && <Error>{errors.ScheduleInput.message}</Error>}
                   </>
                 ) : (
                   <></>

@@ -53,7 +53,6 @@ const EditSubjects = () => {
       setError(false);
       await userService.addSubjectToUser(currentUser.id, subject.id, price, level.id)
       .then(() => {
-        console.log('added')
         setPrice("");
         setSubjectsTaught([]);
         setLoading(true);

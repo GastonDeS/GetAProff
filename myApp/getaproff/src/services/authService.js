@@ -1,14 +1,12 @@
 import {axiosService} from "./index";
 
 const API_URL = "/auth";
+const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 const login = async (mail, password) => {
   const credentials = mail+":"+password;
   const hash = btoa(credentials);
   try {
-    // const response = await axios.get(API_URL+"/login", {headers: { Authorization: "Basic "+hash }})
-    // const path = 
-    // const headers = {Authorization: getBasicToken()}
     let config = {}
     config['headers'] =  {Authorization: axiosService.getBasicToken(mail, password)}
     const response = await axiosService.axiosWrapper(axiosService.GET, `${API_URL}/login`, config);
@@ -29,9 +27,15 @@ const toTeacher = (user) => {
 
 const register = async (formData) => {
   try {
-    await axiosService.axiosWrapper(axiosService.POST, API_URL, {'Content-Type': 'multipart/form-data'}, formData)
+    let config = {
+      headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+    }
+    var url = API_URL + '/student';
+    if (formData.role === 1) {
+      url = API_URL + '/teacher';
+    }
+    await axiosService.axiosWrapper(axiosService.POST, url, config, formData)
     .then( (res) => {
-      console.log(res)
       localStorage.setItem('token', res.headers.authorization);
       localStorage.setItem('user', JSON.stringify(res.data));
     });

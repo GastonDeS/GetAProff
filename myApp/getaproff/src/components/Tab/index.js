@@ -9,14 +9,19 @@ const TabContainer = styled.div`
   align-items: stretch;
 `;
 
-const Tab = ({ children, setIndex, setValue, flexDirection }) => {
+const Tab = ({ children, setIndex, setValue, flexDirection, onChange }) => {
   const [itemId, setItemId] = useState(0);
+
+  
 
   return (
     <TabContainer style={{ flexDirection: flexDirection}}>
       {React.Children.map(children, (child, index) => {
         return React.cloneElement(child, {
           onClick: () => {
+            if (onChange) {
+              onChange();
+            }
             setItemId(index);
             setIndex(index);
             if(setValue != null)

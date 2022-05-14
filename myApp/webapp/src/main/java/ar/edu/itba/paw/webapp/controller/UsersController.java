@@ -154,7 +154,7 @@ public class UsersController {
     @POST
     @Path("/{id}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
-    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response editProfile(@PathParam("id") Long id,
                                 @FormDataParam("name") String newName,
                                 @FormDataParam("description") String newDescription,
