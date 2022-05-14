@@ -8,6 +8,7 @@ import Button from '../../components/Button';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
 import { useHomeFetch } from '../../hooks/useHomeFetch';
 import { useNavigate } from 'react-router-dom';
+import i18next from "i18next";
 
 const Home = () => {
   const { topRated, mostRequested, subjects } = useHomeFetch();
@@ -31,7 +32,7 @@ const Home = () => {
           </ButtonContainer>
         </SearchContainer>
         <Content>
-          <h2>Top Rated Teachers</h2>
+          <h2>{i18next.t('home.topRatedTeachers')}</h2>
           <TutorContainer>
             {topRated && topRated.map(item => {
               return <TutorCard key={item.id} user={item}/>
@@ -39,7 +40,7 @@ const Home = () => {
           </TutorContainer>
         </Content>
         <Content>
-          <h2>Most requested teachers</h2>
+          <h2>{i18next.t('home.mostRequestedTeachers')}</h2>
           <TutorContainer>
           {mostRequested && mostRequested.map(item => {
               return <TutorCard key={item.id} user={item}/>

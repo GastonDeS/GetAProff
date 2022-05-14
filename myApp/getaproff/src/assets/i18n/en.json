@@ -144,7 +144,24 @@
     "schedulePlaceholder": "Enter your schedule",
     "save": "Save changes",
     "changeToTeacher" : "Want to become a teacher?",
-    "cleickHere" : "Click here"
+    "clickHere" : "Click here"
+  },
+  "favourites": {
+    "empty": "No teachers added to favourites yet!"
+  },
+  "home": {
+    "topRatedTeachers": "Top rated teachers",
+    "mostRequestedTeachers": "Most requested teachers"
+  },
+  "login":{
+    "welcome": "WELCOME",
+    "invalidCredentials": "You have entered an invalid email or password",
+    "emailPlaceholder": "example@gmail.com",
+    "passwordPlaceholder": "Password",
+    "requiredField": "This field is required",
+    "invalidFormat": "Invalid format",
+    "login": "Login",
+    "notRegistered": "Don't have an account yet?",
+    "signUp": "Sign Up"
   }
-
 }

@@ -145,5 +145,24 @@
     "save": "Guardar cambios",
     "changeToTeacher": "Quieres ser profesor?",
     "clickHere": "Haz click aquí"
+  },
+  "favourites": {
+    "empty": "No tienes profesores favoritos!"
+  },
+  "home": {
+    "topRatedTeachers": "Profesores mejor calificados",
+    "mostRequestedTeachers": "Profesores más solicitados"
+  },
+  "login":{
+    "welcome": "BIENVENIDO",
+    "invalidCredentials": "Email o contraseña inválidos",
+    "emailPlaceholder": "ejemplo@gmail.com",
+    "passwordPlaceholder": "Contraseña",
+    "requiredField": "Este campo es obligatorio",
+    "invalidFormat": "Formato inválido",
+    "login": "Ingresar",
+    "notRegistered": "Aún no estás registrado?",
+    "signUp": "Regístrate"
+
   }
 }
