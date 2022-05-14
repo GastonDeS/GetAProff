@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.webapp.dto.ClassroomDto;
+import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,15 +29,19 @@ public class ClassesController {
     @Context
     UriInfo uriInfo;
 
+    @Autowired
+    private AuthFacade authFacade;
+
     @GET
     @Produces(value = MediaType.APPLICATION_JSON)
     @Consumes(value = MediaType.APPLICATION_JSON)
-    public Response getClassesFromUser(@QueryParam("userId") @DefaultValue("0") Long userId,
+    public Response getClassesFromUser(
                                        @QueryParam("asTeacher") @DefaultValue("false") Boolean asTeacher,
                                        @QueryParam("status") @DefaultValue("-1") int status,
                                        @QueryParam("page") @DefaultValue("1") Integer page,
                                        @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
         try {
+            Long userId = authFacade.getCurrentUserId();
             final Page<Lecture> lectures = lectureService.findClasses(userId, asTeacher, status, page, pageSize);
             Response.ResponseBuilder builder = Response.ok(
                     new GenericEntity<List<ClassroomDto>>(lectures.getContent().stream()

@@ -4,12 +4,12 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.StudentDto;
+import ar.edu.itba.paw.webapp.security.api.models.Authority;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
-import ar.edu.itba.paw.webapp.util.JwtUtils;
+import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -23,13 +23,15 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Path("/auth")
 @Component
 public class AuthController {
     @Autowired
-    AuthenticationManager authenticationManager;
+    AuthenticationTokenService authenticationTokenService;
 
     @Autowired
     private UserService userService;
@@ -41,9 +43,6 @@ public class AuthController {
     private ImageService imageService;
 
     @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
     private AuthFacade authFacade;
 
     @GET
@@ -52,24 +51,6 @@ public class AuthController {
         User user = authFacade.getCurrentUser();
         return Response.ok(StudentDto.fromUser(uriInfo, user)).build();
     }
-
-    //TODO: sacar este endpoint
-//    @POST
-//    @Path("/login")
-//    @Consumes(value = { MediaType.APPLICATION_JSON, })
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response login(@Valid @RequestBody LoginDto loginDto) throws UnsupportedEncodingException {
-//        final Optional<User> maybeUser = userService.findByEmail(loginDto.getMail());
-//        if (!maybeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-//
-//        User user = maybeUser.get();
-//        Authentication auth = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(loginDto.getMail(), loginDto.getPassword()));
-//        SecurityContextHolder.getContext().setAuthentication(auth);
-//
-//        String token = jwtUtils.generateJwtToken(loginDto.getMail());
-//        return Response.ok(AuthDto.login(uriInfo, user, token)).build();
-//    }
 
     @POST
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
@@ -84,7 +65,11 @@ public class AuthController {
             return Response.status(Response.Status.CONFLICT).build();
         imageService.createOrUpdate(newUser.get().getId(), IOUtils.toByteArray(image));
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
-        return Response.created(location).build();
+        Response.ResponseBuilder response = Response.created(location);
+        Set<Authority> authoritySet = new HashSet<>();
+        authoritySet.add(Authority.USER_STUDENT);
+        if (newUser.get().isTeacher()) authoritySet.add(Authority.USER_TEACHER);
+        return response.header("Authorization", authenticationTokenService.issueToken(newUser.get().getMail(), authoritySet)).build();
     }
 
 }

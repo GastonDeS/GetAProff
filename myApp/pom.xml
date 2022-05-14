@@ -11,7 +11,7 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+    <org.springframework.version>4.3.22.RELEASE</org.springframework.version>
     <com.sun.mail.version>1.6.2</com.sun.mail.version>
     <servlet-api.version>2.5</servlet-api.version>
     <jstl.version>1.2</jstl.version>
@@ -19,7 +19,7 @@
     <org.hsqldb.version>2.3.1</org.hsqldb.version>
     <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
     <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
-    <spring-security.version>4.0.4.RELEASE</spring-security.version>
+    <spring-security.version>4.2.11.RELEASE</spring-security.version>
     <org.slf4j.version>1.7.5</org.slf4j.version>
     <logback.version>1.1.2</logback.version>
     <logback-ext-spring.version>0.1.1</logback-ext-spring.version>

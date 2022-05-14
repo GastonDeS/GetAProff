@@ -17,10 +17,15 @@ import java.util.HashSet;
 @Component
 public class PawUserDetailsService implements UserDetailsService {
 
+//    @Autowired
     private final UserService userService;
 
+//    public PawUserDetailsService() {
+//        this.userSe/rvice = userService;
+//    }
+
     @Autowired
-    public PawUserDetailsService( UserService userService) {
+    public PawUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
