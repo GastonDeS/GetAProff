@@ -27,13 +27,20 @@ import AuthService from "../../services/authService";
 const Register = () => {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
-  const [image, setImage] = useState(Default);
-  const {register, formState: {errors}, handleSubmit, getValues, setValue} = useForm( {defaultValues: {"Role" : 1}});
+  const [image, setImage] = useState();
+  const [displayImage, setDisplayImage] = useState(Default);
+  const {register, formState: {errors}, handleSubmit, getValues, setValue} = useForm( {defaultValues: {"Role" : 1, "DescriptionInput": "", "ScheduleInput": ""}});
 
   const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setDisplayImage(URL.createObjectURL(event.target.files[0]));
+      setImage(event.target.files[0])
+    }
+  };
+
   const onSubmit = data => {
-      let userImg = data.ImgInput[0];
       let formData = new FormData();
       formData.append("name", data.NameInput);
       formData.append("mail", data.MailInput);
@@ -41,11 +48,13 @@ const Register = () => {
       formData.append("description", data.DescriptionInput);
       formData.append("schedule", data.ScheduleInput);
       formData.append("role", data.Role);
-      formData.append("image", userImg);
+      formData.append("image", image);
       AuthService
           .register(formData)
-          .then( navigate("/") )
-          .catch( navigate("/error") )
+          .then(navigate("/"))
+          .catch((error) => {
+            navigate("/error") 
+          })
   };
   return (
     <Wrapper>
@@ -69,7 +78,7 @@ const Register = () => {
               <input type="number"  style={{display: 'none'}} {...register("Role")}/>
               <InputContainer>
               <div style={{ width: "80%" }}>
-              <DisplayImage  register={register} name="ImgInput" image={image} setImage={setImage}/>
+              <DisplayImage  register={register} name="ImgInput" image={displayImage} onImageChange={onImageChange}/>
               </div>
               <InputWrapper>
                 <Input register={register} name="NameInput" options={{required: {value: true, message: "This field is required"}}} type="text" placeholder="Name" />
@@ -95,7 +104,7 @@ const Register = () => {
                            value: 8,
                            message: "Password must have at least 8 characters"
                          }
-                       }} type="text" placeholder="Password"  />
+                       }} type="password" placeholder="Password"  />
                 {errors.PassInput && <Error>{errors.PassInput.message}</Error>}
                 <Input register={register} name="ConfirmPassInput"
                        options={{
@@ -103,7 +112,7 @@ const Register = () => {
                            value: true, message: "This field is required"
                          },
                          validate: value => value === getValues("PassInput") || "The passwords don't match"
-                       }} type="text" placeholder="Confirm Password"  />
+                       }} type="password" placeholder="Confirm Password"  />
                 {errors.ConfirmPassInput && <Error>{errors.ConfirmPassInput.message}</Error>}
                 {index === 0 ? (
                   <>

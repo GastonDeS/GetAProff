@@ -17,8 +17,8 @@ public class ImageServiceImpl implements ImageService {
 
     @Transactional
     @Override
-    public Image createOrUpdate(Long userId, byte[] image){
-        return imageDao.createOrUpdate(userId, image);
+    public Optional<Image> createOrUpdate(Long userId, byte[] image){
+        return Optional.ofNullable(imageDao.createOrUpdate(userId, image));
     }
 
     @Override

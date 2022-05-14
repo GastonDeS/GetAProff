@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.webapp.requestDto;
 
-public class EditTeacherDto {
+public class EditUserDto {
 
     private Long id;
 
-    private String name, description, schedule;
+    private String name;
+
+    private String description;
+
+    private String schedule;
 
     private boolean switchRole;
 

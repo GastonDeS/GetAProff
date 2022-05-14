@@ -37,13 +37,12 @@ const login = async (mail, password) => {
 //     });
 // };
 
+const toTeacher = (user) => {
+  localStorage.setItem('user', JSON.stringify(user));
+}
 
 const register = async (formData) => {
-  return await axiosService.axiosWrapper(axiosService.POST, API_URL, {'Content-Type': 'multipart/form-data'}, formData );
-      // .post(API_URL, formData, { headers: {
-      //         'Content-Type': 'multipart/form-data'
-      //     }})
-      // .then( response => {return response;});
+  return await axiosService.axiosWrapper(axiosService.POST, API_URL, {'Content-Type': 'multipart/form-data'}, formData);
 }
 
 const logout = () => {
@@ -59,5 +58,6 @@ export default {
   login,
   getCurrentUser,
   logout,
-  register
+  register,
+  toTeacher
 };

@@ -25,13 +25,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const DisplayImage = ({ image, setImage, register, name }) => {
-
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-    }
-  };
+const DisplayImage = ({ image, onImageChange, register, name }) => {
 
   const openFile = () => {
     document.getElementById("usrPhoto").click()

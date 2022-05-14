@@ -19,19 +19,22 @@ const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
   const navigate = useNavigate();
   const [change, setChange] = useState(false);
-  const [image, setImage] = useState(Default);
-  const [isNewImage, setIsNewImage] = useState(false);
+  const [image, setImage] = useState();
+  const [displayImage, setDisplayImage] = useState(Default);
   const [currentUser, setCurrentUser] = useState();
-  const {register, formState: { errors }, handleSubmit, reset, setValue} = useForm({defaultValues : { nameInput: "", schedule: "", description: ""}});
+  const {register, formState: { errors }, handleSubmit, reset, setValue} = useForm({defaultValues : { nameInput: "", schedule: "", description: "" }});
 
   const handleRoleChange = () => {
     setChange(current => !current);
     setIsTeacher(current => !current);
   }
 
-  useEffect(() => {
-    console.log(image === Default);
-  }, [isNewImage])
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setDisplayImage(URL.createObjectURL(event.target.files[0]));
+      setImage(event.target.files[0])
+    }
+  };
 
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
@@ -58,7 +61,7 @@ const EditProfile = () => {
       //TODO: Revisar este endpoint
       axios.get( `/users/${currentUser.id}/image`)
         .then(res => {
-          setImage('data:image/png;base64,' + res.data.image);
+          setDisplayImage('data:image/png;base64,' + res.data.image);
         })
         .catch(error => {});
     }
@@ -70,16 +73,20 @@ const EditProfile = () => {
     formData.append("description", data.description);
     formData.append("schedule", data.schedule);
     formData.append("teach", change ? "true" : "false");
-
-    if (image !== Default) {
-      var imgData = new FormData().append("image", image);
-      await axiosService.axiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, imgData)
+    
+    if (image) {
+      var imgData = new FormData();
+      imgData.append("image", image, image.name)
+      await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, {}, imgData)
         .catch( err => console.log(err));
     }
-    //TODO: service
-    await axiosService.axiosWrapper(axiosService.POST, `/users/${currentUser.id}`, formData )
-      .then( () => {
-        navigate("/users/"+ currentUser.id);
+  
+    await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}`, {}, formData)
+      .then((res) => {
+        if (change) {
+          AuthService.toTeacher(res.data);
+        }
+        navigate("/users/" + currentUser.id);
       }).catch( err => console.log(err));
 
   }
@@ -91,7 +98,7 @@ const EditProfile = () => {
         <Content>
           <Title>Edit profile</Title>
             <Form onSubmit={handleSubmit(onSubmit)}>
-              <DisplayImage register={register} name = "image" image = {image} setImage={setImage}/>
+              <DisplayImage register={register} name = "image" image = {displayImage} onImageChange={onImageChange}/>
               <Input register={register} name = "nameInput" options={{required : {value: true, message: "This field is required"}}}
               />
               {errors.nameInput && <Error>{errors.nameInput.message}</Error>}
