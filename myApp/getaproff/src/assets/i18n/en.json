@@ -23,11 +23,6 @@
     },
     "all": "All"
   },
-  "files": {
-    "file": "File",
-    "subject": "Subject",
-    "level": "Level"
-  },
   "profile": {
     "personal": "Information",
     "subjects": "Subjects",
@@ -170,5 +165,21 @@
     "login": "Login",
     "notRegistered": "Don't have an account yet?",
     "signUp": "Sign Up"
+  },
+  "myFiles": {
+    "file": "File",
+    "subject": "Subject",
+    "level": "Level",
+    "title": "My Files",
+    "filterBy": "Filter by:",
+    "add": "Add Files",
+    "remove": "Remove Files",
+    "new": {
+      "title": "Add File",
+      "chooseSubjects": "Choose which classes this file is available to",
+      "chooseFiles": "Choose files",
+      "cancel": "Cancel",
+      "upload": "Upload Files"
+    }
   }
 }

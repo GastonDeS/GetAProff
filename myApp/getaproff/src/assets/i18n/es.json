@@ -23,11 +23,6 @@
     },
     "all": "Todos"
   },
-  "files": {
-    "file": "Archivo",
-    "subject": "Materia",
-    "level": "Nivel"
-  },
   "profile": {
     "personal": "Información",
     "subjects": "Materias",
@@ -170,6 +165,21 @@
     "login": "Ingresar",
     "notRegistered": "Aún no estás registrado?",
     "signUp": "Regístrate"
-
+  },
+  "myFiles": {
+    "file": "Archivo",
+    "subject": "Materia",
+    "level": "Nivel",
+    "title": "Mis archivos",
+    "filterBy": "Filtrar por:",
+    "add": "Agregar Archivos",
+    "remove": "Borrar archivos",
+    "new": {
+      "title": "Agregar archivo",
+      "chooseSubjects": "Elija en que clases quiere disponiblizar el archivo",
+      "chooseFiles": "Elegir Archivos",
+      "cancel": "Cancelar",
+      "upload": "Subir Archivos"
+    }
   }
 }
