@@ -111,18 +111,9 @@ public class UsersController {
 //        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
 //    }
 
-    @POST
-    @Path("/{uid}/image")
-    @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
-                              @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
-        Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
-        return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
     @GET
     @Path("/{id}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getTeacherInfo(@PathParam("id") Long id) {
         final Optional<User> mayBeUser = userService.findById(id);
         if(!mayBeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
@@ -135,7 +126,7 @@ public class UsersController {
 
     @GET
     @Path("/top-rated")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response listTopRatedTeachers() {
         final List<TeacherDto> topRatedTeachers = teachesService.getTopRatedTeachers().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
@@ -144,44 +135,18 @@ public class UsersController {
 
     @GET
     @Path("/most-requested")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response listMostRequestedTeachers() {
         final List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
                 .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(mostRequestedTeachers){}).build();
     }
 
-    @GET
-    @Path("/{id}/subjects")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
-    public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
-        final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
-                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
-                .map(k -> SubjectInfoDto.fromSubjectInfo(k.getKey(), k.getValue())).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
-    }
-
-    @GET
-    @Path("/subjects/levels/{id}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
-    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
-        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
-                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
-    }
-
-    @DELETE
-    @Path("/{userId}/{subjectId}/{level}")
-    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
-        return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
-                Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
     //Edit profile
     @POST
     @Path("/{id}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
-    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response editProfile(@PathParam("id") Long id,
                                 @FormDataParam("name") String newName,
                                 @FormDataParam("description") String newDescription,
@@ -200,10 +165,30 @@ public class UsersController {
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    //Subjects
+
+    @GET
+    @Path("/{id}/subjects")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response getSubjectInfoFromUser(@PathParam("id") Long id) {
+        final List<SubjectInfoDto> subjectInfoDtos = teachesService.get(id).stream()
+                .collect(Collectors.groupingBy(teaches -> teaches.getSubject().getName())).entrySet().stream()
+                .map(k -> SubjectInfoDto.fromSubjectInfo(k.getKey(), k.getValue())).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
+    }
+
+    @GET
+    @Path("/subjects/levels/{id}")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
+        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
+                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
+    }
 
     @GET
     @Path("/available-subjects/{id}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getSubjectAndLevelsAvailableForUser(@PathParam("id") Long id) {
         final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsAvailableForUser(id)
                 .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
@@ -217,6 +202,13 @@ public class UsersController {
         final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel());
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @DELETE
+    @Path("/{userId}/{subjectId}/{level}")
+    public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
+        return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
+                Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     //Returns all the classes that involve the user
@@ -283,6 +275,15 @@ public class UsersController {
         return maybeImage.isPresent() ? Response.ok(ImageDto.fromUser(uriInfo, maybeImage.get())).build()
                 : Response.status(Response.Status.NO_CONTENT).build();
 
+    }
+
+    @POST
+    @Path("/{uid}/image")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
+                              @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
+        Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
+        return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @POST

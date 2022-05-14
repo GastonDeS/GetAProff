@@ -94,6 +94,14 @@ export class UserService {
         }
     }
 
+    async addUserImg (uid, imgData) {
+        try {
+            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}/image`, {}, imgData);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async getUserInfo(uid) {
         try {
             let data;
