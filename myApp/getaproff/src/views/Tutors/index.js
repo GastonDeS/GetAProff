@@ -19,14 +19,16 @@ import Button from "../../components/Button";
 import TutorCard from "../../components/TutorCard";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import {useForm, Controller} from "react-hook-form";
+import {userService} from "../../services";
 
 const Tutors = () => {
   const [order, setOrder] = useState(0);
-  const [price, setPrice] = useState(1000);
   const [level, setLevel] = useState(0);
   const [page, setPage] = useState(1);
   const [subject, setSubject] = useState();
   const [tutors, setTutors] = useState([]);
+  const {register, handleSubmit, getValues} = useForm({defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1}});
   const orders = [
     {name: "Price Ascending", id: 1},
     {name: "Price Descending", id: 2},
@@ -46,6 +48,7 @@ const Tutors = () => {
   }, []);
 
   useEffect(() => {
+    userService.getUsers()
     subject && axios.get('/teachers/subject/?page=1&search=' + subject)
       .then(res => {
         res.data.forEach(item => {
@@ -67,8 +70,10 @@ const Tutors = () => {
     document.getElementById("filterForm").submit();
   };
 
-  const s = () => {
-    console.log("submiteed");
+  const onSubmit = (data, e) => {
+    console.log(data);
+    userService.getUsers(data)
+    console.log(e);
   };
 
   let items = [];
@@ -93,39 +98,44 @@ const Tutors = () => {
           <form
             id="filterForm"
             style={{ display: "flex", flexDirection: "column" }}
-            onSubmit={s}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <FilterSection>
               <h4>Ordenar por</h4>
               <SelectDropdown
-                options={orders}
-                setIndex={setOrder}
-                type="Choose an order"
+                  name={"order"}
+                  register={register}
+                  options={orders}
+                  type="Choose an order"
               />
             </FilterSection>
             <FilterSection>
               <h4>Precio Maximo</h4>
               <RangeSlider
-                maxValue={10000}
-                value={price}
-                onChange={setPrice}
-                name={"price"}
+                  register={register}
+                  name="maxPrice"
+                  minValue={1}
+                  maxValue={10000}
+                  value={9990}
+                  getValues = {getValues}
               />
             </FilterSection>
             <FilterSection>
               <h4>Nivel</h4>
-              {Levels.map((object, index) => {
-                return (
-                  <FormCheck
-                    key={index}
-                    type={"radio"}
-                    name="level"
-                    value={index}
-                    id={i18next.t(object)}
-                    label={i18next.t(object)}
-                  />
-                );
-              })}
+              <Form.Group>
+                {Levels.map((object, index) => {
+                  return (
+                     <FormCheck
+                         {...register("level")}
+                        key={index}
+                        type={"radio"}
+                        value={index}
+                        id={i18next.t(object)}
+                        label={i18next.t(object)}
+                      />
+                  );
+                })}
+              </Form.Group>
             </FilterSection>
             <FilterSection>
               <h4>Rating</h4>
@@ -137,8 +147,8 @@ const Tutors = () => {
                     style={{ marginLeft: "-20px" }}
                   >
                     <Form.Check.Input
+                        {...register("rating")}
                       type={"radio"}
-                      name="rating"
                       value={rating}
                       style={{
                         position: "fixed",
@@ -158,7 +168,7 @@ const Tutors = () => {
             </FilterSection>
             <hr />
             <div style={{ alignSelf: "center" }}>
-              <Button text={"Aplicar filtros"} callback={submitForm} />
+              <Button text={"Aplicar filtros"}/>
             </div>
             {haveParams && (
               <div style={{ alignSelf: "center", marginTop: "8px" }}>

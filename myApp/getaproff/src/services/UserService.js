@@ -158,6 +158,21 @@ export class UserService {
         }
     }
 
+    async getUsers(queryParams) {
+        try {
+            let config = {};
+            let response;
+            config['params'] = queryParams
+            await axiosService.axiosWrapper(axiosService.GET, '/users', config)
+                .then(res => response = res)
+            return response;
+        }
+        catch (err) {
+            console.log(err)
+        }
+
+    }
+
     async getUserClasses(uid, asTeacher, status, page) {
         try {
             let config = {}
@@ -180,13 +195,14 @@ export class UserService {
 
     async createReview(uid, teacherId, data) {
         try {
-            let params = {
+            let data = {
                 studentId: uid,
                 teacherId: parseInt(teacherId),
                 rate: parseFloat(data.rating),
                 review: data.review
             };
-            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`, params);
+            let config = {}
+            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`,config, data);
         }
         catch (err) {
             console.log(err);

@@ -12,4 +12,6 @@ public interface RatingDao {
     Pair<Float, Integer> getRatingById(Long teacherId);
 
     Page<Rating> getTeacherRatings(Long teacherId, PageRequest pageRequest);
+
+    boolean availableToRate(Long teachedId, Long studentId);
 }

@@ -33,4 +33,11 @@ public class RatingServiceImpl implements RatingService {
     public Page<Rating> getTeacherRatings(Long teacherId, Integer page, Integer pageSize) {
         return ratingDao.getTeacherRatings(teacherId, new PageRequest(page, pageSize));
     }
+
+    @Override
+    public boolean availableToRate(Long teacherId, Long studentId) {
+        return ratingDao.availableToRate(teacherId, studentId);
+    }
+
+
 }

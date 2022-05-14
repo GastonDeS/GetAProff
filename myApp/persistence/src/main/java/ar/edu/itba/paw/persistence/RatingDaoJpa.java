@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.RatingDao;
-import ar.edu.itba.paw.models.Page;
-import ar.edu.itba.paw.models.PageRequest;
-import ar.edu.itba.paw.models.Rating;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
 import org.springframework.stereotype.Repository;
 
@@ -46,5 +43,15 @@ public class RatingDaoJpa extends BasePaginationDaoImpl<Rating> implements Ratin
         final TypedQuery<Rating> query = entityManager.createQuery("from Rating r where r.teacher = :teacher", Rating.class);
         query.setParameter("teacher", teacher);
         return listBy(query, pageRequest);
+    }
+
+    @Override
+    public boolean availableToRate(Long teacherId, Long studentId) {
+        final User teacher = entityManager.getReference(User.class, teacherId);
+        final User student = entityManager.getReference(User.class, studentId);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture l where l.teacher = :teacher and l.student = :student and l.status = 2", Lecture.class);
+        query.setParameter("teacher", teacher);
+        query.setParameter("student", student);
+        return query.getResultList().size() > 0;
     }
 }
