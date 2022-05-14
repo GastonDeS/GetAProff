@@ -136,5 +136,14 @@
     "save": "Guardar cambios",
     "delete": "Borrar archivos",
     "choose": "Subir archivos"
+  },
+  "editProfile": {
+    "title": "Editar Perfil",
+    "required": "Este campo es obligatorio",
+    "descriptionPlaceholder": "Descripción",
+    "schedulePlaceholder": "Horarios",
+    "save": "Guardar cambios",
+    "changeToTeacher": "Quieres ser profesor?",
+    "clickHere": "Haz click aquí"
   }
 }

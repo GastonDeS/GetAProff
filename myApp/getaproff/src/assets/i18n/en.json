@@ -136,5 +136,15 @@
     "save": "Save changes",
     "delete": "Delete files",
     "choose": "Choose files"
+  },
+  "editProfile": {
+    "title": "Edit profile",
+    "required": "This field is required",
+    "descriptionPlaceholder": "Describe yourself in a few words",
+    "schedulePlaceholder": "Enter your schedule",
+    "save": "Save changes",
+    "changeToTeacher" : "Want to become a teacher?",
+    "cleickHere" : "Click here"
   }
+
 }
