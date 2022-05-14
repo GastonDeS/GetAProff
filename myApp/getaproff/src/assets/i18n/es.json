@@ -231,5 +231,19 @@
     "insertMessage": "Ingresar mensaje",
     "insertMessagePlaceholder": "Cuéntanos porque quieres agregar esta materia",
     "sendRequest": "Enviar solicitud"
+  },
+  "tutors":{
+    "filters": "Filtros",
+    "orderBy": "Ordenar por",
+    "maxPrice": "Precio máximo",
+    "level": "Nivel",
+    "rating": "Calificación",
+    "orMore": "o más",
+    "applyFilters": "Aplicar filtros",
+    "clearFilters": "Limpiar filtros",
+    "priceAsc": "Precio ascendente",
+    "priceDesc": "Precio descendente",
+    "rateAsc": "Calificación ascendente",
+    "rateDesc": "Calificación descendente"
   }
 }

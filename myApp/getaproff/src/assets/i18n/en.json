@@ -231,5 +231,20 @@
     "insertMessage": "Insert message",
     "insertMessagePlaceholder": "Tell us why you want to add this subject",
     "sendRequest": "Send Request"
+  },
+  "tutors": {
+    "filters": "Filters",
+    "orderBy": "Order by",
+    "maxPrice": "Max price",
+    "level": "Level",
+    "rating": "Rating",
+    "orMore": "or more",
+    "applyFilters": "Apply filters",
+    "clearFilters": "Clear filters",
+    "priceAsc": "Price ascending",
+    "priceDesc": "Price descending",
+    "rateAsc": "Rating ascending",
+    "rateDesc": "Rating descending"
+
   }
 }
