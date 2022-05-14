@@ -181,5 +181,39 @@
       "cancel": "Cancelar",
       "upload": "Subir Archivos"
     }
+  },
+  "rateTeacher": {
+    "title": "Calificar la clase de",
+    "rate": "Calificar",
+    "review": "Reseña",
+    "reviewPlaceholder": "Un groso el profe...",
+    "uploadRating": "Confirmar Calificación",
+    "starRating": {
+      "title": "Elige una calificación",
+      "one": "1 estrella",
+      "two": "2 estrellas",
+      "three": "3 estrellas",
+      "four": "4 estrellas",
+      "five": "5 estrellas"
+    }
+  },
+  "register": {
+    "title": "BIENVENIDO",
+    "teacher": "Profesor",
+    "student": "Alumno",
+    "emailPlaceholder": "ejemplo@gmail.com",
+    "passwordPlaceholder": "Contraseña",
+    "requiredField": "Este campo es obligatorio",
+    "invalidFormat": "Debes ingresar un email válido",
+    "shortPassword": "La contraseña debe tener al menos 8 caracteres",
+    "password": "Contraseña",
+    "confirmPasswordPlaceholder": "Confirmar contraseña",
+    "descriptionPlaceholder": "Descripción",
+    "schedulePlaceholder": "Horarios",
+    "mailPlaceholder": "ejemplo@gmail.com",
+    "namePlaceholder": "Nombre",
+    "signUp": "Registrarse",
+    "alreadyRegistered": "Ya tienes una cuenta?",
+    "login": "Ingresar"
   }
 }

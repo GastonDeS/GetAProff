@@ -181,5 +181,39 @@
       "cancel": "Cancel",
       "upload": "Upload Files"
     }
+  },
+  "rateTeacher": {
+    "title": "Rate Class from",
+    "rate": "Rate",
+    "review": "Review",
+    "reviewPlaceholder": "The teacher was amazing, i learned a lot...",
+    "uploadRating": "Upload rating",
+    "starRating": {
+      "title": "Choose a rate",
+      "one": "1 star",
+      "two": "2 stars",
+      "three": "3 stars",
+      "four": "4 stars",
+      "five": "5 stars"
+    }
+  },
+  "register": {
+    "title": "WELCOME",
+    "teacher": "Teacher",
+    "student": "Student",
+    "emailPlaceholder": "example@gmail.com",
+    "passwordPlaceholder": "Password",
+    "requiredField": "This field is required",
+    "invalidFormat": "You must enter a valid email",
+    "shortPassword": "Password must be at least 8 characters",
+    "password": "Password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "descriptionPlaceholder": "Description",
+    "SchedulePlaceholder": "Schedule",
+    "mailPlaceholder": "example@gmail.com,",
+    "namePlaceholder": "Name",
+    "signUp": "Sign Up",
+    "alreadyRegistered": "Already have an account?",
+    "login": "Login"
   }
 }
