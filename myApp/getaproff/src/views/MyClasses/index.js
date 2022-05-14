@@ -108,7 +108,7 @@ const MyClasses = () => {
         .then(res => {
           console.log(res)
           setClasses([...res.data]);
-          setPageQty((parseInt(res.headers['x-total-pages']) + 1));
+          setPageQty((parseInt(res.headers['x-total-pages'])));
         })
   }, [tabIndex, status, reloadCards, page]);
 

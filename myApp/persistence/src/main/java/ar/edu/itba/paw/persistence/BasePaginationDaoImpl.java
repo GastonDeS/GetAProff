@@ -17,6 +17,7 @@ public class BasePaginationDaoImpl<T> implements BasePaginationDao<T> {
     }
 
     public int getTotalPageCount(Query query, Integer pageSize) {
-        return query.getResultList().size() / pageSize;
+        int size = query.getResultList().size();
+        return size / pageSize + (size%pageSize > 0 ? 1: 0);
     }
 }

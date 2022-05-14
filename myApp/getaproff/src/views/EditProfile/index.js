@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AuthService from "../../services/authService";
-import { axiosService } from "../../services/index"
-
+import {axiosService} from "../../services";
 import { Wrapper, MainContainer, Title, Request } from "../../GlobalStyle";
 import { useForm } from "react-hook-form";
 import Navbar from "../../components/Navbar";
@@ -78,13 +77,11 @@ const EditProfile = () => {
     if (image) {
       var imgData = new FormData();
       imgData.append("image", image, image.name)
-      await axiosService.axiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, imgData, 
-                        {'Content-Type': 'multipart/form-data', 'Authorization': axiosService.getBearerToken()})
+      await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, {}, imgData)
         .catch( err => console.log(err));
     }
   
-    await axiosService.axiosWrapper(axiosService.POST, `/users/${currentUser.id}`, formData, 
-                        {'Content-Type': 'multipart/form-data', 'Authorization': axiosService.getBearerToken()})
+    await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}`, {}, formData)
       .then((res) => {
         if (change) {
           AuthService.toTeacher(res.data);
