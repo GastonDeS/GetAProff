@@ -25,7 +25,7 @@ const Home = () => {
           <ButtonContainer>
             {
               subjects && subjects.map((item, index) => {
-                return <Button key={index} text={item.name} fontSize='1rem' callback={() => navigate('tutors', {state: {subject: item}})}/>
+                return <Button key={index} text={item.name} fontSize='1rem' callback={() => navigate(`tutors?search=${item.name}`)}/>
               })
             }
           </ButtonContainer>

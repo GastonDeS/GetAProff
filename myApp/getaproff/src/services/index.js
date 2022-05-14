@@ -1,5 +1,5 @@
-import { UserService} from "./userService";
-import { ClassroomService } from "./classroomService";
+import { UserService} from "./UserService";
+import { ClassroomService } from "./ClassroomService";
 import { AxiosService } from "./axios.service";
 
 

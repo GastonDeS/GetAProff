@@ -1,4 +1,3 @@
-import axios from "axios";
 import {axiosService} from "./index";
 
 const PATH = '/classroom'

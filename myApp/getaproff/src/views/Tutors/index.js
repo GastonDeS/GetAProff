@@ -18,7 +18,7 @@ import RatingStars from "../../components/RatingStars";
 import Button from "../../components/Button";
 import TutorCard from "../../components/TutorCard";
 import { useLocation } from "react-router-dom";
-import {useForm, Controller, useFormState, get} from "react-hook-form";
+import {useForm, useFormState} from "react-hook-form";
 import {userService} from "../../services";
 
 const Tutors = () => {
@@ -29,7 +29,13 @@ const Tutors = () => {
   const [subject, setSubject] = useState();
   const [isFormReseted, setIsFormReseted] = useState(false)
   const [tutors, setTutors] = useState([]);
-  const {register, handleSubmit, getValues, reset, control} = useForm({defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1}});
+
+  const search = useLocation().search;
+  const searchQuery = new URLSearchParams(search).get('search');
+
+  const {register, handleSubmit, getValues, reset, control, setValue} = useForm(
+      {defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
+  );
   const {isDirty} = useFormState({control})
   const orders = [
     {name: "Price Ascending", id: 1},
@@ -42,11 +48,6 @@ const Tutors = () => {
   const myURL = window.location.search;
 
   //TODO: revisar esto de los parametros para filtros
-  const location = useLocation();
-
-  useEffect(() => {
-    setSubject(location.state.subject.name);
-  }, []);
 
   //Funciones
 
@@ -54,7 +55,7 @@ const Tutors = () => {
     setPage(parseInt(event.currentTarget.innerHTML));
 
   const cleanFilters = () => {
-    setIsFormReseted(true)
+    setIsFormReseted(!isFormReseted)
     reset()
   };
 
@@ -180,7 +181,7 @@ const Tutors = () => {
         </FiltersContainer>
         <TutorsWrapper>
           <SearchBarContainer>
-            <SearchBar register={register} name={"search"}/>
+            <SearchBar register={register} name={"search"} getValues = {getValues}/>
           </SearchBarContainer>
           <Grid>
             {tutors && tutors.map(tutor => {

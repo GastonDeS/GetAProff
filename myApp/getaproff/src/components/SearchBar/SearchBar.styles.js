@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   height: fit-content;
   background: white;
   padding-left: 1em;
-  border-radius: 10px;
+  border-radius: 10px 20px 20px 10px;
   width: 100%;
 
   img {

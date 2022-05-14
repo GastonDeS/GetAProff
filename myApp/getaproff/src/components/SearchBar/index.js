@@ -3,9 +3,16 @@ import { Wrapper } from './SearchBar.styles'
 import PropTypes from "prop-types";
 // Icon
 import SearchIcon from '../../assets/img/search_icon.png'
+import Button from "../Button";
+import {useNavigate} from "react-router-dom";
 
-const SearchBar = ({register, name}) => {
-  const [state, setState] = useState('');
+const SearchBar = ({register, name, getValues}) => {
+  const [state, setState] = useState(getValues('search'));
+  let navigate = useNavigate()
+
+  const search = () => {
+      navigate(`/tutors?search=${state}`)
+  }
 
   return (
     <Wrapper>
@@ -17,6 +24,7 @@ const SearchBar = ({register, name}) => {
               onChange={event => setState(event.currentTarget.value)}
               value={state}
         />
+        <Button text="Search" callback={search}/>
     </Wrapper>
   )
 }
@@ -24,10 +32,12 @@ const SearchBar = ({register, name}) => {
 SearchBar.propTypes = {
     register : PropTypes.func,
     name: PropTypes.string,
+    getValues: PropTypes.func,
 }
 
 SearchBar.defaultProps = {
     register: (x) => x,
+    getValues: x => '',
     name: ""
 }
 

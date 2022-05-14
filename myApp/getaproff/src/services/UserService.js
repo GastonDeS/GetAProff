@@ -175,9 +175,9 @@ export class UserService {
           let config = {
             headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
           }
-          var url = API_URL + '/student';
+          var url = PATH + '/student';
           if (formData.role === 1) {
-            url = API_URL + '/teacher';
+            url = PATH + '/teacher';
           }
           await axiosService.axiosWrapper(axiosService.POST, url, config, formData)
           .then( (res) => {
