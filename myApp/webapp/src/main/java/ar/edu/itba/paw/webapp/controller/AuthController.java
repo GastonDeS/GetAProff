@@ -59,16 +59,13 @@ public class AuthController {
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
     public Response register(@FormDataParam("name") String name, @FormDataParam("mail") String mail,
                              @FormDataParam("password") String password, @FormDataParam("description") String description, @FormDataParam("role") Long role,
-                             @FormDataParam("schedule") String schedule, @FormDataParam("image") InputStream image) throws IOException {
+                             @FormDataParam("schedule") String schedule) throws IOException {
         Optional<User> mayBeUser = userService.findByEmail(mail);
         if(mayBeUser.isPresent())
             return Response.status(Response.Status.BAD_REQUEST).build();
         Optional<User> newUser = userService.create(name, mail, password, description, schedule, role);
         if(!newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
-        Optional<Image> maybeImage = imageService.createOrUpdate(newUser.get().getId(), IOUtils.toByteArray(image));
-        if(!maybeImage.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         Response.ResponseBuilder response = Response.created(location);
         response.entity(AuthDto.fromUser(uriInfo, newUser.get()));

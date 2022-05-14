@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { axiosService } from "../../services";
 
 import Navbar from "../../components/Navbar";
 import Tab from "../../components/Tab";
@@ -40,7 +41,7 @@ const Register = () => {
     }
   };
 
-  const onSubmit = data => {
+  const onSubmit = async (data) => {
       let formData = new FormData();
       formData.append("name", data.NameInput);
       formData.append("mail", data.MailInput);
@@ -48,13 +49,18 @@ const Register = () => {
       formData.append("description", data.DescriptionInput);
       formData.append("schedule", data.ScheduleInput);
       formData.append("role", data.Role);
-      formData.append("image", image);
-      AuthService
-          .register(formData)
-          .then(navigate("/"))
-          .catch((error) => {
-            navigate("/error") 
-          })
+      
+      await AuthService.register(formData).catch((error) => { navigate("/error") })
+      
+      if (image) {
+        var imgData = new FormData();
+        imgData.append("image", image, image.name)
+        var currentUser = AuthService.getCurrentUser();
+        await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, {}, imgData)
+          .catch( err => console.log(err));
+      }
+
+      navigate("/");
   };
   return (
     <Wrapper>

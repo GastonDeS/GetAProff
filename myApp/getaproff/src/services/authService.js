@@ -23,26 +23,21 @@ const login = async (mail, password) => {
   }
 };
 
-// const login = async (mail, password) => {
-//     //TODO: corregir post sin /login
-//   await axios.post(API_URL  + "/login", {
-//       mail,
-//       password,
-//     })
-//     .then(response => {
-//       if (response.data.token) {
-//         localStorage.setItem('user', JSON.stringify(response.data));
-//       }
-//       return response.data;
-//     });
-// };
-
 const toTeacher = (user) => {
   localStorage.setItem('user', JSON.stringify(user));
 }
 
 const register = async (formData) => {
-  return await axiosService.axiosWrapper(axiosService.POST, API_URL, {'Content-Type': 'multipart/form-data'}, formData);
+  try {
+    await axiosService.axiosWrapper(axiosService.POST, API_URL, {'Content-Type': 'multipart/form-data'}, formData)
+    .then( (res) => {
+      console.log(res)
+      localStorage.setItem('token', res.headers.authorization);
+      localStorage.setItem('user', JSON.stringify(res.data));
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 const logout = () => {
