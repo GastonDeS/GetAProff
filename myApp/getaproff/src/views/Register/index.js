@@ -61,7 +61,7 @@ const Register = () => {
         }
       }
       
-      await AuthService.register(formData).catch((error) => { navigate("/error") })
+      await userService.register(formData).catch((error) => { navigate("/error") })
       
       if (image) {
         var imgData = new FormData();

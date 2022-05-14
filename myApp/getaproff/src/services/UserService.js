@@ -3,7 +3,6 @@ import {axiosService} from "./index";
 const PATH = '/users'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
-
 export class UserService {
     async getUserSubjects(uid) {
         try {
@@ -173,6 +172,24 @@ export class UserService {
         }
     }
 
+    async register(formData) {
+        try {
+          let config = {
+            headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+          }
+          var url = API_URL + '/student';
+          if (formData.role === 1) {
+            url = API_URL + '/teacher';
+          }
+          await axiosService.axiosWrapper(axiosService.POST, url, config, formData)
+          .then( (res) => {
+            localStorage.setItem('token', res.headers.authorization);
+            localStorage.setItem('user', JSON.stringify(res.data));
+          });
+        } catch (err) {
+          console.log(err);
+        }
+    }
 
 
     async requestClass(uid, requestData) {
