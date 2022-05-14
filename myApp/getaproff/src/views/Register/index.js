@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosService } from "../../services";
+import { axiosService, userService } from "../../services";
 
 import Navbar from "../../components/Navbar";
 import Tab from "../../components/Tab";
@@ -67,8 +67,7 @@ const Register = () => {
         var imgData = new FormData();
         imgData.append("image", image, image.name)
         var currentUser = AuthService.getCurrentUser();
-        await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, {}, imgData)
-          .catch( err => console.log(err));
+        userService.addUserImg(currentUser.id, imgData);
       }
 
       navigate("/");
