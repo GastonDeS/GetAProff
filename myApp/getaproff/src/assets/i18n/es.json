@@ -6,7 +6,9 @@
     "myAccount": "Mi cuenta",
     "myProfile": "Mi perfil",
     "myFiles": "Mis archivos",
-    "logout": "Cerrar sesión"
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse"
   },
   "subjects": {
     "subject": "Materia",
@@ -38,7 +40,7 @@
       "subjects": "Materias"
     },
     "editProfile": "Editar perfil",
-    "request": "Pedir clase", 
+    "request": "Pedir clase",
     "addFavourites": "Agregar a favoritos",
     "removeFavourites": "Remover de favoritos",
     "description": "Descripción",
@@ -67,5 +69,65 @@
       "active": "Activo",
       "finished": "Finalizado"
     }
+  },
+  "classCard": {
+    "status": {
+      "pending": "Pendiente",
+      "active": "Activo",
+      "finished": "Finalizado",
+      "cancelled": "Cancelado",
+      "error": "Error"
+    },
+    "enter": "Ingresar",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "cancel": "Cancelar",
+    "finish": "Finalizar",
+    "rate": "Calificar",
+    "hour": "hora",
+    "teacher": "Profesor",
+    "level": "Nivel",
+    "price": "Precio",
+    "subject": "Materia"
+  },
+  "displayImage": {
+    "choose": "Seleccionar imagen"
+  },
+  "searchBar": {
+    "search": "Buscar",
+    "placeholder": "Buscar..."
+  },
+  "classroom": {
+    "title": "Aula virtual",
+    "status": {
+      "pending": "Pendiente",
+      "active": "Activo",
+      "finished": "Finalizado",
+      "cancelled": "Cancelado",
+      "error": "Error"
+    },
+    "post": {
+      "placeholder": "Hola, te quería preguntar sobre este examen...",
+      "uploadFile": "Subir archivo",
+      "publish": "Publicar"
+    },
+    "files": {
+      "myFiles": "Mis archivos",
+      "empty": "No hay archivos para compartir",
+      "choose": "Seleccione los archivos para subir a esta Aula Virtual",
+      "share": "Compartir archivos",
+      "shared": "Archivos compartidos",
+      "emptyShared": "Aun no haz compartido archivos",
+      "stop": "Dejar de compartir",
+      "classFiles": "Archivos del Aula"
+    },
+    "subject": "Materia",
+    "student": "Alumno",
+    "teacher": "Profesor",
+    "price": "Precio",
+    "hour": "hora",
+    "accept": "Aceptar",
+    "cancel": "Cancelar",
+    "finish": "Finalizar"
   }
 }

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import SearchIcon from '../../assets/img/search_icon.png'
 import Button from "../Button";
 import {useNavigate} from "react-router-dom";
+import i18next from "i18next";
 
 const SearchBar = ({register, name, getValues}) => {
   const [state, setState] = useState(getValues('search'));
@@ -20,11 +21,11 @@ const SearchBar = ({register, name, getValues}) => {
         <input
             {...register(name)}
               type='text'
-              placeholder='Search'
+              placeholder={i18next.t('searchBar.placeholder')}
               onChange={event => setState(event.currentTarget.value)}
               value={state}
         />
-        <Button text="Search" callback={search}/>
+        <Button text={i18next.t('searchBar.search')} callback={search}/>
     </Wrapper>
   )
 }

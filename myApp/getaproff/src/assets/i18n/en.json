@@ -6,7 +6,9 @@
     "myAccount": "My account",
     "myProfile": "My profile",
     "myFiles": "My files",
-    "logout": "Logout"
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
   },
   "subjects": {
     "subject": "Subject",
@@ -67,5 +69,65 @@
       "active": "Active",
       "finished": "Finished"
     }
+  },
+  "classCard": {
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "finished": "Finished",
+      "cancelled": "Canceled",
+      "error": "Error"
+    },
+    "enter": "Enter",
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancel": "Cancel",
+    "finish": "Finish",
+    "rate": "Rate",
+    "hour": "hour",
+    "teacher": "Teacher",
+    "level": "Level",
+    "price": "Price",
+    "subject": "Subject"
+  },
+  "displayImage": {
+    "choose": "Choose Image"
+  },
+  "searchBar": {
+    "search": "Search",
+    "placeholder": "Search..."
+  },
+  "classroom": {
+    "title": "Classroom",
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "finished": "Finished",
+      "cancelled": "Canceled",
+      "error": "Error"
+    },
+    "post": {
+      "placeholder": "Hi, I wanted to ask you about this exam question...",
+      "uploadFile": "Upload file",
+      "publish": "Publish"
+    },
+    "files": {
+      "myFiles": "My Files",
+      "empty": "There are no files to share",
+      "choose": "Choose the files you want to upload to this Classroom",
+      "share": "Share Files",
+      "shared": "Shared files",
+      "emptyShared": "You haven't shared any files yet",
+      "stop": "Stop sharing",
+      "classFiles": "Classroom Files"
+    },
+    "subject": "Subject",
+    "student": "Student",
+    "teacher": "Teacher",
+    "price": "Price",
+    "hour": "hour",
+    "accept": "Accept",
+    "cancel": "Cancel",
+    "finish": "Finish"
   }
 }

@@ -26,6 +26,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {set, useForm} from "react-hook-form";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
+import i18next from "i18next";
 
 const Classroom = () => {
     const files = 1;
@@ -127,27 +128,27 @@ const Classroom = () => {
                     <ClassroomContainer>
                         <ClassroomSidePanel>
                             <ClassContentSide>
-                                <h2>Classroom</h2>
-                                <p>Subject: {classInfo.subjectName}</p>
-                                <p>Student: {classInfo.student.name}</p>
-                                <p>Teacher: {classInfo.teacher.name}</p>
-                                <p>Price: ${classInfo.price}/hour</p>
+                                <h2>{i18next.t('classroom.title')}</h2>
+                                <p>{i18next.t('classroom.subject')}: {classInfo.subjectName}</p>
+                                <p>{i18next.t('classroom.student')}: {classInfo.student.name}</p>
+                                <p>{i18next.t('classroom.teacher')}: {classInfo.teacher.name}</p>
+                                <p>{i18next.t('classroom.price')}: ${classInfo.price}/{i18next.t('classroom.hour')}</p>
                             </ClassContentSide>
                             <ClassContentSide>
                                 {(classInfo.status === 0) ?
                                     <ClassStatus style={{background: "darkorange"}}>
-                                        <h6 style={{color: "black", margin: "0"}}>Pending</h6>
+                                        <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.pending')}</h6>
                                     </ClassStatus>
                                     : (classInfo.status === 1) ? <ClassStatus style={{background: "green"}}>
-                                            <h6 style={{color: "black", margin: "0"}}>Active</h6>
+                                            <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.active')}</h6>
                                         </ClassStatus>
                                         : <> {classInfo.status === FINISHED &&
                                                     <ClassStatus style={{background: "#d3d3d3"}}>
-                                                        <h6 style={{color: "black", margin: "0"}}>Finished</h6>
+                                                        <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.finished')}</h6>
                                                     </ClassStatus>}
                                              {classInfo.status === RATED &&
                                                  <ClassStatus style={{background: "#d3d3d3"}}>
-                                                 <h6 style={{color: "black", margin: "0"}}>Rated</h6>
+                                                 <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.rated')}</h6>
                                                  </ClassStatus>
                                              }
                                         </>
@@ -155,20 +156,20 @@ const Classroom = () => {
                                 {classInfo.status === 0 ? (
                                     <ButtonContainer>
                                         {isTeacherClassroom &&
-                                            <Button text={"Accept"} callback={acceptClass}/>
+                                            <Button text={i18next.t('classroom.accept')} callback={acceptClass}/>
                                         }
-                                        <Button text={"Cancel"} color={'#FFC300'} fontColor={'black'}/>
+                                        <Button text={i18next.t('classroom.cancel')} color={'#FFC300'} fontColor={'black'}/>
                                     </ButtonContainer>
                                 ) :
                                     classInfo.status !== FINISHED &&  classInfo.status !== RATED  && (
-                                    <Button text={"Finish"} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
+                                    <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
                             {(classInfo.status !== FINISHED && classInfo.status !== RATED) ?
                                 <PostFormContainer onSubmit={handleSubmit(publishPost)}>
-                                    <Textarea name="postTextInput" register={register} placeholder="Hola! Te consulto sobre este examen..." style={{
+                                    <Textarea name="postTextInput" register={register} placeholder={i18next.t('classroom.post.placeholder')} style={{
                                         borderRadius: "10px",
                                         fontSize: "16px",
                                         fontFamily: "Roboto Light, sans-serif",
@@ -180,13 +181,13 @@ const Classroom = () => {
                                     </Textarea>
                                     <ButtonContainer>
                                         <div style={{display: 'flex', 'flex-direction': 'row', 'align-items': 'center'}}>
-                                            <Button type="button" text="Upload file" fontSize="15px" callback={() => document.getElementById("file").click()}/>
+                                            <Button type="button" text={i18next.t('classroom.post.uploadFile')} fontSize="15px" callback={() => document.getElementById("file").click()}/>
                                             <input id="file" {...register("file")} type="file" accept="image/*,.pdf"
                                                    style={{display: "none"}}
                                             />
                                             <p style={{margin: "0 9px"}} id="fileName">{watchFileName && watchFileName[0] && watchFileName[0].name}</p>
                                         </div>
-                                        <Button fontSize="15px" text="Publish"/>
+                                        <Button fontSize="15px" text={i18next.t('classroom.post.publish')}/>
                                     </ButtonContainer>
                                 </PostFormContainer>
                                 :
@@ -234,14 +235,12 @@ const Classroom = () => {
                             {isTeacherClassroom && classInfo.status !== FINISHED &&
                             <>
                                 <ClassContentSide>
-                                    <h2>My Files</h2>
+                                    <h2>{i18next.t('classroom.files.myFiles')}</h2>
                                     {(files === 0) ?
-                                        <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>There are no files to share.</span>
+                                        <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.empty')}</span>
                                         :
                                         <div>
-                                            <h6 style={{margin: "2px 0 2px 0"}}>Choose the files you want to share in
-                                                this
-                                                class</h6>
+                                            <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
                                             <SharedFilesContainer>
                                                 <Ul>
                                                     <li>
@@ -260,7 +259,7 @@ const Classroom = () => {
                                                         </SubjectsRow>
                                                     </li>
                                             </Ul>
-                                            <Button text="Share Files" fontSize="8" type="submit" id="share-button"
+                                            <Button text={i18next.t('classroom.files.share')} fontSize="8" type="submit" id="share-button"
                                                     style={{alignSelf: "center", marginTop: "10px", display: "none"}}>
                                             </Button>
                                         </SharedFilesContainer>
@@ -268,9 +267,9 @@ const Classroom = () => {
                                 }
                             </ClassContentSide>
                             <ClassContentSide>
-                                <h2>Shared files</h2>
+                                <h2>{i18next.t('classroom.files.shared')}</h2>
                                 {(files === 0) ?
-                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>You haven't shared any files yet</span>
+                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.sharedEmpty')}</span>
                                     :
                                         <SharedFilesContainer>
                                             <Ul>
@@ -291,7 +290,7 @@ const Classroom = () => {
                                                     </SubjectsRow>
                                                 </li>
                                             </Ul>
-                                            <Button text="Stop sharing" fontSize="8" type="submit" id="share-button"
+                                            <Button text={i18next.t('classroom.files.stop')} fontSize="8" type="submit" id="share-button"
                                                     style={{alignSelf: "center", marginTop: "10px", display: "none"}}>
                                             </Button>
                                         </SharedFilesContainer>
@@ -300,7 +299,7 @@ const Classroom = () => {
                             </>
                             }
                             <ClassContentSide>
-                                <h2>Class files</h2>
+                                <h2>{i18next.t('classroom.files.classFiles')}</h2>
                                 {(files === 0) ?
                                     <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>Teacher hasn't shared files yet</span>
                                     :
