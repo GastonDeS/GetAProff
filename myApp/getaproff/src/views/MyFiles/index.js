@@ -23,6 +23,7 @@ import {
   useMyFilesFetch,
   ALL_LEVELS,
 } from "../../hooks/useMyFilesFetch";
+import { axiosService, filesService } from "../../services";
 
 const MyFiles = () => {
   const inputFile = useRef(null);
@@ -36,6 +37,8 @@ const MyFiles = () => {
     newFiles,
     checkAll,
     allFiles,
+    currentUser,
+    setReload,
     setShow,
     setNewFiles, 
     setAllFiles,
@@ -50,26 +53,33 @@ const MyFiles = () => {
     if (inputFile && inputFile.current) inputFile.current.click();
   };
 
-  const handleUpload = () => {
-    let files = [];
-    newFiles.forEach(async (item) => {
+  const handleUpload = async () => {
+    for (var i = 0; i < newFiles.length; i++) {
       const form = new FormData();
-      form.append("file", item.file);
-      await axios.post('subject-files/145/' + subject.id + '/' + level, form)
-      .then(res => {
-        files.push({
-          first: res.data.name,
-          second: res.data.subject.name,
-          third: i18next.t("subjects.levels." + res.data.level),
-          subjectId: res.data.subject.subjectId,
-          levelId: res.data.level,
-          id: res.data.id,
-          selected: false
-        });
-      })
-      .catch(error => {});
-      setAllFiles(allFiles.concat(files));
-    })
+      form.append("file", newFiles[i].file);
+      await filesService.addSubjectFiles(currentUser.id, level, subject.id, form);
+    }
+    setAllFiles([]);
+    setNewFiles([]);
+    setReload(true);
+    // newFiles.forEach(async (item) => {
+    //   const form = new FormData();
+    //   form.append("file", item.file);
+    //   await axios.post('subject-files/145/' + subject.id + '/' + level, form)
+    //   .then(res => {
+    //     files.push({
+    //       first: res.data.name,
+    //       second: res.data.subject.name,
+    //       third: i18next.t("subjects.levels." + res.data.level),
+    //       subjectId: res.data.subject.subjectId,
+    //       levelId: res.data.level,
+    //       id: res.data.id,
+    //       selected: false
+    //     });
+    //   })
+    //   .catch(error => {});
+    //   setAllFiles(allFiles.concat(files));
+    // })
     handleShow();
   }
 
@@ -99,18 +109,24 @@ const MyFiles = () => {
     }));
   };
 
-  const handleDelete = () => {
-    setDeleted([]);
-    filteredFiles.forEach((file) => {
-      if (file.selected) {
-        axios
-        .delete("/subject-files/" + file.id)
-        .then(() => {
-          setDeleted((previous) => [...previous, file.id]);
-        })
-        .catch((error) => {});
+  const handleDelete = async () => {
+    for (var i = 0; i < filteredFiles.length; i++) {
+      if (filteredFiles[i].selected) {
+        await filesService.removeSubjectFiles(filteredFiles[i].id);
       }
-    });
+    }
+    // filteredFiles.forEach((file) => {
+    //   if (file.selected) {
+    //     axios
+    //     .delete("/subject-files/" + file.id)
+    //     .then(() => {
+    //       setDeleted((previous) => [...previous, file.id]);
+    //     })
+    //     .catch((error) => {});
+    //   }
+    // });
+    setAllFiles([]);
+    setReload(true);
   };
 
   const handleCheckAll = (event) => {
