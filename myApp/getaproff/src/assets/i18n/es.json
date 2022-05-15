@@ -28,6 +28,8 @@
     "subjects": "Materias",
     "reviews": "Reseñas",
     "share": "Compartir perfil",
+    "shareSuccess": "Link del perfil copiado a portapapeles",
+    "shareError": "Error al copiar el linkdel perfil al portapapeles",
     "edit": {
       "edit": "Editar",
       "profile": "Perfil",

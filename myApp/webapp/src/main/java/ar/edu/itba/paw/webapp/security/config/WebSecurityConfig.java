@@ -120,8 +120,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .antMatcher(API_PREFIX+"/**").authorizeRequests()
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/user").hasAuthority("USER_STUDENT")
-                        .antMatchers(HttpMethod.GET,API_PREFIX+"/classes").hasAuthority("USER_STUDENT") // asi esta bien limito cuando se pide cada uno con los links despues
-//                        .antMatchers(HttpMethod.GET, "/classroom").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/classes").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
@@ -129,9 +128,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
-//                        .antMatchers(HttpMethod.GET,"/files/user/{id}").hasAuthority("USER_STUDENT") //TODO VERIFY THIS AUTH
-//                        .antMatchers(HttpMethod.POST,"/ratings/new-rating").hasAuthority("USER_STUDENNT") //TODO ONLY IF HAS AN OPEN CLASS
-
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/subject-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.DELETE, API_PREFIX+"/subject-files/{file}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/subject-files/{id}/{subject}/{level}").access("@antMatcherVoter.canAccessPostFile(authentication, #id)")
@@ -148,7 +144,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/classes").hasAuthority("USER_STUDENT")
                         .antMatchers("/**").permitAll()
-                .anyRequest().permitAll()
                 .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
