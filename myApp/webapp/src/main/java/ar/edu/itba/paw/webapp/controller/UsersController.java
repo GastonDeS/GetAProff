@@ -3,10 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
-import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
-import ar.edu.itba.paw.webapp.requestDto.NewUserDto;
-import ar.edu.itba.paw.webapp.requestDto.SubjectRequestDto;
+import ar.edu.itba.paw.webapp.requestDto.*;
 import ar.edu.itba.paw.webapp.security.api.models.Authority;
 import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
@@ -156,25 +153,30 @@ public class UsersController {
 
     //Edit profile
     @POST
-    @Path("/{id}")
-    @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
+    @Path("/{id}/teacher")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response editProfile(@PathParam("id") Long id,
-                                @FormDataParam("name") String newName,
-                                @FormDataParam("description") String newDescription,
-                                @FormDataParam("schedule") String newSchedule,
-                                @FormDataParam("teach") String toTeacher) {
-        int desc = userService.setUserDescription(id, newDescription);
-        int sch = userService.setUserSchedule(id, newSchedule);
-        int name = userService.setUserName(id, newName);
-        if (!toTeacher.equals("true")) {
-            return (desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    public Response editProfileTeacher(@PathParam("id") Long id, @Validated(EditUserDto.Teacher.class) @RequestBody EditUserDto editUserDto) {
+        int desc = userService.setUserDescription(id, editUserDto.getDescription());
+        int sch = userService.setUserSchedule(id, editUserDto.getSchedule());
+        int name = userService.setUserName(id, editUserDto.getName());
+        if (editUserDto.getSwitchRole().equals("false")) {
+            return (desc == 1 && sch == 1 && name == 1) ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
         }
         Optional<User> user = userService.findById(id);
         boolean added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
         userService.setTeacherAuthorityToUser();
         return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @POST
+    @Path("/{id}/student")
+    @Consumes("application/vnd.getaproff.api.v1+json")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response editProfileStudent(@PathParam("id") Long id, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
+        int name = userService.setUserName(id, editUserDto.getName());
+        return name == 1 ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     //Subjects

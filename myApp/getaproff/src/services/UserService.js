@@ -105,8 +105,7 @@ export class UserService {
     async getUserInfo(uid) {
         try {
             let data;
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, {})
                 .then(res => data = res.data)
             return data;
         } catch (err) {
@@ -116,9 +115,8 @@ export class UserService {
 
     async checkIfTeacherIsFaved(uid, teacherId) {
         try {
-            let retVal = false
-            let config = {}
-            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config )
+            let retVal = false;
+            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, {})
             res.data && res.data.forEach(
                 user => {
                     if (user.id === Number(teacherId)) {
@@ -190,6 +188,16 @@ export class UserService {
         }
     }
 
+    async editProfile (uid, role, form) {
+        try {
+            let config = {
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            }
+            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/${role}`, config, form);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     async requestClass(uid, requestData) {
         try {

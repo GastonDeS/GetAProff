@@ -12,10 +12,9 @@ import {
     ClassroomCenterPanel,
     SharedFilesContainer,
     SubjectsRow,
-    InputPostContainer,
     BigBox,
     PostBox,
-    ButtonHolder, Ul, ClassSideSection, ButtonContainer, PostFormContainer,
+    ButtonHolder, Ul, ButtonContainer, PostFormContainer,
 } from "./Classroom.styles";
 import Banner from '../../assets/img/matematica_banner.png';
 import Button from "../../components/Button";
@@ -23,7 +22,7 @@ import Textarea from "../../components/Textarea";
 import {classroomService} from "../../services"
 import authService from "../../services/authService";
 import {useNavigate, useParams} from "react-router-dom";
-import {set, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
@@ -60,21 +59,21 @@ const Classroom = () => {
     }
 
     const acceptClass = () =>{
-        classroomService.changeClassStatus(id.id, 1, user.id).
-        then(
+        classroomService.changeClassStatus(id.id, 1, user.id)
+          .then(
             data => {
                 console.log(data);
                 setClassStatus(1)
-            })
+            });
     }
 
     const cancelClass = () => {
-        classroomService.changeClassStatus(id.id, FINISHED, user.id).
-        then(
+        classroomService.changeClassStatus(id.id, FINISHED, user.id)
+          .then(
             data => {
                 console.log(data);
                 setClassStatus(3)
-            })
+            });
     }
 
     const rateTeacher = () => {
@@ -87,31 +86,29 @@ const Classroom = () => {
                 response => {
                     console.log(response);
                     setRefreshPosts(true);
-                })
-            .catch(err => console.log(err))
-        reset()
+                });
+        reset();
     }
 
     useEffect(() => {
         classroomService.fetchClassroomInfo(id.id)
             .then(data => {
                 setClassInfo(data);
-            })
-            .catch(err => console.log(err));
-    }, [classStatus])
+            });
+    }, [classStatus]);
 
     useEffect(() => {
         if(classInfo && classInfo.teacher)
             setIsTeacherClassroom(classInfo.teacher.id === user.id)
-    },[classInfo])
+    }, [classInfo]);
 
     useEffect(() => {
         classroomService.fetchClassroomPosts(id.id, page)
             .then(res => {
                 setClassPosts(res.data);
                 setPageQty(res.pageQty)
-            })
-    }, [refreshPosts, page])
+            });
+    }, [refreshPosts, page]);
 
 
     function navigateToMyClasses() {
@@ -201,10 +198,10 @@ const Classroom = () => {
                                     'width': '90%',
                                     'justify-content' : 'space-between',
                                     'gap': '10px'}}>
-                                    <h2>La clase se termino</h2>
-                                    <Button text={"Volver a Mis Clases"} callback={navigateToMyClasses}/>
+                                    <h2>{i18next.t('classroom.classOver')}</h2>
+                                    <Button text={i18next.t('classroom.back')} callback={navigateToMyClasses}/>
                                     {!isTeacherClassroom && classInfo.status !== RATED &&
-                                    <Button text={"Puntuar al profesor"} callback={rateTeacher}/>}
+                                    <Button text={i18next.t('classroom.rate')} callback={rateTeacher}/>}
                                 </div>
                             }
                             <BigBox>
@@ -237,7 +234,7 @@ const Classroom = () => {
                                 <ClassContentSide>
                                     <h2>{i18next.t('classroom.files.myFiles')}</h2>
                                     {(files === 0) ?
-                                        <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.empty')}</span>
+                                        <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.noFiles')}</span>
                                         :
                                         <div>
                                             <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
@@ -247,7 +244,7 @@ const Classroom = () => {
                                                         <SubjectsRow>
                                                         <a style={{fontWeight: "bold"}}
                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                           target="_blank">File name</a>
+                                                           target="_blank">{i18next.t('classroom.files.name')}</a>
                                                         <input type="checkbox" name="sharedFiles"
                                                                style={{
                                                                    width: "18px",
@@ -269,7 +266,7 @@ const Classroom = () => {
                             <ClassContentSide>
                                 <h2>{i18next.t('classroom.files.shared')}</h2>
                                 {(files === 0) ?
-                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.sharedEmpty')}</span>
+                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.empty')}</span>
                                     :
                                         <SharedFilesContainer>
                                             <Ul>
@@ -277,7 +274,7 @@ const Classroom = () => {
                                                     <SubjectsRow>
                                                         <a style={{fontWeight: "bold"}}
                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                           target="_blank">File name</a>
+                                                           target="_blank">{i18next.t('classroom.files.name')}</a>
                                                         <input type="checkbox" name="sharedFiles"
                                                                class="form-check-input"
                                                                style={{
@@ -301,7 +298,7 @@ const Classroom = () => {
                             <ClassContentSide>
                                 <h2>{i18next.t('classroom.files.classFiles')}</h2>
                                 {(files === 0) ?
-                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>Teacher hasn't shared files yet</span>
+                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.noSharedFiles')}</span>
                                     :
                                     <SharedFilesContainer>
                                         <Ul>
@@ -309,7 +306,7 @@ const Classroom = () => {
                                                 <SubjectsRow>
                                                     <a style={{fontWeight: "bold"}}
                                                        href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                       target="_blank">File name</a>
+                                                       target="_blank">{i18next.t('classroom.files.name')}</a>
                                                 </SubjectsRow>
                                             </li>
                                         </Ul>

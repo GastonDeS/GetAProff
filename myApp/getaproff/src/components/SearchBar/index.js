@@ -15,22 +15,22 @@ const SearchBar = ({register, name, value, handleSubmit}) => {
       navigate(`/tutors?search=${state}`)
   }
 
-  if(handleSubmit===null)
-        handleSubmit = search
+  if (handleSubmit === null)
+      handleSubmit = search
 
     return (
-    <Wrapper>
-        <img src={SearchIcon} alt='search-icon' />
-        <input
-            {...register(name)}
-              type='text'
-              placeholder={i18next.t('searchBar.placeholder')}
-              onChange={event => setState(event.currentTarget.value)}
-              value={state}
-        />
-        <Button text={i18next.t('searchBar.search')} callback={handleSubmit}/>
-    </Wrapper>
-  )
+      <Wrapper>
+          <img src={SearchIcon} alt='search-icon' />
+          <input
+              {...register(name)}
+                type='text'
+                placeholder={i18next.t('searchBar.placeholder')}
+                onChange={event => setState(event.currentTarget.value)}
+                value={state}
+          />
+          <Button text={i18next.t('searchBar.search')} callback={handleSubmit}/>
+      </Wrapper>
+   )
 }
 
 SearchBar.propTypes = {

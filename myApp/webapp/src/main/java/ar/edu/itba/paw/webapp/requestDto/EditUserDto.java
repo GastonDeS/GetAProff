@@ -1,16 +1,33 @@
 package ar.edu.itba.paw.webapp.requestDto;
 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 public class EditUserDto {
 
+    @NotNull(groups = {NewUserDto.Teacher.class, NewUserDto.Student.class})
     private Long id;
 
+    @NotBlank(groups = {NewUserDto.Teacher.class, NewUserDto.Student.class})
+    @Pattern(regexp = "^$|^([A-ZÀ-ÿ-,a-z. ']+[ ]*)+$", groups = {NewUserDto.Teacher.class, NewUserDto.Student.class})
     private String name;
 
+    @NotNull(groups = {NewUserDto.Teacher.class})
+    private String switchRole;
+
+    @NotBlank(groups = {NewUserDto.Teacher.class})
     private String description;
 
+    @NotBlank(groups = {NewUserDto.Teacher.class})
     private String schedule;
 
-    private boolean switchRole;
+    public interface Teacher {
+    }
+
+    public interface Student {
+    }
 
     public Long getId() {
         return id;
@@ -44,11 +61,11 @@ public class EditUserDto {
         this.schedule = schedule;
     }
 
-    public boolean isSwitchRole() {
+    public String getSwitchRole() {
         return switchRole;
     }
 
-    public void setSwitchRole(boolean switchRole) {
+    public void setSwitchRole(String switchRole) {
         this.switchRole = switchRole;
     }
 }
