@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.sql.Timestamp;
 import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
