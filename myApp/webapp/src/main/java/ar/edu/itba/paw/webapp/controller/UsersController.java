@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -57,10 +59,13 @@ public class UsersController {
     @Context
     private UriInfo uriInfo;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UsersController.class);
+
     @POST
     @Path("/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response registerTeacher(@Validated(NewUserDto.Teacher.class) @RequestBody NewUserDto newUserDto) {
+        LOGGER.debug("Registering teacher of name {}", newUserDto.getName());
         return commonRegister(newUserDto);
     }
 
@@ -68,6 +73,7 @@ public class UsersController {
     @Path("/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response registerStudent(@Validated(NewUserDto.Student.class) @RequestBody NewUserDto newUserDto) {
+        LOGGER.debug("Registering student of name {}", newUserDto.getName());
         return commonRegister(newUserDto);
     }
 
@@ -79,6 +85,7 @@ public class UsersController {
                 newUserDto.getDescription(), newUserDto.getSchedule(), newUserDto.getRole());
         if(!newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
+        LOGGER.debug("User {} registered. Role: {}", newUser.get().getName(), newUserDto.getRole());
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         Response.ResponseBuilder response = Response.created(location);
         response.entity(AuthDto.fromUser(uriInfo, newUser.get()));
@@ -216,6 +223,9 @@ public class UsersController {
     public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody SubjectRequestDto newSubjectDto) {
         final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel());
+        if (newTeaches.isPresent()) {
+            LOGGER.debug("Subject with id {} added to user with id: {}", newSubjectDto.getSubjectId() ,userId);
+        }
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
