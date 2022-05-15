@@ -42,9 +42,6 @@ public class UsersController {
     private TeachesService teachesService;
 
     @Autowired
-    private RatingService ratingService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -52,9 +49,6 @@ public class UsersController {
 
     @Autowired
     private UserRoleService userRoleService;
-
-    @Autowired
-    private LectureService lectureService;
 
     @Context
     private UriInfo uriInfo;
@@ -160,29 +154,29 @@ public class UsersController {
 
     //Edit profile
     @POST
-    @Path("/{id}/teacher")
+    @Path("/{uid}/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response editProfileTeacher(@PathParam("id") Long id, @Validated(EditUserDto.Teacher.class) @RequestBody EditUserDto editUserDto) {
-        int desc = userService.setUserDescription(id, editUserDto.getDescription());
-        int sch = userService.setUserSchedule(id, editUserDto.getSchedule());
-        int name = userService.setUserName(id, editUserDto.getName());
+    public Response editProfileTeacher(@PathParam("uid") Long uid, @Validated(EditUserDto.Teacher.class) @RequestBody EditUserDto editUserDto) {
+        int desc = userService.setUserDescription(uid, editUserDto.getDescription());
+        int sch = userService.setUserSchedule(uid, editUserDto.getSchedule());
+        int name = userService.setUserName(uid, editUserDto.getName());
         if (editUserDto.getSwitchRole().equals("false")) {
             return (desc == 1 && sch == 1 && name == 1) ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Optional<User> user = userService.findById(id);
-        boolean added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
+        Optional<User> user = userService.findById(uid);
+        boolean added = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId());
         userService.setTeacherAuthorityToUser();
         return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @POST
-    @Path("/{id}/student")
+    @Path("/{uid}/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response editProfileStudent(@PathParam("id") Long id, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
-        int name = userService.setUserName(id, editUserDto.getName());
+    public Response editProfileStudent(@PathParam("uid") Long uid, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
+        int name = userService.setUserName(uid, editUserDto.getName());
         return name == 1 ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -310,36 +304,6 @@ public class UsersController {
                               @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
         Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
         return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    @POST
-    @Path("/{uid}/classes")
-    @Consumes(value = "application/vnd.getaproff.api.v1+json")
-    public Response requestClass(@PathParam("uid") Long teacherId, ClassRequestDto classRequestDto){
-        Optional<Lecture> newLecture = lectureService.create(classRequestDto.getStudentId(), teacherId, classRequestDto.getLevel(),
-                classRequestDto.getSubjectId(), classRequestDto.getPrice());
-        if(!newLecture.isPresent()){
-          return Response.status(Response.Status.CONFLICT).build();
-        }
-        URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
-        return Response.created(location).build();
-    }
-
-    @POST
-    @Path("/{uid}/reviews")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
-    @Consumes(value = { "application/vnd.getaproff.api.v1+json" })
-    public Response rateTeacher(@PathParam("uid") Long teacherId, NewRatingDto newRatingDto){
-        //TODO: validar que exista la clase entre alumno y teacher y que este en estado terminado
-        final Optional<Rating> rating = ratingService.addRating(newRatingDto.getTeacherId(), newRatingDto.getStudentId(),
-                    newRatingDto.getRate(), newRatingDto.getReview());
-        if (!rating.isPresent())
-            return Response.status(Response.Status.CONFLICT).build();
-        if(newRatingDto.getTeacherId().equals(newRatingDto.getStudentId()))
-            return Response.status(Response.Status.FORBIDDEN).build();
-        //TODO: cual seria el id de la review?
-        URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
-        return Response.created(location).build();
     }
 }
 

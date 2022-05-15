@@ -2,7 +2,9 @@ package ar.edu.itba.paw.webapp.security.voters;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.security.api.models.BasicAuthenticationToken;
 import ar.edu.itba.paw.webapp.security.models.PawUser;
@@ -31,6 +33,9 @@ public class AntMatcherVoter {
 
     @Autowired
     private SubjectFileService subjectFileService;
+
+    @Autowired
+    UserFileService userFileService;
 
     private Long getUserId(Authentication authentication) {
         return getUser(authentication).getUserid();
@@ -75,8 +80,17 @@ public class AntMatcherVoter {
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
-    public boolean canAccessSubjectFile(Authentication authentication, Long id){
-        return !(authentication instanceof AnonymousAuthenticationToken);
+    public boolean canAccessDeleteSubjectFile(Authentication authentication, Long id){
+        if (authentication instanceof AnonymousAuthenticationToken) return false;
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id);
+        return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
+    }
+
+    public boolean canAccessDeleteCertification(Authentication authentication, Long id){
+        if (authentication instanceof AnonymousAuthenticationToken) return false;
+        Optional<UserFile> certification = userFileService.getFileById(id);
+        if (!certification.isPresent()) throw new ClassNotFoundException(""); //TODO create this exception
+        return certification.get().getFileOwner().getId().equals(getUserId(authentication));
     }
 
     public boolean canAccessWithSameId(Authentication authentication, Long id) {
@@ -84,9 +98,9 @@ public class AntMatcherVoter {
         return id.equals(getUserId(authentication));
     }
 
-    public boolean canRate(Authentication authentication, Long tid) {
+    public boolean canRate(Authentication authentication, Long teacherId) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        return ratingService.availableToRate(tid, getUserId(authentication));
+        return ratingService.availableToRate(teacherId, getUserId(authentication));
     }
 }
 

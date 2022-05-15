@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.webapp.requestDto;
 
 public class ClassRequestDto {
-    private Long studentId, subjectId;
+    private Long teacherId, subjectId;
     private int price, level;
 
-    public Long getStudentId() {
-        return studentId;
+    public Long getTeacherId() {
+        return teacherId;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
     }
 
     public Long getSubjectId() {

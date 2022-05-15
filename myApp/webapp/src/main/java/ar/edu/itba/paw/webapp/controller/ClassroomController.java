@@ -17,6 +17,8 @@ import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +51,8 @@ public class ClassroomController {
 
     @Context
     private UriInfo uriInfo;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
 
     @GET
     @Path("/{classId}")
@@ -107,6 +111,7 @@ public class ClassroomController {
         Optional<Post> maybePost = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType());
         if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + maybePost.get().getPostId());
+        LOGGER.debug("Created post with id {} to classroom with id {}", maybePost.get().getPostId(), classId);
         return Response.created(location).build();
     }
 

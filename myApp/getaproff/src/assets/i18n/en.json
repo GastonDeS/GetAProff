@@ -253,5 +253,10 @@
     "priceDesc": "Price descending",
     "rateAsc": "Rating ascending",
     "rateDesc": "Rating descending"
+  },
+  "error404": {
+    "title": "Oops!",
+    "description": "Looks like we cannot find the page you are looking for",
+    "btnText": "Go back home"
   }
 }
