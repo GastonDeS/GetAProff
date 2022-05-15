@@ -241,52 +241,6 @@ public class UsersController {
 //        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
 //    }
 
-    //Return all favorite users of user with uid
-    @GET
-    @Path("/{uid}/favorites")
-    public Response getUserFavorites(@PathParam("uid") Long uid,
-                                    @QueryParam("page") @DefaultValue("1") Integer page,
-                                    @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        try {
-            final Page<TeacherInfo> favourites = userService.getFavourites(uid, page, pageSize);
-            Response.ResponseBuilder builder = Response.ok(
-                    new GenericEntity<List<TeacherDto>>(favourites.getContent().stream()
-                            .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo))
-                            .collect(Collectors.toList())) {
-                    });
-            return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
-        } catch (IllegalArgumentException exception) { // TODO mensaje exacto
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
-
-//TODO: esto colisiona
-//    @GET
-//    @Path("/{uid}")
-//    @Produces({"application/vnd.getaproff.api.v1+json"})
-//    public Response isFaved(@PathParam("uid") Long teacherId, @QueryParam("favedBy") Long uid) {
-//        boolean isFaved = userService.isFaved(teacherId, uid);
-//        return Response.ok(IsFavedDto.createIsFavedDto(isFaved)).build();
-//    }
-
-    //Add/remove new user to user with uid favorites list
-    @POST
-    @Path("/{uid}/favorites")
-    @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response addNewFavoriteUser(@PathParam("uid") Long uid, IdDto teacherId) {
-        int result = userService.addFavourite(teacherId.getId(), uid);
-        if (result == ALREADY_INSERTED) return Response.status(Response.Status.NO_CONTENT).build();
-        return Response.ok().build();
-    }
-
-    @DELETE
-    @Path("/{uid}/favorites/{teacherId}")
-    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("teacherId") Long teacherId) {
-        int result = userService.removeFavourite(teacherId, uid);
-        if (result == NO_CONTENT_TO_DELETE)
-            return Response.status(Response.Status.NO_CONTENT).build();
-        return Response.ok().build();
-    }
 
     @GET
     @Path("/{uid}/image")
