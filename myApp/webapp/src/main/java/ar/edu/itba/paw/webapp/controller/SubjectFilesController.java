@@ -6,6 +6,8 @@ import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,8 @@ public class SubjectFilesController {
 
     @Context
     private UriInfo uriInfo;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubjectFilesController.class);
 
     @GET
     @Path("/{uid}")
@@ -56,6 +60,9 @@ public class SubjectFilesController {
         //TODO poner la location bien
         URI location = URI.create("/");
         final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level);
+        if (subjectFile.isPresent()) {
+            LOGGER.debug("Subject file uploaded successfully");
+        }
         return subjectFile.isPresent() ? Response.created(location).build() :
                     Response.status(Response.Status.BAD_REQUEST).build();
     }
