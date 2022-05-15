@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -34,6 +36,8 @@ public class ClassesController {
 
     @Autowired
     private AuthFacade authFacade;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassesController.class);
 
     @GET
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -65,6 +69,7 @@ public class ClassesController {
         if(!newLecture.isPresent()){
             return Response.status(Response.Status.CONFLICT).build();
         }
+        LOGGER.debug("requested class of subject with id {} from teacher with id{}, level: {}, price: {}", classRequestDto.getSubjectId(),classRequestDto.getTeacherId(), classRequestDto.getLevel(), classRequestDto.getPrice());
         URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
         return Response.created(location).build();
     }
