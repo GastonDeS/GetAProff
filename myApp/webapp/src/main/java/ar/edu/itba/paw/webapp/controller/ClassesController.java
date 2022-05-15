@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
@@ -9,6 +10,8 @@ import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -34,6 +37,11 @@ public class ClassesController {
 
     @Autowired
     private AuthFacade authFacade;
+
+    @Autowired
+    EmailService emailService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassesController.class);
 
     @GET
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -65,6 +73,8 @@ public class ClassesController {
         if(!newLecture.isPresent()){
             return Response.status(Response.Status.CONFLICT).build();
         }
+        LOGGER.debug("requested class of subject with id {} from teacher with id{}, level: {}, price: {}", classRequestDto.getSubjectId(),classRequestDto.getTeacherId(), classRequestDto.getLevel(), classRequestDto.getPrice());
+        emailService.sendNewClassMessage(newLecture.get().getTeacher().getMail(), newLecture.get().getStudent().getName(), newLecture.get().getSubject().getName(), uriInfo.getBaseUri().toString());
         URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
         return Response.created(location).build();
     }

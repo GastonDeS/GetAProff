@@ -138,7 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{userId}/{subjectId}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #userId)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/teacher").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/student").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{id}/subjects").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/users/available-subjects/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(API_PREFIX+"/favorites/**").hasAuthority("USER_STUDENT")// TODO check if this works if not separate into the 4 endpoints all with USER_STUDENT

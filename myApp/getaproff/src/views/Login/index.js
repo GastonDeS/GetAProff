@@ -91,7 +91,7 @@ const Login = () => {
               </ButtonContainer>
             </Form>
             <Request>
-              <p> {i18next.t('login.notRegistered')}</p>
+              <p>{i18next.t('login.notRegistered')}</p>
               <button onClick={() => {
                 navigate('/users/new')
               }}> {i18next.t('login.signUp')}

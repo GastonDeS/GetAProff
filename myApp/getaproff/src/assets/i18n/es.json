@@ -257,6 +257,6 @@
   "error404": {
     "title": "Ups!",
     "description": "Parece que no pudimos encontrar la página que buscas",
-    "btnText": "Volver al Inicio"
+    "btnText": "Volver al inicio"
   }
 }

@@ -20,7 +20,7 @@ const MyClasses = () => {
   const [status, setStatus] = useState(0);
   const [requestedClasses, setRequestedClasses] = useState([]);
   const [offeredClasses, setOfferedClasses] = useState([]);
-  const [reloadCards, setReloadCards] = useState(false)
+  const [reloadCards, setReloadCards] = useState(false);
   const [page, setPage] = useState(1)
   const [pageQty, setPageQty] = useState(1)
   const currUser = AuthService.getCurrentUser();
@@ -50,29 +50,31 @@ const MyClasses = () => {
       id: 5
     }];
 
-  const handleFilter = e => {
+  const handleFilter = (e) => {
     setStatus(e.target.value);
   }
-  const handleRate = uid => {
+
+  const handleRate = (uid) => {
     navigate(`/users/${uid}/reviews`);
   }
-  const handleEnterClassroom = classId => {
+
+  const handleEnterClassroom = (classId) => {
     navigate(`/classroom/${classId}`);
   }
-  const handleFinishClass= classId => {
-    classroomService.finishClass(classId, currUser.id)
-        .then(r => console.log(r) )
-  }
-  const handleCancelClass = classId => {
-    setReloadCards(!reloadCards)
-    classroomService.cancelClass(classId, currUser.id)
-        .then(r => console.log(r) )
+
+  const handleFinishClass = async (classId) => {
+    await classroomService.finishClass(classId, currUser.id)
+      .then(() => setReloadCards(true));
   }
 
-  const handleAcceptClass = classId => {
-    setReloadCards(!reloadCards)
-    classroomService.acceptClass(classId, currUser.id)
-        .then(r => console.log(r) )
+  const handleCancelClass = async (classId) => {
+    await classroomService.cancelClass(classId, currUser.id)
+        .then(() => setReloadCards(true));
+  }
+
+  const handleAcceptClass = async (classId) => {
+    await classroomService.acceptClass(classId, currUser.id)
+      .then(() => setReloadCards(true));
   }
 
   let items = [];
@@ -86,6 +88,16 @@ const MyClasses = () => {
           {number}
         </PageItem>
     );
+  };
+
+  const fetchClasses = async (setClasses, asTeacher) => {
+    await userService.getUserClasses(currUser.id, asTeacher, status - 1, page)
+        .then(res => {
+          console.log(res)
+          setClasses([...res.data]);
+          setPageQty((parseInt(res.headers['x-total-pages'])));
+        });
+    setReloadCards(false);
   }
 
   const handler = {
@@ -96,19 +108,23 @@ const MyClasses = () => {
     cancelClass: handleCancelClass
   }
 
-  useEffect( () => {
-    setPage(1)
+  useEffect(() => {
+    setPage(1);
   }, [tabIndex, status])
 
   useEffect(() => {
+    if (reloadCards) {
+      let asTeacher = tabIndex === 1;
+      let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
+      fetchClasses(setClasses, asTeacher);
+    }
+  }, [reloadCards]);
+
+  useEffect(async () => {
     let asTeacher = tabIndex === 1;
     let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
-    userService.getUserClasses(currUser.id, asTeacher, status - 1, page)
-        .then(res => {
-          setClasses([...res.data]);
-          setPageQty((parseInt(res.headers['x-total-pages'])));
-        })
-  }, [tabIndex, status, reloadCards, page]);
+    fetchClasses(setClasses, asTeacher);
+  }, [tabIndex, status, page])
 
 
   return (

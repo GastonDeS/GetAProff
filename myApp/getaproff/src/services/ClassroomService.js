@@ -1,6 +1,7 @@
 import {axiosService} from "./index";
 
 const PATH = '/classroom'
+const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 
 export class ClassroomService {
@@ -77,11 +78,12 @@ export class ClassroomService {
                 userId: uid
             }
             let data;
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData )
-                .then(res => data = res.data
-                )
-            return data;
+            let config = {
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            }
+            return await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData)
+            //     .then(res => data = res.data);
+            // return data;
         }
         catch (err) {
             console.log(err)
