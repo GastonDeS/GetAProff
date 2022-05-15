@@ -278,15 +278,16 @@ public class UsersController {
     //Add/remove new user to user with uid favorites list
     @POST
     @Path("/{uid}/favorites")
-    @Consumes(value = "application/vnd.getaproff.api.v1+json")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response addNewFavoriteUser(@PathParam("uid") Long uid, IdDto teacherId) {
         int result = userService.addFavourite(teacherId.getId(), uid);
+        if (result == ALREADY_INSERTED) return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok().build();
     }
 
     @DELETE
-    @Path("/{uid}/favorites/{favTeacherId}")
-    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("favTeacherId") Long teacherId) {
+    @Path("/{uid}/favorites/{teacherId}")
+    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("teacherId") Long teacherId) {
         int result = userService.removeFavourite(teacherId, uid);
         if (result == NO_CONTENT_TO_DELETE)
             return Response.status(Response.Status.NO_CONTENT).build();
