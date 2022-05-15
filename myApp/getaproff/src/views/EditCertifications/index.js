@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import AuthService from "../../services/authService";
-import { userService } from "../../services";
+import { filesService } from "../../services";
 import i18next from "i18next";
 
 import {
@@ -46,7 +46,7 @@ const EditCertifications = () => {
   const handleDelete = async () => {
     const files = certifications.filter((file) => file.selected);
     for (var i = 0; i < files.length; i++) {
-      await userService.removeCertification(files[i].id);
+      await filesService.removeCertification(files[i].id);
     }
     setCertifications([]);
     setReload(true);
@@ -58,7 +58,7 @@ const EditCertifications = () => {
       if (certifications.filter(item => item.name === files[i].name).length === 0) {
         const form = new FormData();
         form.append("file", files[i]);
-        await userService.addCertification(currentUser.id, form);
+        await filesService.addCertification(currentUser.id, form);
       };
     };
     setCertifications([]);
@@ -103,7 +103,7 @@ const EditCertifications = () => {
   };
 
   const fetchCertifications = async () => {
-    await userService.getUserCertifications(currentUser.id).then(res => {
+    await filesService.getUserCertifications(currentUser.id).then(res => {
       res.forEach((file) => {
         setCertifications((previous) => [
           ...previous,

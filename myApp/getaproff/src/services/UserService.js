@@ -55,43 +55,17 @@ export class UserService {
         } catch(error) {console.log(error)};
     }
 
-    async getUserSpecificInfo(info, uid) {
+    async getUserReviews(uid) {
         try {
             let data;
             let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `/${info}/${uid}`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `/ratings/${uid}`, config)
                 .then(res => {
                     data = res.data
                 })
             return data;
         }
         catch (err) {
-            console.log(err);
-        }
-    }
-
-    async getUserReviews (uid) {
-      return this.getUserSpecificInfo("ratings", uid)
-    }
-
-    async getUserCertifications (uid) {
-       return this.getUserSpecificInfo("user-files", uid)
-    }
-
-    async addCertification (uid, form) {
-        try {
-            await axiosService.authAxiosWrapper(axiosService.POST, `/user-files/${uid}`, {}, form);
-            return;
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    async removeCertification (fileId) {
-        try {
-            await axiosService.authAxiosWrapper(axiosService.DELETE, `/user-files/${fileId}`, {});
-            return;
-        } catch (err) {
             console.log(err);
         }
     }
