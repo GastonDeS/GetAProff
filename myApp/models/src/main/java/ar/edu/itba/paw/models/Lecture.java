@@ -83,6 +83,7 @@ public class Lecture {
         this.studentLastTime = builder.studentLastTime;
         this.teacherLastTime = builder.teacherLastTime;
         this.sharedFilesByTeacher = builder.sharedFilesByTeacher;
+        this.notifications = builder.notifications;
     }
 
     public Integer getNotifications() {
@@ -212,7 +213,8 @@ public class Lecture {
                 && aux.classId.equals(this.classId)
                 && aux.status == this.status
                 && aux.level == this.level
-                && aux.price == this.price;
+                && aux.price == this.price
+                && aux.notifications.equals(this.notifications);
     }
 
     public static class Builder
@@ -223,6 +225,7 @@ public class Lecture {
         private Timestamp studentLastTime, teacherLastTime;
         private List<SubjectFile> sharedFilesByTeacher;
         private Long classId;
+        private Integer notifications;
 
         public Builder(User teacher, User student, Subject subject) {
             this.teacher = teacher;
@@ -255,6 +258,10 @@ public class Lecture {
         }
         public Builder status(int status) {
             this.status = status;
+            return this;
+        }
+        public Builder notifications(Integer notifications) {
+            this.notifications = notifications;
             return this;
         }
         public Builder studentLastTime(Timestamp studentLastTime) {

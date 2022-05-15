@@ -6,6 +6,7 @@ public class PageRequest {
     private static final int MIN_PAGE_COUNT = 1;
     private static final int MIN_PAGE_SIZE = 1;
     private static final int MAX_PAGE_SIZE = 50;
+
     public PageRequest(Integer page, Integer pageSize) {
         if(pageSize < MIN_PAGE_SIZE || pageSize > MAX_PAGE_SIZE || page < MIN_PAGE_COUNT)
             throw new IllegalArgumentException();
