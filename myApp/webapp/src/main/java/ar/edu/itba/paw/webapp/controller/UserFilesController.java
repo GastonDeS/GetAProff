@@ -28,29 +28,29 @@ public class UserFilesController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/{id}")
-    public Response getAllFilesFromUser(@PathParam("id") Long id) {
-        final List<UserFileDto> userFileDtos = userFileService.getAllUserFiles(id).stream()
+    @Path("/{uid}")
+    public Response getAllFilesFromUser(@PathParam("uid") Long uid) {
+        final List<UserFileDto> userFileDtos = userFileService.getAllUserFiles(uid).stream()
                 .map(file -> UserFileDto.fromUser(uriInfo, file)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserFileDto>>(userFileDtos){}).build();
     }
 
     @DELETE
-    @Path("/{file}")
+    @Path("/{fileId}")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response deleteUserSubjectFile(@PathParam("file") Long file) {
-        int success = userFileService.deleteFile(file);
+    public Response deleteUserSubjectFile(@PathParam("fileId") Long fileId) {
+        int success = userFileService.deleteFile(fileId);
         return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @POST
-    @Path("/{id}")
+    @Path("/{uid}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response uploadUserFiles(@PathParam("id") Long id, @FormDataParam("file") InputStream uploadedInputStream,
+    public Response uploadUserFiles(@PathParam("uid") Long uid, @FormDataParam("file") InputStream uploadedInputStream,
                                     @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
-        final Optional<UserFile> userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), id);
+        final Optional<UserFile> userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid);
         return userFile.isPresent() ? Response.ok(UserFileDto.fromUser(uriInfo, userFile.get())).build() :
                 Response.status(Response.Status.BAD_REQUEST).build();
     }

@@ -29,10 +29,10 @@ public class SubjectFilesController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/{id}")
+    @Path("/{uid}")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response getUserSubjectFiles(@PathParam("id") Long id) {
-        final List<SubjectFileDto> subjectFileDtos = subjectFileService.getAllSubjectFilesFromUser(id).stream()
+    public Response getUserSubjectFiles(@PathParam("uid") Long uid) {
+        final List<SubjectFileDto> subjectFileDtos = subjectFileService.getAllSubjectFilesFromUser(uid).stream()
                 .map(subjectFile -> SubjectFileDto.fromUser(uriInfo, subjectFile)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
     }
@@ -46,16 +46,16 @@ public class SubjectFilesController {
     }
 
     @POST
-    @Path("/{id}/{subject}/{level}")
+    @Path("/{uid}/{subject}/{level}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @PathParam("subject") Long subject,
+    public Response uploadUserSubjectFiles(@PathParam("uid") Long uid, @PathParam("subject") Long subject,
                                            @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
         //TODO poner la location bien
         URI location = URI.create("/");
-        final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), id, subject, level);
+        final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level);
         return subjectFile.isPresent() ? Response.created(location).build() :
                     Response.status(Response.Status.BAD_REQUEST).build();
     }
