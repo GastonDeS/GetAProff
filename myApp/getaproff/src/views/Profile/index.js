@@ -24,7 +24,7 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
 import {Headers, MainContainer, Request, Row, Table, Wrapper} from "../../GlobalStyle";
-import FilesService from "../../services/filesService";
+import { filesService } from "../../services/index";
 import Dropdown from "../../components/DropDown";
 import { userService } from "../../services/index";
 import { useProfileFetch } from "../../hooks/useProfileFetch";
@@ -145,7 +145,7 @@ const Profile = () => {
                         return (
                         <li key={certification.id}>
                           <Request>
-                            <button onClick={() => window.open(URL.createObjectURL(new Blob([FilesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
+                            <button onClick={() => window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
                           </Request>
                         </li>
                       )})}
