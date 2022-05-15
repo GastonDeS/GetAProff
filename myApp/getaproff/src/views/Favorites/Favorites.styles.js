@@ -21,4 +21,18 @@ export const PageContainer = styled.div`
     height: 85%;
     margin: 10px 10px 10px 0;
 
+    h1 {
+      font-size: 2rem;
+      color: var(--secondary);
+      font-weight: bold;
+    }
+`;
+
+export const TextContainer = styled.div`
+    display: flex;
+    width: fit-content;
+    background-color: var(--tertiary);
+    margin: 0.625rem;
+    padding: 0.75rem;
+    border-radius: 0.625rem;
 `;

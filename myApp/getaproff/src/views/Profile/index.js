@@ -54,13 +54,13 @@ const Profile = () => {
     setIsFaved
   } = useProfileFetch(id);
 
-  const handleFavoriteState = () => {
+  const handleFavoriteState = async () => {
     let teacherId = id;
     let setFavoriteStatus = userService.addTeacherToFavorites;
     if (isFaved) {
       setFavoriteStatus = userService.removeTeacherFromFavorites;
     }
-    setFavoriteStatus(teacherId, currentUser.id);
+    await setFavoriteStatus(teacherId, currentUser.id);
     setIsFaved(!isFaved);
   }
   const [show, setShow] = useState(false);

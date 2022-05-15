@@ -156,6 +156,7 @@
     "clickHere" : "Click here"
   },
   "favourites": {
+    "title": "Your favourite teachers",
     "empty": "No teachers added to favourites yet!"
   },
   "home": {

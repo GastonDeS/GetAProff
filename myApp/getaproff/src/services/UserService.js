@@ -137,14 +137,15 @@ export class UserService {
         } catch (err) {
             console.log(err)
         }
-
     }
 
     async addTeacherToFavorites(teacherId, uid) {
         try {
-            let config = {}
-            let data = {'id' : teacherId}
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/favorites`, config, data )
+            let config = {
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            };
+            let data = {'id' : teacherId};
+            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/favorites`, config, data);
         } catch (err) {
             console.log(err);
         }
@@ -153,11 +154,11 @@ export class UserService {
     async getFavoriteTeachers(uid, page) {
         try {
             let response = {}
-            let config = {
-                params: {
-                    page: page,
-                    pageSize: 5,
-                }}
+            let config = {};
+            config['params'] = {
+                page: page,
+                pageSize: 5,
+            };
             await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config)
                 .then(res => {
                     response['data'] = res.data
@@ -201,7 +202,6 @@ export class UserService {
 
     async requestClass(uid, requestData) {
         try {
-            // let response;
             let level = parseInt(requestData.level)
             let priceIdx = requestData.subject.levels.indexOf(level)
             let response;
