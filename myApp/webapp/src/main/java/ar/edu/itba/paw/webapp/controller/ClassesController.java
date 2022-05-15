@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
@@ -37,6 +38,9 @@ public class ClassesController {
     @Autowired
     private AuthFacade authFacade;
 
+    @Autowired
+    EmailService emailService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassesController.class);
 
     @GET
@@ -70,6 +74,7 @@ public class ClassesController {
             return Response.status(Response.Status.CONFLICT).build();
         }
         LOGGER.debug("requested class of subject with id {} from teacher with id{}, level: {}, price: {}", classRequestDto.getSubjectId(),classRequestDto.getTeacherId(), classRequestDto.getLevel(), classRequestDto.getPrice());
+        emailService.sendNewClassMessage(newLecture.get().getTeacher().getMail(), newLecture.get().getStudent().getName(), newLecture.get().getSubject().getName(), uriInfo.getBaseUri().toString());
         URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
         return Response.created(location).build();
     }

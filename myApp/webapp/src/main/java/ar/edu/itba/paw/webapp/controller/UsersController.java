@@ -79,7 +79,7 @@ public class UsersController {
                 newUserDto.getDescription(), newUserDto.getSchedule(), newUserDto.getRole());
         if(!newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
-        LOGGER.debug("User {} registered. Role: {}", newUser.get().getName(), newUserDto.getRole());
+        LOGGER.debug("User {} registered, Role: {}", newUser.get().getName(), newUserDto.getRole());
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         Response.ResponseBuilder response = Response.created(location);
         response.entity(AuthDto.fromUser(uriInfo, newUser.get()));
@@ -303,6 +303,9 @@ public class UsersController {
     public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
                               @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
         Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
+        if (image.isPresent()) {
+            LOGGER.debug("Image uploaded for user {}", uid);
+        }
         return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 }
