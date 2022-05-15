@@ -47,8 +47,8 @@ public class UserFilesController {
     @Path("/{id}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response uploadUserSubjectFiles(@PathParam("id") Long id, @FormDataParam("file") InputStream uploadedInputStream,
-                                           @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+    public Response uploadUserFiles(@PathParam("id") Long id, @FormDataParam("file") InputStream uploadedInputStream,
+                                    @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
         final Optional<UserFile> userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), id);
         return userFile.isPresent() ? Response.ok(UserFileDto.fromUser(uriInfo, userFile.get())).build() :

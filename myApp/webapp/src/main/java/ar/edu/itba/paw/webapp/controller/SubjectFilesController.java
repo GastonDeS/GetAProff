@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,8 +53,10 @@ public class SubjectFilesController {
                                            @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
+        //TODO poner la location bien
+        URI location = URI.create("/");
         final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), id, subject, level);
-        return subjectFile.isPresent() ? Response.ok(SubjectFileDto.fromUser(uriInfo, subjectFile.get())).build() :
+        return subjectFile.isPresent() ? Response.created(location).build() :
                     Response.status(Response.Status.BAD_REQUEST).build();
     }
 }

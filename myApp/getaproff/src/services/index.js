@@ -1,7 +1,7 @@
 import { UserService} from "./UserService";
 import { ClassroomService } from "./ClassroomService";
 import { AxiosService } from "./axios.service";
-import { FilesService } from "./FilesService";
+import { FilesService } from "./filesService";
 import { SubjectService } from "./SubjectService";
 
 
