@@ -13,6 +13,7 @@ import Button from "../../components/Button";
 import Default from "../../assets/img/add_img.png";
 import {Error} from "../Login/Login.styles";
 import {useNavigate} from "react-router-dom";
+import i18next from "i18next";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
@@ -97,28 +98,28 @@ const EditProfile = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Edit profile</Title>
+          <Title>{i18next.t('editProfile.title')}</Title>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <DisplayImage register={register} name = "image" image = {displayImage} onImageChange={onImageChange}/>
-              <Input register={register} name = "nameInput" options={{required : {value: true, message: "This field is required"}}}
+              <Input register={register} name = "nameInput" options={{required : {value: true, message: i18next.t('editProfile.required')}}}
               />
               {errors.nameInput && <Error>{errors.nameInput.message}</Error>}
               {isTeacher &&
                 <>
-                  <Textarea name = "description" register = {register} options = {{required: {value: true, message: "This field is required"}}} placeholder="Description"
+                  <Textarea name = "description" register = {register} options = {{required: {value: true, message: i18next.t('editProfile.required')}}} placeholder={i18next.t('editProfile.descriptionPlaceholder')}
                   />
                   {errors.description && <Error>{errors.description.message}</Error>}
-                  <Textarea name= "schedule" register = {register} options = {{required: {value: true, message: "This field is required"}}} placeholder="Schedule"
+                  <Textarea name= "schedule" register = {register} options = {{required: {value: true, message: i18next.t('editProfile.required')}}} placeholder={i18next.t('editProfile.schedulePlaceholder')}
                   />
                   {errors.schedule && <Error>{errors.schedule.message}</Error>}
                 </>
               }
-              <Button type="Submit" text="Save changes"/>
+              <Button type="Submit" text={i18next.t('editProfile.save')}/>
             </Form>
           {!isTeacher && (<>
             <Request>
-              <p>Want to become a teacher?</p>
-              <button onClick={handleRoleChange} type="button">Click here</button>
+              <p>{i18next.t('editProfile.changeToTeacher')}</p>
+              <button onClick={handleRoleChange} type="button">{i18next.t('editProfile.clickHere')}</button>
             </Request>
           </>)}
         </Content>

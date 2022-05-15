@@ -5,6 +5,7 @@ import { Wrapper, MainContainer, Title } from '../../GlobalStyle';
 import { Content, InputContainer } from './RequestSubject.styles';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
+import i18next from "i18next";
 
 const RequestSubject = () => {
   return (
@@ -12,14 +13,14 @@ const RequestSubject = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Request subject</Title>
+          <Title>{i18next.t('requestSubject.title')}</Title>
           <InputContainer>
-            <p>Insert subject</p>
-            <input placeholder='Ex. Algebra'/>
-            <p>Your message:</p>
-            <textarea placeholder='Tell us why you want to request this subject'/>
+            <p>{i18next.t('requestSubject.insertSubject')}</p>
+            <input placeholder={i18next.t('requestSubject.insertSubjectPlaceholder')}/>
+            <p>{i18next.t('requestSubject.insertMessage')}</p>
+            <textarea placeholder={i18next.t('requestSubject.insertMessagePlaceholder')}/>
           </InputContainer>
-          <Button text='Send request' fontSize='1rem'/>
+          <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem'/>
         </Content>
       </MainContainer>
     </Wrapper>

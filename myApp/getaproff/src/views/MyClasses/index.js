@@ -46,7 +46,7 @@ const MyClasses = () => {
       id: 4
     },
     {
-      name: i18next.t('myClasses.status.canceled'),
+      name: i18next.t('myClasses.status.cancelled'),
       id: 5
     }];
 
@@ -119,13 +119,13 @@ const MyClasses = () => {
           <FilterContainer>
             <Tab setIndex={setTabIndex} flexDirection='column'>
               {/* index = 0 */}
-              <TabItem style={{ borderRadius: '0.625rem' }} fontSize="1.1rem">Requested</TabItem>
+              <TabItem style={{ borderRadius: '0.625rem' }} fontSize="1.1rem">{i18next.t('myClasses.requested')}</TabItem>
               {/* index = 1 */}
               {
-                currUser.teacher ? <TabItem fontSize="1.1rem">Offered</TabItem> : <></>
+                currUser.teacher ? <TabItem fontSize="1.1rem">{i18next.t('myClasses.offered')}</TabItem> : <></>
               }
             </Tab>
-            <Filter>Filter status:</Filter>
+            <Filter>{i18next.t('myClasses.filter')}</Filter>
             <SelectContainer>
               <SelectDropdown options={options} handler={handleFilter}/>
             </SelectContainer>
@@ -133,7 +133,7 @@ const MyClasses = () => {
           <CardContainer>
             {tabIndex === 1 ?
                 <>
-                  {offeredClasses.length === 0 && <h1>Parece que aun no tenes clases</h1>}
+                  {offeredClasses.length === 0 && <h1>{i18next.t('myClasses.noOffered')}</h1>}
                   {offeredClasses.map((Class, index) => {
                   return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.student}
                   price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={true} handlers={handler}/>

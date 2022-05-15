@@ -10,6 +10,7 @@ import { userService }  from "../../services";
 import authService from "../../services/authService";
 import { useNavigate,  useParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
+import i18next from "i18next";
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
@@ -59,15 +60,15 @@ const RequestClass = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Request class to {teacherInfo && teacherInfo.name}</Title>
+          <Title>{i18next.t('requestClass.title')} {teacherInfo && teacherInfo.name}</Title>
           <InputContainer>
-            <p>Select subject</p>
-            <SelectDropdown type="Subjects" value={subjectIdx} handler={handleSubject}
+            <p>{i18next.t('requestClass.selectSubject')}</p>
+            <SelectDropdown type={i18next.t('requestClass.subjects')} value={subjectIdx} handler={handleSubject}
                             options={subjects}/>
-            <p>Select Level</p>
-            <SelectDropdown type="Levels" handler={handleLevel} options={levels} disabled={levels.length === 1 }/>
+            <p>{i18next.t('requestClass.selectLevel')}l</p>
+            <SelectDropdown type={i18next.t('requestClass.levels')} handler={handleLevel} options={levels} disabled={levels.length === 1 }/>
           </InputContainer>
-          <Button text='Send request' fontSize='1rem' callback={handleClassRequest}/>
+          <Button text={i18next.t('requestClass.sendRequest')} fontSize='1rem' callback={handleClassRequest}/>
         </Content>
       </MainContainer>
     </Wrapper>

@@ -167,11 +167,11 @@ const MyFiles = () => {
       <Navbar />
       <MainContainer>
         <Content>
-          <Title>Mis archivos</Title>
-          <h5>Filtrar por:</h5>
+          <Title>{i18next.t('myFiles.title')}</Title>
+          <h5>{i18next.t('myFiles.filterBy')}</h5>
           <SelectContainer>
             <FilterContainer>
-              <p>Subject:</p>
+              <p>{i18next.t('myFiles.subject')}:</p>
               {subject ? (
                 <SelectDropdown
                   options={currentSubjects}
@@ -183,7 +183,7 @@ const MyFiles = () => {
               )}
             </FilterContainer>
             <FilterContainer>
-              <p>Level:</p>
+              <p>{i18next.t('myFiles.level')}:</p>
               <SelectDropdown
                 options={currentLevels}
                 handler={handleLevelChange}
@@ -195,13 +195,13 @@ const MyFiles = () => {
             <thead>
               <Row>
                 <Headers style={{ width: "45%" }}>
-                  {i18next.t("files.file")}
+                  {i18next.t("myFiles.file")}
                 </Headers>
                 <Headers style={{ width: "20%" }}>
-                  {i18next.t("files.subject")}
+                  {i18next.t("myFiles.subject")}
                 </Headers>
                 <Headers style={{ width: "30%" }}>
-                  {i18next.t("files.level")}
+                  {i18next.t("myFiles.level")}
                 </Headers>
                 <Headers style={{ width: "5%" }}>
                   <CheckBox checked={checkAll} handleCheck={handleCheckAll}/>
@@ -225,7 +225,7 @@ const MyFiles = () => {
           <ButtonContainer>
             <Button
               callback={handleShow}
-              text="Agregar Archivos"
+              text= {i18next.t('myFiles.add')}
               fontSize="1rem"
             />
             {filteredFiles.filter(file => file.selected).length === 0 ? (
@@ -233,7 +233,7 @@ const MyFiles = () => {
             ) : (
               <Button
                 callback={handleDelete}
-                text="Borrar Archivos"
+                text={i18next.t('myFiles.remove')}
                 fontSize="1rem"
               />
             )}
@@ -242,7 +242,7 @@ const MyFiles = () => {
           {/* MODAL */}
           <Modal show={show} onHide={handleShow} size="xl">
             <Modal.Header closeButton>
-              <Title>Agregar Archivo</Title>
+              <Title>{i18next.t('myFiles.new.title')}</Title>
             </Modal.Header>
             <ModalBody>
               <input
@@ -254,10 +254,10 @@ const MyFiles = () => {
                 multiple
                 onClick={(event) => event.target.value = null}
               />
-              <h3>Elija en que clases quiere disponiblizar el archivo</h3>
+              <h3>{i18next.t('myFiles.new.chooseSubjects')}</h3>
               <SelectContainer>
                 <FilterContainer>
-                  <p>Subject:</p>
+                  <p>{i18next.t('myFiles.subject')}:</p>
                   {subject ? (
                     <SelectDropdown
                       options={currentSubjects}
@@ -269,7 +269,7 @@ const MyFiles = () => {
                   )}
                 </FilterContainer>
                 <FilterContainer>
-                  <p>Level:</p>
+                  <p>{i18next.t('myFiles.level')}:</p>
                   <SelectDropdown
                     options={currentLevels}
                     handler={handleLevelChange}
@@ -295,7 +295,7 @@ const MyFiles = () => {
               </table>
               <ModalButtonContainer>
                 <Button
-                  text="Elegir archivos"
+                  text={i18next.t('myFiles.new.chooseFiles')}
                   fontSize="1rem"
                   callback={openFileUpload}
                 />
@@ -304,12 +304,12 @@ const MyFiles = () => {
                     color="grey"
                     fontSize="1rem"
                     callback={handleShow}
-                    text="Cancelar"
+                    text={i18next.t('myFiles.new.cancel')}
                   />
                   <Button
                     callback={handleUpload}
                     fontSize="1rem"
-                    text="Subir archivos"
+                    text={i18next.t('myFiles.new.upload')}
                   />
                 </div>
               </ModalButtonContainer>

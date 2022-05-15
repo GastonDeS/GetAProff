@@ -148,6 +148,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,"/users/{uid}/classes").hasAuthority("USER_STUDENT")
                         .antMatchers("/**").permitAll() //TODO check why this doesnt work
+                .anyRequest().permitAll()
                 .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
