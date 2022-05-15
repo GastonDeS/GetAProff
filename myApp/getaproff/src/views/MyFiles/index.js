@@ -23,6 +23,7 @@ import {
   useMyFilesFetch,
   ALL_LEVELS,
 } from "../../hooks/useMyFilesFetch";
+import { axiosService, filesService } from "../../services";
 
 const MyFiles = () => {
   const inputFile = useRef(null);
@@ -36,6 +37,8 @@ const MyFiles = () => {
     newFiles,
     checkAll,
     allFiles,
+    currentUser,
+    setReload,
     setShow,
     setNewFiles, 
     setAllFiles,
@@ -50,26 +53,33 @@ const MyFiles = () => {
     if (inputFile && inputFile.current) inputFile.current.click();
   };
 
-  const handleUpload = () => {
-    let files = [];
-    newFiles.forEach(async (item) => {
+  const handleUpload = async () => {
+    for (var i = 0; i < newFiles.length; i++) {
       const form = new FormData();
-      form.append("file", item.file);
-      await axios.post('subject-files/145/' + subject.id + '/' + level, form)
-      .then(res => {
-        files.push({
-          first: res.data.name,
-          second: res.data.subject.name,
-          third: i18next.t("subjects.levels." + res.data.level),
-          subjectId: res.data.subject.subjectId,
-          levelId: res.data.level,
-          id: res.data.id,
-          selected: false
-        });
-      })
-      .catch(error => {});
-      setAllFiles(allFiles.concat(files));
-    })
+      form.append("file", newFiles[i].file);
+      await filesService.addSubjectFiles(currentUser.id, level, subject.id, form);
+    }
+    setAllFiles([]);
+    setNewFiles([]);
+    setReload(true);
+    // newFiles.forEach(async (item) => {
+    //   const form = new FormData();
+    //   form.append("file", item.file);
+    //   await axios.post('subject-files/145/' + subject.id + '/' + level, form)
+    //   .then(res => {
+    //     files.push({
+    //       first: res.data.name,
+    //       second: res.data.subject.name,
+    //       third: i18next.t("subjects.levels." + res.data.level),
+    //       subjectId: res.data.subject.subjectId,
+    //       levelId: res.data.level,
+    //       id: res.data.id,
+    //       selected: false
+    //     });
+    //   })
+    //   .catch(error => {});
+    //   setAllFiles(allFiles.concat(files));
+    // })
     handleShow();
   }
 
@@ -99,18 +109,24 @@ const MyFiles = () => {
     }));
   };
 
-  const handleDelete = () => {
-    setDeleted([]);
-    filteredFiles.forEach((file) => {
-      if (file.selected) {
-        axios
-        .delete("/subject-files/" + file.id)
-        .then(() => {
-          setDeleted((previous) => [...previous, file.id]);
-        })
-        .catch((error) => {});
+  const handleDelete = async () => {
+    for (var i = 0; i < filteredFiles.length; i++) {
+      if (filteredFiles[i].selected) {
+        await filesService.removeSubjectFiles(filteredFiles[i].id);
       }
-    });
+    }
+    // filteredFiles.forEach((file) => {
+    //   if (file.selected) {
+    //     axios
+    //     .delete("/subject-files/" + file.id)
+    //     .then(() => {
+    //       setDeleted((previous) => [...previous, file.id]);
+    //     })
+    //     .catch((error) => {});
+    //   }
+    // });
+    setAllFiles([]);
+    setReload(true);
   };
 
   const handleCheckAll = (event) => {
@@ -151,11 +167,11 @@ const MyFiles = () => {
       <Navbar />
       <MainContainer>
         <Content>
-          <Title>Mis archivos</Title>
-          <h5>Filtrar por:</h5>
+          <Title>{i18next.t('myFiles.title')}</Title>
+          <h5>{i18next.t('myFiles.filterBy')}</h5>
           <SelectContainer>
             <FilterContainer>
-              <p>Subject:</p>
+              <p>{i18next.t('myFiles.subject')}:</p>
               {subject ? (
                 <SelectDropdown
                   options={currentSubjects}
@@ -167,7 +183,7 @@ const MyFiles = () => {
               )}
             </FilterContainer>
             <FilterContainer>
-              <p>Level:</p>
+              <p>{i18next.t('myFiles.level')}:</p>
               <SelectDropdown
                 options={currentLevels}
                 handler={handleLevelChange}
@@ -179,13 +195,13 @@ const MyFiles = () => {
             <thead>
               <Row>
                 <Headers style={{ width: "45%" }}>
-                  {i18next.t("files.file")}
+                  {i18next.t("myFiles.file")}
                 </Headers>
                 <Headers style={{ width: "20%" }}>
-                  {i18next.t("files.subject")}
+                  {i18next.t("myFiles.subject")}
                 </Headers>
                 <Headers style={{ width: "30%" }}>
-                  {i18next.t("files.level")}
+                  {i18next.t("myFiles.level")}
                 </Headers>
                 <Headers style={{ width: "5%" }}>
                   <CheckBox checked={checkAll} handleCheck={handleCheckAll}/>
@@ -209,7 +225,7 @@ const MyFiles = () => {
           <ButtonContainer>
             <Button
               callback={handleShow}
-              text="Agregar Archivos"
+              text= {i18next.t('myFiles.add')}
               fontSize="1rem"
             />
             {filteredFiles.filter(file => file.selected).length === 0 ? (
@@ -217,7 +233,7 @@ const MyFiles = () => {
             ) : (
               <Button
                 callback={handleDelete}
-                text="Borrar Archivos"
+                text={i18next.t('myFiles.remove')}
                 fontSize="1rem"
               />
             )}
@@ -226,7 +242,7 @@ const MyFiles = () => {
           {/* MODAL */}
           <Modal show={show} onHide={handleShow} size="xl">
             <Modal.Header closeButton>
-              <Title>Agregar Archivo</Title>
+              <Title>{i18next.t('myFiles.new.title')}</Title>
             </Modal.Header>
             <ModalBody>
               <input
@@ -238,10 +254,10 @@ const MyFiles = () => {
                 multiple
                 onClick={(event) => event.target.value = null}
               />
-              <h3>Elija en que clases quiere disponiblizar el archivo</h3>
+              <h3>{i18next.t('myFiles.new.chooseSubjects')}</h3>
               <SelectContainer>
                 <FilterContainer>
-                  <p>Subject:</p>
+                  <p>{i18next.t('myFiles.subject')}:</p>
                   {subject ? (
                     <SelectDropdown
                       options={currentSubjects}
@@ -253,7 +269,7 @@ const MyFiles = () => {
                   )}
                 </FilterContainer>
                 <FilterContainer>
-                  <p>Level:</p>
+                  <p>{i18next.t('myFiles.level')}:</p>
                   <SelectDropdown
                     options={currentLevels}
                     handler={handleLevelChange}
@@ -279,7 +295,7 @@ const MyFiles = () => {
               </table>
               <ModalButtonContainer>
                 <Button
-                  text="Elegir archivos"
+                  text={i18next.t('myFiles.new.chooseFiles')}
                   fontSize="1rem"
                   callback={openFileUpload}
                 />
@@ -288,12 +304,12 @@ const MyFiles = () => {
                     color="grey"
                     fontSize="1rem"
                     callback={handleShow}
-                    text="Cancelar"
+                    text={i18next.t('myFiles.new.cancel')}
                   />
                   <Button
                     callback={handleUpload}
                     fontSize="1rem"
-                    text="Subir archivos"
+                    text={i18next.t('myFiles.new.upload')}
                   />
                 </div>
               </ModalButtonContainer>

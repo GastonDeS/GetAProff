@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-@Path("/classroom")
+@Path("/api/classroom")
 @Controller
 public class ClassroomController {
     @Autowired

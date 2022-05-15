@@ -16,7 +16,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/classes")
+@Path("/api/classes")
 @Controller
 public class ClassesController {
 

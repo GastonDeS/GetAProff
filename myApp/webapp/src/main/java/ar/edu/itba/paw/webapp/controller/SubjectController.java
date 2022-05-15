@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("/subjects")
+@Path("/api/subjects")
 @Component
 public class SubjectController {
 

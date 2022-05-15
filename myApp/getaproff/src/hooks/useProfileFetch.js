@@ -3,7 +3,7 @@ import AuthService from "../services/authService";
 import i18next from "i18next";
 
 import ProfileImg from '../assets/img/no_profile_pic.jpeg';
-import { userService } from '../services';
+import { userService, filesService } from '../services';
 
 export const useProfileFetch = (id) => {
   const [index, setIndex] = useState(0);
@@ -57,7 +57,7 @@ export const useProfileFetch = (id) => {
         userService.getUserReviews(user.id)
             .then(data => setReviews(data))
 
-        userService.getUserCertifications(user.id)
+        filesService.getUserCertifications(user.id)
             .then(data => setCertifications(data))
       }
       setLoading(false);

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosService, userService } from "../../services";
+import { userService } from "../../services";
 
 import Navbar from "../../components/Navbar";
 import Tab from "../../components/Tab";
@@ -23,6 +23,7 @@ import Default from "../../assets/img/add_img.png";
 import {useForm} from "react-hook-form";
 import {Error} from "../Login/Login.styles";
 import AuthService from "../../services/authService";
+import i18next from "i18next";
 
 
 const Register = () => {
@@ -78,15 +79,15 @@ const Register = () => {
       <MainContainer>
         <FormContainer>
           <TabContainer>
-            <WelcomeText>Welcome</WelcomeText>
+            <WelcomeText>{i18next.t('register.title')}</WelcomeText>
             <Tab setIndex={setIndex} setValue={setValue} style={{ borderRadius: "2rem" }} onChange={onTabChange}>
               {/* index = 0 */}
               <TabItem style={{ borderBottomLeftRadius: "2rem" }}>
-                  Teacher
+                  {i18next.t('register.teacher')}
               </TabItem>
               {/* index = 1 */}
               <TabItem style={{ borderBottomRightRadius: "2rem" }}>
-                Student
+                  {i18next.t('register.student')}
               </TabItem>
             </Tab>
           </TabContainer>
@@ -97,54 +98,54 @@ const Register = () => {
               <DisplayImage  register={register} name="ImgInput" image={displayImage} onImageChange={onImageChange}/>
               </div>
               <InputWrapper>
-                <Input register={register} name="NameInput" options={{required: {value: true, message: "This field is required"}}} type="text" placeholder="Name" />
+                <Input register={register} name="NameInput" options={{required: {value: true, message: i18next.t('register.requiredField')}}} type="text" placeholder={i18next.t('register.namePlaceholder')} />
                 <Input register={register} name="MailInput"
                        options={{
                          required: {
                            value: true,
-                           message: "This field is required"
+                           message: i18next.t('register.requiredField')
                          },
                          pattern: {
                            value: EMAIL_PATTERN,
-                           message: "You must enter a valid mail"
+                           message: i18next.t('register.invalidFormat')
                          }
-                       }} type="text" placeholder="mail@example.com"  />
+                       }} type="text" placeholder={i18next.t('register.mailPlaceholder')} />
                 {errors.MailInput && <Error>{errors.MailInput.message}</Error>}
                 <Input register={register} name="PassInput"
                        options={{
                          required: {
                            value: true,
-                           message: "This field is required"
+                           message: i18next.t('register.requiredField')
                          },
                          minLength: {
                            value: 8,
-                           message: "Password must have at least 8 characters"
+                           message: i18next.t('register.shortPassword')
                          }
-                       }} type="password" placeholder="Password"  />
+                       }} type="password" placeholder={i18next.t('register.password')}  />
                 {errors.PassInput && <Error>{errors.PassInput.message}</Error>}
                 <Input register={register} name="ConfirmPassInput"
                        options={{
                          required: {
-                           value: true, message: "This field is required"
+                           value: true, message: i18next.t('register.requiredField')
                          },
                          validate: value => value === getValues("PassInput") || "The passwords don't match"
-                       }} type="password" placeholder="Confirm Password"  />
+                       }} type="password" placeholder={i18next.t('register.confirmPasswordPlaceholder')}  />
                 {errors.ConfirmPassInput && <Error>{errors.ConfirmPassInput.message}</Error>}
                 {index === 0 ? (
                   <>
                     <Textarea register={register} options={{
                          required: {
                            value: true,
-                           message: "This field is required"
+                           message: i18next.t('register.requiredField')
                          }
-                       }} name="DescriptionInput" placeholder="Description" />
+                       }} name="DescriptionInput" placeholder={i18next.t('register.descriptionPlaceholder')} />
                     {errors.DescriptionInput && <Error>{errors.DescriptionInput.message}</Error>}
                     <Textarea register={register} options={{
                          required: {
                            value: true,
-                           message: "This field is required"
+                           message: i18next.t('register.requiredField')
                          }
-                       }} name="ScheduleInput" placeholder="Schedule" />
+                       }} name="ScheduleInput" placeholder={i18next.t('register.schedulePlaceholder')} />
                     {errors.ScheduleInput && <Error>{errors.ScheduleInput.message}</Error>}
                   </>
                 ) : (
@@ -153,11 +154,11 @@ const Register = () => {
               </InputWrapper>
             </InputContainer>
             <ButtonContainer>
-              <Button type="Submit">Sign up</Button>
+              <Button type="Submit">{i18next.t('register.signUp')}</Button>
             </ButtonContainer>
             <Request>
-              <p>Already have an account?</p>
-              <button onClick={() => { navigate('/users/login')}}>Login</button>
+              <p>{i18next.t('register.alreadyRegistered')}</p>
+              <button onClick={() => { navigate('/users/login')}}>{i18next.t('register.login')}</button>
             </Request>
           </Form>
         </FormContainer>

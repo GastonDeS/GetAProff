@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from 'prop-types';
 import i18next from "i18next";
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,10 +24,11 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
 import {Headers, MainContainer, Request, Row, Table, Wrapper} from "../../GlobalStyle";
-import FilesService from "../../services/filesService";
+import { filesService } from "../../services/index";
 import Dropdown from "../../components/DropDown";
 import { userService } from "../../services/index";
 import { useProfileFetch } from "../../hooks/useProfileFetch";
+import {Toast} from "react-bootstrap";
 
 const Profile = () => {
   const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
@@ -62,7 +63,13 @@ const Profile = () => {
     setFavoriteStatus(teacherId, currentUser.id);
     setIsFaved(!isFaved);
   }
+  const [show, setShow] = useState(false);
 
+  const shareProfile = () => {
+    navigator.clipboard.writeText(window.location.href).then(r => {
+      setShow(true);
+    });
+  }
   const requestClass = () => {
     navigate(`/users/${id}/class-request`)
   }
@@ -91,19 +98,22 @@ const Profile = () => {
                   </StarsReviews>
                 }
               </ProfileName>
+              <Toast position='top-end' onClose={() => setShow(false)} show={show} delay={3000} autohide>
+                <Toast.Body>{i18next.t('profile.shareSuccess')}</Toast.Body>
+              </Toast>
               <ProfileInfoButtons>
                 {currentUser && currentUser.id === user.id ? (
                   isTeacher ? 
                   <>
                     <Dropdown brand={i18next.t('profile.edit.edit')} options={editOptions} size="1rem" color="white" background="var(--secondary)" radius="2rem" padding="0.45em 1.3em"/>
-                    <Button text={i18next.t('profile.share')} fontSize="1rem"/> 
+                    <Button text={i18next.t('profile.share')} fontSize="1rem"/>
                   </> : 
                   <Button text={i18next.t('profile.editProfile')} fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
                   <>
                     <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>
                     <Button text={!isFaved ? i18next.t('profile.addFavourites') : i18next.t('profile.removeFavourites')} callback={handleFavoriteState} fontSize="1rem"/>
-                    <Button text={i18next.t('profile.share')} fontSize="1rem"/>
+                    <Button text={i18next.t('profile.share')} callback={shareProfile} fontSize="1rem"/>
                   </>
                 )}
               </ProfileInfoButtons>
@@ -135,7 +145,7 @@ const Profile = () => {
                         return (
                         <li key={certification.id}>
                           <Request>
-                            <button onClick={() => window.open(URL.createObjectURL(new Blob([FilesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
+                            <button onClick={() => window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
                           </Request>
                         </li>
                       )})}

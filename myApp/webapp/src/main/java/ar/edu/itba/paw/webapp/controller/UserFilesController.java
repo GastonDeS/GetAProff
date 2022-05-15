@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("/user-files")
+@Path("/api/user-files")
 @Component
 public class UserFilesController {
 
@@ -37,7 +37,7 @@ public class UserFilesController {
 
     @DELETE
     @Path("/{file}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response deleteUserSubjectFile(@PathParam("file") Long file) {
         int success = userFileService.deleteFile(file);
         return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
@@ -46,7 +46,7 @@ public class UserFilesController {
     @POST
     @Path("/{id}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response uploadUserSubjectFiles(@PathParam("id") Long id, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);

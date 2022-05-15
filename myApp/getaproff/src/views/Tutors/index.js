@@ -37,10 +37,10 @@ const Tutors = () => {
   );
   const {dirtyFields} = useFormState({control})
   const orders = [
-    {name: "Price Ascending", id: 1},
-    {name: "Price Descending", id: 2},
-    {name: "Rate Ascending", id: 3},
-    {name: "Rate Descending", id: 4},
+    {name: i18next.t('tutors.priceAsc'), id: 1},
+    {name: i18next.t('tutors.priceDesc'), id: 2},
+    {name: i18next.t('tutors.rateAsc'), id: 3},
+    {name: i18next.t('tutors.rateDesc'), id: 4},
   ];
   const rating = [0, 1, 2, 3, 4];
 
@@ -93,14 +93,14 @@ const Tutors = () => {
       <Navbar />
       <MainContainer>
         <FiltersContainer>
-          <h3>Filtros</h3>
+          <h3>{i18next.t('tutors.filters')}</h3>
           <form
             id="filterForm"
             style={{ display: "flex", flexDirection: "column" }}
             onSubmit={handleSubmit(onSubmit)}
           >
             <FilterSection>
-              <h4>Ordenar por</h4>
+              <h4>{i18next.t('tutors.orderBy')}</h4>
               <SelectDropdown
                   name={"order"}
                   register={register}
@@ -109,7 +109,7 @@ const Tutors = () => {
               />
             </FilterSection>
             <FilterSection>
-              <h4>Precio Maximo</h4>
+              <h4>{i18next.t('tutors.maxPrice')}</h4>
               <RangeSlider
                   register={register}
                   name="maxPrice"
@@ -120,7 +120,7 @@ const Tutors = () => {
               />
             </FilterSection>
             <FilterSection>
-              <h4>Nivel</h4>
+              <h4>{i18next.t('tutors.level')}</h4>
               <Form.Group>
                 {Levels.map((object, index) => {
                   return (
@@ -137,7 +137,7 @@ const Tutors = () => {
               </Form.Group>
             </FilterSection>
             <FilterSection>
-              <h4>Rating</h4>
+              <h4>{i18next.t('tutors.rating')}</h4>
               {rating.map((rating) => {
                 return (
                   <Form.Check
@@ -158,7 +158,7 @@ const Tutors = () => {
                     <Form.Check.Label>
                       <div style={{ width: "100%", display: "flex" }}>
                         <RatingStars markedStars={rating} key={rating} />
-                        <p style={{ marginLeft: "3px" }}>o más</p>
+                        <p style={{ marginLeft: "3px" }}>{i18next.t('tutors.orMore')}</p>
                       </div>
                     </Form.Check.Label>
                   </Form.Check>
@@ -167,11 +167,11 @@ const Tutors = () => {
             </FilterSection>
             <hr />
             <div style={{ alignSelf: "center" }}>
-              <Button text={"Aplicar filtros"}/>
+              <Button text={i18next.t('tutors.applyFilters')}/>
             </div>
             {checkIfDirty() && (
               <div style={{ alignSelf: "center", marginTop: "8px" }}>
-                <Button text={"Limpiar filtros"} callback={resetForm} />
+                <Button  text={i18next.t('tutors.clearFilters')} callback={resetForm} />
               </div>
             )}
           </form>

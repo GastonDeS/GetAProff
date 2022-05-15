@@ -53,8 +53,8 @@ const Navbar = ({ empty }) => {
               <Dropdown brand={i18next.t('navbar.myAccount')} options={options} endOption={endOption} weight="bold"/>
             </Container> :
             <Container>
-              <Button text='Login' callback={() => { navigate('/users/login')}}/>
-              <Button text='Register' callback={() => { navigate('/users/new')}}/>
+              <Button text={i18next.t('navbar.login')} callback={() => { navigate('/users/login')}}/>
+              <Button text={i18next.t('navbar.register')} callback={() => { navigate('/users/new')}}/>
             </Container>)
         }
       </Content>

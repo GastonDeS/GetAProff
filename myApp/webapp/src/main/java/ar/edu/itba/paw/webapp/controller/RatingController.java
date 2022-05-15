@@ -4,18 +4,19 @@ import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Rating;
 import ar.edu.itba.paw.webapp.dto.RatingDto;
-import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("/ratings")
+@Path("/api/ratings")
 @Component
 public class RatingController {
 

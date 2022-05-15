@@ -11,6 +11,7 @@ import {TutorContainer} from "../Home/Home.styles";
 import { userService } from "../../services";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
+import i18next from "i18next";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);
@@ -54,7 +55,7 @@ const Favorites = () => {
         <PageContainer>
             <TutorContainer>
             { (favoriteUsersList.length === 0)?
-                <h1>No tutors added to favourites yet!</h1>
+                <h1>{i18next.t('favourites.empty')}</h1>
             :
                 favoriteUsersList.map(item => {
                         return <TutorCard key={item.id} user={item} ima/>

@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Path("users")
+@Path("/api/users")
 @Component
 public class UsersController {
 
@@ -189,6 +189,7 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 
+    //TODO: SE PODRIA BORRAR
     @GET
     @Path("/subjects/levels/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")

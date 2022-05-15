@@ -118,36 +118,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
-                        .antMatchers(HttpMethod.GET,"/user").hasAuthority("USER_STUDENT")
-                        .antMatchers(HttpMethod.GET,"/classes").hasAuthority("USER_STUDENT") // asi esta bien limito cuando se pide cada uno con los links despues
-//                        .antMatchers(HttpMethod.GET, "/classroom").hasAuthority("USER_STUDENT") // TODO ADD ACCESS
-                        .antMatchers(HttpMethod.GET, "/classroom/{classId}").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
-                        .antMatchers(HttpMethod.GET, "/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
-                        .antMatchers(HttpMethod.GET, "/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
-                        .antMatchers(HttpMethod.POST, "/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroomAsTeacher(authentication, #classId)")
-                        .antMatchers(HttpMethod.POST, "/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
-                        .antMatchers(HttpMethod.POST, "/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
-                        .antMatchers(HttpMethod.GET,"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
-//                        .antMatchers(HttpMethod.GET,"/files/user/{id}").hasAuthority("USER_STUDENT") //TODO VERIFY THIS AUTH
-//                        .antMatchers(HttpMethod.POST,"/ratings/new-rating").hasAuthority("USER_STUDENNT") //TODO ONLY IF HAS AN OPEN CLASS
-
-                        .antMatchers(HttpMethod.GET, "/subject-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(HttpMethod.DELETE, "/subject-files/{file}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
-                        .antMatchers(HttpMethod.POST, "/subject-files/{id}/{subject}/{level}").access("@antMatcherVoter.canAccessPostFile(authentication, #id)")
-                        .antMatchers(HttpMethod.DELETE,"/user-files/{file}").hasAuthority("USER_STUDENT") // TODO OWNER
-                        .antMatchers(HttpMethod.POST, "/user-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(HttpMethod.POST,"/users/{uid}/image").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.DELETE,"/users/{userId}/{subjectId}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #userId)")
-                        .antMatchers(HttpMethod.POST,"/users/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(HttpMethod.POST,"/users/{id}/subjects").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(HttpMethod.GET,"/users/available-subjects/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(HttpMethod.GET,"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST,"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.DELETE,"/users/{uid}/favorites/{favTeacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST,"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST,"/users/{uid}/classes").hasAuthority("USER_STUDENT")
-                        .antMatchers("/**").permitAll() //TODO check why this doesnt work
+                    .antMatcher(API_PREFIX+"/**").authorizeRequests()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/user").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/classes").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroomAsTeacher(authentication, #classId)")
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/subject-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.DELETE, API_PREFIX+"/subject-files/{file}").hasAuthority("USER_STUDENT") //TODO RESTRICTED TO OWNER
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/subject-files/{id}/{subject}/{level}").access("@antMatcherVoter.canAccessPostFile(authentication, #id)")
+                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/user-files/{file}").hasAuthority("USER_TEACHER") // TODO OWNER
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/user-files/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/image").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
+                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{userId}/{subjectId}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #userId)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{id}/subjects").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/available-subjects/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
+                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{uid}/favorites/{favTeacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/classes").hasAuthority("USER_STUDENT")
+                        .antMatchers("/**").permitAll()
                 .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
@@ -168,19 +164,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers(HttpMethod.GET,"/user-files/{id}")
-                .antMatchers(HttpMethod.GET,"/ratings/{id}")
-                .antMatchers(HttpMethod.GET,"/subjects/**" /*all public*/)
-                .antMatchers(HttpMethod.GET,"/users")
-                .antMatchers(HttpMethod.GET,"/users/{id}")
-                .antMatchers(HttpMethod.GET,"/users/most-requested")
-                .antMatchers(HttpMethod.GET,"/users/{id}/subjects")
-                .antMatchers(HttpMethod.GET,"/users/subjects/levels/{id}")
-                .antMatchers(HttpMethod.GET,"/users/{uid}/image")
-                .antMatchers(HttpMethod.GET,"/users/top-rated")
-                .antMatchers(HttpMethod.POST, "/users/teacher")
-                .antMatchers(HttpMethod.POST, "/users/student")
-                .antMatchers(HttpMethod.GET,"/files/user/{id}")
                 .antMatchers("/")
                 .antMatchers("/*.js")
                 .antMatchers("/*.css")

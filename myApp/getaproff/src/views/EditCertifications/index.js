@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AuthService from "../../services/authService";
-import axios from "axios";
+import { filesService } from "../../services";
+import i18next from "i18next";
 
 import {
   Wrapper,
@@ -21,6 +22,7 @@ const EditCertifications = () => {
   const [currentUser, setCurrentUser] = useState();
   const [certifications, setCertifications] = useState([]);
   const [checkAll, setCheckAll] = useState(false);
+  const [reload, setReload] = useState(true);
   const inputFile = useRef(null);
 
   const navigate = useNavigate();
@@ -41,11 +43,13 @@ const EditCertifications = () => {
     };
   };
 
-  const handleDelete = () => {
-    certifications.filter((file) => file.selected).forEach((file) => {
-      axios.delete('/user-files/' + file.id);
-    });
-    setCertifications(certifications.filter(file => !file.selected));
+  const handleDelete = async () => {
+    const files = certifications.filter((file) => file.selected);
+    for (var i = 0; i < files.length; i++) {
+      await filesService.removeCertification(files[i].id);
+    }
+    setCertifications([]);
+    setReload(true);
   };
 
   const handleUpload = async (event) => {
@@ -54,19 +58,17 @@ const EditCertifications = () => {
       if (certifications.filter(item => item.name === files[i].name).length === 0) {
         const form = new FormData();
         form.append("file", files[i]);
-        const res = await axios.post('/user-files/' + currentUser.id, form);
-        setCertifications(previous => [...previous, {
-          ...res.data,
-          selected: false
-        }]);
+        await filesService.addCertification(currentUser.id, form);
       };
     };
+    setCertifications([]);
+    setReload(true);
   };
 
-  const handleCheckedFile = (checked, id) => {
+  const handleCheckedFile = (checked, data) => {
     setCertifications(
       certifications.map((file) => {
-        if (Number(file.id) === id) file.selected = checked;
+        if (Number(file.id) === data.id) file.selected = checked;
         return file;
       })
     );
@@ -76,7 +78,7 @@ const EditCertifications = () => {
     return (
       <DeleteButton>
         {displayButtons()}
-        <Button text="Delete" fontSize="1rem" color="red" callback={handleDelete}/>
+        <Button text={i18next.t('certifications.delete')} fontSize="1rem" color="red" callback={handleDelete}/>
       </DeleteButton>
     )
   };
@@ -85,7 +87,7 @@ const EditCertifications = () => {
     return (
       <ButtonContainer>
         <label>
-          <Button text="Upload file" fontSize="1rem" callback={openFile} />
+          <Button text={i18next.t('certifications.choose')} fontSize="1rem" callback={openFile} />
           <input
             type="file"
             id="certification"
@@ -95,19 +97,14 @@ const EditCertifications = () => {
             multiple
           />
         </label>
-        <Button text="Save changes" fontSize="1rem" callback={() => navigate('/users/' + currentUser.id)}/>
+        <Button text={i18next.t('certifications.save')} fontSize="1rem" callback={() => navigate('/users/' + currentUser.id)}/>
       </ButtonContainer>
     );
   };
 
-  useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-  }, []);
-
-  useEffect(async () => {
-    if (currentUser) {
-      const res = await axios.get("/user-files/" + currentUser.id);
-      res.data.forEach((file) => {
+  const fetchCertifications = async () => {
+    await filesService.getUserCertifications(currentUser.id).then(res => {
+      res.forEach((file) => {
         setCertifications((previous) => [
           ...previous,
           {
@@ -116,8 +113,19 @@ const EditCertifications = () => {
           },
         ]);
       });
+    })
+    setReload(false);
+  }
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+  }, []);
+
+  useEffect(() => {
+    if (reload && currentUser) {
+      fetchCertifications();
     }
-  }, [currentUser]);
+  }, [reload, currentUser]);
 
   useEffect(() => {
     if (certifications && certifications.length === 0) setCheckAll(false) 
@@ -128,11 +136,11 @@ const EditCertifications = () => {
       <Navbar empty={true} />
       <MainContainer>
         <Content>
-          <Title>Edit certifications</Title>
+          <Title>{i18next.t('certifications.title')}</Title>
           <Table>
             <thead>
               <Row>
-                <Headers style={{ width: "95%" }}>Files</Headers>
+                <Headers style={{ width: "95%" }}>{i18next.t('certifications.files')}</Headers>
                 <Headers style={{ width: "5%" }}>
                   <CheckBox checked={checkAll} handleCheck={handleDeleteAll}/>
                 </Headers>

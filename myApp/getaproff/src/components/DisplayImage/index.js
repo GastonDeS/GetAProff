@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React from "react";
 
 import styled from "styled-components";
 import Button from "../Button";
+import i18next from "i18next";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -34,7 +35,7 @@ const DisplayImage = ({ image, onImageChange, register, name }) => {
   return (
     <Wrapper>
       <img src={image} id="img-con" alt="userImage" />
-        <Button type="button" text="Choose photo" fontSize="1rem" callback={openFile} />
+        <Button type="button" text={i18next.t('displayImage.choose')} fontSize="1rem" callback={openFile} />
         <input
             {...register(name)}
             id="usrPhoto"

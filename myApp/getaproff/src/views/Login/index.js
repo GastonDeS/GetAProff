@@ -16,6 +16,7 @@ import {StyledInput} from "../../components/Input";
 import AuthService from "../../services/authService";
 import {useForm} from "react-hook-form";
 import {Request, Wrapper, MainContainer} from "../../GlobalStyle";
+import i18next from "i18next";
 
 const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
@@ -27,19 +28,15 @@ const Login = () => {
   const navigate = useNavigate();
 
 
-  const handleLogin = event => {
+  const handleLogin = async (event) => {
     setInvalidCredentials(false)
-    AuthService
-        .login(event.username, event.password)
-        .then(
-            (token) => {
-              navigate(`/`);
-            },
-            () => {
-              setInvalidCredentials(true)
-            }
-        )
-        .catch(() => navigate("/error"))
+    await AuthService.login(event.username, event.password)
+        .then((token) => {
+          if (token) {
+            navigate(`/`);
+          }
+          setInvalidCredentials(true);
+        });
   };
 
 
@@ -48,23 +45,23 @@ const Login = () => {
         <Navbar empty={true}/>
         <MainContainer>
           <LoginContainer>
-            <WelcomeText>Welcome</WelcomeText>
+            <WelcomeText>{i18next.t('login.welcome')}</WelcomeText>
             <Form onSubmit={handleSubmit(handleLogin)}>
               <InputContainer>
-                {invalidCredentials && <Error>You have entered an invalid username or password</Error>}
+                {invalidCredentials && <Error>{i18next.t('login.invalidCredentials')}</Error>}
                 <InputWrapper>
                   <StyledInput
-                      placeholder="example@gmail.com"
+                      placeholder={i18next.t('login.emailPlaceholder')}
                       {...register(
                           "username",
                           {
                             required: {
                               value: true,
-                              message: 'This field is required'
+                              message: i18next.t('login.requiredField')
                             },
                             pattern: {
                               value: EMAIL_PATTERN,
-                              message: "Invalid format"
+                              message: i18next.t('login.invalidFormat')
                             }
                           })
                       }
@@ -73,13 +70,13 @@ const Login = () => {
                 </InputWrapper>
                 <InputWrapper>
                   <StyledInput type="password"
-                               placeholder="password"
+                               placeholder={i18next.t('login.passwordPlaceholder')}
                       {...register(
                           "password",
                           {
                             required: {
                               value: true,
-                              message: 'This field is required'
+                              message: i18next.t('login.requiredField')
                             }
                           })
                       }
@@ -89,15 +86,15 @@ const Login = () => {
               </InputContainer>
               <ButtonContainer>
                 <Button type="submit">
-                  Login
+                  {i18next.t('login.login')}
                 </Button>
               </ButtonContainer>
             </Form>
             <Request>
-              <p>Don't have an account yet?</p>
+              <p> {i18next.t('login.notRegistered')}</p>
               <button onClick={() => {
                 navigate('/users/new')
-              }}>Sign Up
+              }}> {i18next.t('login.signUp')}
               </button>
             </Request>
           </LoginContainer>
