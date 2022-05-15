@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.User;
 
 public interface EmailService {
 
-    void sendNewClassMessage(String to, String userFrom, String subject, String localAddr);
+    void sendNewClassMessage(String to, String userFrom, String subject, long classId,String localAddr);
 
     void sendStatusChangeMessage(Lecture myLecture, String localAddr);
 

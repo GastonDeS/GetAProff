@@ -1,3 +1,4 @@
+import React from "react";
 import {Wrapper} from "../../GlobalStyle";
 import Navbar from "../../components/Navbar";
 import Button from "../../components/Button";
