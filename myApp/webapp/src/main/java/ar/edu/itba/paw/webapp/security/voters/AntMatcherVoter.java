@@ -98,9 +98,9 @@ public class AntMatcherVoter {
         return id.equals(getUserId(authentication));
     }
 
-    public boolean canRate(Authentication authentication, Long tid) {
+    public boolean canRate(Authentication authentication, Long teacherId) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        return ratingService.availableToRate(tid, getUserId(authentication));
+        return ratingService.availableToRate(teacherId, getUserId(authentication));
     }
 }
 

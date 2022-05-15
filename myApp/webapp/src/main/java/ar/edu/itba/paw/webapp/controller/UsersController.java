@@ -42,9 +42,6 @@ public class UsersController {
     private TeachesService teachesService;
 
     @Autowired
-    private RatingService ratingService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -52,9 +49,6 @@ public class UsersController {
 
     @Autowired
     private UserRoleService userRoleService;
-
-    @Autowired
-    private LectureService lectureService;
 
     @Context
     private UriInfo uriInfo;
@@ -310,23 +304,6 @@ public class UsersController {
                               @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
         Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
         return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    @POST
-    @Path("/{uid}/reviews")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
-    @Consumes(value = { "application/vnd.getaproff.api.v1+json" })
-    public Response rateTeacher(@PathParam("uid") Long teacherId, NewRatingDto newRatingDto){
-        //TODO: validar que exista la clase entre alumno y teacher y que este en estado terminado
-        final Optional<Rating> rating = ratingService.addRating(newRatingDto.getTeacherId(), newRatingDto.getStudentId(),
-                    newRatingDto.getRate(), newRatingDto.getReview());
-        if (!rating.isPresent())
-            return Response.status(Response.Status.CONFLICT).build();
-        if(newRatingDto.getTeacherId().equals(newRatingDto.getStudentId()))
-            return Response.status(Response.Status.FORBIDDEN).build();
-        //TODO: cual seria el id de la review?
-        URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
-        return Response.created(location).build();
     }
 }
 
