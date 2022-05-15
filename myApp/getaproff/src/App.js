@@ -18,7 +18,7 @@ import RequestClass from './views/RequestClass';
 import EditCertifications from './views/EditCertifications';
 import EditProfile from './views/EditProfile';
 import Tutors from "./views/Tutors";
-import Classrom from './views/Classroom';
+import Error404 from './views/Error404'
 import Favorites from './views/Favorites';
 import Classroom from "./views/Classroom";
 import RateTeacher from "./views/RateTeacher";
@@ -43,6 +43,7 @@ const App = () => {
         <Route path='/tutors' element={<Tutors/> } />
         <Route path='/classroom/:id' element={ <Classroom/> }/>
         <Route path='/users/:id/reviews' element={<RateTeacher/>}/>
+        <Route path='*' element ={<Error404/>} />
       </Routes>
     </Router>
   );

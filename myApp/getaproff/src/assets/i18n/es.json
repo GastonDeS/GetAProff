@@ -253,5 +253,10 @@
     "priceDesc": "Precio descendente",
     "rateAsc": "Calificación ascendente",
     "rateDesc": "Calificación descendente"
+  },
+  "error404": {
+    "title": "Ups!",
+    "description": "Parece que no pudimos encontrar la página que buscas",
+    "btnText": "Volver al Inicio"
   }
 }

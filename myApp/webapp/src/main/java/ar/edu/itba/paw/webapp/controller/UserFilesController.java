@@ -6,6 +6,8 @@ import ar.edu.itba.paw.webapp.dto.UserFileDto;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,8 @@ public class UserFilesController {
 
     @Context
     private UriInfo uriInfo;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserFilesController.class);
 
     @GET
     @Path("/{uid}")
@@ -51,6 +55,9 @@ public class UserFilesController {
                                     @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
         final Optional<UserFile> userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid);
+        if (userFile.isPresent()) {
+            LOGGER.debug("File uploaded successfully");
+        }
         return userFile.isPresent() ? Response.ok(UserFileDto.fromUser(uriInfo, userFile.get())).build() :
                 Response.status(Response.Status.BAD_REQUEST).build();
     }
