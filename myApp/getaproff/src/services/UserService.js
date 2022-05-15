@@ -4,6 +4,7 @@ const PATH = '/users'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 export class UserService {
+    //Users Controller
     async getHomeTeachers(type) {
         try {
             return await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${type}`, {});

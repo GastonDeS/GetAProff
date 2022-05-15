@@ -133,7 +133,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.DELETE, API_PREFIX+"/subject-files/{fileId}").access("@antMatcherVoter.canAccessDeleteSubjectFile(authentication, #fileId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/subject-files/{uid}/{subject}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/user-files/{fileId}").access("@antMatcherVoter.canAccessDeleteCertification(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST, API_PREFIX+"/user-files/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/user-files/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/image").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{userId}/{subjectId}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #userId)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/teacher").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
