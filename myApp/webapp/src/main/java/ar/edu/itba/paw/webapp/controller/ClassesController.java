@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.webapp.dto.ClassroomDto;
+import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/api/classes")
@@ -53,4 +56,17 @@ public class ClassesController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
+
+    @POST
+    @Consumes(value = "application/vnd.getaproff.api.v1+json")
+    public Response requestClass(ClassRequestDto classRequestDto) {
+        Optional<Lecture> newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
+                classRequestDto.getSubjectId(), classRequestDto.getPrice());
+        if(!newLecture.isPresent()){
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+        URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
+        return Response.created(location).build();
+    }
+
 }

@@ -121,6 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatcher(API_PREFIX+"/**").authorizeRequests()
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/user").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/classes").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/classes").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
@@ -144,7 +145,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{uid}/favorites/{teacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/classes").hasAuthority("USER_STUDENT")
                         .antMatchers("/**").permitAll()
                 .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

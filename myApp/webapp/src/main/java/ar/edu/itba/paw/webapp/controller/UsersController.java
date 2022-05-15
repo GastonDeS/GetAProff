@@ -313,19 +313,6 @@ public class UsersController {
     }
 
     @POST
-    @Path("/{uid}/classes")
-    @Consumes(value = "application/vnd.getaproff.api.v1+json")
-    public Response requestClass(@PathParam("uid") Long teacherId, ClassRequestDto classRequestDto){
-        Optional<Lecture> newLecture = lectureService.create(classRequestDto.getStudentId(), teacherId, classRequestDto.getLevel(),
-                classRequestDto.getSubjectId(), classRequestDto.getPrice());
-        if(!newLecture.isPresent()){
-          return Response.status(Response.Status.CONFLICT).build();
-        }
-        URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
-        return Response.created(location).build();
-    }
-
-    @POST
     @Path("/{uid}/reviews")
     @Produces(value = { "application/vnd.getaproff.api.v1+json" })
     @Consumes(value = { "application/vnd.getaproff.api.v1+json" })
