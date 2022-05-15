@@ -13,8 +13,7 @@ export class UserService {
     async getUserSubjects(uid) {
         try {
             let subjects = []
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {})
                 .then(res => {
                     res.data.forEach(subject => subjects.push(subject));
                     return subjects;
