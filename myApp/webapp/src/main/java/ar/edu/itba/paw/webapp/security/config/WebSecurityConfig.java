@@ -143,8 +143,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{uid}/favorites/{favTeacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/classes").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/user-files/{id}").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/ratings/{id}").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/subjects/**" /*all public*/).permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{id}").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/most-requested").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{id}/subjects").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/subjects/levels/{id}").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{uid}/image").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/top-rated").permitAll()
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/users/teacher").permitAll()
+                        .antMatchers(HttpMethod.POST, API_PREFIX+"/users/student").permitAll()
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/files/user/{id}").permitAll()
                         .antMatchers("/**").permitAll()
                 .and()
+                    .antMatcher("/api/**")
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
