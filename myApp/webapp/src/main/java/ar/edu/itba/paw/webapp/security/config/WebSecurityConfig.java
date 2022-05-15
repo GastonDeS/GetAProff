@@ -129,7 +129,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
-                        .antMatchers(HttpMethod.GET, API_PREFIX+"/subject-files/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/subject-files/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE, API_PREFIX+"/subject-files/{fileId}").access("@antMatcherVoter.canAccessDeleteSubjectFile(authentication, #fileId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/subject-files/{uid}/{subject}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/user-files/{fileId}").access("@antMatcherVoter.canAccessDeleteCertification(authentication, #uid)")

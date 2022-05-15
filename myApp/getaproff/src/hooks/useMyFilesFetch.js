@@ -92,6 +92,7 @@ export const useMyFilesFetch = () => {
         ]);
       });
     });
+    setReload(false);
   };
 
   const fetchSubjects = async () => {
