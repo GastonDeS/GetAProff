@@ -20,6 +20,7 @@ export class AxiosService {
     }
 
      async axiosWrapper(action, path, config, data = {}) {
+        path = "/api"+path;
         switch (action) {
             case this.GET:
                 return await axios.get(path, config);

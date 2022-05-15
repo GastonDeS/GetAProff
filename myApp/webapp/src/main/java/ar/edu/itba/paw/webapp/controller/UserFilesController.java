@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("/user-files")
+@Path("/api/user-files")
 @Component
 public class UserFilesController {
 

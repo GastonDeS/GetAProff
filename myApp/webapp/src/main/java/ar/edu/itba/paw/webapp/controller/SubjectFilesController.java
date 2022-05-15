@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("/subject-files")
+@Path("/api/subject-files")
 @Component
 public class SubjectFilesController {
 
