@@ -19,7 +19,7 @@ public class SubjectFile {
     @Column(nullable = false)
     private byte[] file;
 
-    @ManyToOne(targetEntity = Teaches.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Teaches.class)
     @JoinColumns(value = {
         @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),
         @JoinColumn(name = "subjectLevel", referencedColumnName = "level"),
