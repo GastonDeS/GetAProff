@@ -29,6 +29,11 @@ export const FilterSection = styled.div`
   }
 `;
 
+export const CustomH1 = styled.h2 `
+    margin-top: 10px;
+    font-size: 2rem;
+`;
+
 export const TutorsWrapper = styled.div`
   width: 70%;
   display: flex;
@@ -46,7 +51,7 @@ export const SearchBarContainer = styled.div`
 `;
 
 export const Grid = styled.div`
-  margin: 40px 0;
+  margin: 20px 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;

@@ -6,6 +6,7 @@ import { Card, CardBody, Description, Name, Price, TutorImg } from './TutorCard.
 import RatingStar from 'react-stars';
 import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 import { useNavigate } from 'react-router-dom';
+import { userService } from '../../services';
 
 const TutorCard = ({ user }) => {
   const [image, setImage] = useState(ProfileImg);
@@ -13,10 +14,10 @@ const TutorCard = ({ user }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/users/${user.id}/image`)
+    userService.getUserImg(user.id)
     .then(res => {
-      if (res.data.image) {
-        setImage('data:image/png;base64,' + res.data.image); 
+      if (res) {
+        setImage(res); 
       }
     })
     .catch((error) => {});

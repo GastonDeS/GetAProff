@@ -8,7 +8,7 @@ import {
   Grid,
   StyledPagination,
   TutorsWrapper,
-  SearchBarContainer
+  SearchBarContainer, CustomH1
 } from "./Tutors.styles";
 import SelectDropdown from "../../components/SelectDropdown";
 import RangeSlider from "../../components/RangeSlider";
@@ -22,21 +22,20 @@ import {useForm, useFormState} from "react-hook-form";
 import {userService} from "../../services";
 
 const Tutors = () => {
-  const [order, setOrder] = useState(0);
-  const [level, setLevel] = useState(0);
   const [page, setPage] = useState(1);
   const [pageQty, setPageQty] = useState(0)
-  const [subject, setSubject] = useState();
   const [isFormReseted, setIsFormReseted] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false)
+
   const [tutors, setTutors] = useState([]);
 
   const search = useLocation().search;
   const searchQuery = new URLSearchParams(search).get('search');
 
-  const {register, handleSubmit, getValues, reset, control, setValue} = useForm(
+  const {register, handleSubmit, getValues, reset, control} = useForm(
       {defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
   );
-  const {isDirty} = useFormState({control})
+  const {dirtyFields} = useFormState({control})
   const orders = [
     {name: i18next.t('tutors.priceAsc'), id: 1},
     {name: i18next.t('tutors.priceDesc'), id: 2},
@@ -45,20 +44,18 @@ const Tutors = () => {
   ];
   const rating = [0, 1, 2, 3, 4];
 
-  const myURL = window.location.search;
-
-  //TODO: revisar esto de los parametros para filtros
-
-  //Funciones
-
-  const handlePaging = (event) =>
-    setPage(parseInt(event.currentTarget.innerHTML));
-
-  const cleanFilters = () => {
+  const resetForm = () => {
+    reset(
+        {
+          search: getValues("search"),
+          rating: 0,
+          level: 0,
+          maxPrice: 10000,
+          order: 1
+        }
+    )
     setIsFormReseted(!isFormReseted)
-    reset()
-  };
-
+  }
 
   useEffect( () => {
     userService.getUsers(getValues(), page)
@@ -66,17 +63,17 @@ const Tutors = () => {
           setTutors(res.data);
           setPageQty((parseInt(res.headers['x-total-pages'])));
         })
-  }, [page, isFormReseted])
+  }, [page, formSubmitted, isFormReseted])
 
 
   const onSubmit = (data, e) => {
-    userService.getUsers(data, page)
-        .then( res => {
-          setTutors(res.data);
-          setPageQty((parseInt(res.headers['x-total-pages'])));
-        })
+    setFormSubmitted(!formSubmitted)
     setPage(1)
-  };
+  }
+
+  const checkIfDirty = () =>{
+    return dirtyFields.level || dirtyFields.price || dirtyFields.rating || dirtyFields.order;
+  }
 
   let items = [];
   for (let number = 1; number <= pageQty; number++) {
@@ -84,7 +81,7 @@ const Tutors = () => {
       <PageItem
         key={number}
         active={number === page}
-        onClick={handlePaging}
+        onClick={() => setPage(number)}
       >
         {number}
       </PageItem>
@@ -118,7 +115,7 @@ const Tutors = () => {
                   name="maxPrice"
                   minValue={1}
                   maxValue={10000}
-                  value={9990}
+                  value={getValues("price")}
                   getValues = {getValues}
               />
             </FilterSection>
@@ -172,17 +169,20 @@ const Tutors = () => {
             <div style={{ alignSelf: "center" }}>
               <Button text={i18next.t('tutors.applyFilters')}/>
             </div>
-            {isDirty && (
+            {checkIfDirty() && (
               <div style={{ alignSelf: "center", marginTop: "8px" }}>
-                <Button text={i18next.t('tutors.clearFilters')} callback={cleanFilters} />
+                <Button  text={i18next.t('tutors.clearFilters')} callback={resetForm} />
               </div>
             )}
           </form>
         </FiltersContainer>
         <TutorsWrapper>
           <SearchBarContainer>
-            <SearchBar register={register} name={"search"} getValues = {getValues}/>
+            <SearchBar register={register} name={"search"} value={ getValues("search") } handleSubmit={() => handleSubmit(onSubmit)()}/>
           </SearchBarContainer>
+          {tutors.length !== 0 ?
+              <CustomH1>Profesores enseniando {getValues('search')}</CustomH1> :
+              <CustomH1>No hay profesores para esta busqueda</CustomH1>}
           <Grid>
             {tutors && tutors.map(tutor => {
               return <TutorCard key={tutor.id} user={tutor}/>

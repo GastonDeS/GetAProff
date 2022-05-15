@@ -28,7 +28,7 @@ export const useHomeFetch = () => {
   }
 
   const fetchSubjects = () => {
-    axios.get('/subjects/most-requested')
+    axios.get('/api/subjects/most-requested')
       .then(res => {
           setSubjects([...res.data])
       })
