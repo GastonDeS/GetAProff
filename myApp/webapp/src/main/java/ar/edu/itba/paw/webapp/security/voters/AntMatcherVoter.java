@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.security.voters;
 
-import ar.edu.itba.paw.interfaces.services.LectureService;
-import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.interfaces.services.RatingService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
@@ -31,6 +28,9 @@ public class AntMatcherVoter {
 
     @Autowired
     private RatingService ratingService;
+
+    @Autowired
+    private SubjectFileService subjectFileService;
 
     private Long getUserId(Authentication authentication) {
         return getUser(authentication).getUserid();
@@ -73,6 +73,10 @@ public class AntMatcherVoter {
 //        if (!post.isPresent()) throw new ClassNotFoundException("");
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
+    }
+
+    public boolean canAccessSubjectFile(Authentication authentication, Long id){
+        return !(authentication instanceof AnonymousAuthenticationToken);
     }
 
     public boolean canAccessWithSameId(Authentication authentication, Long id) {
