@@ -28,6 +28,8 @@
     "subjects": "Subjects",
     "reviews": "Reviews",
     "share": "Share profile",
+    "shareSuccess": "Profile link copied to clipboard",
+    "shareError": "Error copying profile link to clipboard",
     "edit": {
       "edit": "Edit",
       "profile": "Profile",
