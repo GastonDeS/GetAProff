@@ -65,9 +65,9 @@ export const useProfileFetch = (id) => {
     }
   },[user]);
 
-  useEffect(() => {
+  useEffect(async () => {
     let current = AuthService.getCurrentUser();
-    userService.checkIfTeacherIsFaved(current.id, id)
+    await userService.checkIfTeacherIsFaved(current.id, id)
         .then(value => {
           setIsFaved(value);
         })

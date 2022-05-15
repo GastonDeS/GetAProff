@@ -47,7 +47,7 @@ const ClassCard = ({ subject, user, level, price, statusCode, isTeacher, classId
       <Body>
         <ClassInfo>
           <h1>{i18next.t('classCard.teacher')}: {user.name}</h1>
-          <p>{i18next.t('classCard.level')}: {level}</p>
+          <p>{i18next.t('classCard.level')}: {i18next.t("subjects.levels." + level)}</p>
           <p>{i18next.t('classCard.price')}: ${price}/{i18next.t('classCard.hour')}</p>
         </ClassInfo>
         <ButtonContainer>

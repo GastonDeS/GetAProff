@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 
 import { InputContainer, Content } from './RequestClass.styles';
 import { Wrapper, MainContainer, Title } from '../../GlobalStyle';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import SelectDropdown from '../../components/SelectDropdown'
-import { userService }  from "../../services";
+import { userService, classesService }  from "../../services";
 import AuthService from "../../services/authService";
 import { useNavigate,  useParams} from "react-router-dom";
 import i18next from "i18next";
@@ -16,7 +15,6 @@ const RequestClass = () => {
   const [level, setLevel] = useState();
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
   const teacher = useParams();
   const [teacherInfo , setTeacherInfo] = useState()
@@ -24,22 +22,19 @@ const RequestClass = () => {
 
   const handleClassRequest = async () => {
     const requestData = {
+      teacherId: teacher.id,
       subject: subject,
-      level: level,
-      teacherId: teacherInfo.id
+      level: level
     };
-    await userService.requestClass(teacher.id, requestData)
+    await classesService.requestClass(requestData)
         .then(res => navigate(`/classroom/${res.headers.location.split('/').pop()}`));
   }
 
-  const handleLevel = (e) => setLevel(e.target.value);
+  const handleIndex = (e) => setLevel(e.target.value);
 
-  const handleSubject = (e) => {
-    setSubject(subjects.filter(s => s.id == e.target.value)[0])
-  }
+  const handleSubject = (e) => setSubject(subjects.filter(s => s.id == e.target.value)[0]);
 
   useEffect(async () => {
-    setCurrentUser(AuthService.getCurrentUser());
     await userService.getUserInfo(teacher.id)
       .then(data => {
         setTeacherInfo(data)
@@ -47,8 +42,8 @@ const RequestClass = () => {
   }, []);
 
   useEffect(async () => {
-    if (loading) {
-      await userService.getUserSubjects(teacher.id)
+    if (teacherInfo) {
+      await userService.getUserSubjects(teacherInfo.id)
         .then(data => {
           data.forEach(item => {
             setSubjects((previous) => [
@@ -56,13 +51,14 @@ const RequestClass = () => {
               {
                 name: item.subject,
                 id: item.id,
+                prices: item.prices,
                 levels: item.levels,
               }
             ]);
           })
         });
     }
-  }, [loading]);
+  }, [teacherInfo]);
 
   useEffect(() => {
     if (subjects.length > 0) {
@@ -72,7 +68,7 @@ const RequestClass = () => {
 
   useEffect( () => {
     if(subject) {
-      setLevels(subject.levels.map(item => {
+      setLevels(subject.levels.map((item) => {
         return {
           name: i18next.t("subjects.levels." + item),
           id: item
@@ -91,10 +87,10 @@ const RequestClass = () => {
           <Title>{i18next.t('requestClass.title')} {teacherInfo && teacherInfo.name}</Title>
           <InputContainer>
             <p>{i18next.t('requestClass.selectSubject')}</p>
-            {!loading && <SelectDropdown type={i18next.t('requestClass.subjects')} value={subject.id} handler={handleSubject}
+            {!loading && <SelectDropdown value={subject.id} handler={handleSubject}
                             options={subjects} disabled={subjects.length === 1}/>}
             <p>{i18next.t('requestClass.selectLevel')}l</p>
-            {!loading && <SelectDropdown type={i18next.t('requestClass.levels')} handler={handleLevel} options={levels} disabled={levels.length === 1}/>}
+            {!loading && <SelectDropdown value={level} handler={handleIndex} options={levels} disabled={levels.length === 1}/>}
           </InputContainer>
           <Button text={i18next.t('requestClass.sendRequest')} fontSize='1rem' callback={handleClassRequest}/>
         </Content>

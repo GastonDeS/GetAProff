@@ -199,26 +199,6 @@ export class UserService {
         }
     }
 
-    async requestClass(uid, requestData) {
-        try {
-            let level = parseInt(requestData.level)
-            let priceIdx = requestData.subject.levels.indexOf(level)
-            let response;
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/classes`,config, {
-                studentId: requestData.studentId,
-                subjectId: requestData.subject.id,
-                level: requestData.level,
-                price: requestData.subject.prices[priceIdx],
-            })
-                .then(res => response = res);
-            return response;
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }
-
     async getUsers(queryParams, page) {
         try {
             let config = {};

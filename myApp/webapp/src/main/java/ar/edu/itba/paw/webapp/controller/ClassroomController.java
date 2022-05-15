@@ -52,6 +52,8 @@ public class ClassroomController {
     @Context
     private UriInfo uriInfo;
 
+    private final Integer SUCCESS = 1;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
 
     @GET
@@ -117,15 +119,15 @@ public class ClassroomController {
 
     @POST
     @Path("/{classId}/status")
-    @Consumes( value = {"application/vnd.getaproff.api.v1+json"})
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
         Lecture lecture = checkLectureExistence(classId);
         //TODO: el alumno no la puede cancelar?
 //        if( newStatus.getStatus() == 4)
 //            if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
 //                return Response.status(Response.Status.FORBIDDEN).build();
-        lectureService.setStatus(classId, newStatus.getStatus());
-        return Response.ok().build();
+        int updated = lectureService.setStatus(classId, newStatus.getStatus());
+        return updated == SUCCESS ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @POST
