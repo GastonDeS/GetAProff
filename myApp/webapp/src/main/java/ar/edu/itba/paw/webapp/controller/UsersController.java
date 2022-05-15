@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Path("users")
+@Path("/api/users")
 @Component
 public class UsersController {
 
