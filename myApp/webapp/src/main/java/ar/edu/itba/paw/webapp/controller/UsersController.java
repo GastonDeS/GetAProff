@@ -160,29 +160,29 @@ public class UsersController {
 
     //Edit profile
     @POST
-    @Path("/{id}/teacher")
+    @Path("/{uid}/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response editProfileTeacher(@PathParam("id") Long id, @Validated(EditUserDto.Teacher.class) @RequestBody EditUserDto editUserDto) {
-        int desc = userService.setUserDescription(id, editUserDto.getDescription());
-        int sch = userService.setUserSchedule(id, editUserDto.getSchedule());
-        int name = userService.setUserName(id, editUserDto.getName());
+    public Response editProfileTeacher(@PathParam("uid") Long uid, @Validated(EditUserDto.Teacher.class) @RequestBody EditUserDto editUserDto) {
+        int desc = userService.setUserDescription(uid, editUserDto.getDescription());
+        int sch = userService.setUserSchedule(uid, editUserDto.getSchedule());
+        int name = userService.setUserName(uid, editUserDto.getName());
         if (editUserDto.getSwitchRole().equals("false")) {
             return (desc == 1 && sch == 1 && name == 1) ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Optional<User> user = userService.findById(id);
-        boolean added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
+        Optional<User> user = userService.findById(uid);
+        boolean added = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId());
         userService.setTeacherAuthorityToUser();
         return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @POST
-    @Path("/{id}/student")
+    @Path("/{uid}/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response editProfileStudent(@PathParam("id") Long id, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
-        int name = userService.setUserName(id, editUserDto.getName());
+    public Response editProfileStudent(@PathParam("uid") Long uid, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
+        int name = userService.setUserName(uid, editUserDto.getName());
         return name == 1 ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
