@@ -77,13 +77,10 @@ export class ClassroomService {
                 status: newStatus,
                 userId: uid
             }
-            let data;
             let config = {
                 headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
-            return await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData)
-            //     .then(res => data = res.data);
-            // return data;
+            return await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData);
         }
         catch (err) {
             console.log(err)

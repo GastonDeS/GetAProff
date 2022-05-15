@@ -129,7 +129,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
-                        .antMatchers(HttpMethod.GET, API_PREFIX+"/subject-files/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/subject-files/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE, API_PREFIX+"/subject-files/{fileId}").access("@antMatcherVoter.canAccessDeleteSubjectFile(authentication, #fileId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/subject-files/{uid}/{subject}/{level}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/user-files/{fileId}").access("@antMatcherVoter.canAccessDeleteCertification(authentication, #uid)")
@@ -141,9 +141,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{id}/subjects").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/users/available-subjects/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{uid}/favorites/{teacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
+                        .antMatchers(API_PREFIX+"/favorites/**").hasAuthority("USER_STUDENT")// TODO check if this works if not separate into the 4 endpoints all with USER_STUDENT
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/ratings/{teacherId}").access("@antMatcherVoter.canRate(authentication, #teacherId)")
                         .antMatchers("/**").permitAll()
                 .and()
