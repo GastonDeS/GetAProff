@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import i18next from "i18next";
-import axios from "axios";
 
 import Navbar from "../../components/Navbar";
 import { MainContainer, Wrapper } from "../../GlobalStyle";
@@ -36,13 +35,11 @@ const MyFiles = () => {
     show,
     newFiles,
     checkAll,
-    allFiles,
     currentUser,
     setReload,
     setShow,
     setNewFiles, 
     setAllFiles,
-    setDeleted,
     setLevel,
     setSubject,
     setFilteredFiles,
@@ -62,24 +59,6 @@ const MyFiles = () => {
     setAllFiles([]);
     setNewFiles([]);
     setReload(true);
-    // newFiles.forEach(async (item) => {
-    //   const form = new FormData();
-    //   form.append("file", item.file);
-    //   await axios.post('subject-files/145/' + subject.id + '/' + level, form)
-    //   .then(res => {
-    //     files.push({
-    //       first: res.data.name,
-    //       second: res.data.subject.name,
-    //       third: i18next.t("subjects.levels." + res.data.level),
-    //       subjectId: res.data.subject.subjectId,
-    //       levelId: res.data.level,
-    //       id: res.data.id,
-    //       selected: false
-    //     });
-    //   })
-    //   .catch(error => {});
-    //   setAllFiles(allFiles.concat(files));
-    // })
     handleShow();
   }
 
@@ -115,16 +94,6 @@ const MyFiles = () => {
         await filesService.removeSubjectFiles(filteredFiles[i].id);
       }
     }
-    // filteredFiles.forEach((file) => {
-    //   if (file.selected) {
-    //     axios
-    //     .delete("/subject-files/" + file.id)
-    //     .then(() => {
-    //       setDeleted((previous) => [...previous, file.id]);
-    //     })
-    //     .catch((error) => {});
-    //   }
-    // });
     setAllFiles([]);
     setReload(true);
   };

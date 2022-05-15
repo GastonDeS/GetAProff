@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import i18next from "i18next";
 import { filesService, userService } from '../services'
 import AuthService from '../services/authService'
@@ -20,8 +19,6 @@ export const useMyFilesFetch = () => {
   const [currentLevels, setCurrentLevels] = useState([]);
   const [currentSubjects, setCurrentSubjects] = useState([]);
   const [filteredFiles, setFilteredFiles] = useState([]);
-  const [deleted, setDeleted] = useState([]);
-  // const [initialState, setInitialState] = useState();
   const [checkAll, setCheckAll] = useState(false);
   const [currentUser, setCurrentUser] = useState();
   const [reload, setReload] = useState(true);
@@ -63,18 +60,6 @@ export const useMyFilesFetch = () => {
     });
   };
 
-  // const addAllLevels = (all, levels) => {
-  //   if (all.length === 0) {
-  //     levels.forEach((level) => all.push(level));
-  //   } else {
-  //     levels.forEach((level) => {
-  //       if (all.filter((item) => item === level).length === 0) {
-  //         all.push(level);
-  //       }
-  //     });
-  //   }
-  // };
-
   const fetchFiles = async () => {
     await filesService.getSubjectFiles(currentUser.id).then(files => {
       files.forEach((item) => {
@@ -109,24 +94,6 @@ export const useMyFilesFetch = () => {
       })
     })
     setCurrentSubjects(prev => [initialState, ...prev]);
-    // const subjects = await axios.get("/users/subjects/levels/145");
-    // var allLevels = [];
-    // subjects.data.forEach((item) => {
-    //   addAllLevels(allLevels, item.levels);
-    //   setCurrentSubjects((previous) => [
-    //     ...previous,
-    //     {
-    //       name: item.name,
-    //       id: item.subjectId,
-    //       levels: item.levels,
-    //     }
-    //   ]);
-    // });
-    // setInitialState({
-    //   id: 0,
-    //   name: i18next.t("subjects.all"),
-    //   levels: allLevels,
-    // })
   };
 
   useEffect(() => {
@@ -138,10 +105,6 @@ export const useMyFilesFetch = () => {
   useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
-
-  // useEffect(() => {
-  //   initialState && currentUser && fetchSubjects();
-  // }, [initialState]);
 
   useEffect(() => {
     if (currentSubjects) {
@@ -160,12 +123,6 @@ export const useMyFilesFetch = () => {
       filterFiles();
     }
   }, [subject, level, allFiles]);
-
-  // useEffect(() => {
-  //   deleted.forEach((id) => {
-  //     setAllFiles(allFiles.filter((item) => item.id !== id));
-  //   });
-  // }, [deleted]);
 
   useEffect(() => {
     if (show) {
@@ -195,13 +152,11 @@ export const useMyFilesFetch = () => {
     show,
     newFiles,
     checkAll,
-    allFiles,
     currentUser,
     setReload,
     setShow,
     setNewFiles, 
     setAllFiles,
-    setDeleted,
     setLevel,
     setSubject,
     setFilteredFiles,
