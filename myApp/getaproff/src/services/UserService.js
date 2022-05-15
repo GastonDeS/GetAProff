@@ -137,7 +137,6 @@ export class UserService {
         } catch (err) {
             console.log(err)
         }
-
     }
 
     async addTeacherToFavorites(teacherId, uid) {
