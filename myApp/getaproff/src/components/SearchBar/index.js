@@ -4,17 +4,20 @@ import PropTypes from "prop-types";
 // Icon
 import SearchIcon from '../../assets/img/search_icon.png'
 import Button from "../Button";
-import {useNavigate} from "react-router-dom";
+import  {useNavigate} from "react-router-dom";
 
-const SearchBar = ({register, name, getValues}) => {
-  const [state, setState] = useState(getValues('search'));
-  let navigate = useNavigate()
+const SearchBar = ({register, name, value, handleSubmit}) => {
+  const [state, setState] = useState(value);
+  let navigate = useNavigate();
 
   const search = () => {
       navigate(`/tutors?search=${state}`)
   }
 
-  return (
+  if(handleSubmit===null)
+        handleSubmit = search
+
+    return (
     <Wrapper>
         <img src={SearchIcon} alt='search-icon' />
         <input
@@ -24,7 +27,7 @@ const SearchBar = ({register, name, getValues}) => {
               onChange={event => setState(event.currentTarget.value)}
               value={state}
         />
-        <Button text="Search" callback={search}/>
+        <Button text="Search" callback={handleSubmit}/>
     </Wrapper>
   )
 }
@@ -33,11 +36,13 @@ SearchBar.propTypes = {
     register : PropTypes.func,
     name: PropTypes.string,
     getValues: PropTypes.func,
+    handleSubmit: PropTypes.func,
 }
 
 SearchBar.defaultProps = {
-    register: (x) => x,
-    getValues: x => '',
+    register: x => x,
+    value: '',
+    handleSubmit: null,
     name: ""
 }
 
