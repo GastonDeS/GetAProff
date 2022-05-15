@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import axios from 'axios'
 
 import { Card, CardBody, Description, Name, Price, TutorImg } from './TutorCard.styles'
 import RatingStar from 'react-stars';
@@ -16,12 +15,9 @@ const TutorCard = ({ user }) => {
   useEffect(() => {
     userService.getUserImg(user.id)
     .then(res => {
-      if (res) {
-        setImage(res); 
-      }
-    })
-    .catch((error) => {});
-  }, [])
+      if (res) setImage(res); 
+    });
+  }, []);
 
   return (
     <Card onClick={() => navigate('/users/' + user.id)}>

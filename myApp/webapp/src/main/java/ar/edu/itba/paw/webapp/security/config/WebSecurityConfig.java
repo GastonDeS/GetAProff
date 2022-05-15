@@ -142,7 +142,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/users/available-subjects/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
-                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{uid}/favorites/{favTeacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
+                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/users/{uid}/favorites/{teacherId}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/reviews").access("@antMatcherVoter.canRate(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/classes").hasAuthority("USER_STUDENT")
                         .antMatchers("/**").permitAll()

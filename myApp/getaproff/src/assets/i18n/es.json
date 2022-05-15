@@ -156,6 +156,7 @@
     "clickHere": "Haz click aquí"
   },
   "favourites": {
+    "title": "Tus profesores favoritos",
     "empty": "No tienes profesores favoritos!"
   },
   "home": {
