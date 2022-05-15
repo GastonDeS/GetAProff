@@ -1,4 +1,3 @@
-import axios from "axios"
 import { axiosService } from "./index";
 
 const USER_FILE_PATH = 'user-files'

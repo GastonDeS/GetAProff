@@ -4,11 +4,17 @@ const PATH = '/users'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 export class UserService {
+    async getHomeTeachers(type) {
+        try {
+            return await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${type}`, {});
+        }  catch (err) { console.log(err) }
+    }
+
     async getUserSubjects(uid) {
         try {
             let subjects = []
             let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `/users/${uid}/subjects`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, config)
                 .then(res => {
                     res.data.forEach(subject => subjects.push(subject));
                     return subjects;
@@ -22,7 +28,7 @@ export class UserService {
         try {
             let subjects = []
             let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `/users/available-subjects/${uid}`, config)
+            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/available-subjects/${uid}`, config)
                 .then(res => {
                     res.data.forEach(subject => subjects.push(subject));
                     return subjects;
@@ -37,7 +43,7 @@ export class UserService {
             let config = {
                 headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
-            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}`, config, {
+            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}`, config, {
                 subjectId: subjecId,
                 price: price,
                 level: level
@@ -49,7 +55,7 @@ export class UserService {
         try {
             for (const subject of subjects) {
                 if (subject.checked) {
-                    await axiosService.authAxiosWrapper(axiosService.DELETE, "/users/" + uid + subject.url, {});
+                    await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${uid}` + subject.url, {});
                 }
             }
         } catch(error) {console.log(error)};
@@ -90,7 +96,7 @@ export class UserService {
 
     async addUserImg (uid, imgData) {
         try {
-            await axiosService.authAxiosWrapper(axiosService.POST, `/users/${uid}/image`, {}, imgData);
+            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/image`, {}, imgData);
         } catch (err) {
             console.log(err);
         }
@@ -218,7 +224,7 @@ export class UserService {
                 page: page,
                 pageSize: 9
             };
-            await axiosService.axiosWrapper(axiosService.GET, '/users', config)
+            await axiosService.axiosWrapper(axiosService.GET, `${PATH}`, config)
                 .then(res => response = res)
             return response;
         }
