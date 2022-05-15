@@ -3,10 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
-import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
-import ar.edu.itba.paw.webapp.requestDto.NewUserDto;
-import ar.edu.itba.paw.webapp.requestDto.SubjectRequestDto;
+import ar.edu.itba.paw.webapp.requestDto.*;
 import ar.edu.itba.paw.webapp.security.api.models.Authority;
 import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
@@ -17,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -60,10 +59,13 @@ public class UsersController {
     @Context
     private UriInfo uriInfo;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UsersController.class);
+
     @POST
     @Path("/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response registerTeacher(@Validated(NewUserDto.Teacher.class) @RequestBody NewUserDto newUserDto) {
+        LOGGER.debug("Registering teacher of name {}", newUserDto.getName());
         return commonRegister(newUserDto);
     }
 
@@ -71,6 +73,7 @@ public class UsersController {
     @Path("/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response registerStudent(@Validated(NewUserDto.Student.class) @RequestBody NewUserDto newUserDto) {
+        LOGGER.debug("Registering student of name {}", newUserDto.getName());
         return commonRegister(newUserDto);
     }
 
@@ -82,6 +85,7 @@ public class UsersController {
                 newUserDto.getDescription(), newUserDto.getSchedule(), newUserDto.getRole());
         if(!newUser.isPresent())
             return Response.status(Response.Status.CONFLICT).build();
+        LOGGER.debug("User {} registered. Role: {}", newUser.get().getName(), newUserDto.getRole());
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         Response.ResponseBuilder response = Response.created(location);
         response.entity(AuthDto.fromUser(uriInfo, newUser.get()));
@@ -156,25 +160,30 @@ public class UsersController {
 
     //Edit profile
     @POST
-    @Path("/{id}")
-    @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
+    @Path("/{uid}/teacher")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response editProfile(@PathParam("id") Long id,
-                                @FormDataParam("name") String newName,
-                                @FormDataParam("description") String newDescription,
-                                @FormDataParam("schedule") String newSchedule,
-                                @FormDataParam("teach") String toTeacher) {
-        int desc = userService.setUserDescription(id, newDescription);
-        int sch = userService.setUserSchedule(id, newSchedule);
-        int name = userService.setUserName(id, newName);
-        if (!toTeacher.equals("true")) {
-            return (desc == 1 && sch == 1 && name == 1) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    public Response editProfileTeacher(@PathParam("uid") Long uid, @Validated(EditUserDto.Teacher.class) @RequestBody EditUserDto editUserDto) {
+        int desc = userService.setUserDescription(uid, editUserDto.getDescription());
+        int sch = userService.setUserSchedule(uid, editUserDto.getSchedule());
+        int name = userService.setUserName(uid, editUserDto.getName());
+        if (editUserDto.getSwitchRole().equals("false")) {
+            return (desc == 1 && sch == 1 && name == 1) ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Optional<User> user = userService.findById(id);
-        boolean added = userRoleService.addRoleToUser(id, Roles.TEACHER.getId());
+        Optional<User> user = userService.findById(uid);
+        boolean added = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId());
         userService.setTeacherAuthorityToUser();
         return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @POST
+    @Path("/{uid}/student")
+    @Consumes("application/vnd.getaproff.api.v1+json")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response editProfileStudent(@PathParam("uid") Long uid, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
+        int name = userService.setUserName(uid, editUserDto.getName());
+        return name == 1 ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     //Subjects
@@ -214,6 +223,9 @@ public class UsersController {
     public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody SubjectRequestDto newSubjectDto) {
         final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel());
+        if (newTeaches.isPresent()) {
+            LOGGER.debug("Subject with id {} added to user with id: {}", newSubjectDto.getSubjectId() ,userId);
+        }
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -266,15 +278,16 @@ public class UsersController {
     //Add/remove new user to user with uid favorites list
     @POST
     @Path("/{uid}/favorites")
-    @Consumes(value = "application/vnd.getaproff.api.v1+json")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response addNewFavoriteUser(@PathParam("uid") Long uid, IdDto teacherId) {
         int result = userService.addFavourite(teacherId.getId(), uid);
+        if (result == ALREADY_INSERTED) return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok().build();
     }
 
     @DELETE
-    @Path("/{uid}/favorites/{favTeacherId}")
-    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("favTeacherId") Long teacherId) {
+    @Path("/{uid}/favorites/{teacherId}")
+    public Response removeFavoriteUser(@PathParam("uid") Long uid, @PathParam("teacherId") Long teacherId) {
         int result = userService.removeFavourite(teacherId, uid);
         if (result == NO_CONTENT_TO_DELETE)
             return Response.status(Response.Status.NO_CONTENT).build();

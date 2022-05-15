@@ -57,7 +57,7 @@
     "level": "Select level:",
     "title": "Edit subjects",
     "deleteSubject": "Delete subjects",
-    "back": "Go Back"
+    "back": "Return"
   },
   "myClasses": {
     "status": {
@@ -70,7 +70,7 @@
     },
     "requested": "Requested",
     "offered": "Ofered",
-    "filter": "Filter by State:",
+    "filter": "Filter by status:",
     "noOffered": "You have no classes"
   },
   "classCard": {
@@ -95,7 +95,7 @@
     "subject": "Subject"
   },
   "displayImage": {
-    "choose": "Choose Image"
+    "choose": "Choose image"
   },
   "searchBar": {
     "search": "Search",
@@ -117,14 +117,19 @@
     },
     "files": {
       "myFiles": "My Files",
-      "empty": "There are no files to share",
+      "noFiles": "There are no files to share",
       "choose": "Choose the files you want to upload to this Classroom",
       "share": "Share Files",
       "shared": "Shared files",
-      "emptyShared": "You haven't shared any files yet",
+      "empty": "You haven't shared any files yet",
       "stop": "Stop sharing",
-      "classFiles": "Classroom Files"
+      "classFiles": "Classroom Files",
+      "noSharedFiles": "Teacher hasn't shared files yet",
+      "name": "File name"
     },
+    "classOver": "Your class is over",
+    "rate": "Rate your teacher",
+    "back": "Return",
     "subject": "Subject",
     "student": "Student",
     "teacher": "Teacher",
@@ -151,6 +156,7 @@
     "clickHere" : "Click here"
   },
   "favourites": {
+    "title": "Your favourite teachers",
     "empty": "No teachers added to favourites yet!"
   },
   "home": {

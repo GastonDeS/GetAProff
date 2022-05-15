@@ -117,14 +117,19 @@
     },
     "files": {
       "myFiles": "Mis archivos",
-      "empty": "No hay archivos para compartir",
+      "noFiles": "No hay archivos para compartir",
       "choose": "Seleccione los archivos para subir a esta Aula Virtual",
       "share": "Compartir archivos",
       "shared": "Archivos compartidos",
-      "emptyShared": "Aun no haz compartido archivos",
+      "empty": "Aún no has compartido archivos",
       "stop": "Dejar de compartir",
-      "classFiles": "Archivos del Aula"
+      "classFiles": "Archivos del Aula",
+      "noSharedFiles": "El profesor aún no ha compartido archivos",
+      "name": "Nombre del archivo"
     },
+    "classOver": "La clase se termino",
+    "back": "Volver",
+    "rate": "Rate your teacher",
     "subject": "Materia",
     "student": "Alumno",
     "teacher": "Profesor",
@@ -151,6 +156,7 @@
     "clickHere": "Haz click aquí"
   },
   "favourites": {
+    "title": "Tus profesores favoritos",
     "empty": "No tienes profesores favoritos!"
   },
   "home": {

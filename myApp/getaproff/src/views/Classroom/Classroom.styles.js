@@ -108,12 +108,12 @@ export const PostFormContainer = styled.form`
 `;
 
 export const ButtonContainer = styled.div `
-    marginTop: 10px;
+    margin-top: 10px;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    flexDirection: row;
-    alignItems: center;
+    flex-direction: row;
+    align-items: center;
 `;
 
 export const BigBox = styled.div`

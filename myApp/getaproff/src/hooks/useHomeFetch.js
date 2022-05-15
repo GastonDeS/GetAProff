@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { userService } from '../services';
+import { userService, subjectService } from '../services';
 
 export const useHomeFetch = () => {
   const [topRated, setTopRated] = useState();
@@ -19,20 +19,13 @@ export const useHomeFetch = () => {
       .then(res => {
         setMostRequested([...res.data])
       });
-    // axios.get('/users/most-requested')
-    //   .then(res => {
-    //       setMostRequested([...res.data])
-
-    //   })
-    //   .catch(error => {});
   }
 
-  const fetchSubjects = () => {
-    axios.get('/api/subjects/most-requested')
+  const fetchSubjects = async () => {
+    await subjectService.getMostRequestedSubjects()
       .then(res => {
           setSubjects([...res.data])
-      })
-      .catch(error => {});
+      });
   }
 
   useEffect(() => {

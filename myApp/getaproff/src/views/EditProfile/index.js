@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import AuthService from "../../services/authService";
-import {axiosService} from "../../services";
+import { userService } from "../../services";
 import { Wrapper, MainContainer, Title, Request } from "../../GlobalStyle";
 import { useForm } from "react-hook-form";
 import Navbar from "../../components/Navbar";
-import {Content, Form} from "./EditProfile.styles";
+import { Content, Form } from "./EditProfile.styles";
 import Input from "../../components/Input";
 import DisplayImage from "../../components/DisplayImage";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import Default from "../../assets/img/add_img.png";
-import {Error} from "../Login/Login.styles";
-import {useNavigate} from "react-router-dom";
+import { Error } from "../Login/Login.styles";
+import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
 
 const EditProfile = () => {
@@ -41,56 +40,56 @@ const EditProfile = () => {
   }, []);
 
 
-  useEffect(() => {
+  useEffect(async () => {
     if (currentUser) {
-      let getUserUrl = '/users';
       if (!currentUser.teacher) {
         setIsTeacher(false);
       }
-      axios.get(getUserUrl + '/' + currentUser.id).then(res => {
+      await userService.getUserInfo(currentUser.id).then(res => {
         reset({
-          nameInput: res.data.name
-        })
+          nameInput: res.name
+        });
         if (currentUser.teacher) {
           reset({
-            schedule: res.data.schedule,
-            description: res.data.description
-          })
-        }
+            schedule: res.schedule,
+            description: res.description
+          });
+        };
       });
-      //TODO: Revisar este endpoint
-      axios.get( `/users/${currentUser.id}/image`)
-        .then(res => {
-          if (res.data.image) {
-            setDisplayImage('data:image/png;base64,' + res.data.image);
-          }
-        })
-        .catch(error => {});
+
+      await userService.getUserImg(currentUser.id).then(img => {
+        if (img) setDisplayImage(img);
+      });
     }
   }, [currentUser]);
 
   const onSubmit = async (data) => {
-    var formData = new FormData();
-    formData.append("name", data.nameInput);
-    formData.append("description", data.description);
-    formData.append("schedule", data.schedule);
-    formData.append("teach", change ? "true" : "false");
     
     if (image) {
       var imgData = new FormData();
       imgData.append("image", image, image.name)
-      await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}/image`, {}, imgData)
-        .catch( err => console.log(err));
+      await userService.addUserImg(currentUser.id, imgData);
     }
-  
-    await axiosService.authAxiosWrapper(axiosService.POST, `/users/${currentUser.id}`, {}, formData)
-      .then((res) => {
-        if (change) {
-          AuthService.toTeacher(res.data);
-        }
-        navigate("/users/" + currentUser.id);
-      }).catch( err => console.log(err));
 
+    let formData = {
+      "name": data.nameInput
+    }
+
+    if (currentUser.teacher || change) {
+      formData = {...formData, 
+        "id": currentUser.id,
+        "switchRole": change ? true : false,
+        "description": data.description,
+        "schedule": data.schedule
+      }
+      await userService.editProfile(currentUser.id, 'teacher', formData)
+        .then((res) => {
+          if (change) AuthService.toTeacher(res.data);
+        })
+    } else {
+      await userService.editProfile(currentUser.id, 'student', formData);
+    }
+    navigate("/users/" + currentUser.id);
   }
 
   return (
