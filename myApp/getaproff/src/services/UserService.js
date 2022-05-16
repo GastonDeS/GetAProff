@@ -193,22 +193,5 @@ export class UserService {
             console.log(err);
         }
     }
-
-    //RatingController
-    async createReview(uid, teacherId, data) {
-        try {
-            let form = {
-                studentId: uid,
-                teacherId: parseInt(teacherId),
-                rate: parseFloat(data.rating),
-                review: data.review
-            };
-            let config = {}
-            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`, config, form);
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
 }
 

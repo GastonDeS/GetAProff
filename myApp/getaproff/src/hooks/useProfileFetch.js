@@ -57,13 +57,13 @@ export const useProfileFetch = (id) => {
                   }])
                 })
               })
-            })
+            });
 
-        await ratingService.getUserReviews(user.id)
-            .then(data => setReviews(data))
+        await ratingService.getUserReviews(user.id, 1)
+            .then(data => setReviews(data));
 
         await filesService.getUserCertifications(user.id)
-            .then(data => setCertifications(data))
+            .then(data => setCertifications(data));
       }
       setLoading(false);
 

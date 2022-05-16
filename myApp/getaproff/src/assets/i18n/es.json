@@ -192,7 +192,7 @@
     }
   },
   "rateTeacher": {
-    "title": "Calificar la clase de",
+    "title": "Como estuvo la clase con",
     "rate": "Calificar",
     "review": "Reseña",
     "reviewPlaceholder": "Un groso el profe...",
