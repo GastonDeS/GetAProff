@@ -69,6 +69,14 @@ public class Teaches {
         this.level = level;
     }
 
+    private Teaches(Builder builder) {
+        this.price = builder.price;
+        this.level = builder.level;
+        this.teacher = builder.teacher;
+        this.subject = builder.subject;
+        this.subjectsFilesList = builder.subjectsFilesList;
+    }
+
     public List<SubjectFile> getSubjectsFilesList() {
         return subjectsFilesList;
     }
@@ -124,5 +132,45 @@ public class Teaches {
         PRIMARY,
         SECONDARY,
         TERTIARY
+    }
+
+    public static class Builder
+    {
+        private int price, level;
+        private User teacher;
+        private Subject subject;
+        private List<SubjectFile> subjectsFilesList;
+
+        public Builder() {
+        }
+
+        public Builder teacher(User teacher) {
+            this.teacher = teacher;
+            return this;
+        }
+
+        public Builder subject(Subject subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder level(int level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder favourites(List<SubjectFile> subjectsFilesList) {
+            this.subjectsFilesList = subjectsFilesList;
+            return this;
+        }
+
+        public Teaches build() {
+            return new Teaches(this);
+        }
     }
 }

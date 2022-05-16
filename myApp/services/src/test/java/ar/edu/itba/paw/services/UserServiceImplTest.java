@@ -72,24 +72,6 @@ public class UserServiceImplTest {
         Assert.fail("Duplicate user creation should have thrown");
     }
 
-//    @Test
-//    public void testGetFavourites() {
-//        //setup
-//        List<Object> mockFavourites = new ArrayList<>();
-//        mockFavourites.add(new Object[] {2L,USERNAME,500,500,DESCRIPTION,4.5f});
-//        mockFavourites.add(new Object[] {3L,USERNAME+"2",500,500,DESCRIPTION,3.5f});
-//        when(mockDao.getFavourites(eq(USER_ID))).thenReturn(mockFavourites);
-//
-//        //2
-//        final List<TeacherInfo> favourites = userService.getFavourites(USER_ID);
-//
-//        //3
-//        final List<TeacherInfo> teacherInfos = new ArrayList<>();
-//        teacherInfos.add(new TeacherInfo(2L,USERNAME,500,500,DESCRIPTION,4.5f));
-//        teacherInfos.add(new TeacherInfo(3L,USERNAME+"2",500,500,DESCRIPTION,3.5f));
-//        Assert.assertEquals(teacherInfos,favourites);
-//    }
-
     @Test(expected = InsertException.class)
     public void testAddFavourite() {
         when(mockDao.addFavourite(eq(USER_ID),eq(2L)/* second id*/)).thenThrow(InsertException.class);

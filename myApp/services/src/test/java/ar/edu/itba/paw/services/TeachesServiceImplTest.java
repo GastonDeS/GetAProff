@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.daos.SubjectDao;
 import ar.edu.itba.paw.interfaces.daos.TeachesDao;
 import ar.edu.itba.paw.models.*;
 import org.junit.Assert;
@@ -9,8 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,7 +30,10 @@ public class TeachesServiceImplTest {
     private static final Long SUBJECT_ID_ONE = 1L;
     private static final Long SUBJECT_ID_TWO = 2L;
     private static final Integer PRICE = 500;
-    private static final Integer LEVEL = 3;
+    private static final Integer LEVEL_ONE = 1;
+    private static final Integer LEVEL_TWO = 2;
+    private static final Integer LEVEL_THREE = 3;
+    private static final Integer LEVEL_FOUR = 0;
     private static final Integer PAGE = 1;
     private static final Integer PAGE_SIZE = 9;
     private static final Integer MAXPRICE = 1400;
@@ -42,7 +45,10 @@ public class TeachesServiceImplTest {
     private TeachesServiceImpl teachesService = new TeachesServiceImpl();
 
     @Mock
-    private TeachesDao mockDao;
+    private TeachesDao teachesMockDao;
+
+    @Mock
+    private SubjectDao subjectMockDao;
 
 //    @Test
 //    public void  testGetSubjectInfoListByUser() {
@@ -96,8 +102,8 @@ public class TeachesServiceImplTest {
         final PageRequest pageRequest = new PageRequest(PAGE, PAGE_SIZE);
         final int total = teachers.size() / pageRequest.getPageSize() + (teachers.size() % pageRequest.getPageSize() > 0 ? 1: 0);
         final Page<TeacherInfo> expectedTeacherInfoPage = new Page<>(teachers, PAGE_SIZE, PAGE, total);
-        when(mockDao.getMostExpensiveUserFee(eq(SUBJECT_ONE))).thenReturn(MAXPRICE);
-        when(mockDao.filterUsers(eq(SUBJECT_ONE), eq(MAXPRICE), eq(ANY_LEVEL), eq(MAX_LEVEL), eq(ANY_RATING),
+        when(teachesMockDao.getMostExpensiveUserFee(eq(SUBJECT_ONE))).thenReturn(MAXPRICE);
+        when(teachesMockDao.filterUsers(eq(SUBJECT_ONE), eq(MAXPRICE), eq(ANY_LEVEL), eq(MAX_LEVEL), eq(ANY_RATING),
                 eq(RAND_ORDER), any(PageRequest.class))).thenReturn(new Page<>(new ArrayList<TeacherInfo>() {{
             add(teacherOne);
             add(teacherTwo);
@@ -109,6 +115,53 @@ public class TeachesServiceImplTest {
 
         //3. Asserts - postcondiciones
         Assert.assertEquals(expectedTeacherInfoPage, teacherInfoPage);
+    }
+
+    @Test
+    public void testGetSubjectAndLevelsTaughtByUser() {
+        User teacher = new User.Builder(MAIL_ONE).userId(USER_ID_ONE).build();
+        Subject subject = new Subject(SUBJECT_ONE, SUBJECT_ID_ONE);
+        Teaches teachesOne = new Teaches.Builder().teacher(teacher).subject(subject).level(LEVEL_ONE).build();
+        Teaches teachesTwo = new Teaches.Builder().teacher(teacher).subject(subject).level(LEVEL_TWO).build();
+        when(teachesMockDao.get(eq(USER_ID_ONE))).thenReturn(new ArrayList<Teaches>(){{
+            add(teachesOne);
+            add(teachesTwo);
+        }});
+
+        Map<Subject, List<Integer>> expectedSubjectsAndLevels = new HashMap<>();
+        expectedSubjectsAndLevels.put(subject, new ArrayList<>(Arrays.asList(teachesOne.getLevel(),teachesTwo.getLevel())));
+
+        final Map<Subject, List<Integer>> subjectsAndLevels = teachesService.getSubjectAndLevelsTaughtByUser(USER_ID_ONE);
+        Assert.assertEquals(expectedSubjectsAndLevels, subjectsAndLevels);
+    }
+
+    @Test
+    public void testGetSubjectAndLevelsAvailableForUser() {
+        User teacher = new User.Builder(MAIL_ONE).userId(USER_ID_ONE).build();
+        Subject subjectOne = new Subject(SUBJECT_ONE, SUBJECT_ID_ONE);
+        Subject subjectTwo = new Subject(SUBJECT_TWO, SUBJECT_ID_TWO);
+        Teaches teachesOne = new Teaches.Builder().teacher(teacher).subject(subjectOne).level(LEVEL_ONE).build();
+        Teaches teachesTwo = new Teaches.Builder().teacher(teacher).subject(subjectOne).level(LEVEL_TWO).build();
+        Teaches teachesThree = new Teaches.Builder().teacher(teacher).subject(subjectTwo).level(LEVEL_ONE).build();
+        Teaches teachesFour = new Teaches.Builder().teacher(teacher).subject(subjectTwo).level(LEVEL_THREE).build();
+        when(subjectMockDao.listSubjects()).thenReturn(new ArrayList<Subject>() {{
+            add(subjectOne);
+            add(subjectTwo);
+        }});
+        when(teachesMockDao.get(eq(USER_ID_ONE))).thenReturn(new ArrayList<Teaches>(){{
+            add(teachesOne);
+            add(teachesTwo);
+            add(teachesThree);
+            add(teachesFour);
+        }});
+
+        Map<Subject, List<Integer>> expectedAvailableSubjects = new HashMap<>();
+        expectedAvailableSubjects.put(subjectOne, new ArrayList<>(Arrays.asList(LEVEL_FOUR, LEVEL_THREE)));
+        expectedAvailableSubjects.put(subjectTwo, new ArrayList<>(Arrays.asList(LEVEL_FOUR, LEVEL_TWO)));
+
+        final Map<Subject, List<Integer>> availableSubjects = teachesService.getSubjectAndLevelsAvailableForUser(USER_ID_ONE);
+
+        Assert.assertEquals(expectedAvailableSubjects, availableSubjects);
     }
 
 }

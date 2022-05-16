@@ -90,6 +90,7 @@ public class SubjectFile {
 
         public Builder() {
         }
+
         public Builder teachesInfo(Teaches teachesInfo) {
             this.teachesInfo = teachesInfo;
             return this;

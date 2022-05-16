@@ -4,6 +4,7 @@ import { AxiosService } from "./axios.service";
 import { FilesService } from "./FilesService";
 import { SubjectService } from "./SubjectService";
 import { ClassesService } from "./ClassesService";
+import { RatingService } from "./RatingService";
 
 
 const userService = new UserService();
@@ -12,6 +13,7 @@ const axiosService = new AxiosService();
 const filesService = new FilesService();
 const subjectService = new SubjectService();
 const classesService = new ClassesService();
+const ratingService = new RatingService();
 
 export {
     userService,
@@ -19,5 +21,6 @@ export {
     axiosService,
     filesService,
     subjectService,
-    classesService
+    classesService,
+    ratingService
 };

@@ -4,13 +4,14 @@ const PATH = '/users'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 export class UserService {
-    //Users Controller
+    //UsersController
     async getHomeTeachers(type) {
         try {
             return await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${type}`, {});
         }  catch (err) { console.log(err) }
     }
 
+    //UsersController
     async getUserSubjects(uid) {
         try {
             let subjects = []
@@ -24,6 +25,7 @@ export class UserService {
         catch (err) { console.log(err) }
     }
 
+    //UsersController
     async getUserAvailableSubjects(uid) {
         try {
             let subjects = []
@@ -38,6 +40,7 @@ export class UserService {
         catch (err) { console.log(err) }
     }
 
+    //UsersController
     async addSubjectToUser(uid, subjecId, price, level) {
         try {
             let config = {
@@ -51,6 +54,7 @@ export class UserService {
         } catch(error) {console.log(error)};
     }
 
+    //UsersController
     async deleteSubjectsFromUser(uid, subjects) {
         try {
             for (const subject of subjects) {
@@ -61,21 +65,7 @@ export class UserService {
         } catch(error) {console.log(error)};
     }
 
-    async getUserReviews(uid) {
-        try {
-            let data;
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `/ratings/${uid}`, config)
-                .then(res => {
-                    data = res.data
-                })
-            return data;
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-    
+    //UsersController
     async getUserImg(uid) {
         try {
             let image;
@@ -94,6 +84,7 @@ export class UserService {
         }
     }
 
+    //UsersController
     async addUserImg (uid, imgData) {
         try {
             await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/image`, {}, imgData);
@@ -102,6 +93,7 @@ export class UserService {
         }
     }
 
+    //UsersController
     async getUserInfo(uid) {
         try {
             let data;

@@ -129,34 +129,44 @@ public class LectureServiceImplTest {
         Assert.assertEquals(expectedPage, lecturePage);
     }
 
-//    @Test
-//    public void testFindClassesByTeacherAndStatusTwo() {
-//        //1. Setup - precondiciones
-//        final List<Lecture> lectureList = new ArrayList<>();
-//        lectureList.add(new Lecture.Builder(teacher, student, subjectOne).status(STATUS_TWO).classId(LECTURE_ID).build());
-//        when(mockDao.findClassesByTeacherAndMultipleStatus(eq(USER_ID_ONE), eq(STATUS_TWO))).thenReturn(lectureList);
-//        when(mockDao.getNotificationsCount(LECTURE_ID, 0)).thenReturn(0);
-//
-//        //2. Ejercito la class under test una unica linea
-//        final List<Lecture> maybeLectureList = lectureService.findClassesByTeacherAndStatus(USER_ID_ONE, STATUS_TWO);
-//
-//        //3. Asserts - postcondiciones
-//        Assert.assertEquals(lectureList, maybeLectureList);
-//    }
-//
-//    @Test
-//    public void testFindClassesByTeacherAndStatusOther() {
-//        //1. Setup - precondiciones
-//        final List<Lecture> lectureList = new ArrayList<>();
-//        lectureList.add(new Lecture.Builder(teacher, student, subjectOne).status(STATUS_OTHER).classId(LECTURE_ID).build());
-//        when(mockDao.findClassesByTeacherAndStatus(eq(USER_ID_ONE), eq(STATUS_OTHER))).thenReturn(lectureList);
-//        when(mockDao.getNotificationsCount(LECTURE_ID, 0)).thenReturn(0);
-//
-//        //2. Ejercito la class under test una unica linea
-//        final List<Lecture> maybeLectureList = lectureService.findClassesByTeacherAndStatus(USER_ID_ONE, STATUS_OTHER);
-//
-//        //3. Asserts - postcondiciones
-//        Assert.assertEquals(lectureList, maybeLectureList);
-//    }
+    @Test
+    public void testFindClassesByTeacherAndStatusTwo() {
+        //1. Setup - precondiciones
+        final List<Lecture> expectedLectureList = new ArrayList<Lecture>() {{
+            add(new Lecture.Builder(teacher, student, subjectOne).status(STATUS_TWO).classId(LECTURE_ID).notifications(0).build());
+        }};
+        final PageRequest pageRequest = new PageRequest(PAGE, PAGE_SIZE);
+        int size = expectedLectureList.size();
+        final Page<Lecture> expectedPage = new Page.Builder<Lecture>().content(expectedLectureList).page(pageRequest.getPage())
+                .size(pageRequest.getPageSize()).total(size / pageRequest.getPageSize() + (size% pageRequest.getPageSize() > 0 ? 1: 0)).build();
+        when(mockDao.findClassesByTeacherAndStatus(eq(USER_ID_ONE), eq(STATUS_TWO), any(PageRequest.class))).thenReturn(expectedPage);
+        when(mockDao.getNotificationsCount(LECTURE_ID, 0)).thenReturn(0);
+
+        //2. Ejercito la class under test una unica linea
+        final Page<Lecture> lecturePage = lectureService.findClasses(USER_ID_ONE, true, STATUS_TWO, PAGE, PAGE_SIZE);
+
+        //3. Asserts - postcondiciones
+        Assert.assertEquals(expectedPage, lecturePage);
+    }
+
+    @Test
+    public void testFindClassesByTeacherAndStatusOther() {
+        //1. Setup - precondiciones
+        final List<Lecture> expectedLectureList = new ArrayList<Lecture>() {{
+            add(new Lecture.Builder(teacher, student, subjectOne).status(STATUS_OTHER).classId(LECTURE_ID).notifications(0).build());
+        }};
+        final PageRequest pageRequest = new PageRequest(PAGE, PAGE_SIZE);
+        int size = expectedLectureList.size();
+        final Page<Lecture> expectedPage = new Page.Builder<Lecture>().content(expectedLectureList).page(pageRequest.getPage())
+                .size(pageRequest.getPageSize()).total(size / pageRequest.getPageSize() + (size% pageRequest.getPageSize() > 0 ? 1: 0)).build();
+        when(mockDao.findClassesByTeacherAndStatus(eq(USER_ID_ONE), eq(STATUS_OTHER), any(PageRequest.class))).thenReturn(expectedPage);
+        when(mockDao.getNotificationsCount(LECTURE_ID, 0)).thenReturn(0);
+
+        //2. Ejercito la class under test una unica linea
+        final Page<Lecture> lecturePage = lectureService.findClasses(USER_ID_ONE, true, STATUS_OTHER, PAGE, PAGE_SIZE);
+
+        //3. Asserts - postcondiciones
+        Assert.assertEquals(expectedPage, lecturePage);
+    }
 
 }
