@@ -45,6 +45,7 @@ public class EmailServiceImpl implements EmailService {
     private LectureService lectureService;
 
 
+
     private void sendSimpleMessage(String to, String subject, String text) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -71,14 +72,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendStatusChangeMessage(Lecture myLecture, String localAddr) {
+    public void sendStatusChangeMessage(Lecture myLecture, int status,String localAddr) {
         Optional<User> maybeS = userService.findById(myLecture.getStudent().getId());
         Optional<User> maybeT = userService.findById(myLecture.getTeacher().getId());
         Optional<Subject> maybeSub = subjectService.findById(myLecture.getSubject().getSubjectId());
         if (!maybeS.isPresent() || !maybeT.isPresent() || !maybeSub.isPresent()) {
             throw new NoSuchElementException();
         }
-        int myStatus = myLecture.getStatus();
         Subject mySubject = maybeSub.get();
         User student = maybeS.get();
         User teacher = maybeT.get();
@@ -86,40 +86,40 @@ public class EmailServiceImpl implements EmailService {
         String mailSubject;
         String format;
         String button;
-        switch (myStatus) {
+        switch (status) {
             case 1:
                 format = messageSource.getMessage("mail.class.accepted.body", new Object[] {teacher.getName(), mySubject.getName(), teacher.getMail()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.accepted", null, LocaleContextHolder.getLocale());
                 button = messageSource.getMessage("mail.class.accepted.btn", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "/classroom/" + myLecture.getClassId().toString(),button);
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "classroom/" + myLecture.getClassId().toString(),button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 2:
                 format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
                 button = messageSource.getMessage("mail.class.finished.btn", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "/classroom/" + myLecture.getClassId().toString(),button);
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr +  "classroom/" + myLecture.getClassId().toString(),button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 3:
                 format = messageSource.getMessage("mail.class.student.cancelled.body", new Object[] {student.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.cancelled", null, LocaleContextHolder.getLocale());
                 button = messageSource.getMessage("mail.class.student.cancelled.btn", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "/myClasses/offered/2",button);
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "users/" + teacher.getId().toString() + "/classes",button);
                 sendSimpleMessage(teacher.getMail(),mailSubject, text);
                 break;
             case 4:
                 format = messageSource.getMessage("mail.class.teacher.cancelled.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
                 button = messageSource.getMessage("mail.class.teacher.cancelled.btn", null, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.cancelled", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), mailSubject,format, localAddr + "/myClasses/requested/2",button);
+                text = String.format(templateMailMessage.getText(), mailSubject,format, localAddr + "users/" + student.getId().toString() + "/classes",button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 5:
                 format = messageSource.getMessage("mail.class.rejected.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
                 button = messageSource.getMessage("mail.class.rejected.btn", null, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.rejected", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "/myClasses/requested/2",button);
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "users/" + student.getId().toString() + "/classes",button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
         }

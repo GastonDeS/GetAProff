@@ -7,7 +7,7 @@ public interface EmailService {
 
     void sendNewClassMessage(String to, String userFrom, String subject, long classId,String localAddr);
 
-    void sendStatusChangeMessage(Lecture myLecture, String localAddr);
+    void sendStatusChangeMessage(Lecture myLecture, int status,String localAddr);
 
     void sendRatedMessage(Lecture myLecture, int rating, String review, String localAddr);
 
