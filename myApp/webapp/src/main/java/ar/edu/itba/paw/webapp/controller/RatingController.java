@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Rating;
@@ -28,6 +29,9 @@ public class RatingController {
 
     @Autowired
     private RatingService ratingService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Context
     private UriInfo uriInfo;
@@ -64,6 +68,7 @@ public class RatingController {
             return Response.status(Response.Status.CONFLICT).build();
         //TODO: cual seria el id de la review? teacherid y userid
         URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
+        emailService.sendRatedMessage(teacherId, authFacade.getCurrentUserId(), rating.get(), uriInfo.getBaseUri().toString());
         return Response.created(location).build();
     }
 }
