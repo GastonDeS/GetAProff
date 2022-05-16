@@ -17,11 +17,11 @@ public class ClassroomFilesDto {
         classroomFilesDto.shared = new ArrayList<>();
         if(shared != null && !shared.isEmpty())
             classroomFilesDto.shared = shared.stream()
-                    .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
+                    .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "subject-files", "",e.getFileName(), e.getFileId()))
                     .collect(Collectors.toList());
         if(notShared!= null && !notShared.isEmpty())
             classroomFilesDto.notShared = notShared.stream()
-                    .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
+                    .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "subject-files", "",e.getFileName(), e.getFileId()))
                     .collect(Collectors.toList());
         return classroomFilesDto;
     }
