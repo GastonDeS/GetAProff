@@ -6,8 +6,8 @@ export const paths = {
   RATINGS: '/ratings',
   CLASSES: '/classes',
   CLASSROOM: '/classroom',
-  USER_FILES: 'user-files',
-  SUBJECT_FILES: 'subject-files'
+  USER_FILES: '/user-files',
+  SUBJECT_FILES: '/subject-files'
 }
 
 export const status = {

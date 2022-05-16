@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
+import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -27,15 +28,18 @@ public class SubjectFilesController {
     @Autowired
     private SubjectFileService subjectFileService;
 
+    @Autowired
+    private AuthFacade authFacade;
+
     @Context
     private UriInfo uriInfo;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectFilesController.class);
 
     @GET
-    @Path("/{uid}")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response getUserSubjectFiles(@PathParam("uid") Long uid) {
+    public Response getUserSubjectFiles() {
+        Long uid = authFacade.getCurrentUserId();
         final List<SubjectFileDto> subjectFileDtos = subjectFileService.getAllSubjectFilesFromUser(uid).stream()
                 .map(subjectFile -> SubjectFileDto.fromUser(uriInfo, subjectFile)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();

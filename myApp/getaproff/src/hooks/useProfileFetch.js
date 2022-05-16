@@ -17,9 +17,6 @@ export const useProfileFetch = (id) => {
   const [isTeacher, setIsTeacher] = useState(true);
   const [isFaved, setIsFaved] = useState(false);
 
-  useEffect(() => {
-    console.log(isFaved)
-  }, [isFaved])
 
   useEffect(() => {
     if (currentUser) {
@@ -32,9 +29,13 @@ export const useProfileFetch = (id) => {
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
     await userService.getUserInfo(id)
-       .then(data => {{
-         setUser(data);
-       }})
+      .then(data => {{
+        setUser(data);
+      }});
+    await favouritesService.checkIfTeacherIsFaved(id)
+      .then(res => {
+        if(res) setIsFaved(true);
+      })
   }, [id]);
   
   useEffect(async () => {
@@ -68,15 +69,6 @@ export const useProfileFetch = (id) => {
 
     }
   },[user]);
-
-  useEffect(async () => {
-    let current = AuthService.getCurrentUser();
-    await favouritesService.checkIfTeacherIsFaved(id)
-        .then(res => {
-          console.log(res)
-          if(res) setIsFaved(true);
-        })
-  },[]);
 
   return {
     currentUser,

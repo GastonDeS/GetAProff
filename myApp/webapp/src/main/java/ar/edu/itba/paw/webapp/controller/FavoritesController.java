@@ -56,7 +56,6 @@ public class FavoritesController {
     @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getFavedTeacher(@PathParam("teacherId") Long teacherId) {
         boolean isFaved = userService.isFaved(teacherId, authFacade.getCurrentUserId());
-        System.out.println(isFaved);
         if (!isFaved) return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(LinkUserDto.fromUserId(uriInfo, teacherId.toString())).build();
     }

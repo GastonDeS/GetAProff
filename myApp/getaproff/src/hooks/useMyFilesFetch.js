@@ -61,7 +61,7 @@ export const useMyFilesFetch = () => {
   };
 
   const fetchFiles = async () => {
-    await filesService.getSubjectFiles(currentUser.id).then(files => {
+    await filesService.getSubjectFiles().then(files => {
       files.forEach((item) => {
         setAllFiles((previous) => [
           ...previous,

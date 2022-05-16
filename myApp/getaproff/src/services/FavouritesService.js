@@ -8,14 +8,8 @@ export class FavouritesService {
   //FavouritesController
   async checkIfTeacherIsFaved(teacherId) {
     try {
-        await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${teacherId}`, {})
-          .then(res => {
-            return res;
-            // if (res) {
-            //   console.log(res);
-            //   return true};
-          })
-        // return false;
+        const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${teacherId}`, {});
+        return res.data;
     } catch (err) {
         console.log(err);
     }
