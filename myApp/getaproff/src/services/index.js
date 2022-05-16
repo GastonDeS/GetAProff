@@ -5,6 +5,7 @@ import { FilesService } from "./FilesService";
 import { SubjectService } from "./SubjectService";
 import { ClassesService } from "./ClassesService";
 import { RatingService } from "./RatingService";
+import { FavouritesService } from "./FavouritesService";
 
 
 const userService = new UserService();
@@ -14,6 +15,7 @@ const filesService = new FilesService();
 const subjectService = new SubjectService();
 const classesService = new ClassesService();
 const ratingService = new RatingService();
+const favouritesService = new FavouritesService();
 
 export {
     userService,
@@ -22,5 +24,6 @@ export {
     filesService,
     subjectService,
     classesService,
-    ratingService
+    ratingService,
+    favouritesService
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-
+//TODO: BORRAR
 const getImage = (id, setImage) => {
   axios.get(`/users/${id}/image`)
     .then(res => {

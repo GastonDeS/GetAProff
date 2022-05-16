@@ -19,7 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/api/favorites")
+@Path("/api/favourites")
 @Component
 public class FavoritesController {
     private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0; // TODO transform this into exceptions
@@ -35,6 +35,7 @@ public class FavoritesController {
 
     //Return all favorite users of user with uid
     @GET
+    @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getUserFavorites(@QueryParam("page") @DefaultValue("1") Integer page,
                                      @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
         try {
@@ -55,14 +56,16 @@ public class FavoritesController {
     @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getFavedTeacher(@PathParam("teacherId") Long teacherId) {
         boolean isFaved = userService.isFaved(teacherId, authFacade.getCurrentUserId());
-        if (!isFaved) return Response.noContent().build();
+        System.out.println(isFaved);
+        if (!isFaved) return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(LinkUserDto.fromUserId(uriInfo, teacherId.toString())).build();
     }
 
     @POST
-    @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response addNewFavoriteUser(IdDto teacherId) {
-        int result = userService.addFavourite(teacherId.getId(), authFacade.getCurrentUserId());
+    @Path("/{teacherId}")
+    @Produces({"application/vnd.getaproff.api.v1+json"})
+    public Response addNewFavoriteUser(@PathParam("teacherId") Long teacherId) {
+        int result = userService.addFavourite(teacherId, authFacade.getCurrentUserId());
         if (result == ALREADY_INSERTED) return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok().build();
     }

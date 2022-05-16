@@ -141,7 +141,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/users/{uid}/subjects").access("@antMatcherVoter.canAccessWithSameId(authentication, #uid)")
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/users/available-subjects/{id}").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
-                        .antMatchers(API_PREFIX+"/favorites/**").hasAuthority("USER_STUDENT")// TODO check if this works if not separate into the 4 endpoints all with USER_STUDENT
+                        .antMatchers(HttpMethod.GET, API_PREFIX+"/favourites").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.GET,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")
+                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")// TODO check if this works if not separate into the 4 endpoints all with USER_STUDENT
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/ratings/{teacherId}").access("@antMatcherVoter.canRate(authentication, #teacherId)")
                         .antMatchers("/**").permitAll()
                 .and()

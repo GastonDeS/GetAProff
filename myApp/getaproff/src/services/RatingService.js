@@ -1,7 +1,7 @@
 import {axiosService} from "./index";
+import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
 
-const PATH = '/ratings'
-const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
+const PATH = paths.RATINGS
 
 export class RatingService {
   async getUserReviews(uid) {

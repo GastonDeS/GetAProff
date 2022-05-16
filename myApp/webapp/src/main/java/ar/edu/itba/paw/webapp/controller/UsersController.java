@@ -55,6 +55,7 @@ public class UsersController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UsersController.class);
 
+    // UserService
     @POST
     @Path("/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -63,6 +64,7 @@ public class UsersController {
         return commonRegister(newUserDto);
     }
 
+    // UserService
     @POST
     @Path("/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -89,6 +91,7 @@ public class UsersController {
         return response.header("Authorization", authenticationTokenService.issueToken(newUser.get().getMail(), authoritySet)).build();
     }
 
+    // UserService
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response findBySubject(@QueryParam("search") String search,
@@ -121,6 +124,7 @@ public class UsersController {
 //        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
 //    }
 
+    // UserService
     @GET
     @Path("/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -134,6 +138,7 @@ public class UsersController {
         return Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo)).build();
     }
 
+    // UserService
     @GET
     @Path("/top-rated")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -143,6 +148,7 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<TeacherDto>>(topRatedTeachers){}).build();
     }
 
+    // UserService
     @GET
     @Path("/most-requested")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -152,7 +158,8 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<TeacherDto>>(mostRequestedTeachers){}).build();
     }
 
-    //Edit profile
+    // UserService
+    // Edit profile
     @POST
     @Path("/{uid}/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -171,6 +178,7 @@ public class UsersController {
                 Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    // UserService
     @POST
     @Path("/{uid}/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -180,8 +188,8 @@ public class UsersController {
         return name == 1 ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    //Subjects
-
+    // Subjects
+    // UserService
     @GET
     @Path("/{id}/subjects")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -192,16 +200,17 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 
-    //TODO: SE PODRIA BORRAR
-    @GET
-    @Path("/subjects/levels/{id}")
-    @Produces("application/vnd.getaproff.api.v1+json")
-    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
-        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
-                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
-    }
+//    //TODO: SE PODRIA BORRAR
+//    @GET
+//    @Path("/subjects/levels/{id}")
+//    @Produces("application/vnd.getaproff.api.v1+json")
+//    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
+//        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
+//                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
+//        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
+//    }
 
+    // UserService
     @GET
     @Path("/available-subjects/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -211,6 +220,7 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
     }
 
+    // UserService
     @POST
     @Path("/{uid}")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -223,6 +233,7 @@ public class UsersController {
         return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    // UserService
     @DELETE
     @Path("/{userId}/{subjectId}/{level}")
     public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
@@ -241,7 +252,7 @@ public class UsersController {
 //        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
 //    }
 
-
+    // UserService
     @GET
     @Path("/{uid}/image")
     public Response getUserImage(@PathParam("uid") Long uid) {
@@ -251,6 +262,7 @@ public class UsersController {
 
     }
 
+    // UserService
     @POST
     @Path("/{uid}/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})

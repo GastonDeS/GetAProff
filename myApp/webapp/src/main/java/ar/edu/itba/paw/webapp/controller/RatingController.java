@@ -54,7 +54,7 @@ public class RatingController {
     @Path("/{teacherId}")
     @Produces(value = { "application/vnd.getaproff.api.v1+json" })
     @Consumes(value = { "application/vnd.getaproff.api.v1+json" })
-    public Response rateTeacher(@PathParam("teacherId") Long teacherId,NewRatingDto newRatingDto){
+    public Response rateTeacher(@PathParam("teacherId") Long teacherId, NewRatingDto newRatingDto){
         final Optional<Rating> rating = ratingService.addRating(teacherId, authFacade.getCurrentUserId(),
                 newRatingDto.getRate(), newRatingDto.getReview());
         if (!rating.isPresent())

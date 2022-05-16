@@ -8,7 +8,7 @@ import {
 } from "./Favorites.styles";
 import TutorCard from "../../components/TutorCard";
 import {TutorContainer} from "../Home/Home.styles";
-import { userService } from "../../services";
+import { favouritesService, userService } from "../../services";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
@@ -38,7 +38,7 @@ const Favorites = () => {
 
     useEffect(async () => {
         if(currentUser)
-            await userService.getFavoriteTeachers(currentUser.id, page)
+            await favouritesService.getFavoriteTeachers(page)
                 .then(
                     res => {
                         setFavoriteUsersList(res.data);

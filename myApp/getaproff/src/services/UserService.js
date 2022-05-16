@@ -1,9 +1,11 @@
 import {axiosService} from "./index";
+import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
 
-const PATH = '/users'
-const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
+const PATH = paths.USERS
 
 export class UserService {
+
+    //Get most rated and most requested teachers
     //UsersController
     async getHomeTeachers(type) {
         try {
@@ -11,6 +13,7 @@ export class UserService {
         }  catch (err) { console.log(err) }
     }
 
+    // Get subjects being taugh by teacher
     //UsersController
     async getUserSubjects(uid) {
         try {
@@ -25,6 +28,7 @@ export class UserService {
         catch (err) { console.log(err) }
     }
 
+    // Get subjects not being taugh by teacher
     //UsersController
     async getUserAvailableSubjects(uid) {
         try {
@@ -40,6 +44,7 @@ export class UserService {
         catch (err) { console.log(err) }
     }
 
+    // Add new subject to teacher
     //UsersController
     async addSubjectToUser(uid, subjecId, price, level) {
         try {
@@ -54,6 +59,7 @@ export class UserService {
         } catch(error) {console.log(error)};
     }
 
+    // Delete subject taugh by teacher
     //UsersController
     async deleteSubjectsFromUser(uid, subjects) {
         try {
@@ -65,6 +71,7 @@ export class UserService {
         } catch(error) {console.log(error)};
     }
 
+    // Get user's image
     //UsersController
     async getUserImg(uid) {
         try {
@@ -84,6 +91,7 @@ export class UserService {
         }
     }
 
+    //Add image to user
     //UsersController
     async addUserImg (uid, imgData) {
         try {
@@ -93,6 +101,7 @@ export class UserService {
         }
     }
 
+    // Get user
     //UsersController
     async getUserInfo(uid) {
         try {
@@ -105,63 +114,8 @@ export class UserService {
         }
     }
 
-    async checkIfTeacherIsFaved(uid, teacherId) {
-        try {
-            let retVal = false;
-            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, {})
-            res.data && res.data.forEach(
-                user => {
-                    if (user.id === Number(teacherId)) {
-                        retVal = true;
-                    }
-                }
-            )
-            return retVal;
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    async removeTeacherFromFavorites(teacherId, uid) {
-        try {
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${uid}/favorites/${teacherId}`, config )
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    async addTeacherToFavorites(teacherId, uid) {
-        try {
-            let config = {
-                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
-            };
-            let data = {'id' : teacherId};
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/favorites`, config, data);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    async getFavoriteTeachers(uid, page) {
-        try {
-            let response = {}
-            let config = {};
-            config['params'] = {
-                page: page,
-                pageSize: 5,
-            };
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/favorites`, config)
-                .then(res => {
-                    response['data'] = res.data
-                    response['pageQty'] =(parseInt(res.headers['x-total-pages']))
-                })
-            return response;
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
+    // Register students and teachers
+    //UsersController
     async register(formData) {
         try {
           let config = {
@@ -181,6 +135,8 @@ export class UserService {
         }
     }
 
+    // Edit students and teachers' profile
+    //UsersController
     async editProfile (uid, role, form) {
         try {
             let config = {
@@ -192,6 +148,8 @@ export class UserService {
         }
     }
 
+    // Filter teachers by params
+    //UsersController
     async getUsers(queryParams, page) {
         try {
             let config = {};
@@ -214,6 +172,8 @@ export class UserService {
 
     }
 
+    //ClassesController
+    // Get user's classes filtered by params
     async getUserClasses(uid, asTeacher, status, page) {
         try {
             let config = {}
@@ -234,16 +194,17 @@ export class UserService {
         }
     }
 
+    //RatingController
     async createReview(uid, teacherId, data) {
         try {
-            let data = {
+            let form = {
                 studentId: uid,
                 teacherId: parseInt(teacherId),
                 rate: parseFloat(data.rating),
                 review: data.review
             };
             let config = {}
-            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`,config, data);
+            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/reviews`, config, form);
         }
         catch (err) {
             console.log(err);

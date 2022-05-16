@@ -24,9 +24,8 @@ import Tab from "../../components/Tab";
 import TabItem from "../../components/TabItem";
 import Rows from "../../components/Rows";
 import {Headers, MainContainer, Request, Row, Table, Wrapper} from "../../GlobalStyle";
-import { filesService } from "../../services/index";
+import { favouritesService, filesService } from "../../services/index";
 import Dropdown from "../../components/DropDown";
-import { userService } from "../../services/index";
 import { useProfileFetch } from "../../hooks/useProfileFetch";
 import {Toast} from "react-bootstrap";
 
@@ -56,11 +55,11 @@ const Profile = () => {
 
   const handleFavoriteState = async () => {
     let teacherId = id;
-    let setFavoriteStatus = userService.addTeacherToFavorites;
+    let setFavoriteStatus = favouritesService.addTeacherToFavorites;
     if (isFaved) {
-      setFavoriteStatus = userService.removeTeacherFromFavorites;
+      setFavoriteStatus = favouritesService.removeTeacherFromFavorites;
     }
-    await setFavoriteStatus(teacherId, currentUser.id);
+    await setFavoriteStatus(teacherId);
     setIsFaved(!isFaved);
   }
   const [show, setShow] = useState(false);

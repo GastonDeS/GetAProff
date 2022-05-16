@@ -3,7 +3,7 @@ import AuthService from "../services/authService";
 import i18next from "i18next";
 
 import ProfileImg from '../assets/img/no_profile_pic.jpeg';
-import { userService, filesService, ratingService } from '../services';
+import { userService, filesService, ratingService, favouritesService } from '../services';
 
 export const useProfileFetch = (id) => {
   const [index, setIndex] = useState(0);
@@ -16,6 +16,10 @@ export const useProfileFetch = (id) => {
   const [currentUser, setCurrentUser] = useState();
   const [isTeacher, setIsTeacher] = useState(true);
   const [isFaved, setIsFaved] = useState(false);
+
+  useEffect(() => {
+    console.log(isFaved)
+  }, [isFaved])
 
   useEffect(() => {
     if (currentUser) {
@@ -67,9 +71,10 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     let current = AuthService.getCurrentUser();
-    await userService.checkIfTeacherIsFaved(current.id, id)
-        .then(value => {
-          setIsFaved(value);
+    await favouritesService.checkIfTeacherIsFaved(id)
+        .then(res => {
+          console.log(res)
+          if(res) setIsFaved(true);
         })
   },[]);
 
