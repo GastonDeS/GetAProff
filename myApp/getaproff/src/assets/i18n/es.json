@@ -108,6 +108,7 @@
       "active": "Activo",
       "finished": "Finalizado",
       "cancelled": "Cancelado",
+      "rated": "Calificado",
       "error": "Error"
     },
     "post": {
@@ -127,9 +128,9 @@
       "noSharedFiles": "El profesor aún no ha compartido archivos",
       "name": "Nombre del archivo"
     },
-    "classOver": "La clase se termino",
+    "classOver": "La clase se terminó",
     "back": "Volver",
-    "rate": "Rate your teacher",
+    "rate": "Calificá a tu profesor",
     "subject": "Materia",
     "student": "Alumno",
     "teacher": "Profesor",

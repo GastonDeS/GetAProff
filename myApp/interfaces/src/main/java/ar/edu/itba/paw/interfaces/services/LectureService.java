@@ -29,5 +29,5 @@ public interface LectureService {
 
     List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId);
 
-    List<SubjectFile> getSharedFilesByTeacher(Long classId);
+    List<SubjectFile> getFilesSharedInLecture(Long classId);
 }

@@ -108,6 +108,7 @@
       "active": "Active",
       "finished": "Finished",
       "cancelled": "Cancelled",
+      "rated": "Rated",
       "error": "Error"
     },
     "post": {
