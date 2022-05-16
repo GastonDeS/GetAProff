@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.interfaces.services.LectureService;
-import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.interfaces.services.SubjectFileService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Post;
@@ -48,6 +45,9 @@ public class ClassroomController {
 
     @Autowired
     private SubjectFileService subjectFileService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Context
     private UriInfo uriInfo;
@@ -114,6 +114,7 @@ public class ClassroomController {
         if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + maybePost.get().getPostId());
         LOGGER.debug("Created post with id {} to classroom with id {}", maybePost.get().getPostId(), classId);
+        emailService.sendNewPostMessage(uploader, lecture, uriInfo.getBaseUri().toString());
         return Response.created(location).build();
     }
 

@@ -152,11 +152,11 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendNewPostMessage(User poster, Lecture lecture, String localAddr) {
+    public void sendNewPostMessage(long posterId, Lecture lecture, String localAddr) {
         String to;
         String toFormat;
         int status = 1;
-        if (lecture.getStudent().equals(poster)) {
+        if (lecture.getStudent().getId().equals(posterId)) {
             to = lecture.getTeacher().getMail();
             status = 0;
         } else {
@@ -164,12 +164,12 @@ public class EmailServiceImpl implements EmailService {
         }
         String mailSubject = messageSource.getMessage("mail.class.new.post.subject", null, LocaleContextHolder.getLocale());
         if (status == 0){
-            toFormat = messageSource.getMessage("mail.class.new.student.post.body", new Object[] {poster.getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
+            toFormat = messageSource.getMessage("mail.class.new.student.post.body", new Object[] {lecture.getStudent().getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
         } else  {
-            toFormat = messageSource.getMessage("mail.class.new.teacher.post.body", new Object[] {poster.getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
+            toFormat = messageSource.getMessage("mail.class.new.teacher.post.body", new Object[] {lecture.getTeacher().getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
         }
         String button = messageSource.getMessage("mail.class.new.post.btn",null, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), mailSubject,toFormat, localAddr + "/classroom/" + lecture.getClassId(), button);
+        String text = String.format(templateMailMessage.getText(), mailSubject,toFormat, localAddr + "classroom/" + lecture.getClassId(), button);
         sendSimpleMessage(to,mailSubject, text);
     }
 

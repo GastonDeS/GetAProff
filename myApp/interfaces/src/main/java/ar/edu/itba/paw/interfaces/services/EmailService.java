@@ -13,5 +13,5 @@ public interface EmailService {
 
     void sendSubjectRequest(Long uid, String Subject, String message);
 
-    void sendNewPostMessage(User user, Lecture myLecture, String localAddr);
+    void sendNewPostMessage(long posterId, Lecture myLecture, String localAddr);
 }
