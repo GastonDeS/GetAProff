@@ -62,7 +62,7 @@ public class ClassroomController {
     public Response getClassroom(@PathParam("classId") final Long classId) {
         Lecture lecture = checkLectureExistence(classId);
         return Response.ok(
-                ClassroomDto.getClassroom(uriInfo ,lecture)
+                ClassroomDto.getClassroom(lecture)
         ).build();
     }
 

@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Subject;
+import ar.edu.itba.paw.webapp.controller.SubjectController;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
@@ -13,13 +15,13 @@ public class SubjectLevelDto extends SubjectDto{
     private String name, url;
     private Long subjectId;
 
-    public static SubjectLevelDto fromSubjectLevel(UriInfo uri, Map.Entry<Subject, List<Integer>> subjectAndLevels) {
+    public static SubjectLevelDto fromSubjectLevel(Map.Entry<Subject, List<Integer>> subjectAndLevels) {
         SubjectLevelDto subjectLevelDto = new SubjectLevelDto();
         subjectLevelDto.levels = subjectAndLevels.getValue().stream().sorted().collect(Collectors.toList());
         subjectLevelDto.name = subjectAndLevels.getKey().getName();
         subjectLevelDto.subjectId = subjectAndLevels.getKey().getSubjectId();
-        subjectLevelDto.url = uri.getBaseUriBuilder().path("subjects")
-                .path(String.valueOf(subjectAndLevels.getKey().getSubjectId())).build().toString();
+        //subjectLevelDto.url = uri.getBaseUriBuilder().path("subjects").path(String.valueOf(subjectAndLevels.getKey().getSubjectId())).build().toString();
+        subjectLevelDto.url = JaxRsLinkBuilder.linkTo(SubjectController.class).slash(subjectAndLevels.getKey().getSubjectId()).toString();
         return subjectLevelDto;
     }
 

@@ -32,6 +32,7 @@
     <node.version>v14.17.0</node.version>
     <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
     <jackson.version>2.13.1</jackson.version>
+    <org.springframework.hateoas.version>0.25.1.RELEASE</org.springframework.hateoas.version>
 
   </properties>
 
@@ -307,6 +308,11 @@
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt</artifactId>
         <version>0.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.hateoas</groupId>
+        <artifactId>spring-hateoas</artifactId>
+        <version>${org.springframework.hateoas.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

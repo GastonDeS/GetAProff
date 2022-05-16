@@ -84,7 +84,7 @@ public class UsersController {
         LOGGER.debug("User {} registered, Role: {}", newUser.get().getName(), newUserDto.getRole());
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + newUser.get().getId());
         Response.ResponseBuilder response = Response.created(location);
-        response.entity(AuthDto.fromUser(uriInfo, newUser.get()));
+        response.entity(AuthDto.fromUser(newUser.get()));
         Set<Authority> authoritySet = new HashSet<>();
         authoritySet.add(Authority.USER_STUDENT);
         if (newUser.get().isTeacher()) authoritySet.add(Authority.USER_TEACHER);
@@ -105,7 +105,7 @@ public class UsersController {
             final Page<TeacherInfo> filteredTeaches = teachesService.filterUsers(search, order, price, level, rating, page, pageSize);
             Response.ResponseBuilder builder = Response.ok(
                     new GenericEntity<List<TeacherDto>>(filteredTeaches.getContent().stream()
-                            .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo))
+                            .map(teacherInfo -> TeacherDto.getTeacher(teacherInfo))
                             .collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(filteredTeaches, builder, uriInfo, pageSize);
@@ -135,7 +135,7 @@ public class UsersController {
         TeacherInfo teacherInfo = teachesService.getTeacherInfo(user.getId())
                     .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
                             user.getMail(), 0));
-        return Response.ok(TeacherDto.getTeacher(uriInfo, teacherInfo)).build();
+        return Response.ok(TeacherDto.getTeacher(teacherInfo)).build();
     }
 
     // UserService
@@ -144,7 +144,7 @@ public class UsersController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response listTopRatedTeachers() {
         final List<TeacherDto> topRatedTeachers = teachesService.getTopRatedTeachers().stream()
-                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
+                .map(TeacherDto::getTeacher).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(topRatedTeachers){}).build();
     }
 
@@ -154,7 +154,7 @@ public class UsersController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response listMostRequestedTeachers() {
         final List<TeacherDto> mostRequestedTeachers = teachesService.getMostRequested().stream()
-                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
+                .map(TeacherDto::getTeacher).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TeacherDto>>(mostRequestedTeachers){}).build();
     }
 
@@ -175,7 +175,7 @@ public class UsersController {
         boolean added = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId());
         userService.setTeacherAuthorityToUser();
         return (desc == 1 && sch == 1 && name == 1 && added && user.isPresent()) ?
-                Response.ok(AuthDto.fromUser(uriInfo, user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
+                Response.ok(AuthDto.fromUser(user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     // UserService
@@ -216,7 +216,7 @@ public class UsersController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getSubjectAndLevelsAvailableForUser(@PathParam("id") Long id) {
         final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsAvailableForUser(id)
-                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
+                .entrySet().stream().map(SubjectLevelDto::fromSubjectLevel).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
     }
 
@@ -257,7 +257,7 @@ public class UsersController {
     @Path("/{uid}/image")
     public Response getUserImage(@PathParam("uid") Long uid) {
         Optional<Image> maybeImage = imageService.findImageById(uid);
-        return maybeImage.isPresent() ? Response.ok(ImageDto.fromUser(uriInfo, maybeImage.get())).build()
+        return maybeImage.isPresent() ? Response.ok(ImageDto.fromUser(maybeImage.get())).build()
                 : Response.status(Response.Status.NO_CONTENT).build();
 
     }

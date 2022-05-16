@@ -23,6 +23,6 @@ public class AuthController {
     @GET
     public Response getUser() {
         User user = authFacade.getCurrentUser();
-        return Response.ok(AuthDto.fromUser(uriInfo, user)).build();
+        return Response.ok(AuthDto.fromUser(user)).build();
     }
 }

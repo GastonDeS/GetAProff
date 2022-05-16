@@ -56,7 +56,7 @@ public class ClassesController {
             final Page<Lecture> lectures = lectureService.findClasses(userId, asTeacher, status, page, pageSize);
             Response.ResponseBuilder builder = Response.ok(
                     new GenericEntity<List<ClassroomDto>>(lectures.getContent().stream()
-                            .map(lecture -> ClassroomDto.getClassroom(uriInfo, lecture))
+                            .map(ClassroomDto::getClassroom)
                             .collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(lectures, builder, uriInfo, pageSize);

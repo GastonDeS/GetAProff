@@ -16,12 +16,12 @@ public class SubjectFileDto {
 
     private byte[] file;
 
-    public static SubjectFileDto fromUser(UriInfo uri, SubjectFile subjectFile) {
+    public static SubjectFileDto fromUser(SubjectFile subjectFile) {
         SubjectFileDto subjectFileDto = new SubjectFileDto();
         subjectFileDto.id = subjectFile.getFileId();
         subjectFileDto.file = subjectFile.getFile();
         subjectFileDto.name = subjectFile.getFileName();
-        subjectFileDto.subject = SubjectDto.get(uri, subjectFile.getTeachesInfo().getSubject());
+        subjectFileDto.subject = SubjectDto.get(subjectFile.getTeachesInfo().getSubject());
         subjectFileDto.level = subjectFile.getTeachesInfo().getLevel();
         return subjectFileDto;
     }

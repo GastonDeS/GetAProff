@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.controller.UsersController;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 
 public class AuthDto {
 
@@ -14,13 +15,13 @@ public class AuthDto {
 
     private boolean isTeacher;
 
-    public static AuthDto fromUser(UriInfo uri, User user) {
+    public static AuthDto fromUser(User user) {
         AuthDto authDto = new AuthDto();
         authDto.mail = user.getMail();
         authDto.name = user.getName();
         authDto.id = user.getId();
         authDto.isTeacher = user.isTeacher();
-        authDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
+        authDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel().toString();
         return authDto;
     }
 

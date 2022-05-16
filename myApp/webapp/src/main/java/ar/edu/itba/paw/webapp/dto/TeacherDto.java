@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.TeacherInfo;
+import ar.edu.itba.paw.webapp.controller.UsersController;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -15,7 +17,7 @@ public class TeacherDto {
     private float rate;
 
 
-    public static TeacherDto getTeacher(UriInfo uri, TeacherInfo teacher) {
+    public static TeacherDto getTeacher(TeacherInfo teacher) {
         TeacherDto teacherDto = new TeacherDto();
         teacherDto.maxPrice = teacher.getMaxPrice();
         teacherDto.minPrice = teacher.getMinPrice();
@@ -26,7 +28,8 @@ public class TeacherDto {
         teacherDto.mail = teacher.getMail();
         teacherDto.id = teacher.getUserId();
         teacherDto.reviewsQty = teacher.getReviews();
-        teacherDto.url = uri.getBaseUriBuilder().path("/users").path(String.valueOf(teacher.getUserId())).build().toString();
+        //teacherDto.url = uri.getBaseUriBuilder().path("/users").path(String.valueOf(teacher.getUserId())).build().toString();
+        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).toString();
         return teacherDto;
     }
 
