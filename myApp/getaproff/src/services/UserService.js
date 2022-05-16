@@ -171,27 +171,5 @@ export class UserService {
         }
 
     }
-
-    //ClassesController
-    // Get user's classes filtered by params
-    async getUserClasses(uid, asTeacher, status, page) {
-        try {
-            let config = {}
-            config['params'] = {
-                status: status,
-                asTeacher: asTeacher,
-                userId: uid,
-                page: page,
-                pageSize: 5
-            }
-            let response;
-            await axiosService.authAxiosWrapper(axiosService.GET, '/classes', config)
-                .then(r => response = r)
-            return response
-        }
-        catch(err) {
-            console.log(err);
-        }
-    }
 }
 

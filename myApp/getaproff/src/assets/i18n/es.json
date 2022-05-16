@@ -149,9 +149,6 @@
   },
   "editProfile": {
     "title": "Editar Perfil",
-    "required": "Este campo es obligatorio",
-    "descriptionPlaceholder": "Descripción",
-    "schedulePlaceholder": "Horarios",
     "save": "Guardar cambios",
     "changeToTeacher": "Quieres ser profesor?",
     "clickHere": "Haz click aquí"
@@ -167,10 +164,6 @@
   "login":{
     "welcome": "BIENVENIDO",
     "invalidCredentials": "Email o contraseña inválidos",
-    "emailPlaceholder": "ejemplo@gmail.com",
-    "passwordPlaceholder": "Contraseña",
-    "requiredField": "Este campo es obligatorio",
-    "invalidFormat": "Formato inválido",
     "login": "Ingresar",
     "notRegistered": "Aún no estás registrado?",
     "signUp": "Regístrate"
@@ -210,17 +203,6 @@
     "title": "BIENVENIDO",
     "teacher": "Profesor",
     "student": "Alumno",
-    "emailPlaceholder": "ejemplo@gmail.com",
-    "passwordPlaceholder": "Contraseña",
-    "requiredField": "Este campo es obligatorio",
-    "invalidFormat": "Debes ingresar un email válido",
-    "shortPassword": "La contraseña debe tener al menos 8 caracteres",
-    "password": "Contraseña",
-    "confirmPasswordPlaceholder": "Confirmar contraseña",
-    "descriptionPlaceholder": "Descripción",
-    "schedulePlaceholder": "Horarios",
-    "mailPlaceholder": "ejemplo@gmail.com",
-    "namePlaceholder": "Nombre",
     "signUp": "Registrarse",
     "alreadyRegistered": "Ya tienes una cuenta?",
     "login": "Ingresar"
@@ -259,5 +241,18 @@
     "title": "Ups!",
     "description": "Parece que no pudimos encontrar la página que buscas",
     "btnText": "Volver al inicio"
+  },
+  "form": {
+    "emailPlaceholder": "ejemplo@gmail.com",
+    "passwordPlaceholder": "Contraseña",
+    "requiredField": "Este campo es obligatorio",
+    "invalidFormat": "Debes ingresar un email válido",
+    "shortPassword": "La contraseña debe tener al menos 8 caracteres",
+    "confirmPasswordPlaceholder": "Confirmar contraseña",
+    "descriptionPlaceholder": "Descripción",
+    "schedulePlaceholder": "Horarios",
+    "mailPlaceholder": "ejemplo@gmail.com",
+    "namePlaceholder": "Nombre",
+    "notMatchingPasswords": "Las contraseñas no coinciden"
   }
 }

@@ -149,9 +149,6 @@
   },
   "editProfile": {
     "title": "Edit profile",
-    "required": "This field is required",
-    "descriptionPlaceholder": "Describe yourself in a few words",
-    "schedulePlaceholder": "Enter your schedule",
     "save": "Save changes",
     "changeToTeacher" : "Want to become a teacher?",
     "clickHere" : "Click here"
@@ -167,10 +164,6 @@
   "login":{
     "welcome": "WELCOME",
     "invalidCredentials": "You have entered an invalid email or password",
-    "emailPlaceholder": "example@gmail.com",
-    "passwordPlaceholder": "Password",
-    "requiredField": "This field is required",
-    "invalidFormat": "Invalid format",
     "login": "Login",
     "notRegistered": "Don't have an account yet?",
     "signUp": "Sign Up"
@@ -210,17 +203,6 @@
     "title": "WELCOME",
     "teacher": "Teacher",
     "student": "Student",
-    "emailPlaceholder": "example@gmail.com",
-    "passwordPlaceholder": "Password",
-    "requiredField": "This field is required",
-    "invalidFormat": "You must enter a valid email",
-    "shortPassword": "Password must be at least 8 characters",
-    "password": "Password",
-    "confirmPasswordPlaceholder": "Confirm password",
-    "descriptionPlaceholder": "Description",
-    "SchedulePlaceholder": "Schedule",
-    "mailPlaceholder": "example@gmail.com,",
-    "namePlaceholder": "Name",
     "signUp": "Sign Up",
     "alreadyRegistered": "Already have an account?",
     "login": "Login"
@@ -259,5 +241,18 @@
     "title": "Oops!",
     "description": "Looks like we cannot find the page you are looking for",
     "btnText": "Go back home"
+  }, 
+  "form": {
+    "emailPlaceholder": "example@gmail.com",
+    "passwordPlaceholder": "Password",
+    "requiredField": "This field is required",
+    "invalidFormat": "You must enter a valid email",
+    "shortPassword": "Password must be at least 8 characters",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "descriptionPlaceholder": "Description",
+    "schedulePlaceholder": "Schedule",
+    "mailPlaceholder": "example@gmail.com,",
+    "namePlaceholder": "Name",
+    "notMatchingPasswords": "The passwords don't match"
   }
 }
