@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.webapp.controller.ClassroomController;
+import ar.edu.itba.paw.webapp.controller.PostFileController;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -14,17 +17,19 @@ public class ClassroomDto {
 
 
 
-    public static ClassroomDto getClassroom(UriInfo uri, Lecture lecture) {
+    public static ClassroomDto getClassroom(Lecture lecture) {
         ClassroomDto classroomDto = new ClassroomDto();
-        classroomDto.student = StudentDto.fromUser(uri, lecture.getStudent());
-        classroomDto.teacher = StudentDto.fromUser(uri, lecture.getTeacher());
+        classroomDto.student = StudentDto.fromUser(lecture.getStudent());
+        classroomDto.teacher = StudentDto.fromUser(lecture.getTeacher());
         classroomDto.classId = lecture.getClassId();
         classroomDto.subjectName = lecture.getSubject().getName();
         classroomDto.price = lecture.getPrice();
         classroomDto.status = lecture.getStatus();
         classroomDto.level = lecture.getLevel();
-        classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"posts").build().toString();
-        classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"files").build().toString();
+        //classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"posts").build().toString();
+        classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").toString();
+        //classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"files").build().toString();
+        classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").toString();
         //classroomDto.notifications = lecture.getNotifications();
         return classroomDto;
     }

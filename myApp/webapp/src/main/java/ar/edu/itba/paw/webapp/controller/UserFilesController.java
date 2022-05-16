@@ -35,7 +35,7 @@ public class UserFilesController {
     @Path("/{uid}")
     public Response getAllFilesFromUser(@PathParam("uid") Long uid) {
         final List<UserFileDto> userFileDtos = userFileService.getAllUserFiles(uid).stream()
-                .map(file -> UserFileDto.fromUser(uriInfo, file)).collect(Collectors.toList());
+                .map(UserFileDto::fromUser).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserFileDto>>(userFileDtos){}).build();
     }
 
@@ -58,7 +58,7 @@ public class UserFilesController {
         if (userFile.isPresent()) {
             LOGGER.debug("File uploaded successfully");
         }
-        return userFile.isPresent() ? Response.ok(UserFileDto.fromUser(uriInfo, userFile.get())).build() :
+        return userFile.isPresent() ? Response.ok(UserFileDto.fromUser(userFile.get())).build() :
                 Response.status(Response.Status.BAD_REQUEST).build();
     }
 

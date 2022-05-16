@@ -27,11 +27,18 @@ export const FilterSection = styled.div`
   input[type="radio"]:checked + label {
     font-weight: bold;
   }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
 `;
 
 export const CustomH1 = styled.h2 `
-    margin-top: 10px;
     font-size: 2rem;
+    color: var(--secondary);
+    font-weight: bold;
+    margin-top: 0.625rem;
 `;
 
 export const TutorsWrapper = styled.div`

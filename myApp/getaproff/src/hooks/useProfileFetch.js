@@ -16,6 +16,8 @@ export const useProfileFetch = (id) => {
   const [currentUser, setCurrentUser] = useState();
   const [isTeacher, setIsTeacher] = useState(true);
   const [isFaved, setIsFaved] = useState(false);
+  const [pageQty, setPageQty] = useState(1);
+  const [page, setPage] = useState(1);
 
 
   useEffect(() => {
@@ -57,18 +59,25 @@ export const useProfileFetch = (id) => {
                   }])
                 })
               })
-            })
-
-        await ratingService.getUserReviews(user.id)
-            .then(data => setReviews(data))
+            });
 
         await filesService.getUserCertifications(user.id)
-            .then(data => setCertifications(data))
+            .then(data => setCertifications(data));
       }
       setLoading(false);
 
     }
   },[user]);
+
+  useEffect(async () => {
+    if (user) {
+      await ratingService.getUserReviews(user.id, page)
+            .then(res => {
+              setPageQty((parseInt(res.headers['x-total-pages'])));
+              setReviews(res.data);
+            });
+    }
+  }, [user, page]);
 
   return {
     currentUser,
@@ -81,6 +90,9 @@ export const useProfileFetch = (id) => {
     index,
     loading,
     subjects,
+    pageQty,
+    page, 
+    setPage,
     setIndex,
     setIsFaved
   };

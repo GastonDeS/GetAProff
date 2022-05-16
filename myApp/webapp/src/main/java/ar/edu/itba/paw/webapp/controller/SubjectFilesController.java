@@ -41,7 +41,7 @@ public class SubjectFilesController {
     public Response getUserSubjectFiles() {
         Long uid = authFacade.getCurrentUserId();
         final List<SubjectFileDto> subjectFileDtos = subjectFileService.getAllSubjectFilesFromUser(uid).stream()
-                .map(subjectFile -> SubjectFileDto.fromUser(uriInfo, subjectFile)).collect(Collectors.toList());
+                .map(SubjectFileDto::fromUser).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
     }
 

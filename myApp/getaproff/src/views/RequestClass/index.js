@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-
 import { InputContainer, Content } from './RequestClass.styles';
 import { Wrapper, MainContainer, Title } from '../../GlobalStyle';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import SelectDropdown from '../../components/SelectDropdown'
 import { userService, classesService }  from "../../services";
-import AuthService from "../../services/authService";
 import { useNavigate,  useParams} from "react-router-dom";
 import i18next from "i18next";
 

@@ -23,8 +23,14 @@ export const InputContainer = styled.div`
   gap: 0.5rem;
   padding: 0 1rem;
 
-  p {
+  h3 {
     color: var(--secondary);
+    padding-left: 0.5rem;
+    font-weight: normal;
+  }
+
+  p {
+    color: red;
     padding-left: 0.5rem;
   }
 

@@ -5,6 +5,12 @@ export const PageContainer = styled.div `
     display: flex;
     flex-direction: column;
     text-align: center;
+    
+    h1 {
+      font-size: 2rem;
+      color: var(--secondary);
+      font-weight: bold;
+    }
 `
 
 export const FormContainer = styled.form `

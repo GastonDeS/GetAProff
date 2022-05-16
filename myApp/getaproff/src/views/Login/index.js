@@ -18,7 +18,7 @@ import {useForm} from "react-hook-form";
 import {Request, Wrapper, MainContainer} from "../../GlobalStyle";
 import i18next from "i18next";
 
-const EMAIL_PATTERN = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+const EMAIL_PATTERN = /^$|^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$/;
 
 const Login = () => {
 
@@ -51,17 +51,17 @@ const Login = () => {
                 {invalidCredentials && <Error>{i18next.t('login.invalidCredentials')}</Error>}
                 <InputWrapper>
                   <StyledInput
-                      placeholder={i18next.t('login.emailPlaceholder')}
+                      placeholder={i18next.t('form.emailPlaceholder')}
                       {...register(
                           "username",
                           {
                             required: {
                               value: true,
-                              message: i18next.t('login.requiredField')
+                              message: i18next.t('form.requiredField')
                             },
                             pattern: {
                               value: EMAIL_PATTERN,
-                              message: i18next.t('login.invalidFormat')
+                              message: i18next.t('form.invalidFormat')
                             }
                           })
                       }
@@ -70,13 +70,13 @@ const Login = () => {
                 </InputWrapper>
                 <InputWrapper>
                   <StyledInput type="password"
-                               placeholder={i18next.t('login.passwordPlaceholder')}
+                               placeholder={i18next.t('form.passwordPlaceholder')}
                       {...register(
                           "password",
                           {
                             required: {
                               value: true,
-                              message: i18next.t('login.requiredField')
+                              message: i18next.t('form.requiredField')
                             }
                           })
                       }
