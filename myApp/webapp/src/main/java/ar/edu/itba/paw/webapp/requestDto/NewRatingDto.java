@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.webapp.requestDto;
 
+import javax.validation.constraints.NotNull;
+
 public class NewRatingDto {
 
+    @NotNull
     private float rate;
 
     private String review;

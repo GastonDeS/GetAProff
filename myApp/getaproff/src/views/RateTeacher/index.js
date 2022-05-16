@@ -6,7 +6,7 @@ import {FormContainer, FormInput, PageContainer} from "./RateTeacher.styles";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import {useForm} from "react-hook-form";
-import {classroomService, userService} from "../../services";
+import {classroomService, userService, ratingService} from "../../services";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../services/authService";
 import {Error} from "../Login/Login.styles";
@@ -19,8 +19,8 @@ const RateTeacher = () => {
     const currUser = AuthService.getCurrentUser();
     const teacher = useParams()
 
-    const onSubmit = (data) => {
-        userService.createReview(currUser.id, teacher.id, data)
+    const onSubmit = async (data) => {
+        await ratingService.rateTeacher(teacher.id, data)
             .then(r => {
                 navigate(`/users/${currUser.id}/classes`);
             })
@@ -38,7 +38,7 @@ const RateTeacher = () => {
             <Navbar/>
             <MainContainer>
                 <PageContainer>
-                    {teacherInfo && <h1>{i18next.t('rateTeacher.title')} {teacherInfo.name}</h1>}
+                    {teacherInfo && <h1>{i18next.t('rateTeacher.title')} {teacherInfo.name}?</h1>}
                     <FormContainer  onSubmit={handleSubmit(onSubmit)}>
                         <FormInput>
                             <label style={{alignSelf:'flex-start'}}>{i18next.t('rateTeacher.rate')}</label>
