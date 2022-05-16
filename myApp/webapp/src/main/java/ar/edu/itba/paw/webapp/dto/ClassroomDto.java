@@ -3,13 +3,15 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.webapp.controller.ClassroomController;
 import ar.edu.itba.paw.webapp.controller.PostFileController;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import javax.ws.rs.core.UriInfo;
 
 public class ClassroomDto {
 
-    private String subjectName, posts, files;
+    private String subjectName;
+    private Link posts, files;
     private Long classId;
     private StudentDto teacher;
     private StudentDto student;
@@ -26,11 +28,8 @@ public class ClassroomDto {
         classroomDto.price = lecture.getPrice();
         classroomDto.status = lecture.getStatus();
         classroomDto.level = lecture.getLevel();
-        //classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"posts").build().toString();
-        classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").toString();
-        //classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"files").build().toString();
-        classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").toString();
-        //classroomDto.notifications = lecture.getNotifications();
+        classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").withSelfRel();
+        classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").withSelfRel();
         return classroomDto;
     }
 
@@ -58,19 +57,19 @@ public class ClassroomDto {
         this.teacher = teacher;
     }
 
-    public String getFiles() {
+    public Link getFiles() {
         return files;
     }
 
-    public void setFiles(String files) {
+    public void setFiles(Link files) {
         this.files = files;
     }
 
-    public String getPosts() {
+    public Link getPosts() {
         return posts;
     }
 
-    public void setPosts(String posts) {
+    public void setPosts(Link posts) {
         this.posts = posts;
     }
 

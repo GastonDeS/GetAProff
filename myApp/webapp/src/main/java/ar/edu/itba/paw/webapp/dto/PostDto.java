@@ -19,9 +19,8 @@ public class PostDto {
         if (post.getFilename() == null || post.getFilename().isEmpty())
             postDto.file = null;
         else
-            //postDto.file = PaginatedFileDto.getPaginatedFileDto(uri, "posts", "/file/", post.getFilename(), post.getPostId());
             postDto.file  = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(post.getPostId()).slash("file").withRel(post.getFilename());
-            postDto.message = post.getMessage();
+        postDto.message = post.getMessage();
         postDto.time = post.getTime();
         postDto.uploader = post.getUploader().getId();
         return postDto;

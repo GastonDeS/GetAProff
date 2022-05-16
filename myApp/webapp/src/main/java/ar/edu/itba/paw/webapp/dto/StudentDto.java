@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.controller.UsersController;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import javax.ws.rs.core.UriInfo;
@@ -11,7 +12,7 @@ public class StudentDto {
 //    @Value("${spring.data.rest.basePath}")
 //    private static String apiBaseUrl;
 
-    private String url;
+    private Link url;
 
     private String name, mail;
 
@@ -25,8 +26,7 @@ public class StudentDto {
         studentDto.name = user.getName();
         studentDto.id = user.getId();
         studentDto.isTeacher = user.isTeacher();
-        //studentDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
-        studentDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel().toString();
+        studentDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel();
         return studentDto;
     }
 
@@ -46,11 +46,11 @@ public class StudentDto {
         this.name = name;
     }
 
-    public String getUrl() {
+    public Link getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(Link url) {
         this.url = url;
     }
 
