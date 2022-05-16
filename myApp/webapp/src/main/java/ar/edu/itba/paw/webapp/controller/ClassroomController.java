@@ -129,6 +129,8 @@ public class ClassroomController {
 //            if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
 //                return Response.status(Response.Status.FORBIDDEN).build();
         int updated = lectureService.setStatus(classId, newStatus.getStatus());
+        emailService.sendStatusChangeMessage(lecture, newStatus.getStatus(),uriInfo.getBaseUri().toString());
+        LOGGER.debug("Changed status of classroom with id {} to {}", classId, newStatus.getStatus());
         return updated == SUCCESS ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
