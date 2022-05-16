@@ -8,7 +8,7 @@ import TabItem from '../../components/TabItem'
 import SelectDropdown from '../../components/SelectDropdown';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
 import AuthService from "../../services/authService";
-import {classroomService, userService} from "../../services";
+import {classesService, classroomService, userService} from "../../services";
 import {useNavigate} from "react-router-dom";
 import i18next from "i18next";
 import {StyledPagination} from "../Tutors/Tutors.styles";
@@ -21,8 +21,8 @@ const MyClasses = () => {
   const [requestedClasses, setRequestedClasses] = useState([]);
   const [offeredClasses, setOfferedClasses] = useState([]);
   const [reloadCards, setReloadCards] = useState(false);
-  const [page, setPage] = useState(1)
-  const [pageQty, setPageQty] = useState(1)
+  const [page, setPage] = useState(1);
+  const [pageQty, setPageQty] = useState(1);
   const currUser = AuthService.getCurrentUser();
   const options = [
     {
@@ -91,7 +91,7 @@ const MyClasses = () => {
   };
 
   const fetchClasses = async (setClasses, asTeacher) => {
-    await userService.getUserClasses(currUser.id, asTeacher, status - 1, page)
+    await classesService.getUserClasses(currUser.id, asTeacher, status - 1, page)
         .then(res => {
           setClasses([...res.data]);
           setPageQty((parseInt(res.headers['x-total-pages'])));

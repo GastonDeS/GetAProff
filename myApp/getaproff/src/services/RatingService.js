@@ -7,17 +7,16 @@ export class RatingService {
   async getUserReviews(uid, page) {
     try {
         let data;
+
         let config = {
             headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
         }
-        await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}`, config, {
+        config['params'] = {
             page: page,
-            pageSize: 10
-        })
-            .then(res => {
-                data = res.data
-            })
-        return data;
+            pageSize: 5
+        }
+
+        return await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}`, config)
     }
     catch (err) {
         console.log(err);

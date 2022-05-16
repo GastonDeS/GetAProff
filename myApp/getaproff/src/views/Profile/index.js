@@ -28,6 +28,8 @@ import { favouritesService, filesService } from "../../services/index";
 import Dropdown from "../../components/DropDown";
 import { useProfileFetch } from "../../hooks/useProfileFetch";
 import {Toast} from "react-bootstrap";
+import {PageItem} from "react-bootstrap";
+import {StyledPagination} from "../Tutors/Tutors.styles";
 
 const Profile = () => {
   const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
@@ -49,9 +51,25 @@ const Profile = () => {
     index,
     loading,
     subjects,
+    pageQty,
+    page, 
+    setPage,
     setIndex,
     setIsFaved
   } = useProfileFetch(id);
+
+  let items = [];
+  for (let number = 1; number <= pageQty; number++) {
+    items.push(
+        <PageItem
+            key={number}
+            active={number === page}
+            onClick={() => setPage(number)}
+        >
+          {number}
+        </PageItem>
+    );
+  };
 
   const handleFavoriteState = async () => {
     let teacherId = id;
@@ -181,6 +199,7 @@ const Profile = () => {
                       </ProfileDataContainer>
                     })
                   }
+                  {pageQty > 1 && <StyledPagination>{items}</StyledPagination>}
                 </SectionInfo>
               )}
             </TabInfoContainer>

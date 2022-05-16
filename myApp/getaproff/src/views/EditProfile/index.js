@@ -100,15 +100,15 @@ const EditProfile = () => {
           <Title>{i18next.t('editProfile.title')}</Title>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <DisplayImage register={register} name = "image" image = {displayImage} onImageChange={onImageChange}/>
-              <Input register={register} name = "nameInput" options={{required : {value: true, message: i18next.t('editProfile.required')}}}
+              <Input register={register} name = "nameInput" options={{required : {value: true, message: i18next.t('form.requiredField')}}} placeholder={i18next.t('form.namePlaceholder')}
               />
               {errors.nameInput && <Error>{errors.nameInput.message}</Error>}
               {isTeacher &&
                 <>
-                  <Textarea name = "description" register = {register} options = {{required: {value: true, message: i18next.t('editProfile.required')}}} placeholder={i18next.t('editProfile.descriptionPlaceholder')}
+                  <Textarea name = "description" register = {register} options = {{required: {value: true, message: i18next.t('form.requiredField')}}} placeholder={i18next.t('form.descriptionPlaceholder')}
                   />
                   {errors.description && <Error>{errors.description.message}</Error>}
-                  <Textarea name= "schedule" register = {register} options = {{required: {value: true, message: i18next.t('editProfile.required')}}} placeholder={i18next.t('editProfile.schedulePlaceholder')}
+                  <Textarea name= "schedule" register = {register} options = {{required: {value: true, message: i18next.t('form.requiredField')}}} placeholder={i18next.t('form.schedulePlaceholder')}
                   />
                   {errors.schedule && <Error>{errors.schedule.message}</Error>}
                 </>

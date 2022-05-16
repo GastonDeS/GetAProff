@@ -98,54 +98,55 @@ const Register = () => {
               <DisplayImage  register={register} name="ImgInput" image={displayImage} onImageChange={onImageChange}/>
               </div>
               <InputWrapper>
-                <Input register={register} name="NameInput" options={{required: {value: true, message: i18next.t('register.requiredField')}}} type="text" placeholder={i18next.t('register.namePlaceholder')} />
+                <Input register={register} name="NameInput" options={{required: {value: true, message: i18next.t('form.requiredField')}}} type="text" placeholder={i18next.t('form.namePlaceholder')} />
+                {errors.NameInput && <Error>{errors.NameInput.message}</Error>}
                 <Input register={register} name="MailInput"
                        options={{
                          required: {
                            value: true,
-                           message: i18next.t('register.requiredField')
+                           message: i18next.t('form.requiredField')
                          },
                          pattern: {
                            value: EMAIL_PATTERN,
-                           message: i18next.t('register.invalidFormat')
+                           message: i18next.t('form.invalidFormat')
                          }
-                       }} type="text" placeholder={i18next.t('register.mailPlaceholder')} />
+                       }} type="text" placeholder={i18next.t('form.mailPlaceholder')} />
                 {errors.MailInput && <Error>{errors.MailInput.message}</Error>}
                 <Input register={register} name="PassInput"
                        options={{
                          required: {
                            value: true,
-                           message: i18next.t('register.requiredField')
+                           message: i18next.t('form.requiredField')
                          },
                          minLength: {
                            value: 8,
-                           message: i18next.t('register.shortPassword')
+                           message: i18next.t('form.shortPassword')
                          }
-                       }} type="password" placeholder={i18next.t('register.password')}  />
+                       }} type="password" placeholder={i18next.t('form.passwordPlaceholder')}  />
                 {errors.PassInput && <Error>{errors.PassInput.message}</Error>}
                 <Input register={register} name="ConfirmPassInput"
                        options={{
                          required: {
-                           value: true, message: i18next.t('register.requiredField')
+                           value: true, message: i18next.t('form.requiredField')
                          },
-                         validate: value => value === getValues("PassInput") || "The passwords don't match"
-                       }} type="password" placeholder={i18next.t('register.confirmPasswordPlaceholder')}  />
+                         validate: value => value === getValues("PassInput") || i18next.t('form.notMatchingPasswords')
+                       }} type="password" placeholder={i18next.t('form.confirmPasswordPlaceholder')}  />
                 {errors.ConfirmPassInput && <Error>{errors.ConfirmPassInput.message}</Error>}
                 {index === 0 ? (
                   <>
                     <Textarea register={register} options={{
                          required: {
                            value: true,
-                           message: i18next.t('register.requiredField')
+                           message: i18next.t('form.requiredField')
                          }
-                       }} name="DescriptionInput" placeholder={i18next.t('register.descriptionPlaceholder')} />
+                       }} name="DescriptionInput" placeholder={i18next.t('form.descriptionPlaceholder')} />
                     {errors.DescriptionInput && <Error>{errors.DescriptionInput.message}</Error>}
                     <Textarea register={register} options={{
                          required: {
                            value: true,
-                           message: i18next.t('register.requiredField')
+                           message: i18next.t('form.requiredField')
                          }
-                       }} name="ScheduleInput" placeholder={i18next.t('register.schedulePlaceholder')} />
+                       }} name="ScheduleInput" placeholder={i18next.t('form.schedulePlaceholder')} />
                     {errors.ScheduleInput && <Error>{errors.ScheduleInput.message}</Error>}
                   </>
                 ) : (
