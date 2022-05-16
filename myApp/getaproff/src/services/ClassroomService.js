@@ -86,6 +86,33 @@ export class ClassroomService {
             console.log(err)
         }
     }
+
+    async changeClassroomFilesVisibility(fileIds, classroomId) {
+        {
+            try {
+                let config = {};
+                await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, fileIds)
+            }
+            catch(err) {
+                console.log(err)
+            }
+        }
+    }
+
+    async getClassroomFiles(classroomId) {
+        {
+            try {
+                let data;
+                await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classroomId}/files`, {})
+                    .then(res => data=res.data);
+                return data;
+            }
+            catch(err) {
+                console.log(err)
+            }
+        }
+    }
+
 }
 
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.SubjectFile;
 
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,12 +13,16 @@ public class ClassroomFilesDto {
 
     public static ClassroomFilesDto getClassroomFilesDto(UriInfo uri, List<SubjectFile> shared, List<SubjectFile> notShared) {
         ClassroomFilesDto classroomFilesDto = new ClassroomFilesDto();
-        classroomFilesDto.shared = shared.stream()
-                .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
-                .collect(Collectors.toList());
-        classroomFilesDto.notShared = notShared.stream()
-                .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
-                .collect(Collectors.toList());
+        classroomFilesDto.notShared = new ArrayList<>();
+        classroomFilesDto.shared = new ArrayList<>();
+        if(shared != null && !shared.isEmpty())
+            classroomFilesDto.shared = shared.stream()
+                    .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
+                    .collect(Collectors.toList());
+        if(notShared!= null && !notShared.isEmpty())
+            classroomFilesDto.notShared = notShared.stream()
+                    .map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
+                    .collect(Collectors.toList());
         return classroomFilesDto;
     }
 

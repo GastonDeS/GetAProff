@@ -87,15 +87,16 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 52L/*TODO id from authentication*/);
+        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 13L/*TODO id from authentication*/);
         final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(uriInfo, files.getValue1(), files.getValue2());
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
     @POST
     @Path("/{classId}/files")
-    public Response changeFileVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody IdDto fileId) {
-        lectureService.changeFileVisibility(fileId.getId(), classId);
+    public Response changeFilesVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
+        for(Long id : filesId.getIds())
+            lectureService.changeFileVisibility(id, classId);
         return Response.ok().build();
     }
 

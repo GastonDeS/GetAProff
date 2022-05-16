@@ -101,7 +101,7 @@ public class LectureServiceImpl implements LectureService {
         if (lecture.get().getTeacher().getId().equals(userId)) {
             lectureFiles.setValue2(this.getFilesNotSharedInLecture(lectureId, userId));
         }
-        lectureFiles.setValue1(this.getSharedFilesByTeacher(lectureId));
+        lectureFiles.setValue1(this.getFilesSharedInLecture(lectureId));
         return lectureFiles;
     }
 
@@ -121,7 +121,7 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public List<SubjectFile> getSharedFilesByTeacher(Long classId) {
+    public List<SubjectFile> getFilesSharedInLecture(Long classId) {
         return lectureDao.getSharedFilesByTeacher(classId);
     }
 }
