@@ -2,12 +2,21 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.controller.UsersController;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 
 public class AuthDto {
 
-    private String url;
+    private Link url;
+
+    public Link getUrl() {
+        return url;
+    }
+
+    public void setUrl(Link url) {
+        this.url = url;
+    }
 
     private String name, mail;
 
@@ -21,7 +30,7 @@ public class AuthDto {
         authDto.name = user.getName();
         authDto.id = user.getId();
         authDto.isTeacher = user.isTeacher();
-        authDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel().toString();
+        authDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel();
         return authDto;
     }
 
@@ -39,14 +48,6 @@ public class AuthDto {
 
     public void setMail(String mail) {
         this.mail = mail;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public boolean isTeacher() {
