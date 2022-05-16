@@ -44,9 +44,6 @@
     "schedule": "Schedule",
     "certifications": "Certifications"
   },
-  "errors": {
-    "price": "Price value must be greater than zero"
-  },
   "editSubjects": {
     "request": {
       "question": "Can't find the subject you want to teach?",
@@ -226,7 +223,7 @@
   "tutors": {
     "filters": "Filters",
     "orderBy": "Order by",
-    "maxPrice": "Max price",
+    "maxPrice": "Choose max price",
     "level": "Level",
     "rating": "Rating",
     "orMore": "or more",
@@ -235,7 +232,9 @@
     "priceAsc": "Price ascending",
     "priceDesc": "Price descending",
     "rateAsc": "Rating ascending",
-    "rateDesc": "Rating descending"
+    "rateDesc": "Rating descending",
+    "available": "Current teachers",
+    "noTeachers": "No teachers available for your search"
   },
   "error404": {
     "title": "Oops!",
@@ -253,6 +252,7 @@
     "schedulePlaceholder": "Schedule",
     "mailPlaceholder": "example@gmail.com,",
     "namePlaceholder": "Name",
-    "notMatchingPasswords": "The passwords don't match"
+    "notMatchingPasswords": "The passwords don't match",
+    "price": "Price value must be greater than zero"
   }
 }
