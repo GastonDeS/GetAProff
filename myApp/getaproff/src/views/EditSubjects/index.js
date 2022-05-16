@@ -116,7 +116,7 @@ const EditSubjects = () => {
               <input type="text" placeholder="0" onChange={onChangePrice} value={price}/>
             </SingleSelect>
             {
-              error && <ErrorMsg>{i18next.t('errors.price')}</ErrorMsg>
+              error && <ErrorMsg>{i18next.t('form.price')}</ErrorMsg>
             }
             <SingleSelect>
               <p>{i18next.t('editSubjects.level')}</p>

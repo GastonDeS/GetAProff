@@ -6,7 +6,6 @@ const PATH = paths.RATINGS
 export class RatingService {
   async getUserReviews(uid, page) {
     try {
-        let data;
 
         let config = {
             headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}

@@ -44,9 +44,6 @@
     "schedule": "Horarios",
     "certifications": "Certificaciones"
   },
-  "errors": {
-    "price": "El valor del precio debe ser mayor a cero"
-  },
   "editSubjects": {
     "request": {
       "question": "No encotrás la materia que querés dar?",
@@ -226,7 +223,7 @@
   "tutors":{
     "filters": "Filtros",
     "orderBy": "Ordenar por",
-    "maxPrice": "Precio máximo",
+    "maxPrice": "Elegí percio máximo",
     "level": "Nivel",
     "rating": "Calificación",
     "orMore": "o más",
@@ -235,7 +232,9 @@
     "priceAsc": "Precio ascendente",
     "priceDesc": "Precio descendente",
     "rateAsc": "Calificación ascendente",
-    "rateDesc": "Calificación descendente"
+    "rateDesc": "Calificación descendente",
+    "available": "Profesores disponibles",
+    "noTeachers": "No hay profesores disponibles para tu búsqueda"
   },
   "error404": {
     "title": "Ups!",

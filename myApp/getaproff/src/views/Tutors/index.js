@@ -57,8 +57,8 @@ const Tutors = () => {
     setIsFormReseted(!isFormReseted)
   }
 
-  useEffect( () => {
-    userService.getUsers(getValues(), page)
+  useEffect(async () => {
+    await userService.getUsers(getValues(), page)
         .then( res => {
           setTutors(res.data);
           setPageQty((parseInt(res.headers['x-total-pages'])));
@@ -66,7 +66,7 @@ const Tutors = () => {
   }, [page, formSubmitted, isFormReseted])
 
 
-  const onSubmit = (data, e) => {
+  const onSubmit = () => {
     setFormSubmitted(!formSubmitted)
     setPage(1)
   }
@@ -181,8 +181,8 @@ const Tutors = () => {
             <SearchBar register={register} name={"search"} value={ getValues("search") } handleSubmit={() => handleSubmit(onSubmit)()}/>
           </SearchBarContainer>
           {tutors.length !== 0 ?
-              <CustomH1>Profesores enseniando {getValues('search')}</CustomH1> :
-              <CustomH1>No hay profesores para esta busqueda</CustomH1>}
+              <CustomH1>{i18next.t('tutors.available')} {getValues('search')}</CustomH1> :
+              <CustomH1>{i18next.t('tutors.noTeachers')} {getValues('search')}</CustomH1>}
           <Grid>
             {tutors && tutors.map(tutor => {
               return <TutorCard key={tutor.id} user={tutor}/>

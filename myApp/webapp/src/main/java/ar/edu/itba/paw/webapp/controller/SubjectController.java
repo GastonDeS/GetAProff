@@ -27,7 +27,7 @@ public class SubjectController {
     private UriInfo uriInfo;
 
     @GET
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getAllSubjects() {
         final List<SubjectDto> subjectDtos = subjectService.list().stream()
                 .map(subject -> SubjectDto.get(uriInfo, subject)).collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class SubjectController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getSubject(@PathParam("id") Long id) {
         final Optional<Subject> subject = subjectService.findById(id);
         return subject.isPresent() ? Response.ok(SubjectDto.get(uriInfo, subject.get())).build() : Response.status(Response.Status.NOT_FOUND).build();
@@ -44,12 +44,14 @@ public class SubjectController {
 
     @GET
     @Path("/most-requested")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getMostRequestedSubjects() {
         final List<SubjectDto> subjectDtos = subjectService.getHottestSubjects().stream()
                 .map(subject -> SubjectDto.get(uriInfo, subject)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
+
+    
 
 //    @Autowired
 //    private UserService userService;
