@@ -19,15 +19,11 @@ export class SubjectService {
       }
       let subject = requestData.subject
       let message = requestData.text
-      let response;
-      await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}`, config, {
+      const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}`, config, {
         subject: subject,
         message: message,
-      }).then(res => response = res);
-      return response;
-    }
-    catch (err) {
-      console.log(err)
-    }
+      });
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 }

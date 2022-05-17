@@ -22,40 +22,15 @@ export class UserService {
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {});
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
-        // await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {})
-        //     .then((response) => {
-        //         let ans = handleResponse(response);
-        //         setter(handleService(ans, navigate));
-        //     }).catch((error) => {
-        //         let ans = handleResponse(error.response);
-        //         handleService(ans, navigate);
-        //     }).finally(() => {return});
-        // // try {
-        //     let subjects = []
-        //     await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {})
-        //         .then(res => {
-        //             res.data.forEach(subject => subjects.push(subject));
-        //             return subjects;
-        //         })
-        //     return subjects;
-        // }
-        // catch (err) { console.log(err) }
     }
 
     // Get subjects not being taugh by teacher
     //UsersController
     async getUserAvailableSubjects(uid) {
         try {
-            let subjects = []
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/available-subjects/${uid}`, config)
-                .then(res => {
-                    res.data.forEach(subject => subjects.push(subject));
-                    return subjects;
-                })
-            return subjects;
-        }
-        catch (err) { console.log(err) }
+            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/available-subjects/${uid}`, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Add new subject to teacher
@@ -65,54 +40,40 @@ export class UserService {
             let config = {
                 headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}`, config, {
+            const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}`, config, {
                 subjectId: subjecId,
                 price: price,
                 level: level
             });
-        } catch(error) {console.log(error)};
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Delete subject taugh by teacher
     //UsersController
-    async deleteSubjectsFromUser(uid, subjects) {
+    async deleteSubjectsFromUser(uid, subject) {
         try {
-            for (const subject of subjects) {
-                if (subject.checked) {
-                    await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${uid}` + subject.url, {});
-                }
-            }
-        } catch(error) {console.log(error)};
+            const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${uid}` + subject.url, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Get user's image
     //UsersController
     async getUserImg(uid) {
         try {
-            let image;
-            let  config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, config)
-                .then(
-                    res => {
-                        if (res.status === 200) {
-                            image = 'data:image/png;base64,' + res.data.image;
-                        }
-                    })
-            return image;
-        }
-        catch (err) {
-            console.log(err);
-        }
+            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     //Add image to user
     //UsersController
     async addUserImg (uid, imgData) {
         try {
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/image`, {}, imgData);
-        } catch (err) {
-            console.log(err);
-        }
+            const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/image`, {}, imgData);
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Get user
@@ -120,12 +81,9 @@ export class UserService {
     async getUserInfo(uid) {
         try {
             let data;
-            await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, {})
-                .then(res => data = res.data)
-            return data;
-        } catch (err) {
-            console.log(err);
-        }
+            const res = await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Register students and teachers
@@ -139,14 +97,9 @@ export class UserService {
           if (formData.role === 1) {
             url = PATH + '/teacher';
           }
-          await axiosService.axiosWrapper(axiosService.POST, url, config, formData)
-          .then( (res) => {
-            localStorage.setItem('token', res.headers.authorization);
-            localStorage.setItem('user', JSON.stringify(res.data));
-          });
-        } catch (err) {
-          console.log(err);
-        }
+          const res = await axiosService.axiosWrapper(axiosService.POST, url, config, formData);
+          return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Edit students and teachers' profile
@@ -156,10 +109,9 @@ export class UserService {
             let config = {
                 headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
-            return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/${role}`, config, form);
-        } catch (err) {
-            console.log(err);
-        }
+            const res =  await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/${role}`, config, form);
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Filter teachers by params
@@ -167,7 +119,6 @@ export class UserService {
     async getUsers(queryParams, page) {
         try {
             let config = {};
-            let response;
             config['params'] = {
                 maxPrice : queryParams.maxPrice,
                 level : parseInt(queryParams.level),
@@ -176,14 +127,9 @@ export class UserService {
                 page: page,
                 pageSize: 9
             };
-            await axiosService.axiosWrapper(axiosService.GET, `${PATH}`, config)
-                .then(res => response = res)
-            return response;
-        }
-        catch (err) {
-            console.log(err)
-        }
-
+            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}`, config)
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 }
 

@@ -34,11 +34,10 @@ const RequestClass = () => {
   const handleSubject = (e) => setSubject(subjects.filter(s => s.id == e.target.value)[0]);
 
   useEffect(async () => {
-    await userService.getUserInfo(teacher.id)
-      .then(data => {
-        setTeacherInfo(data)
-      });
-  }, []);
+    const res = await userService.getUserInfo(teacher.id);
+    const data = handleService(data, navigate);
+    setTeacherInfo(data);
+  }, [])
 
   useEffect(async () => {
     if (teacherInfo) {
@@ -56,13 +55,13 @@ const RequestClass = () => {
         ]);
       })
     }
-  }, [teacherInfo]);
+  }, [teacherInfo])
 
   useEffect(() => {
     if (subjects.length > 0) {
       setSubject(subjects[0]);
     }
-  }, [subjects]);
+  }, [subjects])
 
   useEffect( () => {
     if(subject) {
@@ -75,7 +74,7 @@ const RequestClass = () => {
       setLevel(subject.levels[0]);
       setLoading(false);
     };
-  }, [subject]);
+  }, [subject])
   
   return (
     <Wrapper>

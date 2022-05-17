@@ -33,10 +33,9 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
-    await userService.getUserInfo(id)
-      .then(data => {{
-        setUser(data);
-      }});
+    const res = await userService.getUserInfo(id);
+    const data = handleService(res, navigate);
+    setUser(data);
     await favouritesService.checkIfTeacherIsFaved(id)
       .then(res => {
         if(res) setIsFaved(true);
@@ -45,11 +44,10 @@ export const useProfileFetch = (id) => {
   
   useEffect(async () => {
     if (user) {
-      await userService.getUserImg(user.id).then(img => {
-        if(img) {
-          setImage(img);
-        }
-      });
+      const res = await userService.getUserImg(user.id);
+      const data = handleService(res, navigate);
+      if (data) setImage('data:image/png;base64,' + data.image);
+      
       if (isTeacher) {
         const res = await userService.getUserSubjects(user.id);
         const data = await handleService(res, navigate);
@@ -78,7 +76,7 @@ export const useProfileFetch = (id) => {
               setReviews(res.data);
             });
     }
-  }, [user, page]);
+  }, [user, page])
 
   return {
     currentUser,

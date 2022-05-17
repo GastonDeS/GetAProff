@@ -36,63 +36,48 @@ export const useEditSubjectsFetch = () => {
   }
 
   const fetchAvailableSubjects = async () => {
-    await userService.getUserAvailableSubjects(currentUser.id)
-    .then(data => {
-      setAvailableSubjects(data.map((item, index) => {
-        var levels = []
-        item.levels.forEach(level => {
-          levels.push({
-            id: level,
-            name: i18next.t('subjects.levels.' + level)
-          })
+    const res = await userService.getUserAvailableSubjects(currentUser.id);
+    const data = handleService(res, navigate);
+    setAvailableSubjects(data.map((item, index) => {
+      var levels = []
+      item.levels.forEach(level => {
+        levels.push({
+          id: level,
+          name: i18next.t('subjects.levels.' + level)
         })
-        var ans = {
-          name: item.name,
-          id: item.subjectId,
-          levels: levels
-        }
-        if (index === 0) {
-          setSubject(ans);
-          setLevel(levels[0]);
-          setLoading(false);
-        }
-        return ans;
-      }))
-    });
+      })
+      var ans = {
+        name: item.name,
+        id: item.subjectId,
+        levels: levels
+      }
+      if (index === 0) {
+        setSubject(ans);
+        setLevel(levels[0]);
+        setLoading(false);
+      }
+      return ans;
+    }))
   }
 
   useEffect(() => {
     subject && setLevel(subject.levels[0]);
-  }, [subject]);
-
-  // useEffect(() => {
-  //   rawSubjects && rawSubjects.map((item) => {
-  //     item.levels.forEach((level, index) => {
-  //       setSubjectsTaught((prev) => [...prev, { 
-  //         name: item.subject,
-  //         price: '$' + item.prices[index] + '/' + i18next.t('subjects.hour'),
-  //         level: i18next.t('subjects.levels.' + level),
-  //         url: '/' + item.id + '/' + level,
-  //         checked: false
-  //       }])
-  //     })
-  //   });
-  // }, [rawSubjects]);
+  }, [subject])
 
   useEffect(() => {
     if (loading && currentUser) {
       fetchAvailableSubjects();
       fetchSubjectsTaught();
     }
-  }, [loading, currentUser]);
+  }, [loading, currentUser])
 
   useEffect(() => {
     if (subjectsTaught && subjectsTaught.length === 0) setCheckAll(false);
-  }, [subjectsTaught]);
+  }, [subjectsTaught])
 
   useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
-  }, []);
+  }, [])
 
   return {
     error,

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Wrapper, MainContainer, Title } from '../../GlobalStyle';
 import { Content, InputContainer } from './RequestSubject.styles';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import i18next from "i18next";
-import {classesService, subjectService} from "../../services";
-import { useNavigate} from "react-router-dom";
+import { subjectService } from "../../services";
+import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/authService";
+import { handleService } from '../../handlers/serviceHandler';
 
 const RequestSubject = () => {
   const [subject, setSubject] = useState();
@@ -17,14 +18,22 @@ const RequestSubject = () => {
   const navigate = useNavigate();
 
   const submitRequest = async () => {
-    if (!subject) setSubjectError(true);
-    if (!message) setMessageError(true);
+    if (!subject) {
+      setSubjectError(true);
+      if (!message) setMessageError(true);
+      return;
+    };
+    if (!message) {
+      setMessageError(true);
+      return;
+    };
     const requestData = {
       subject : subject,
       message : message
     };
-    await subjectService.requestSubject(requestData)
-        .then(res => navigate('/users/' + AuthService.getCurrentUser().id))
+    const res = await subjectService.requestSubject(requestData);
+    handleService(res, navigate);
+    navigate('/users/' + AuthService.getCurrentUser().id);
   }
 
   return (
