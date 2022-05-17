@@ -53,7 +53,7 @@ public class SubjectFilesController {
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId);
         if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
             return Response.status(Response.Status.UNAUTHORIZED).build();
-        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(uriInfo, subjectFile);
+        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
         return Response.ok(subjectFileDto).build();
     }
 

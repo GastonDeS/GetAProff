@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.webapp.controller.SubjectController;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 
 public class SubjectDto {
 
