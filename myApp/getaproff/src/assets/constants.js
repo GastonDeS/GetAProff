@@ -7,12 +7,14 @@ export const paths = {
   CLASSES: '/classes',
   CLASSROOM: '/classroom',
   USER_FILES: '/user-files',
-  SUBJECT_FILES: '/subject-files'
+  SUBJECT_FILES: '/subject-files',
+  SUBJECTS: '/subjects'
 }
 
 export const status = {
   OK: 200,
   SUCCESS_LIMIT: 299,
   NO_CONTENT: 204,
-  UNAUTHORIZED: 401
+  UNAUTHORIZED: 401,
+  PAGE_NOT_FOUND: 404
 }

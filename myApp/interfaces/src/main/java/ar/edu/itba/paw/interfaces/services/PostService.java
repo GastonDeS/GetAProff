@@ -11,5 +11,5 @@ public interface PostService {
 
     Page<Post> retrievePosts(Long classId, Integer page, Integer pageSize);
 
-    Post getFileData(Long postId);
+    Optional<Post> getPost(Long postId);
 }

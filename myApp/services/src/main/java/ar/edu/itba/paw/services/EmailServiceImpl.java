@@ -145,7 +145,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendSubjectRequest(Long uid, String subject, String message) {
-        String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {subject}, LocaleContextHolder.getLocale());
+        String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {uid}, LocaleContextHolder.getLocale());
         String text = messageSource.getMessage("mail.subject.request.body", new Object[] {subject, message}, LocaleContextHolder.getLocale());
         sendSimpleMessage("getaproff@gmail.com", mailSubject,text);
     }

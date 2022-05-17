@@ -22,6 +22,7 @@ import Error404 from './views/Error404'
 import Favorites from './views/Favorites';
 import Classroom from "./views/Classroom";
 import RateTeacher from "./views/RateTeacher";
+import Error from "./views/Error";
 
 const App = () => {
   return (
@@ -29,7 +30,7 @@ const App = () => {
       <GlobalStyle/>
       <Routes>
         <Route path='/' element={ <Home/> }/> 
-        <Route path='/users/login' element={ <Login/> }/>
+        <Route path='/users/login/*' element={ <Login/> }/>
         <Route path='/users/new' element={ <Register/> }/>
         <Route path='/users/:id/favorites' element={ <Favorites/> }/>
         <Route path='/users/:id/classes' element={ <MyClasses/> }/>
@@ -43,6 +44,7 @@ const App = () => {
         <Route path='/tutors' element={<Tutors/> } />
         <Route path='/classroom/:id' element={ <Classroom/> }/>
         <Route path='/users/:id/reviews' element={<RateTeacher/>}/>
+        <Route path='/error' element ={<Error/>} />
         <Route path='*' element ={<Error404/>} />
       </Routes>
     </Router>

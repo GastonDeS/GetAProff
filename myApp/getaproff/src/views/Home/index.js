@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { ButtonContainer, Content, SearchBarContainer, SearchContainer, TutorContainer } from './Home.styles';
 import Navbar from '../../components/Navbar';
 import TutorCard from '../../components/TutorCard';

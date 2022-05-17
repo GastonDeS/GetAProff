@@ -2,11 +2,11 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.SubjectFileDao;
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
-import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +41,7 @@ public class SubjectFileServiceImpl implements SubjectFileService {
     }
 
     @Override
-    public SubjectFile getSubjectFileById(Long fileId) {
-        return subjectFileDao.getSubjectFileById(fileId);
+    public Optional<SubjectFile> getSubjectFileById(Long fileId) {
+        return Optional.ofNullable(subjectFileDao.getSubjectFileById(fileId));
     }
 }

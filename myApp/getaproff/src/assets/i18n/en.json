@@ -163,7 +163,8 @@
     "invalidCredentials": "You have entered an invalid email or password",
     "login": "Login",
     "notRegistered": "Don't have an account yet?",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "unauthorized": "Please login to continue"
   },
   "myFiles": {
     "file": "File",
@@ -236,8 +237,8 @@
     "available": "Current teachers",
     "noTeachers": "No teachers available for your search"
   },
-  "error404": {
-    "title": "Oops!",
+  "error": {
+    "title": "Error",
     "description": "Looks like we cannot find the page you are looking for",
     "btnText": "Go back home"
   }, 
