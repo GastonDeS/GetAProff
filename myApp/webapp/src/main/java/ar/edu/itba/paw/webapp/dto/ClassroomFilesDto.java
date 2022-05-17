@@ -3,10 +3,8 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.webapp.controller.FilesController;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Links;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,13 +18,9 @@ public class ClassroomFilesDto {
         classroomFilesDto.notShared = new ArrayList<>();
         classroomFilesDto.shared = new ArrayList<>();
         if(shared != null && !shared.isEmpty())
-            classroomFilesDto.shared = shared.stream().map(e -> JaxRsLinkBuilder.linkTo(FilesController.class).slash(e.getFileId()).withRel(e.getFileName())).collect(Collectors.toList());
-                    //.map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
-                    //.collect(Collectors.toList());
+            classroomFilesDto.shared = shared.stream().map(e -> JaxRsLinkBuilder.linkTo(FilesController.class).slash(e.getFileId()).withRel(e.getFileId().toString()).withTitle(e.getFileName())).collect(Collectors.toList());
         if(notShared!= null && !notShared.isEmpty())
-            classroomFilesDto.notShared = notShared.stream().map(e -> JaxRsLinkBuilder.linkTo(FilesController.class).slash(e.getFileId()).withRel(e.getFileName())).collect(Collectors.toList());
-                    //.map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
-                    //.collect(Collectors.toList());
+            classroomFilesDto.notShared = notShared.stream().map(e -> JaxRsLinkBuilder.linkTo(FilesController.class).slash(e.getFileId()).withRel(e.getFileId().toString()).withTitle(e.getFileName())).collect(Collectors.toList());
         return classroomFilesDto;
     }
 

@@ -5,8 +5,6 @@ import ar.edu.itba.paw.webapp.controller.UsersController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
-
 public class StudentDto {
 
 //    @Value("${spring.data.rest.basePath}")
@@ -26,7 +24,7 @@ public class StudentDto {
         studentDto.name = user.getName();
         studentDto.id = user.getId();
         studentDto.isTeacher = user.isTeacher();
-        studentDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel();
+        studentDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withRel(user.getId().toString());
         return studentDto;
     }
 

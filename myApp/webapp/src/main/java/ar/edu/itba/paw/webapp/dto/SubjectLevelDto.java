@@ -5,7 +5,6 @@ import ar.edu.itba.paw.webapp.controller.SubjectController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class SubjectLevelDto extends SubjectDto{
         subjectLevelDto.levels = subjectAndLevels.getValue().stream().sorted().collect(Collectors.toList());
         subjectLevelDto.name = subjectAndLevels.getKey().getName();
         subjectLevelDto.subjectId = subjectAndLevels.getKey().getSubjectId();
-        subjectLevelDto.url = JaxRsLinkBuilder.linkTo(SubjectController.class).slash(subjectAndLevels.getKey().getSubjectId()).withSelfRel();
+        subjectLevelDto.url = JaxRsLinkBuilder.linkTo(SubjectController.class).slash(subjectAndLevels.getKey().getSubjectId()).withRel(subjectAndLevels.getKey().getSubjectId().toString());
         return subjectLevelDto;
     }
 

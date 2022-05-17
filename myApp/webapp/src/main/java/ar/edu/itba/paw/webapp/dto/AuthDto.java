@@ -30,7 +30,7 @@ public class AuthDto {
         authDto.name = user.getName();
         authDto.id = user.getId();
         authDto.isTeacher = user.isTeacher();
-        authDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withSelfRel();
+        authDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withRel(user.getId().toString());
         return authDto;
     }
 

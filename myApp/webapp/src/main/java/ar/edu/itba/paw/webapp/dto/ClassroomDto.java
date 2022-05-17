@@ -6,8 +6,6 @@ import ar.edu.itba.paw.webapp.controller.PostFileController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
-
 public class ClassroomDto {
 
     private String subjectName;
@@ -28,8 +26,8 @@ public class ClassroomDto {
         classroomDto.price = lecture.getPrice();
         classroomDto.status = lecture.getStatus();
         classroomDto.level = lecture.getLevel();
-        classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").withSelfRel();
-        classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").withSelfRel();
+        classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").withRel(lecture.getClassId().toString());
+        classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").withRel(lecture.getClassId().toString());
         return classroomDto;
     }
 
