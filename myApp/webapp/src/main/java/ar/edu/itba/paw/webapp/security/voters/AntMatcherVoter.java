@@ -6,15 +6,13 @@ import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.security.api.models.BasicAuthenticationToken;
 import ar.edu.itba.paw.webapp.security.models.PawUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Component
 public class AntMatcherVoter {
@@ -47,45 +45,42 @@ public class AntMatcherVoter {
 
     private User getUser(Authentication authentication) {
         if(authentication instanceof BasicAuthenticationToken) {
-            return userService.findByEmail(((BasicAuthenticationToken)authentication).getPrincipal()).orElseThrow(NoSuchElementException::new);
+            return userService.findByEmail(((BasicAuthenticationToken)authentication).getPrincipal()).orElseThrow(NoUserLoggedException::new);
         }
         return ((PawUser)(authentication.getPrincipal())).toUser();
     }
 
     public boolean canAccessClassroom(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Optional<Lecture> lecture = lectureService.findById(id);
-        if (!lecture.isPresent()) throw new ClassNotFoundException("");
+        Lecture lecture = lectureService.findById(id).orElseThrow(ClassNotFoundException::new);
         Long loggedUserId = getUserId(authentication);
-        return lecture.get().getTeacher().getUserid().equals(loggedUserId) || lecture.get().getStudent().getUserid().equals(loggedUserId);
+        return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessClassroomAsTeacher(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Optional<Lecture> lecture = lectureService.findById(id);
-        if (!lecture.isPresent()) throw new ClassNotFoundException("");
+        Lecture lecture = lectureService.findById(id).orElseThrow(ClassNotFoundException::new);
         Long loggedUserId = getUserId(authentication);
-        return lecture.get().getTeacher().getUserid().equals(loggedUserId);
+        return lecture.getTeacher().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessPostFile(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = postService.getPost(id).orElseThrow(NoSuchElementException::new).getAssociatedLecture(); //TODO add Exception
+        Lecture lecture = postService.getPost(id).orElseThrow(PostNotFoundException::new).getAssociatedLecture();
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessDeleteSubjectFile(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(NoSuchElementException::new); // TODO create this exception
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(SubjectFileNotFoundException::new);
         return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
     }
 
     public boolean canAccessDeleteCertification(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
-        Optional<UserFile> certification = userFileService.getFileById(id);
-        if (!certification.isPresent()) throw new ClassNotFoundException(""); //TODO improve this exception
-        return certification.get().getFileOwner().getId().equals(getUserId(authentication));
+        UserFile certification = userFileService.getFileById(id).orElseThrow(CertificationNotFoundException::new);
+        return certification.getFileOwner().getId().equals(getUserId(authentication));
     }
 
     public boolean canAccessWithSameId(Authentication authentication, Long id) {

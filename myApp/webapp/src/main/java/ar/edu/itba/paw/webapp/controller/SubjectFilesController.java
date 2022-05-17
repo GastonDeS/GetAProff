@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
+import ar.edu.itba.paw.webapp.exceptions.SubjectFileNotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -19,7 +20,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/api/subject-files")
@@ -77,11 +77,8 @@ public class SubjectFilesController {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
         //TODO poner la location bien
         URI location = URI.create("/");
-        final Optional<SubjectFile> subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level);
-        if (subjectFile.isPresent()) {
-            LOGGER.debug("Subject file uploaded successfully");
-        }
-        return subjectFile.isPresent() ? Response.created(location).build() :
-                    Response.status(Response.Status.BAD_REQUEST).build();
+        final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level).orElseThrow(SubjectFileNotFoundException::new);
+        LOGGER.debug("Subject file uploaded successfully");
+        return Response.created(location).build();
     }
 }
