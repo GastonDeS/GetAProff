@@ -5,7 +5,6 @@ import ar.edu.itba.paw.webapp.controller.SubjectController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 
 public class SubjectDto {
 

@@ -45,6 +45,18 @@ public class SubjectFilesController {
         return Response.ok(new GenericEntity<List<SubjectFileDto>>(subjectFileDtos){}).build();
     }
 
+    @GET
+    @Path("/{fileId}")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
+        Long uid = authFacade.getCurrentUserId();
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId);
+        if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
+        return Response.ok(subjectFileDto).build();
+    }
+
     @DELETE
     @Path("/{file}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -53,6 +65,7 @@ public class SubjectFilesController {
         return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    //TODO: Cambiar este endpoint
     @POST
     @Path("/{uid}/{subject}/{level}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })

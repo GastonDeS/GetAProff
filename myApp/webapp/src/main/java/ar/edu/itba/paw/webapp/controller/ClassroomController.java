@@ -87,7 +87,7 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 13L/*TODO id from authentication*/);
+        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 15L/*TODO id from authentication*/);
         final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(files.getValue1(), files.getValue2());
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
