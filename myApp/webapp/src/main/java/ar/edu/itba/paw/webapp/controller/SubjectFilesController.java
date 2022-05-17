@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class SubjectFilesController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
         Long uid = authFacade.getCurrentUserId();
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId);
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId).orElseThrow(NoSuchElementException::new); // TODO Exception
         if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
             return Response.status(Response.Status.UNAUTHORIZED).build();
         SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);

@@ -30,7 +30,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getFileData(Long postId) {
-        return postDao.getPostById(postId);
+    public Optional<Post> getPost(Long postId) {
+        return Optional.ofNullable(postDao.getPostById(postId));
     }
 }
