@@ -70,11 +70,9 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     if (user) {
-      await ratingService.getUserReviews(user.id, page)
-            .then(res => {
-              setPageQty((parseInt(res.headers['x-total-pages'])));
-              setReviews(res.data);
-            });
+      const res = await ratingService.getUserReviews(user.id, page);
+      if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
+      setReviews(handleService(res, navigate));
     }
   }, [user, page])
 
