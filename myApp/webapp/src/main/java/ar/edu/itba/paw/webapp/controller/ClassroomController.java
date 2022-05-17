@@ -75,7 +75,7 @@ public class ClassroomController {
 //        try {
             final Page<Post> posts = postService.retrievePosts(classId, page, pageSize);
             Response.ResponseBuilder builder = Response.ok(
-                    new GenericEntity<List<PostDto>>(posts.getContent().stream().map(post -> PostDto.getPostDto(uriInfo, post)).collect(Collectors.toList())) {
+                    new GenericEntity<List<PostDto>>(posts.getContent().stream().map(PostDto::getPostDto).collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(posts, builder, uriInfo, pageSize);
 //        } catch (IllegalArgumentException exception) { //TODO mensaje exacto
@@ -88,7 +88,7 @@ public class ClassroomController {
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
         Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 15L/*TODO id from authentication*/);
-        final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(uriInfo, files.getValue1(), files.getValue2());
+        final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(files.getValue1(), files.getValue2());
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
