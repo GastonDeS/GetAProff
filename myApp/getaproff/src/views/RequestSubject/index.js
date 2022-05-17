@@ -41,7 +41,7 @@ const RequestSubject = () => {
             <h3>{i18next.t('requestSubject.insertMessage')}</h3>
             <textarea placeholder={i18next.t('requestSubject.insertMessagePlaceholder')} onChange={(e) => setMessage(e.target.value)}/>
             {
-              textError && <p>{i18next.t('form.requiredField')}</p>
+              messageError && <p>{i18next.t('form.requiredField')}</p>
             }
           </InputContainer>
           <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem' callback={submitRequest}/>
