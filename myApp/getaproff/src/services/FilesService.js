@@ -1,5 +1,6 @@
 import { axiosService } from "./index";
 import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
+import { handleResponse } from "../handlers/responseHandler";
 
 const USER_FILE_PATH = paths.USER_FILES
 const SUBJECT_FILE_PATH = paths.SUBJECT_FILES
@@ -25,59 +26,44 @@ export class FilesService {
 
   async getUserCertifications (uid) {
     try {
-      let data;
       let config = {}
-      await axiosService.authAxiosWrapper(axiosService.GET, `${USER_FILE_PATH}/${uid}`, config)
-          .then(res => {
-              data = res.data
-          })
-      return data;
-    }
-    catch (err) {
-        console.log(err);
-    }
+      const res = await axiosService.authAxiosWrapper(axiosService.GET, `${USER_FILE_PATH}/${uid}`, config);
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 
   async addCertification (uid, form) {
     try {
-       await axiosService.authAxiosWrapper(axiosService.POST, `${USER_FILE_PATH}/${uid}`, {}, form);
-       return;
-    } catch (err) {
-        console.log(err);
-    }
+       const res = await axiosService.authAxiosWrapper(axiosService.POST, `${USER_FILE_PATH}/${uid}`, {}, form);
+       return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 
   async removeCertification (fileId) {
     try {
-        await axiosService.authAxiosWrapper(axiosService.DELETE, `/${USER_FILE_PATH}/${fileId}`, {});
-        return;
-    } catch (err) {
-        console.log(err);
-    }
+        const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `/${USER_FILE_PATH}/${fileId}`, {});
+        return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 
   async getSubjectFiles () {
     try {
       const res = await axiosService.authAxiosWrapper(axiosService.GET, `${SUBJECT_FILE_PATH}`, {});
-      return res.data;
-    } catch (err) {
-        console.log(err);
-    }
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 
   async addSubjectFiles (uid, level, subject, form) {
     try {
-      await axiosService.authAxiosWrapper(axiosService.POST, `${SUBJECT_FILE_PATH}/${uid}/${subject}/${level}`, {}, form);
-    } catch (err) {
-      console.log(err);
-    }
+      const res = await axiosService.authAxiosWrapper(axiosService.POST, `${SUBJECT_FILE_PATH}/${uid}/${subject}/${level}`, {}, form);
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 
   async removeSubjectFiles (fileId) {
     try {
-      await axiosService.authAxiosWrapper(axiosService.DELETE, `${SUBJECT_FILE_PATH}/${fileId}`, {});
-    } catch (err) {
-      console.log(err);
-    }
+      const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${SUBJECT_FILE_PATH}/${fileId}`, {});
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 }

@@ -61,8 +61,8 @@ export const useProfileFetch = (id) => {
           })
         })
 
-        await filesService.getUserCertifications(user.id)
-            .then(data => setCertifications(data));
+        const certificacionsRes = await filesService.getUserCertifications(user.id);
+        setCertifications(handleService(certificacionsRes, navigate));
       }
       setLoading(false);
     }
