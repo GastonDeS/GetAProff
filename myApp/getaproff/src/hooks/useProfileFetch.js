@@ -33,13 +33,12 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
-    const res = await userService.getUserInfo(id);
+    const userRes = await userService.getUserInfo(id);
+    const userData = handleService(userRes, navigate);
+    setUser(userData);
+    const res = await favouritesService.checkIfTeacherIsFaved(id);
     const data = handleService(res, navigate);
-    setUser(data);
-    await favouritesService.checkIfTeacherIsFaved(id)
-      .then(res => {
-        if(res) setIsFaved(true);
-      })
+    if(data) setIsFaved(true);
   }, [id])
   
   useEffect(async () => {
