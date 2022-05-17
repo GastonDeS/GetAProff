@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Operation invalid")
 public class InvalidOperationException extends RuntimeException{
+    public InvalidOperationException() {
+        super("Operation invalid");
+    }
+
     public InvalidOperationException(String message) {
         super(message);
     }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserFileService;
 import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.webapp.dto.UserFileDto;
+import ar.edu.itba.paw.webapp.exceptions.CertificationNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -16,7 +17,6 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/api/user-files")
@@ -54,12 +54,9 @@ public class UserFilesController {
     public Response uploadUserFiles(@PathParam("uid") Long uid, @FormDataParam("file") InputStream uploadedInputStream,
                                     @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
-        final Optional<UserFile> userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid);
-        if (userFile.isPresent()) {
-            LOGGER.debug("File uploaded successfully");
-        }
-        return userFile.isPresent() ? Response.ok(UserFileDto.fromUser(userFile.get())).build() :
-                Response.status(Response.Status.BAD_REQUEST).build();
+        final UserFile userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid).orElseThrow(CertificationNotFoundException::new);
+        LOGGER.debug("File uploaded successfully");
+        return Response.ok(UserFileDto.fromUser(userFile)).build();
     }
 
 }
