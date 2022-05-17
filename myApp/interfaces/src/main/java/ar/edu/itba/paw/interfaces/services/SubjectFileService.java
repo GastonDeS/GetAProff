@@ -14,5 +14,5 @@ public interface SubjectFileService {
 
     List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level);
 
-    SubjectFile getSubjectFileById(Long fileId);
+    Optional<SubjectFile> getSubjectFileById(Long fileId);
 }

@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.TeacherInfo;
-
-import javax.ws.rs.core.UriInfo;
+import ar.edu.itba.paw.webapp.controller.UsersController;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 public class TeacherDto {
 
-    private String name, mail, description, schedule, url;
+    private String name, mail, description, schedule;
+    private Link url;
 
     private Long id;
 
@@ -15,7 +17,7 @@ public class TeacherDto {
     private float rate;
 
 
-    public static TeacherDto getTeacher(UriInfo uri, TeacherInfo teacher) {
+    public static TeacherDto getTeacher(TeacherInfo teacher) {
         TeacherDto teacherDto = new TeacherDto();
         teacherDto.maxPrice = teacher.getMaxPrice();
         teacherDto.minPrice = teacher.getMinPrice();
@@ -26,7 +28,7 @@ public class TeacherDto {
         teacherDto.mail = teacher.getMail();
         teacherDto.id = teacher.getUserId();
         teacherDto.reviewsQty = teacher.getReviews();
-        teacherDto.url = uri.getBaseUriBuilder().path("/users").path(String.valueOf(teacher.getUserId())).build().toString();
+        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).withRel(teacher.getUserId().toString());
         return teacherDto;
     }
 
@@ -70,11 +72,11 @@ public class TeacherDto {
         this.schedule = schedule;
     }
 
-    public String getUrl() {
+    public Link getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(Link url) {
         this.url = url;
     }
 

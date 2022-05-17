@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Rating;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
@@ -127,18 +128,17 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendRatedMessage(Lecture myLecture, int rating, String review, String localAddr) {
-        Optional<User> student = userService.findById(myLecture.getStudent().getId());
-        Optional<User> teacher = userService.findById(myLecture.getTeacher().getId());
-        Optional<Subject> mySubject = subjectService.findById(myLecture.getSubject().getSubjectId());
-        if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
+    public void sendRatedMessage(long teacherId, long studentId, Rating rating, String localAddr) {
+        Optional<User> student = userService.findById(studentId);
+        Optional<User> teacher = userService.findById(teacherId);
+        if (!student.isPresent() || !teacher.isPresent()) {
             throw new NoSuchElementException();
         }
         String toFormat = messageSource.getMessage("mail.subject.rated.body", new Object[] {
-                student.get().getName(), mySubject.get().getName(), rating, review}, LocaleContextHolder.getLocale());
+                student.get().getName(), rating.getRate(), rating.getReview()}, LocaleContextHolder.getLocale());
         String mailSubject = messageSource.getMessage("mail.subject.rated", null, LocaleContextHolder.getLocale());
         String button = messageSource.getMessage("mail.subject.rated.btn",null, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), mailSubject, toFormat, localAddr + "/profile/"+ teacher.get().getId(),button);
+        String text = String.format(templateMailMessage.getText(), mailSubject, toFormat, localAddr + "users/"+ teacher.get().getId(),button);
         sendSimpleMessage(teacher.get().getMail(),mailSubject, text);
     }
 

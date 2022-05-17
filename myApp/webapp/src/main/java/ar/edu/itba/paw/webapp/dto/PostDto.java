@@ -1,33 +1,36 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Post;
+import ar.edu.itba.paw.webapp.controller.PostFileController;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 import java.sql.Timestamp;
 
 public class PostDto {
     private String message;
     private Timestamp time;
     private Long uploader;
-    private PaginatedFileDto file;
+    private Link file;
 
-    public static PostDto getPostDto(UriInfo uri, Post post) {
+    public static PostDto getPostDto(Post post) {
         PostDto postDto = new PostDto();
         if (post.getFilename() == null || post.getFilename().isEmpty())
             postDto.file = null;
-        else
-            postDto.file = PaginatedFileDto.getPaginatedFileDto(uri, "posts", "/file/", post.getFilename(), post.getPostId());
+        else {
+            postDto.file = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(post.getPostId()).slash("file").withRel(post.getPostId().toString()).withTitle(post.getFilename());
+        }
         postDto.message = post.getMessage();
         postDto.time = post.getTime();
         postDto.uploader = post.getUploader().getId();
         return postDto;
     }
 
-    public PaginatedFileDto getFile() {
+    public Link getFile() {
         return file;
     }
 
-    public void setFile(PaginatedFileDto file) {
+    public void setFile(Link file) {
         this.file = file;
     }
 

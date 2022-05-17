@@ -42,7 +42,7 @@ public class FavoritesController {
             final Page<TeacherInfo> favourites = userService.getFavourites(authFacade.getCurrentUserId(), page, pageSize);
             Response.ResponseBuilder builder = Response.ok(
                     new GenericEntity<List<TeacherDto>>(favourites.getContent().stream()
-                            .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo))
+                            .map(TeacherDto::getTeacher)
                             .collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
@@ -57,7 +57,7 @@ public class FavoritesController {
     public Response getFavedTeacher(@PathParam("teacherId") Long teacherId) {
         boolean isFaved = userService.isFaved(teacherId, authFacade.getCurrentUserId());
         if (!isFaved) return Response.status(Response.Status.NO_CONTENT).build();
-        return Response.ok(LinkUserDto.fromUserId(uriInfo, teacherId.toString())).build();
+        return Response.ok(LinkUserDto.fromUserId(teacherId.toString())).build();
     }
 
     @POST

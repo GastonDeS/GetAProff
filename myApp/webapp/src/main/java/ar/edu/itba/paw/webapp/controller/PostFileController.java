@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
+import java.util.NoSuchElementException;
 
 @Path("/api/post")
 @Component
@@ -22,7 +23,7 @@ public class PostFileController {
     @Path("/{postId}/file")
     @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getPostFile(@PathParam("postId") final Long postId) {
-        Post post = postService.getFileData(postId);
+        Post post = postService.getPost(postId).orElseThrow(NoSuchElementException::new); //TODO create its own Exception
         Response.ResponseBuilder response = Response.ok(new ByteArrayInputStream(post.getFile()));
         response.header("Content-Disposition", "attachment; filename=\"" + post.getFilename() + "\"" );
         return response.build();

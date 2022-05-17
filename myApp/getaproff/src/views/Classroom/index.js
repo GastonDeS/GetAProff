@@ -98,10 +98,10 @@ const Classroom = () => {
     }
 
     const changeFilesVisibility = data => {
+        setFileVisibilityChanged(!fileVisibilityChanged);
         console.log(data);
-        // setFileVisibilityChanged(!fileVisibilityChanged);
-        // classroomService.changeClassroomFilesVisibility(data,id.id)
-        //     .then(r => console.log(r));
+        classroomService.changeClassroomFilesVisibility(data.filesToChangeVisibility,id.id)
+            .then(r => console.log(r));
     }
 
     const navigateToMyClasses = () => {
@@ -260,41 +260,95 @@ const Classroom = () => {
                             {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
-                            {isTeacherClassroom && classInfo.status !== FINISHED &&
-                            <>
-                                <ClassContentSide>
-                                    <h2>{i18next.t('classroom.files.myFiles')}</h2>
-                                    {(files === 0) ?
-                                        <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.noFiles')}</span>
-                                        :
-                                        <div>
-                                            <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
+                            {(isTeacherClassroom && classInfo.status !== FINISHED) ?
+                                <>
+                                    <ClassContentSide>
+                                        <h2>{i18next.t('classroom.files.myFiles')}</h2>
+                                        {(files === 0) ?
+                                            <span style={{
+                                                alignSelf: "center",
+                                                margin: "8px 0 4px 0",
+                                                fontSize: "20px"
+                                            }}>{i18next.t('classroom.files.noFiles')}</span>
+                                            :
+                                            <div>
+                                                <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
+                                                <SharedFilesContainer>
+                                                    {notSharedClassFiles &&
+                                                    <form onSubmit={shareFilesHandleSubmit(changeFilesVisibility)}>
+                                                        <Ul>
+                                                            {notSharedClassFiles.map((file, index) => {
+                                                                return (
+                                                                    <li key={index}>
+                                                                        <SubjectsRow>
+                                                                            <a style={{fontWeight: "bold"}}
+                                                                               href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                                               target="_blank">{file.name}</a>
+                                                                            <input type="checkbox"
+                                                                                   {...shareFilesRegister("filesToChangeVisibility")}
+                                                                                   style={{
+                                                                                       width: "18px",
+                                                                                       height: "18px",
+                                                                                       marginRight: "4px"
+                                                                                   }}
+                                                                                   value={index}
+                                                                            />
+                                                                        </SubjectsRow>
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                        </Ul>
+                                                        <Button text={i18next.t('classroom.files.share')} fontSize="8"
+                                                                type="submit" id="share-button"
+                                                                style={{
+                                                                    alignSelf: "center",
+                                                                    marginTop: "10px",
+                                                                    display: "none"
+                                                                }}>
+                                                        </Button>
+                                                    </form>
+                                                    }
+                                                </SharedFilesContainer>
+                                            </div>
+                                        }
+                                    </ClassContentSide>
+                                    <ClassContentSide>
+                                        <h2>{i18next.t('classroom.files.shared')}</h2>
+                                        {(files === 0) ?
+                                            <span style={{
+                                                alignSelf: "center",
+                                                margin: "8px 0 4px 0",
+                                                fontSize: "20px"
+                                            }}>{i18next.t('classroom.files.empty')}</span>
+                                            :
                                             <SharedFilesContainer>
-                                                {notSharedClassFiles &&
-                                                <form onSubmit={shareFilesHandleSubmit(changeFilesVisibility)}>
+                                                {sharedClassFiles &&
+                                                <form onSubmit={stopSharingFilesHandleSubmit(changeFilesVisibility)}>
                                                     <Ul>
-                                                        {notSharedClassFiles.map((file, index) => {
+                                                        {sharedClassFiles.map((file, index) => {
                                                             return (
                                                                 <li key={index}>
                                                                     <SubjectsRow>
                                                                         <a style={{fontWeight: "bold"}}
                                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
                                                                            target="_blank">{file.name}</a>
-                                                                        <input type="checkbox"
-                                                                               {...shareFilesRegister("filesToShare")}
-                                                                               style={{
-                                                                                   width: "18px",
-                                                                                   height: "18px",
-                                                                                   marginRight: "4px"
-                                                                               }}
-                                                                               value={index}
-                                                                        />
+                                                                        <input
+                                                                            {...stopSharingFilesRegister("filesToChangeVisibility")}
+                                                                            type="checkbox"
+                                                                            className="form-check-input"
+                                                                            style={{
+                                                                                width: "18px",
+                                                                                height: "18px",
+                                                                                marginRight: "4px"
+                                                                            }}
+                                                                            value={file.id}
+                                                                            onClick={() => console.log('click')}/>
                                                                     </SubjectsRow>
                                                                 </li>
                                                             );
                                                         })}
                                                     </Ul>
-                                                    <Button text={i18next.t('classroom.files.share')} fontSize="8"
+                                                    <Button text={i18next.t('classroom.files.stop')} fontSize="8"
                                                             type="submit" id="share-button"
                                                             style={{
                                                                 alignSelf: "center",
@@ -305,74 +359,33 @@ const Classroom = () => {
                                                 </form>
                                                 }
                                             </SharedFilesContainer>
-                                    </div>
-                                }
-                            </ClassContentSide>
-                            <ClassContentSide>
-                                <h2>{i18next.t('classroom.files.shared')}</h2>
-                                {(files === 0) ?
-                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.empty')}</span>
-                                    :
-                                    <SharedFilesContainer>
-                                        {sharedClassFiles &&
-                                        <form onSubmit={stopSharingFilesHandleSubmit(changeFilesVisibility)}>
-                                            <Ul>
-                                                {sharedClassFiles.map((file, index) => {
-                                                    return (
-                                                        <li key={index}>
-                                                            <SubjectsRow>
-                                                                <a style={{fontWeight: "bold"}}
-                                                                   href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                                   target="_blank">{file.name}</a>
-                                                                <input
-                                                                    {...stopSharingFilesRegister("filesToStopSharing")}
-                                                                    type="checkbox"
-                                                                    className="form-check-input"
-                                                                    style={{
-                                                                        width: "18px",
-                                                                        height: "18px",
-                                                                        marginRight: "4px"
-                                                                    }}
-                                                                    value={index}
-                                                                    onClick={() => console.log('click')}/>
-                                                            </SubjectsRow>
-                                                        </li>
-                                                    );
-                                                })}
-                                            </Ul>
-                                            <Button text={i18next.t('classroom.files.stop')} fontSize="8"
-                                                    type="submit" id="share-button"
-                                                    style={{
-                                                        alignSelf: "center",
-                                                        marginTop: "10px",
-                                                        display: "none"
-                                                    }}>
-                                            </Button>
-                                        </form>
                                         }
-                                    </SharedFilesContainer>
-                                }
-                            </ClassContentSide>
-                            </>
+                                    </ClassContentSide>
+                                </>
+                                :
+                                <ClassContentSide>
+                                    <h2>{i18next.t('classroom.files.classFiles')}</h2>
+                                    {(files === 0) ?
+                                        <span style={{
+                                            alignSelf: "center",
+                                            margin: "8px 0 4px 0",
+                                            fontSize: "20px"
+                                        }}>{i18next.t('classroom.files.noSharedFiles')}</span>
+                                        :
+                                        <SharedFilesContainer>
+                                            <Ul>
+                                                <li>
+                                                    <SubjectsRow>
+                                                        <a style={{fontWeight: "bold"}}
+                                                           href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                           target="_blank">{i18next.t('classroom.files.name')}</a>
+                                                    </SubjectsRow>
+                                                </li>
+                                            </Ul>
+                                        </SharedFilesContainer>
+                                    }
+                                </ClassContentSide>
                             }
-                            <ClassContentSide>
-                                <h2>{i18next.t('classroom.files.classFiles')}</h2>
-                                {(files === 0) ?
-                                    <span style={{alignSelf: "center", margin: "8px 0 4px 0", fontSize: "20px"}}>{i18next.t('classroom.files.noSharedFiles')}</span>
-                                    :
-                                    <SharedFilesContainer>
-                                        <Ul>
-                                            <li>
-                                                <SubjectsRow>
-                                                    <a style={{fontWeight: "bold"}}
-                                                       href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                       target="_blank">{i18next.t('classroom.files.name')}</a>
-                                                </SubjectsRow>
-                                            </li>
-                                        </Ul>
-                                    </SharedFilesContainer>
-                                }
-                            </ClassContentSide>
                         </ClassroomSidePanel>
 
                     </ClassroomContainer>

@@ -1,4 +1,5 @@
 import {axiosService} from "./index";
+import {instanceOf} from "prop-types";
 
 const PATH = '/classroom'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
@@ -91,7 +92,16 @@ export class ClassroomService {
         {
             try {
                 let config = {};
-                await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, fileIds)
+                let data = []
+                console.log(typeof fileIds);
+                console.log(typeof fileIds === 'string')
+                if (typeof fileIds === 'string')
+                    data[0] = parseInt(fileIds)
+                else {
+                    data = fileIds.map(item  => parseInt(item))
+                }
+                console.log(data);
+                await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data)
             }
             catch(err) {
                 console.log(err)
@@ -102,9 +112,13 @@ export class ClassroomService {
     async getClassroomFiles(classroomId) {
         {
             try {
-                let data;
+                let data = {
+                    shared: [],
+                    notShared: [],
+                }
                 await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classroomId}/files`, {})
-                    .then(res => data=res.data);
+                    .then(res => {data=res.data});
+
                 return data;
             }
             catch(err) {

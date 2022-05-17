@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Lecture;
-
-import javax.ws.rs.core.UriInfo;
+import ar.edu.itba.paw.webapp.controller.ClassroomController;
+import ar.edu.itba.paw.webapp.controller.PostFileController;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 public class ClassroomDto {
 
-    private String subjectName, posts, files;
+    private String subjectName;
+    private Link posts, files;
     private Long classId;
     private StudentDto teacher;
     private StudentDto student;
@@ -14,18 +17,17 @@ public class ClassroomDto {
 
 
 
-    public static ClassroomDto getClassroom(UriInfo uri, Lecture lecture) {
+    public static ClassroomDto getClassroom(Lecture lecture) {
         ClassroomDto classroomDto = new ClassroomDto();
-        classroomDto.student = StudentDto.fromUser(uri, lecture.getStudent());
-        classroomDto.teacher = StudentDto.fromUser(uri, lecture.getTeacher());
+        classroomDto.student = StudentDto.fromUser(lecture.getStudent());
+        classroomDto.teacher = StudentDto.fromUser(lecture.getTeacher());
         classroomDto.classId = lecture.getClassId();
         classroomDto.subjectName = lecture.getSubject().getName();
         classroomDto.price = lecture.getPrice();
         classroomDto.status = lecture.getStatus();
         classroomDto.level = lecture.getLevel();
-        classroomDto.posts = uri.getBaseUriBuilder().path(uri.getPath()+"posts").build().toString();
-        classroomDto.files = uri.getBaseUriBuilder().path(uri.getPath()+"files").build().toString();
-        //classroomDto.notifications = lecture.getNotifications();
+        classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").withRel(lecture.getClassId().toString());
+        classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").withRel(lecture.getClassId().toString());
         return classroomDto;
     }
 
@@ -53,19 +55,19 @@ public class ClassroomDto {
         this.teacher = teacher;
     }
 
-    public String getFiles() {
+    public Link getFiles() {
         return files;
     }
 
-    public void setFiles(String files) {
+    public void setFiles(Link files) {
         this.files = files;
     }
 
-    public String getPosts() {
+    public Link getPosts() {
         return posts;
     }
 
-    public void setPosts(String posts) {
+    public void setPosts(Link posts) {
         this.posts = posts;
     }
 

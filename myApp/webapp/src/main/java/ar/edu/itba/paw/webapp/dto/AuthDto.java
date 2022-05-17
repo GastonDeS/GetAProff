@@ -1,12 +1,22 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.controller.UsersController;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 
 public class AuthDto {
 
-    private String url;
+    private Link url;
+
+    public Link getUrl() {
+        return url;
+    }
+
+    public void setUrl(Link url) {
+        this.url = url;
+    }
 
     private String name, mail;
 
@@ -14,13 +24,13 @@ public class AuthDto {
 
     private boolean isTeacher;
 
-    public static AuthDto fromUser(UriInfo uri, User user) {
+    public static AuthDto fromUser(User user) {
         AuthDto authDto = new AuthDto();
         authDto.mail = user.getMail();
         authDto.name = user.getName();
         authDto.id = user.getId();
         authDto.isTeacher = user.isTeacher();
-        authDto.url = uri.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build().toString();
+        authDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withRel(user.getId().toString());
         return authDto;
     }
 
@@ -38,14 +48,6 @@ public class AuthDto {
 
     public void setMail(String mail) {
         this.mail = mail;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public boolean isTeacher() {
