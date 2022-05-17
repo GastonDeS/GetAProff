@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import i18next from "i18next";
 import {classesService, subjectService} from "../../services";
 import { useNavigate} from "react-router-dom";
+import AuthService from "../../services/authService";
 
 const RequestSubject = () => {
   const [subject, setSubject] = useState();
@@ -23,7 +24,7 @@ const RequestSubject = () => {
       message : message
     };
     await subjectService.requestSubject(requestData)
-        .then(res => navigate('/'))
+        .then(res => navigate('/users/' + AuthService.getCurrentUser().id))
   }
 
   return (
