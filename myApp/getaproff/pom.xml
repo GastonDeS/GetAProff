@@ -14,12 +14,11 @@
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
-    <!--<build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>${frontend-maven-plugin.version}</version>
                 <configuration>
                     <workingDirectory>.</workingDirectory>
                 </configuration>
@@ -65,6 +64,6 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>-->
+    </build>
 
 </project>

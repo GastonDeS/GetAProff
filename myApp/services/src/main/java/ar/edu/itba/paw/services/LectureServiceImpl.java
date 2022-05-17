@@ -102,7 +102,7 @@ public class LectureServiceImpl implements LectureService {
     @Transactional
     @Override
     public int shareFileInLecture(Long subjectFileId, Long lecture){
-        return lectureDao.stopSharingFileInLecture(subjectFileId, lecture);
+        return lectureDao.addSharedFileToLecture(subjectFileId, lecture);
     }
 
     @Override
