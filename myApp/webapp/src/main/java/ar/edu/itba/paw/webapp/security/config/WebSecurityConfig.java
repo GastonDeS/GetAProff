@@ -126,6 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroomAsTeacher(authentication, #classId)")
+                        .antMatchers(HttpMethod.DELETE, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroomAsTeacher(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
@@ -147,6 +148,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.DELETE,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")// TODO check if this works if not separate into the 4 endpoints all with USER_STUDENT
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/ratings/{teacherId}").access("@antMatcherVoter.canRate(authentication, #teacherId)")
+                        .antMatchers(HttpMethod.POST,API_PREFIX+"/subjects").hasAuthority("USER_TEACHER")
                         .antMatchers("/**").permitAll()
                 .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

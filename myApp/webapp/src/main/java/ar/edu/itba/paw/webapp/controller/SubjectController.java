@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.webapp.dto.SubjectDto;
+import ar.edu.itba.paw.webapp.requestDto.NewSubjectDto;
+import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,12 @@ public class SubjectController {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private AuthFacade authFacade;
 
     @Context
     private UriInfo uriInfo;
@@ -51,7 +60,16 @@ public class SubjectController {
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
+    @POST
+    @Consumes("application/vnd.getaproff.api.v1+json")
+    public Response requestSubject(NewSubjectDto newSubjectDto) {
+        long uid = authFacade.getCurrentUserId();
+        LOGGER.debug("User {} requested subject {}, message: {}", uid, newSubjectDto.getSubject(), newSubjectDto.getMessage());
+        emailService.sendSubjectRequest(uid, newSubjectDto.getSubject(), newSubjectDto.getMessage());
+        return Response.ok().build();
+    }
 
+    
 
 //    @Autowired
 //    private UserService userService;

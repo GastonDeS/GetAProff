@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -90,6 +91,18 @@ public class LectureServiceImpl implements LectureService {
             return lectureDao.stopSharingFileInLecture(subjectFileId,lectureId);
         }
         return lectureDao.addSharedFileToLecture(subjectFileId, lectureId);
+    }
+
+    @Transactional
+    @Override
+    public int stopSharingFileInLecture(Long subjectFileId, Long lecture){
+        return lectureDao.stopSharingFileInLecture(subjectFileId, lecture);
+    }
+
+    @Transactional
+    @Override
+    public int shareFileInLecture(Long subjectFileId, Long lecture){
+        return lectureDao.stopSharingFileInLecture(subjectFileId, lecture);
     }
 
     @Override

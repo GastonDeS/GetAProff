@@ -7,7 +7,8 @@ export const paths = {
   CLASSES: '/classes',
   CLASSROOM: '/classroom',
   USER_FILES: '/user-files',
-  SUBJECT_FILES: '/subject-files'
+  SUBJECT_FILES: '/subject-files',
+  SUBJECTS: '/subjects'
 }
 
 export const status = {
