@@ -52,10 +52,6 @@ public class AntMatcherVoter {
         return ((PawUser)(authentication.getPrincipal())).toUser();
     }
 
-//    public boolean permitAll(Authentication authentication) {
-//        return true;
-//    }
-
     public boolean canAccessClassroom(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
         Optional<Lecture> lecture = lectureService.findById(id);
@@ -74,22 +70,21 @@ public class AntMatcherVoter {
 
     public boolean canAccessPostFile(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = postService.getFileData(id).getAssociatedLecture(); //TODO add optional
-//        if (!post.isPresent()) throw new ClassNotFoundException("");
+        Lecture lecture = postService.getPost(id).orElseThrow(NoSuchElementException::new).getAssociatedLecture(); //TODO add Exception
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessDeleteSubjectFile(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id);
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(NoSuchElementException::new); // TODO create this exception
         return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
     }
 
     public boolean canAccessDeleteCertification(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
         Optional<UserFile> certification = userFileService.getFileById(id);
-        if (!certification.isPresent()) throw new ClassNotFoundException(""); //TODO create this exception
+        if (!certification.isPresent()) throw new ClassNotFoundException(""); //TODO improve this exception
         return certification.get().getFileOwner().getId().equals(getUserId(authentication));
     }
 

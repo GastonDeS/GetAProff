@@ -5,7 +5,6 @@ import ar.edu.itba.paw.webapp.controller.PostFileController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 import java.sql.Timestamp;
 
 public class PostDto {
@@ -18,8 +17,9 @@ public class PostDto {
         PostDto postDto = new PostDto();
         if (post.getFilename() == null || post.getFilename().isEmpty())
             postDto.file = null;
-        else
-            postDto.file  = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(post.getPostId()).slash("file").withRel(post.getFilename());
+        else {
+            postDto.file = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(post.getPostId()).slash("file").withRel(post.getPostId().toString()).withTitle(post.getFilename());
+        }
         postDto.message = post.getMessage();
         postDto.time = post.getTime();
         postDto.uploader = post.getUploader().getId();

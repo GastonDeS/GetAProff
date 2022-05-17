@@ -163,7 +163,8 @@
     "invalidCredentials": "Email o contraseña inválidos",
     "login": "Ingresar",
     "notRegistered": "Aún no estás registrado?",
-    "signUp": "Regístrate"
+    "signUp": "Regístrate",
+    "unauthorized": "Por favor ingrese para continuar"
   },
   "myFiles": {
     "file": "Archivo",
@@ -236,8 +237,8 @@
     "available": "Profesores disponibles",
     "noTeachers": "No hay profesores disponibles para tu búsqueda"
   },
-  "error404": {
-    "title": "Ups!",
+  "error": {
+    "title": "Error",
     "description": "Parece que no pudimos encontrar la página que buscas",
     "btnText": "Volver al inicio"
   },

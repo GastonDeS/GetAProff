@@ -5,8 +5,6 @@ import ar.edu.itba.paw.webapp.controller.UsersController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
-
 public class TeacherDto {
 
     private String name, mail, description, schedule;
@@ -30,7 +28,7 @@ public class TeacherDto {
         teacherDto.mail = teacher.getMail();
         teacherDto.id = teacher.getUserId();
         teacherDto.reviewsQty = teacher.getReviews();
-        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).withSelfRel();
+        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).withRel(teacher.getUserId().toString());
         return teacherDto;
     }
 

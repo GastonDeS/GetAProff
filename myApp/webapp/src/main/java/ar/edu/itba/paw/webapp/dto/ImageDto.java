@@ -5,14 +5,13 @@ import ar.edu.itba.paw.webapp.controller.UsersController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
-
 public class ImageDto {
 
     private Link url;
 
     private byte[] image;
 
+    // TODO i think this doesnt need url because it points to itself
     public static ImageDto fromUser(Image image) {
         ImageDto imageDto = new ImageDto();
         imageDto.image = image.getImage();

@@ -15,5 +15,6 @@ export const status = {
   OK: 200,
   SUCCESS_LIMIT: 299,
   NO_CONTENT: 204,
-  UNAUTHORIZED: 401
+  UNAUTHORIZED: 401,
+  PAGE_NOT_FOUND: 404
 }

@@ -5,8 +5,6 @@ import ar.edu.itba.paw.webapp.controller.FilesController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
-
 public class UserFileDto {
 
     private Long id;
@@ -17,9 +15,10 @@ public class UserFileDto {
 
     private byte[] file;
 
+    //TODO i think here we dont need the link it points to itself
     public static UserFileDto fromUser(UserFile file) {
         UserFileDto userFileDto = new UserFileDto();
-        userFileDto.url = JaxRsLinkBuilder.linkTo(FilesController.class).slash("user").slash(file.getFileId()).withSelfRel();
+        userFileDto.url = JaxRsLinkBuilder.linkTo(FilesController.class).slash("user").slash(file.getFileId()).withRel(file.getFileId().toString());
         userFileDto.id = file.getFileId();
         userFileDto.name = file.getFileName();
         userFileDto.file = file.getFile();
