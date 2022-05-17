@@ -17,18 +17,19 @@ import { Form, FormCheck, PageItem } from "react-bootstrap";
 import RatingStars from "../../components/RatingStars";
 import Button from "../../components/Button";
 import TutorCard from "../../components/TutorCard";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {useForm, useFormState} from "react-hook-form";
-import {userService} from "../../services";
+import { userService } from "../../services";
+import { handleService } from "../../handlers/serviceHandler";
 
 const Tutors = () => {
   const [page, setPage] = useState(1);
   const [pageQty, setPageQty] = useState(0)
   const [isFormReseted, setIsFormReseted] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
-
   const [tutors, setTutors] = useState([]);
 
+  const navigate = useNavigate();
   const search = useLocation().search;
   const searchQuery = new URLSearchParams(search).get('search');
 
@@ -53,22 +54,20 @@ const Tutors = () => {
           maxPrice: 10000,
           order: 1
         }
-    )
-    setIsFormReseted(!isFormReseted)
+    );
+    setIsFormReseted(!isFormReseted);
   }
 
   useEffect(async () => {
-    await userService.getUsers(getValues(), page)
-        .then( res => {
-          setTutors(res.data);
-          setPageQty((parseInt(res.headers['x-total-pages'])));
-        })
+    const res = await userService.getUsers(getValues(), page);
+    if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
+    setTutors(handleService(res, navigate));
   }, [page, formSubmitted, isFormReseted])
 
 
   const onSubmit = () => {
-    setFormSubmitted(!formSubmitted)
-    setPage(1)
+    setFormSubmitted(!formSubmitted);
+    setPage(1);
   }
 
   const checkIfDirty = () =>{

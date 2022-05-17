@@ -6,17 +6,17 @@ import RatingStar from 'react-stars';
 import ProfileImg from '../../assets/img/no_profile_pic.jpeg';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../services';
+import { handleService } from '../../handlers/serviceHandler';
 
 const TutorCard = ({ user }) => {
   const [image, setImage] = useState(ProfileImg);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    userService.getUserImg(user.id)
-    .then(res => {
-      if (res) setImage(res); 
-    });
+  useEffect(async () => {
+    const res = await userService.getUserImg(user.id);
+    const data = handleService(res, navigate);
+    if (data) setImage('data:image/png;base64,' + data.image);
   }, []);
 
   return (

@@ -18,6 +18,7 @@ import Button from "../../components/Button";
 import { Request, Wrapper, Title, Levels, Row, Headers, Table } from "../../GlobalStyle";
 import CheckBox from "../../components/CheckBox";
 import { useEditSubjectsFetch } from "../../hooks/useEditSubjectsFetch";
+import { handleService } from "../../handlers/serviceHandler";
 
 const EditSubjects = () => {
 
@@ -51,12 +52,11 @@ const EditSubjects = () => {
       setError(true);
     } else {
       setError(false);
-      await userService.addSubjectToUser(currentUser.id, subject.id, price, level.id)
-      .then(() => {
-        setPrice("");
-        setSubjectsTaught([]);
-        setLoading(true);
-      });
+      const res = await userService.addSubjectToUser(currentUser.id, subject.id, price, level.id);
+      handleService(res, navigate);
+      setPrice("");
+      setSubjectsTaught([]);
+      setLoading(true);
     };
   }
 
@@ -87,10 +87,14 @@ const EditSubjects = () => {
   }
 
   const handleDeleteSubjects = async () => {
-    await userService.deleteSubjectsFromUser(currentUser.id, subjectsTaught).then(() => {
-      setSubjectsTaught([]);
-      setLoading(true);
-    })
+    for (const subject of subjectsTaught) {
+      if (subject.checked) {
+        const res = await userService.deleteSubjectsFromUser(currentUser.id, subject);
+        handleService(res, navigate);
+      }
+    }
+    setSubjectsTaught([]);
+    setLoading(true);
   }
 
   const handleLevelChange = (event) => {

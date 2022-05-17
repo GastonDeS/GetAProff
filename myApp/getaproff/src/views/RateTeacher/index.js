@@ -6,11 +6,12 @@ import {FormContainer, FormInput, PageContainer} from "./RateTeacher.styles";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import {useForm} from "react-hook-form";
-import {classroomService, userService, ratingService} from "../../services";
+import { userService, ratingService } from "../../services";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../services/authService";
 import {Error} from "../Login/Login.styles";
 import i18next from "i18next";
+import { handleService } from "../../handlers/serviceHandler";
 
 const RateTeacher = () => {
     const navigate = useNavigate()
@@ -28,9 +29,10 @@ const RateTeacher = () => {
 
     }
 
-    useEffect( () => {
-        userService.getUserInfo(teacher.id)
-            .then( data => setTeacherInfo(data))
+    useEffect(async () => {
+        const res = await userService.getUserInfo(teacher.id);
+        const data = handleService(res, navigate);
+        setTeacherInfo(data);
     }, [])
 
     return (
