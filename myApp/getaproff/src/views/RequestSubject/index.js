@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import i18next from "i18next";
 import {classesService, subjectService} from "../../services";
 import { useNavigate} from "react-router-dom";
+import AuthService from "../../services/authService";
 
 const RequestSubject = () => {
   const [subject, setSubject] = useState();
@@ -23,7 +24,7 @@ const RequestSubject = () => {
       message : message
     };
     await subjectService.requestSubject(requestData)
-        .then(res => navigate('/'))
+        .then(res => navigate('/users/' + AuthService.getCurrentUser().id))
   }
 
   return (
@@ -41,7 +42,7 @@ const RequestSubject = () => {
             <h3>{i18next.t('requestSubject.insertMessage')}</h3>
             <textarea placeholder={i18next.t('requestSubject.insertMessagePlaceholder')} onChange={(e) => setMessage(e.target.value)}/>
             {
-              textError && <p>{i18next.t('form.requiredField')}</p>
+              messageError && <p>{i18next.t('form.requiredField')}</p>
             }
           </InputContainer>
           <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem' callback={submitRequest}/>
