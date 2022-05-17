@@ -21,12 +21,8 @@ public class ClassroomFilesDto {
         classroomFilesDto.shared = new ArrayList<>();
         if(shared != null && !shared.isEmpty())
             classroomFilesDto.shared = shared.stream().map(e -> JaxRsLinkBuilder.linkTo(FilesController.class).slash(e.getFileId()).withRel(e.getFileName())).collect(Collectors.toList());
-                    //.map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
-                    //.collect(Collectors.toList());
         if(notShared!= null && !notShared.isEmpty())
             classroomFilesDto.notShared = notShared.stream().map(e -> JaxRsLinkBuilder.linkTo(FilesController.class).slash(e.getFileId()).withRel(e.getFileName())).collect(Collectors.toList());
-                    //.map(e -> PaginatedFileDto.getPaginatedFileDto(uri, "files", "",e.getFileName(), e.getFileId()))
-                    //.collect(Collectors.toList());
         return classroomFilesDto;
     }
 
