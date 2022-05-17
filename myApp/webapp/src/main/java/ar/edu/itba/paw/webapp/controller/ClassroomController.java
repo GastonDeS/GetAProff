@@ -2,14 +2,12 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.Page;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
+import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -42,6 +40,9 @@ public class ClassroomController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private AuthFacade authFacade;
 
     @Autowired
     private SubjectFileService subjectFileService;
@@ -87,36 +88,34 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, 15L/*TODO id from authentication*/);
+        User currUser = authFacade.getCurrentUser();
+        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, currUser.getId()/*TODO id from authentication*/);
         final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(files.getValue1(), files.getValue2());
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
     @POST
     @Path("/{classId}/files")
+    @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
     public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
         int ans = 1;
-//        for(Long id : filesId.getIds()) {
-//            System.out.println("File " + id);
-//            ans *= lectureService.changeFileVisibility(id, classId);
-//            System.out.println("Ans" + ans);
-//        }
-        ans = lectureService.shareFileInLecture(filesId.getIds().get(0), classId);
-        System.out.println("ANS" + ans);
+        for(Long id : filesId.getIds()) {
+            ans *= lectureService.shareFileInLecture(id, classId);
+        }
+        //TODO: add exception here
+        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/{classId}/files")
+    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
         int ans = 1;
-//        for(Long id : filesId.getIds()) {
-//            System.out.println("File " + id);
-//            ans *= lectureService.changeFileVisibility(id, classId);
-//            System.out.println("Ans" + ans);
-//        }
-        ans = lectureService.stopSharingFileInLecture(filesId.getIds().get(0), classId);
-        System.out.println("DEL ANS" + ans);
+        for(Long id : filesId.getIds()) {
+            ans *= lectureService.stopSharingFileInLecture(id, classId);
+        }
+        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.ok().build();
     }
 

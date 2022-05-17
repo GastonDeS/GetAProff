@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "subject_files")
@@ -111,6 +112,19 @@ public class SubjectFile {
         public SubjectFile build() {
             return new SubjectFile(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubjectFile that = (SubjectFile) o;
+        return fileId.equals(that.fileId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileId);
     }
 }
 
