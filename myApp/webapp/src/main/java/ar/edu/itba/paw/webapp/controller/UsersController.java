@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.requestDto.*;
 import ar.edu.itba.paw.webapp.security.api.models.Authority;
 import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
@@ -105,7 +107,7 @@ public class UsersController {
             final Page<TeacherInfo> filteredTeaches = teachesService.filterUsers(search, order, price, level, rating, page, pageSize);
             Response.ResponseBuilder builder = Response.ok(
                     new GenericEntity<List<TeacherDto>>(filteredTeaches.getContent().stream()
-                            .map(teacherInfo -> TeacherDto.getTeacher(teacherInfo))
+                            .map(TeacherDto::getTeacher)
                             .collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(filteredTeaches, builder, uriInfo, pageSize);
@@ -129,9 +131,7 @@ public class UsersController {
     @Path("/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getTeacherInfo(@PathParam("id") Long id) {
-        final Optional<User> mayBeUser = userService.findById(id);
-        if(!mayBeUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        User user = mayBeUser.get();
+        final User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         TeacherInfo teacherInfo = teachesService.getTeacherInfo(user.getId())
                     .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
                             user.getMail(), 0));
@@ -256,9 +256,8 @@ public class UsersController {
     @GET
     @Path("/{uid}/image")
     public Response getUserImage(@PathParam("uid") Long uid) {
-        Optional<Image> maybeImage = imageService.findImageById(uid);
-        return maybeImage.isPresent() ? Response.ok(ImageDto.fromUser(maybeImage.get())).build()
-                : Response.status(Response.Status.NO_CONTENT).build();
+        Image image = imageService.findImageById(uid).orElseThrow(ImageNotFoundException::new);
+        return Response.ok(ImageDto.fromUser(image)).build();
 
     }
 
@@ -268,7 +267,7 @@ public class UsersController {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
                               @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
-        Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream));
+        Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream)); // TOdo some exception 409
         if (image.isPresent()) {
             LOGGER.debug("Image uploaded for user {}", uid);
         }

@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Operation failed")
 public class OperationFailedException extends RuntimeException {
+    public OperationFailedException() {
+        super("Operation failed");
+    }
+
     public OperationFailedException(String message) {
         super(message);
     }

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService, subjectService } from '../services';
+import { handleService } from '../handlers/serviceHandler';
+
 
 export const useHomeFetch = () => {
   const [topRated, setTopRated] = useState();
@@ -9,21 +11,18 @@ export const useHomeFetch = () => {
   const navigate = useNavigate();
 
   const fetchTopRated = async () => {
-    await userService.getHomeTeachers('top-rated')
-      .then(res => {
-          setTopRated([...res.data])
-      });
+    const res = await userService.getHomeTeachers('top-rated');
+    setTopRated(handleService(res, navigate));
   }
 
   const fetchMostRequested = async () => {
-    await userService.getHomeTeachers('most-requested')
-      .then(res => {
-        setMostRequested([...res.data])
-      });
+    const res = await userService.getHomeTeachers('most-requested');
+    setMostRequested(handleService(res, navigate));
   }
 
-  const fetchSubjects = () => {
-    subjectService.getMostRequestedSubjects(navigate, setSubjects);
+  const fetchSubjects = async () => {
+    const res = await subjectService.getMostRequestedSubjects();
+    setSubjects(handleService(res, navigate));
   }
 
   useEffect(() => {

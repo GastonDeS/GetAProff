@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -61,7 +60,7 @@ public class ClassroomController {
     @Path("/{classId}")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
-        Lecture lecture = checkLectureExistence(classId);
+        Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
         return Response.ok(
                 ClassroomDto.getClassroom(lecture)
         ).build();
@@ -79,7 +78,7 @@ public class ClassroomController {
                     new GenericEntity<List<PostDto>>(posts.getContent().stream().map(PostDto::getPostDto).collect(Collectors.toList())) {
                     });
             return PaginationBuilder.build(posts, builder, uriInfo, pageSize);
-//        } catch (IllegalArgumentException exception) { //TODO mensaje exacto
+//        } catch (IllegalArgumentException exception) { //TODO mensaje exacto se maneja con exception
 //            return Response.status(Response.Status.BAD_REQUEST).build();
 //        }
     }
@@ -89,7 +88,7 @@ public class ClassroomController {
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
         User currUser = authFacade.getCurrentUser();
-        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, currUser.getId()/*TODO id from authentication*/);
+        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, currUser.getId());
         final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(files.getValue1(), files.getValue2());
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
@@ -126,15 +125,14 @@ public class ClassroomController {
     public Response uploadPosts(@PathParam("classId") final Long classId, @FormDataParam("message") final String message,
                                 @FormDataParam("uploader") final Long uploader, @FormDataParam("file") InputStream uploadedInputStream,
                                 @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
-        Lecture lecture = checkLectureExistence(classId);
-        if (!(lecture.getTeacher().getId().equals(uploader) || lecture.getStudent().getId().equals(uploader))) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("The user "+uploader+" doesn't belong to this classroom").build();
+        Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
+        if (!(lecture.getTeacher().getId().equals(uploader) || lecture.getStudent().getId().equals(uploader))) { // TODO fix this to the future handler
+            return Response.status(Response.Status.FORBIDDEN).entity("The user "+uploader+" doesn't belong to this classroom").build();
         }
         if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build();
-        Optional<Post> maybePost = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType());
-        if (!maybePost.isPresent()) throw new OperationFailedException("exception.failed");
-        URI location = URI.create(uriInfo.getAbsolutePath() + "/" + maybePost.get().getPostId());
-        LOGGER.debug("Created post with id {} to classroom with id {}", maybePost.get().getPostId(), classId);
+        Post post = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType()).orElseThrow(OperationFailedException::new);
+        URI location = URI.create(uriInfo.getAbsolutePath() + "/" + post.getPostId());
+        LOGGER.debug("Created post with id {} to classroom with id {}", post.getPostId(), classId);
         emailService.sendNewPostMessage(uploader, lecture, uriInfo.getBaseUri().toString());
         return Response.created(location).build();
     }
@@ -143,7 +141,7 @@ public class ClassroomController {
     @Path("/{classId}/status")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
-        Lecture lecture = checkLectureExistence(classId);
+        Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
         //TODO: el alumno no la puede cancelar?
 //        if( newStatus.getStatus() == 4)
 //            if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
@@ -152,18 +150,5 @@ public class ClassroomController {
         emailService.sendStatusChangeMessage(lecture, newStatus.getStatus(),uriInfo.getBaseUri().toString());
         LOGGER.debug("Changed status of classroom with id {} to {}", classId, newStatus.getStatus());
         return updated == SUCCESS ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    @POST
-    public Response as() throws IOException {
-        return Response.ok().build();
-    }
-
-    private Lecture checkLectureExistence(Long classId) throws ClassNotFoundException {
-        Optional<Lecture> maybeClass = lectureService.findById(classId);
-        if (!maybeClass.isPresent()) {
-            throw new ClassNotFoundException("No class found for class id " + classId);
-        }
-        return maybeClass.get();
     }
 }

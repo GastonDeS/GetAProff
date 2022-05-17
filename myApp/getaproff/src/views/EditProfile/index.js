@@ -13,6 +13,7 @@ import Default from "../../assets/img/add_img.png";
 import { Error } from "../Login/Login.styles";
 import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
+import { handleService } from "../../handlers/serviceHandler";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
@@ -45,21 +46,20 @@ const EditProfile = () => {
       if (!currentUser.teacher) {
         setIsTeacher(false);
       }
-      await userService.getUserInfo(currentUser.id).then(res => {
+      
+      const userRes = await userService.getUserInfo(currentUser.id);
+      const userData = handleService(userRes, navigate);
+      reset({nameInput: userData.name});
+      if (currentUser.teacher) {
         reset({
-          nameInput: res.name
+          schedule: userData.schedule,
+          description: userData.description
         });
-        if (currentUser.teacher) {
-          reset({
-            schedule: res.schedule,
-            description: res.description
-          });
-        };
-      });
+      };
 
-      await userService.getUserImg(currentUser.id).then(img => {
-        if (img) setDisplayImage(img);
-      });
+      const imgRes = await userService.getUserImg(currentUser.id);
+      const imgData = handleService(imgRes, navigate);
+      if (imgData) setDisplayImage('data:image/png;base64,' + imgData.image);
     }
   }, [currentUser]);
 
@@ -68,7 +68,8 @@ const EditProfile = () => {
     if (image) {
       var imgData = new FormData();
       imgData.append("image", image, image.name)
-      await userService.addUserImg(currentUser.id, imgData);
+      const res = await userService.addUserImg(currentUser.id, imgData);
+      handleService(res, navigate);
     }
 
     let formData = {
@@ -82,12 +83,12 @@ const EditProfile = () => {
         "description": data.description,
         "schedule": data.schedule
       }
-      await userService.editProfile(currentUser.id, 'teacher', formData)
-        .then((res) => {
-          if (change) AuthService.toTeacher(res.data);
-        })
+      const res = await userService.editProfile(currentUser.id, 'teacher', formData);
+      const userData = handleService(res, navigate);
+      if (change) AuthService.toTeacher(userData);
     } else {
-      await userService.editProfile(currentUser.id, 'student', formData);
+      const res = await userService.editProfile(currentUser.id, 'student', formData);
+      handleService(res, navigate);
     }
     navigate("/users/" + currentUser.id);
   }

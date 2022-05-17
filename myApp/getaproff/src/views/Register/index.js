@@ -24,6 +24,7 @@ import {useForm} from "react-hook-form";
 import {Error} from "../Login/Login.styles";
 import AuthService from "../../services/authService";
 import i18next from "i18next";
+import { handleService } from "../../handlers/serviceHandler";
 
 
 const Register = () => {
@@ -62,13 +63,17 @@ const Register = () => {
         }
       }
       
-      await userService.register(formData).catch((error) => { navigate("/error") })
+      const res = await userService.register(formData);
+      if (!res.failure) localStorage.setItem('token', res.headers.authorization);
+      const userData = handleService(res, navigate);
+      localStorage.setItem('user', JSON.stringify(userData));
       
       if (image) {
         var imgData = new FormData();
         imgData.append("image", image, image.name)
         var currentUser = AuthService.getCurrentUser();
-        userService.addUserImg(currentUser.id, imgData);
+        const res = userService.addUserImg(currentUser.id, imgData);
+        handleService(res, navigate);
       }
 
       navigate("/");

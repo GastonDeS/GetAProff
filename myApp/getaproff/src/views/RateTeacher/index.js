@@ -6,31 +6,30 @@ import {FormContainer, FormInput, PageContainer} from "./RateTeacher.styles";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import {useForm} from "react-hook-form";
-import {classroomService, userService, ratingService} from "../../services";
+import { userService, ratingService } from "../../services";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../services/authService";
 import {Error} from "../Login/Login.styles";
 import i18next from "i18next";
+import { handleService } from "../../handlers/serviceHandler";
 
 const RateTeacher = () => {
-    const navigate = useNavigate()
-    const {register, handleSubmit, formState: {errors}} = useForm()
+    const navigate = useNavigate();
+    const {register, handleSubmit, formState: {errors}} = useForm();
     const [teacherInfo, setTeacherInfo] = useState();
     const currUser = AuthService.getCurrentUser();
     const teacher = useParams()
 
     const onSubmit = async (data) => {
-        await ratingService.rateTeacher(teacher.id, data)
-            .then(r => {
-                navigate(`/users/${currUser.id}/classes`);
-            })
-            .catch(err => console.log(err))
-
+        const res = await ratingService.rateTeacher(teacher.id, data);
+        handleService(res, navigate);
+        navigate(`/users/${currUser.id}/classes`);
     }
 
-    useEffect( () => {
-        userService.getUserInfo(teacher.id)
-            .then( data => setTeacherInfo(data))
+    useEffect(async () => {
+        const res = await userService.getUserInfo(teacher.id);
+        const data = handleService(res, navigate);
+        setTeacherInfo(data);
     }, [])
 
     return (

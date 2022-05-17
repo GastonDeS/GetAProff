@@ -7,6 +7,7 @@ import SelectDropdown from '../../components/SelectDropdown'
 import { userService, classesService }  from "../../services";
 import { useNavigate,  useParams} from "react-router-dom";
 import i18next from "i18next";
+import { handleService } from '../../handlers/serviceHandler';
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
@@ -33,36 +34,34 @@ const RequestClass = () => {
   const handleSubject = (e) => setSubject(subjects.filter(s => s.id == e.target.value)[0]);
 
   useEffect(async () => {
-    await userService.getUserInfo(teacher.id)
-      .then(data => {
-        setTeacherInfo(data)
-      });
-  }, []);
+    const res = await userService.getUserInfo(teacher.id);
+    const data = handleService(res, navigate);
+    setTeacherInfo(data);
+  }, [])
 
   useEffect(async () => {
     if (teacherInfo) {
-      await userService.getUserSubjects(teacherInfo.id)
-        .then(data => {
-          data.forEach(item => {
-            setSubjects((previous) => [
-              ...previous,
-              {
-                name: item.subject,
-                id: item.id,
-                prices: item.prices,
-                levels: item.levels,
-              }
-            ]);
-          })
-        });
+      const res = await userService.getUserSubjects(teacherInfo.id);
+      const data = handleService(res, navigate);
+      data.forEach(item => {
+        setSubjects((previous) => [
+          ...previous,
+          {
+            name: item.subject,
+            id: item.id,
+            prices: item.prices,
+            levels: item.levels,
+          }
+        ]);
+      })
     }
-  }, [teacherInfo]);
+  }, [teacherInfo])
 
   useEffect(() => {
     if (subjects.length > 0) {
       setSubject(subjects[0]);
     }
-  }, [subjects]);
+  }, [subjects])
 
   useEffect( () => {
     if(subject) {
@@ -75,7 +74,7 @@ const RequestClass = () => {
       setLevel(subject.levels[0]);
       setLoading(false);
     };
-  }, [subject]);
+  }, [subject])
   
   return (
     <Wrapper>
@@ -87,7 +86,7 @@ const RequestClass = () => {
             <p>{i18next.t('requestClass.selectSubject')}</p>
             {!loading && <SelectDropdown value={subject.id} handler={handleSubject}
                             options={subjects} disabled={subjects.length === 1}/>}
-            <p>{i18next.t('requestClass.selectLevel')}l</p>
+            <p>{i18next.t('requestClass.selectLevel')}</p>
             {!loading && <SelectDropdown value={level} handler={handleIndex} options={levels} disabled={levels.length === 1}/>}
           </InputContainer>
           <Button text={i18next.t('requestClass.sendRequest')} fontSize='1rem' callback={handleClassRequest}/>

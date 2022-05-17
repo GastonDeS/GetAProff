@@ -30,6 +30,7 @@ import { useProfileFetch } from "../../hooks/useProfileFetch";
 import {Toast} from "react-bootstrap";
 import {PageItem} from "react-bootstrap";
 import {StyledPagination} from "../Tutors/Tutors.styles";
+import { handleService } from "../../handlers/serviceHandler";
 
 const Profile = () => {
   const editOptions = [{name: 'profile.edit.profile', path: '/edit-profile'}, 
@@ -77,7 +78,8 @@ const Profile = () => {
     if (isFaved) {
       setFavoriteStatus = favouritesService.removeTeacherFromFavorites;
     }
-    await setFavoriteStatus(teacherId);
+    const res = await setFavoriteStatus(teacherId);
+    handleService(res, navigate);
     setIsFaved(!isFaved);
   }
   const [show, setShow] = useState(false);
