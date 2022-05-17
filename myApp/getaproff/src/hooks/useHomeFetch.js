@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { userService, subjectService } from '../services';
 
 export const useHomeFetch = () => {
   const [topRated, setTopRated] = useState();
   const [mostRequested, setMostRequested] = useState();
   const [subjects, setSubjects] = useState();
+  const navigate = useNavigate();
 
   const fetchTopRated = async () => {
     await userService.getHomeTeachers('top-rated')
@@ -21,21 +22,14 @@ export const useHomeFetch = () => {
       });
   }
 
-  const fetchSubjects = async () => {
-    await subjectService.getMostRequestedSubjects()
-      .then(res => {
-          setSubjects([...res.data])
-      });
+  const fetchSubjects = () => {
+    subjectService.getMostRequestedSubjects(navigate, setSubjects);
   }
 
   useEffect(() => {
-    let abortController = new AbortController();
     fetchTopRated();
     fetchMostRequested();
     fetchSubjects();
-    return () => {
-      abortController.abort();
-    }
   }, []);
 
   return { topRated,  mostRequested, subjects };

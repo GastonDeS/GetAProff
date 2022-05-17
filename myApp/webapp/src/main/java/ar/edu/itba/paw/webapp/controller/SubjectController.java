@@ -51,7 +51,7 @@ public class SubjectController {
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
-    
+
 
 //    @Autowired
 //    private UserService userService;

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Navbar from "../../components/Navbar/index";
 import {useNavigate} from "react-router-dom";
 
@@ -24,12 +24,19 @@ const Login = () => {
 
   const {register, formState: {errors}, handleSubmit} = useForm();
   const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    setError(params.get('error'));
+  }, []);
 
   const handleLogin = async (event) => {
-    setInvalidCredentials(false)
+    setError(false);
+    setInvalidCredentials(false);
     await AuthService.login(event.username, event.password)
         .then((token) => {
           if (token) {
@@ -49,6 +56,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit(handleLogin)}>
               <InputContainer>
                 {invalidCredentials && <Error>{i18next.t('login.invalidCredentials')}</Error>}
+                {error && <Error>{i18next.t('login.invalidCredentials')}</Error>}
                 <InputWrapper>
                   <StyledInput
                       placeholder={i18next.t('form.emailPlaceholder')}
