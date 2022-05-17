@@ -94,11 +94,32 @@ public class ClassroomController {
 
     @POST
     @Path("/{classId}/files")
-    public Response changeFilesVisibility(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
-        for(Long id : filesId.getIds())
-            lectureService.changeFileVisibility(id, classId);
+    public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
+        int ans = 1;
+//        for(Long id : filesId.getIds()) {
+//            System.out.println("File " + id);
+//            ans *= lectureService.changeFileVisibility(id, classId);
+//            System.out.println("Ans" + ans);
+//        }
+        ans = lectureService.shareFileInLecture(filesId.getIds().get(0), classId);
+        System.out.println("ANS" + ans);
         return Response.ok().build();
     }
+
+    @DELETE
+    @Path("/{classId}/files")
+    public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
+        int ans = 1;
+//        for(Long id : filesId.getIds()) {
+//            System.out.println("File " + id);
+//            ans *= lectureService.changeFileVisibility(id, classId);
+//            System.out.println("Ans" + ans);
+//        }
+        ans = lectureService.stopSharingFileInLecture(filesId.getIds().get(0), classId);
+        System.out.println("DEL ANS" + ans);
+        return Response.ok().build();
+    }
+
 
     @POST
     @Path("/{classId}/posts")

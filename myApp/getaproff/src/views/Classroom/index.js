@@ -66,7 +66,7 @@ const Classroom = () => {
     }
 
     const acceptClass = () =>{
-        classroomService.changeClassStatus(id.id, 1, user.id)
+        classroomService.changeClassStatus(id.id, ACCEPTED, user.id)
           .then(
             data => {
                 console.log(data);
@@ -90,17 +90,21 @@ const Classroom = () => {
     const publishPost = data => {
         classroomService.createPost(id.id, data, user.id)
             .then(
-                response => {
-                    console.log(response);
+                () => {
                     setRefreshPosts(true);
                 });
         reset();
     }
 
-    const changeFilesVisibility = data => {
+    const stopSharingFiles = data => {
         setFileVisibilityChanged(!fileVisibilityChanged);
-        console.log(data);
-        classroomService.changeClassroomFilesVisibility(data.filesToChangeVisibility,id.id)
+        classroomService.stopSharingFile(data.filesToChangeVisibility,id.id)
+            .then(r => console.log(r));
+    }
+
+    const shareFiles = data => {
+        setFileVisibilityChanged(!fileVisibilityChanged);
+        classroomService.startSharingFile(data.filesToChangeVisibility,id.id)
             .then(r => console.log(r));
     }
 
@@ -271,11 +275,10 @@ const Classroom = () => {
                                                 fontSize: "20px"
                                             }}>{i18next.t('classroom.files.noFiles')}</span>
                                             :
-                                            <div>
-                                                <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
                                                 <SharedFilesContainer>
+                                                    <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
                                                     {notSharedClassFiles &&
-                                                    <form onSubmit={shareFilesHandleSubmit(changeFilesVisibility)}>
+                                                    <form onSubmit={shareFilesHandleSubmit(shareFiles)}>
                                                         <Ul>
                                                             {notSharedClassFiles.map((file, index) => {
                                                                 return (
@@ -283,15 +286,16 @@ const Classroom = () => {
                                                                         <SubjectsRow>
                                                                             <a style={{fontWeight: "bold"}}
                                                                                href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                                               target="_blank">{file.name}</a>
-                                                                            <input type="checkbox"
-                                                                                   {...shareFilesRegister("filesToChangeVisibility")}
+                                                                               target="_blank">{file.title}</a>
+                                                                            <input {...shareFilesRegister("filesToChangeVisibility")}
+                                                                                   type="checkbox"
+                                                                                   className="form-check-input"
                                                                                    style={{
                                                                                        width: "18px",
                                                                                        height: "18px",
                                                                                        marginRight: "4px"
                                                                                    }}
-                                                                                   value={index}
+                                                                                   value={file.rel}
                                                                             />
                                                                         </SubjectsRow>
                                                                     </li>
@@ -309,7 +313,6 @@ const Classroom = () => {
                                                     </form>
                                                     }
                                                 </SharedFilesContainer>
-                                            </div>
                                         }
                                     </ClassContentSide>
                                     <ClassContentSide>
@@ -323,7 +326,7 @@ const Classroom = () => {
                                             :
                                             <SharedFilesContainer>
                                                 {sharedClassFiles &&
-                                                <form onSubmit={stopSharingFilesHandleSubmit(changeFilesVisibility)}>
+                                                <form onSubmit={stopSharingFilesHandleSubmit(stopSharingFiles)}>
                                                     <Ul>
                                                         {sharedClassFiles.map((file, index) => {
                                                             return (
@@ -331,7 +334,7 @@ const Classroom = () => {
                                                                     <SubjectsRow>
                                                                         <a style={{fontWeight: "bold"}}
                                                                            href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                                           target="_blank">{file.name}</a>
+                                                                           target="_blank">{file.title}</a>
                                                                         <input
                                                                             {...stopSharingFilesRegister("filesToChangeVisibility")}
                                                                             type="checkbox"
@@ -341,7 +344,7 @@ const Classroom = () => {
                                                                                 height: "18px",
                                                                                 marginRight: "4px"
                                                                             }}
-                                                                            value={file.id}
+                                                                            value={file.rel}
                                                                             onClick={() => console.log('click')}/>
                                                                     </SubjectsRow>
                                                                 </li>
