@@ -5,16 +5,25 @@ import { Content, InputContainer } from './RequestSubject.styles';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import i18next from "i18next";
+import {classesService, subjectService} from "../../services";
+import { useNavigate} from "react-router-dom";
 
 const RequestSubject = () => {
   const [subject, setSubject] = useState();
   const [subjectError, setSubjectError] = useState(false);
-  const [text, setText] = useState();
-  const [textError, setTextError] = useState(false);
+  const [message, setMessage] = useState();
+  const [messageError, setMessageError] = useState(false);
+  const navigate = useNavigate();
 
-  const submitRequest = () => {
+  const submitRequest = async () => {
     if (!subject) setSubjectError(true);
-    if (!text) setTextError(true);
+    if (!message) setMessageError(true);
+    const requestData = {
+      subject : subject,
+      message : message
+    };
+    await subjectService.requestSubject(requestData)
+        .then(res => navigate('/'))
   }
 
   return (
@@ -30,7 +39,7 @@ const RequestSubject = () => {
               subjectError && <p>{i18next.t('form.requiredField')}</p>
             }
             <h3>{i18next.t('requestSubject.insertMessage')}</h3>
-            <textarea placeholder={i18next.t('requestSubject.insertMessagePlaceholder')} onChange={(e) => setText(e.target.value)}/>
+            <textarea placeholder={i18next.t('requestSubject.insertMessagePlaceholder')} onChange={(e) => setMessage(e.target.value)}/>
             {
               textError && <p>{i18next.t('form.requiredField')}</p>
             }
