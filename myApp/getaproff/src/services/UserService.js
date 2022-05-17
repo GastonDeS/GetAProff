@@ -1,5 +1,6 @@
 import {axiosService} from "./index";
 import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
+import { handleResponse } from "../handlers/responseHandler";
 
 const PATH = paths.USERS
 
@@ -9,23 +10,36 @@ export class UserService {
     //UsersController
     async getHomeTeachers(type) {
         try {
-            return await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${type}`, {});
-        }  catch (err) { console.log(err) }
+            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${type}`, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     // Get subjects being taugh by teacher
     //UsersController
     async getUserSubjects(uid) {
         try {
-            let subjects = []
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {})
-                .then(res => {
-                    res.data.forEach(subject => subjects.push(subject));
-                    return subjects;
-                })
-            return subjects;
-        }
-        catch (err) { console.log(err) }
+            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
+        // await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {})
+        //     .then((response) => {
+        //         let ans = handleResponse(response);
+        //         setter(handleService(ans, navigate));
+        //     }).catch((error) => {
+        //         let ans = handleResponse(error.response);
+        //         handleService(ans, navigate);
+        //     }).finally(() => {return});
+        // // try {
+        //     let subjects = []
+        //     await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {})
+        //         .then(res => {
+        //             res.data.forEach(subject => subjects.push(subject));
+        //             return subjects;
+        //         })
+        //     return subjects;
+        // }
+        // catch (err) { console.log(err) }
     }
 
     // Get subjects not being taugh by teacher

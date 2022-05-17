@@ -7,6 +7,7 @@ import SelectDropdown from '../../components/SelectDropdown'
 import { userService, classesService }  from "../../services";
 import { useNavigate,  useParams} from "react-router-dom";
 import i18next from "i18next";
+import { handleService } from '../../handlers/serviceHandler';
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
@@ -41,20 +42,19 @@ const RequestClass = () => {
 
   useEffect(async () => {
     if (teacherInfo) {
-      await userService.getUserSubjects(teacherInfo.id)
-        .then(data => {
-          data.forEach(item => {
-            setSubjects((previous) => [
-              ...previous,
-              {
-                name: item.subject,
-                id: item.id,
-                prices: item.prices,
-                levels: item.levels,
-              }
-            ]);
-          })
-        });
+      const res = await userService.getUserSubjects(teacherInfo.id);
+      const data = handleService(res, navigate);
+      data.forEach(item => {
+        setSubjects((previous) => [
+          ...previous,
+          {
+            name: item.subject,
+            id: item.id,
+            prices: item.prices,
+            levels: item.levels,
+          }
+        ]);
+      })
     }
   }, [teacherInfo]);
 

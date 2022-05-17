@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import i18next from "i18next";
 import AuthService from "../services/authService";
 import { userService } from "../services";
+import { useNavigate } from "react-router-dom";
+import { handleService } from "../handlers/serviceHandler";
 
 export const useEditSubjectsFetch = () => {
   const [subject, setSubject] = useState();
@@ -14,27 +16,29 @@ export const useEditSubjectsFetch = () => {
   const [checkAll, setCheckAll] = useState(false);
   const [currentUser, setCurrentUser] = useState();
 
-  const fetchSubjectsTaught = async (id) => {
-    await userService.getUserSubjects(id)
-    .then(data => {
-      data.map((item) => {
-        item.levels.forEach((level, index) => {
-          setSubjectsTaught((prev) => [...prev, { 
-            name: item.subject,
-            price: '$' + item.prices[index] + '/' + i18next.t('subjects.hour'),
-            level: i18next.t('subjects.levels.' + level),
-            url: '/' + item.id + '/' + level,
-            checked: false
-          }])
-        })
-      });
+  const navigate = useNavigate();
+
+
+  const fetchSubjectsTaught = async () => {
+    const res = await userService.getUserSubjects(currentUser.id);
+    const data = await handleService(res, navigate);
+    data.map((item) => {
+      item.levels.forEach((level, index) => {
+        setSubjectsTaught((prev) => [...prev, { 
+          name: item.subject,
+          price: '$' + item.prices[index] + '/' + i18next.t('subjects.hour'),
+          level: i18next.t('subjects.levels.' + level),
+          url: '/' + item.id + '/' + level,
+          checked: false
+        }])
+      })
     });
   }
 
-  const fetchAvailableSubjects = async (id) => {
-    await userService.getUserAvailableSubjects(id)
+  const fetchAvailableSubjects = async () => {
+    await userService.getUserAvailableSubjects(currentUser.id)
     .then(data => {
-      setAvailableSubjects(data.map((item) => {
+      setAvailableSubjects(data.map((item, index) => {
         var levels = []
         item.levels.forEach(level => {
           levels.push({
@@ -42,31 +46,43 @@ export const useEditSubjectsFetch = () => {
             name: i18next.t('subjects.levels.' + level)
           })
         })
-        return {
+        var ans = {
           name: item.name,
           id: item.subjectId,
           levels: levels
         }
+        if (index === 0) {
+          setSubject(ans);
+          setLevel(levels[0]);
+          setLoading(false);
+        }
+        return ans;
       }))
     });
   }
 
   useEffect(() => {
-    level && setLoading(false);
-  }, [level])
-
-  useEffect(() => {
     subject && setLevel(subject.levels[0]);
   }, [subject]);
 
-  useEffect(() => {
-    availableSubjects && setSubject(availableSubjects[0]);
-  }, [availableSubjects]);
+  // useEffect(() => {
+  //   rawSubjects && rawSubjects.map((item) => {
+  //     item.levels.forEach((level, index) => {
+  //       setSubjectsTaught((prev) => [...prev, { 
+  //         name: item.subject,
+  //         price: '$' + item.prices[index] + '/' + i18next.t('subjects.hour'),
+  //         level: i18next.t('subjects.levels.' + level),
+  //         url: '/' + item.id + '/' + level,
+  //         checked: false
+  //       }])
+  //     })
+  //   });
+  // }, [rawSubjects]);
 
   useEffect(() => {
     if (loading && currentUser) {
-      fetchAvailableSubjects(currentUser.id);
-      fetchSubjectsTaught(currentUser.id);
+      fetchAvailableSubjects();
+      fetchSubjectsTaught();
     }
   }, [loading, currentUser]);
 

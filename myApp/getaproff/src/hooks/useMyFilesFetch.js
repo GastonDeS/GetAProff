@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import i18next from "i18next";
 import { filesService, userService } from '../services'
 import AuthService from '../services/authService'
+import { useNavigate } from "react-router-dom";
+import { handleService } from "../handlers/serviceHandler";
 
 export const ALL_LEVELS = 4;
 export const ALL_SUBJECTS = 0;
@@ -28,6 +30,8 @@ export const useMyFilesFetch = () => {
     name: i18next.t("subjects.all"),
     levels: allLevels,
   }
+
+  const navigate = useNavigate();
 
   const changeLevels = (levels) => {
     var auxLevels = [];
@@ -81,17 +85,17 @@ export const useMyFilesFetch = () => {
   };
 
   const fetchSubjects = async () => {
-    await userService.getUserSubjects(currentUser.id).then(data => {
-      data.forEach(item => {
-        setCurrentSubjects((previous) => [
-          ...previous,
-          {
-            name: item.subject,
-            id: item.id,
-            levels: item.levels,
-          }
-        ]);
-      })
+    const res = await userService.getUserSubjects(currentUser.id);
+    const data = await handleService(res, navigate);
+    data.forEach(item => {
+      setCurrentSubjects((previous) => [
+        ...previous,
+        {
+          name: item.subject,
+          id: item.id,
+          levels: item.levels,
+        }
+      ]);
     })
     setCurrentSubjects(prev => [initialState, ...prev]);
   };

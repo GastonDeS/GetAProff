@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import AuthService from "../services/authService";
 import i18next from "i18next";
+import { useNavigate } from 'react-router-dom';
 
 import ProfileImg from '../assets/img/no_profile_pic.jpeg';
 import { userService, filesService, ratingService, favouritesService } from '../services';
+import { handleService } from '../handlers/serviceHandler';
 
 export const useProfileFetch = (id) => {
   const [index, setIndex] = useState(0);
@@ -19,6 +21,7 @@ export const useProfileFetch = (id) => {
   const [pageQty, setPageQty] = useState(1);
   const [page, setPage] = useState(1);
 
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {
@@ -26,7 +29,7 @@ export const useProfileFetch = (id) => {
         setIsTeacher(false);
       }
     }
-  }, [currentUser]);
+  }, [currentUser])
 
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
@@ -38,7 +41,7 @@ export const useProfileFetch = (id) => {
       .then(res => {
         if(res) setIsFaved(true);
       })
-  }, [id]);
+  }, [id])
   
   useEffect(async () => {
     if (user) {
@@ -48,26 +51,24 @@ export const useProfileFetch = (id) => {
         }
       });
       if (isTeacher) {
-        await userService.getUserSubjects(user.id)
-            .then(data => {
-              data.map((item) => {
-                item.levels.forEach((level, index) => {
-                  setSubjects((prev) => [...prev, {
-                    name: item.subject,
-                    price: '$' + item.prices[index] + '/' + i18next.t('subjects.hour'),
-                    level: i18next.t('subjects.levels.' + level),
-                  }])
-                })
-              })
-            });
+        const res = await userService.getUserSubjects(user.id);
+        const data = await handleService(res, navigate);
+        data.map((item) => {
+          item.levels.forEach((level, index) => {
+            setSubjects((prev) => [...prev, {
+              name: item.subject,
+              price: '$' + item.prices[index] + '/' + i18next.t('subjects.hour'),
+              level: i18next.t('subjects.levels.' + level),
+            }])
+          })
+        })
 
         await filesService.getUserCertifications(user.id)
             .then(data => setCertifications(data));
       }
       setLoading(false);
-
     }
-  },[user]);
+  },[user])
 
   useEffect(async () => {
     if (user) {
