@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class PostDto {
     private String message;
     private Timestamp time;
-    private Long uploader;
+    private String uploader;
     private Link file;
 
     public static PostDto getPostDto(Post post) {
@@ -22,7 +22,7 @@ public class PostDto {
         }
         postDto.message = post.getMessage();
         postDto.time = post.getTime();
-        postDto.uploader = post.getUploader().getId();
+        postDto.uploader = post.getUploader().getName();
         return postDto;
     }
 
@@ -34,11 +34,11 @@ public class PostDto {
         this.file = file;
     }
 
-    public Long getUploader() {
+    public String getUploader() {
         return uploader;
     }
 
-    public void setUploader(Long uploader) {
+    public void setUploader(String uploader) {
         this.uploader = uploader;
     }
 
