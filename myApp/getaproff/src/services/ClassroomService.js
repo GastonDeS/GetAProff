@@ -1,5 +1,4 @@
 import {axiosService} from "./index";
-import {instanceOf} from "prop-types";
 
 const PATH = '/classroom'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
