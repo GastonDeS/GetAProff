@@ -88,7 +88,7 @@ export class ClassroomService {
         }
     }
 
-    async changeClassroomFilesVisibility(fileIds, classroomId) {
+    async startSharingFile(fileIds, classroomId) {
         {
             try {
                 let config = {};
@@ -100,8 +100,27 @@ export class ClassroomService {
                 else {
                     data = fileIds.map(item  => parseInt(item))
                 }
-                console.log(data);
                 await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data)
+            }
+            catch(err) {
+                console.log(err)
+            }
+        }
+    }
+
+    async stopSharingFile(fileIds, classroomId){
+        {
+            try {
+                let config = {};
+                let data = []
+                console.log(typeof fileIds);
+                console.log(typeof fileIds === 'string')
+                if (typeof fileIds === 'string')
+                    data[0] = parseInt(fileIds)
+                else {
+                    data = fileIds.map(item  => parseInt(item))
+                }
+                await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files`,config, data)
             }
             catch(err) {
                 console.log(err)

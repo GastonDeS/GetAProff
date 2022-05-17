@@ -25,6 +25,10 @@ public interface LectureService {
 
     int changeFileVisibility(Long subjectFileId, Long lectureId);
 
+    int stopSharingFileInLecture(Long subjectFileId, Long lecture);
+
+    int shareFileInLecture(Long subjectFileId, Long lecture);
+
     Pair<List<SubjectFile>, List<SubjectFile>> getTeacherFiles(Long lectureId, Long userId);
 
     List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId);

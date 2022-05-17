@@ -126,6 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroomAsTeacher(authentication, #classId)")
+                        .antMatchers(HttpMethod.DELETE, API_PREFIX+"/classroom/{classId}/files").access("@antMatcherVoter.canAccessClassroomAsTeacher(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/posts").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
                         .antMatchers(HttpMethod.POST, API_PREFIX+"/classroom/{classId}/status").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)") // Only de student can rate, and idk if teacher can only one thing
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/post/{postId}/file").access("@antMatcherVoter.canAccessPostFile(authentication, #postId)")
