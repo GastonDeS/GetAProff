@@ -28,10 +28,13 @@ const Navbar = ({ empty }) => {
   useEffect(() => {
     let curr = AuthService.getCurrentUser();
     if (curr) {
+      let auxOptions = [{name: 'navbar.myProfile', path: '/users/' + curr.id}]
       setAuth(true);
-      setOptions([{name: 'navbar.myProfile', path: '/users/' + curr.id}, {name: 'navbar.myFiles', path: '/my-files'}]);
       setUserPath('/users/' + curr.id);
-
+      if (curr.teacher) {
+        auxOptions.push({name: 'navbar.myFiles', path: '/my-files'});
+      }
+      setOptions(auxOptions);
     }
   }, []);
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AuthService from "../../services/authService";
 import { filesService } from "../../services";
 import i18next from "i18next";
+import { handleAuthentication, handleTeacherRole } from "../../handlers/accessHandler";
 
 import {
   Wrapper,
@@ -121,6 +122,7 @@ const EditCertifications = () => {
   }
 
   useEffect(() => {
+    handleTeacherRole(navigate);
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
 

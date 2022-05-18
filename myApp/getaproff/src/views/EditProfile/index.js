@@ -14,6 +14,7 @@ import { Error } from "../Login/Login.styles";
 import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
+import { handleAuthentication } from "../../handlers/accessHandler";
 
 const EditProfile = () => {
   const [isTeacher, setIsTeacher] = useState(true);
@@ -37,6 +38,7 @@ const EditProfile = () => {
   };
 
   useEffect(async () => {
+    handleAuthentication(navigate);
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
 
