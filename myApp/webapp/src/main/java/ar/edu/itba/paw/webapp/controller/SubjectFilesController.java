@@ -52,13 +52,12 @@ public class SubjectFilesController {
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
         Long uid = authFacade.getCurrentUserId();
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId)
-                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE)); // TODO security
-        if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
         SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
         return Response.ok(subjectFileDto).build();
     }
 
+    // TODO exception
     @DELETE
     @Path("/{file}")
     @Produces("application/vnd.getaproff.api.v1+json")

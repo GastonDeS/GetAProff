@@ -65,7 +65,7 @@ public class ClassroomController {
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 );
+        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 ); // TODO 1 student 0 teacher modificar criterio
         return Response.ok(
                 ClassroomDto.getClassroom(lecture)
         ).build();
@@ -94,6 +94,7 @@ public class ClassroomController {
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
+    // TODO exception
     @POST
     @Path("/{classId}/files")
     @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
@@ -107,6 +108,7 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
+    // TODO exception
     @DELETE
     @Path("/{classId}/files/{fileId}")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
