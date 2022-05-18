@@ -2,6 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import translation_en from "./i18n/en.json"
 import translation_es from "./i18n/es.json"
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 // the translations
 // (tip move them in a JSON file and import them,
@@ -17,6 +18,10 @@ const resources = {
 
 i18n
     .use(initReactI18next) // passes i18n down to react-i18next
+
+
+    .use(LanguageDetector)
+
     .init({
         resources,
         fallbackLng: "es",

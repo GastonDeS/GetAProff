@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Path("/api/subject-files")
@@ -51,7 +50,8 @@ public class SubjectFilesController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
         Long uid = authFacade.getCurrentUserId();
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId).orElseThrow(NoSuchElementException::new); // TODO Exception
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId)
+                .orElseThrow(SubjectFileNotFoundException::new); // TODO security
         if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
             return Response.status(Response.Status.UNAUTHORIZED).build();
         SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
@@ -77,7 +77,8 @@ public class SubjectFilesController {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
         //TODO poner la location bien
         URI location = URI.create("/");
-        final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level).orElseThrow(SubjectFileNotFoundException::new);
+        final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level)
+                .orElseThrow(SubjectFileNotFoundException::new);
         LOGGER.debug("Subject file uploaded successfully");
         return Response.created(location).build();
     }

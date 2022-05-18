@@ -1,4 +1,5 @@
-import axios from "../api"
+// import axios from "../api"
+import axios from "axios";
 
 export class AxiosService {
 
@@ -19,15 +20,16 @@ export class AxiosService {
     }
 
      async axiosWrapper(action, path, config, data = {}) {
+         const aux = '/api/' + path
         switch (action) {
             case this.GET:
-                return await axios.get(path, config);
+                return await axios.get(aux, config);
             case this.PUT:
-                return await axios.put(path, data, config)
+                return await axios.put(aux, data, config)
             case this.POST:
-                return await axios.post(path, data, config);
+                return await axios.post(aux, data, config);
             case this.DELETE:
-                return await axios.delete(path, config);
+                return await axios.delete(aux, config);
             default:
                 break;
         }

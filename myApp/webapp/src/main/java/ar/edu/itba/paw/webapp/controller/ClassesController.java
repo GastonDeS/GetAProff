@@ -51,20 +51,17 @@ public class ClassesController {
                                        @QueryParam("status") @DefaultValue("-1") int status,
                                        @QueryParam("page") @DefaultValue("1") Integer page,
                                        @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        try {
-            Long userId = authFacade.getCurrentUserId();
-            final Page<Lecture> lectures = lectureService.findClasses(userId, asTeacher, status, page, pageSize);
-            Response.ResponseBuilder builder = Response.ok(
-                    new GenericEntity<List<ClassroomDto>>(lectures.getContent().stream()
-                            .map(ClassroomDto::getClassroom)
-                            .collect(Collectors.toList())) {
-                    });
-            return PaginationBuilder.build(lectures, builder, uriInfo, pageSize);
-        } catch (IllegalArgumentException exception) { //TODO mensaje exacto
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        Long userId = authFacade.getCurrentUserId();
+        final Page<Lecture> lectures = lectureService.findClasses(userId, asTeacher, status, page, pageSize);
+        Response.ResponseBuilder builder = Response.ok(
+                new GenericEntity<List<ClassroomDto>>(lectures.getContent().stream()
+                        .map(ClassroomDto::getClassroom)
+                        .collect(Collectors.toList())) {
+                });
+        return PaginationBuilder.build(lectures, builder, uriInfo, pageSize);
     }
 
+    // TODO handle exception for create
     @POST
     @Consumes(value = "application/vnd.getaproff.api.v1+json")
     public Response requestClass(ClassRequestDto classRequestDto) {
