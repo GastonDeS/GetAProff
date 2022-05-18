@@ -32,7 +32,10 @@ const Classroom = () => {
     const files = 1;
     const ACCEPTED = 1;
     const FINISHED = 2;
-    const RATED = 3;
+    const CANCELEDS = 3;
+    const CANCELLEDT = 4;
+    const DECLINED = 5;
+    const RATED = 6;
     const [classInfo, setClassInfo] = useState();
     const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
@@ -45,8 +48,8 @@ const Classroom = () => {
     const [isTeacherClassroom, setIsTeacherClassroom] = useState(false);
 
     const {register, handleSubmit, watch, reset} = useForm();
-    const {register: shareFilesRegister, handleSubmit: shareFilesHandleSubmit} = useForm();
-    const {register: stopSharingFilesRegister, handleSubmit: stopSharingFilesHandleSubmit} = useForm();
+    const {register: shareFilesRegister, handleSubmit: shareFilesHandleSubmit, reset: shareFilesReset} = useForm();
+    const {register: stopSharingFilesRegister, handleSubmit: stopSharingFilesHandleSubmit,  reset: stopSharingFilesReset} = useForm();
 
     const id = useParams();
     const watchFileName = watch("file");
@@ -75,14 +78,19 @@ const Classroom = () => {
         setClassStatus(1);
     }
 
-    const cancelClass = async () => {
+    const finishClass = async () => {
         const res = await classroomService.changeClassStatus(id.id, FINISHED, user.id);
         handleService(res, navigate);
         setClassStatus(3);
     }
+    const declineClass = async () => {
+        const res = await classroomService.changeClassStatus(id.id, DECLINED, user.id);
+        handleService(res, navigate);
+        setClassStatus(6);
+    }
 
     const rateTeacher = () => {
-        navigate(`/users/${classInfo.teacher.id}/reviews`)
+        navigate(`/users/${classInfo.teacher.id}/reviews/${id.id}`);
     }
 
     const publishPost = async (data) => {
@@ -94,15 +102,20 @@ const Classroom = () => {
     }
 
     const stopSharingFiles = async (data) => {
+        for (const fileId of data.filesToChangeVisibility) {
+            const res = await classroomService.stopSharingFile(fileId,id.id);
+            handleService(res, navigate);
+        }
         setFileVisibilityChanged(!fileVisibilityChanged);
-        const res = classroomService.stopSharingFile(data.filesToChangeVisibility,id.id);
-        handleService(res, navigate);
+        stopSharingFilesReset()
+
     }
 
     const shareFiles = async (data) => {
-        setFileVisibilityChanged(!fileVisibilityChanged);
         const res = await classroomService.startSharingFile(data.filesToChangeVisibility,id.id);
         handleService(res, navigate);
+        setFileVisibilityChanged(!fileVisibilityChanged);
+        shareFilesReset()
     }
 
     const navigateToMyClasses = () => {
@@ -176,11 +189,11 @@ const Classroom = () => {
                                         {isTeacherClassroom &&
                                             <Button text={i18next.t('classroom.accept')} callback={acceptClass}/>
                                         }
-                                        <Button text={i18next.t('classroom.cancel')} color={'#FFC300'} fontColor={'black'}/>
+                                        <Button text={i18next.t('classroom.decline')} color={'#FFC300'} fontColor={'black'} callback={declineClass}/>
                                     </ButtonContainer>
                                 ) :
                                     classInfo.status !== FINISHED &&  classInfo.status !== RATED  && (
-                                    <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
+                                    <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={finishClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
@@ -225,7 +238,7 @@ const Classroom = () => {
                                 }}>
                                     <h2>{i18next.t('classroom.classOver')}</h2>
                                     <Button text={i18next.t('classroom.back')} callback={navigateToMyClasses}/>
-                                    {!isTeacherClassroom && classInfo.status !== RATED &&
+                                    {!isTeacherClassroom && classInfo.status === FINISHED &&
                                     <Button text={i18next.t('classroom.rate')} callback={rateTeacher}/>}
                                 </div>
                             }
@@ -367,13 +380,17 @@ const Classroom = () => {
                                         :
                                         <SharedFilesContainer>
                                             <Ul>
-                                                <li>
-                                                    <SubjectsRow>
-                                                        <a style={{fontWeight: "bold"}}
-                                                           href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                           target="_blank">{i18next.t('classroom.files.name')}</a>
-                                                    </SubjectsRow>
-                                                </li>
+                                                {sharedClassFiles.map((file, index) => {
+                                                    return (
+                                                        <li key={index}>
+                                                            <SubjectsRow>
+                                                                <a style={{fontWeight: "bold"}}
+                                                                   href={file.href}
+                                                                   target="_blank">file.title</a>
+                                                            </SubjectsRow>
+                                                        </li>
+                                                    )
+                                                })}
                                             </Ul>
                                         </SharedFilesContainer>
                                     }

@@ -1,9 +1,7 @@
 import {axiosService} from "./index";
 import { handleResponse } from "../handlers/responseHandler";
 
-const PATH = '/classroom'
-const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
-
+const PATH = paths.CLASSROOM
 
 export class ClassroomService {
 
@@ -36,32 +34,33 @@ export class ClassroomService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    async acceptClass(classId, uid) {
-        return await this.changeClassStatus(classId, 1, uid);
+    async acceptClass(classId) {
+        return await this.changeClassStatus(classId, classStatus.ACCEPTED);
     }
 
-    async finishClass(classId, uid){
-        return await this.changeClassStatus(classId, 2, uid);
+    async finishClass(classId){
+        return await this.changeClassStatus(classId, classStatus.FINISHED);
     }
 
-    async cancelClass(classId, uid){
-        return await this.changeClassStatus(classId, 4, uid);
+    async cancelClassS(classId){
+        return await this.changeClassStatus(classId, classStatus.CANCELLEDS);
     }
 
-    async rateClass(classId, uid){
-        return await this.changeClassStatus(classId, 3, uid);
+    async cancelClassT(classId){
+        return await this.changeClassStatus(classId, classStatus.CANCELLEDT);
     }
 
-    async changeClassStatus(classId, newStatus, uid) {
+    async rejectClass(classId){
+        return await this.changeClassStatus(classId, classStatus.REJECTED);
+    }
+
+    async rateClass(classId){
+        return await this.changeClassStatus(classId, classStatus.RATED);
+    }
+
+    async changeClassStatus(classId, newStatus) {
         try {
-            let postData = {
-                status: newStatus,
-                userId: uid
-            }
-            let config = {
-                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
-            }
-            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData);
+            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/${newStatus}`, {});
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }
@@ -80,16 +79,10 @@ export class ClassroomService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    async stopSharingFile(fileIds, classroomId){
+    async stopSharingFile(fileId, classroomId){
         try {
-                let config = {};
-                let data = [];
-                if (typeof fileIds === 'string')
-                    data[0] = parseInt(fileIds)
-                else {
-                    data = fileIds.map(item  => parseInt(item))
-                }
-                const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files`,config, data);
+            let config = {};
+            const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files/${fileId}`,config);
                 return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }

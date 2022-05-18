@@ -43,7 +43,7 @@ const App = () => {
         <Route path='/edit-profile' element={ <EditProfile/> } />
         <Route path='/tutors' element={<Tutors/> } />
         <Route path='/classroom/:id' element={ <Classroom/> }/>
-        <Route path='/users/:id/reviews' element={<RateTeacher/>}/>
+        <Route path='/users/:id/reviews/:classId' element={<RateTeacher/>}/>
         <Route path='/error' element ={<Error/>} />
         <Route path='*' element ={<Error404/>} />
       </Routes>
