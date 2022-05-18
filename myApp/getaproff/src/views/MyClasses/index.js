@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-
+import { handleService } from "../../handlers/serviceHandler";
 import { Content, FilterContainer, CardContainer, Filter, SelectContainer } from './MyClasses.styles';
 import Navbar from '../../components/Navbar';
 import ClassCard from '../../components/ClassCard';
@@ -96,11 +96,9 @@ const MyClasses = () => {
   };
 
   const fetchClasses = async (setClasses, asTeacher) => {
-    await classesService.getUserClasses(currUser.id, asTeacher, status - 1, page)
-        .then(res => {
-          setClasses([...res.data]);
-          setPageQty((parseInt(res.headers['x-total-pages'])));
-        });
+    const res = await classesService.getUserClasses(asTeacher, status - 1, page);
+    if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
+    setClasses(handleService(res, navigate));
     setReloadCards(false);
   }
 
