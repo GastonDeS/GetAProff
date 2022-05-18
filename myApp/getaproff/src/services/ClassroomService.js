@@ -51,8 +51,8 @@ export class ClassroomService {
         return await this.changeClassStatus(classId, classStatus.CANCELLEDT);
     }
 
-    async rejectClass(classId){
-        return await this.changeClassStatus(classId, classStatus.REJECTED);
+    async declineClass(classId){
+        return await this.changeClassStatus(classId, classStatus.DECLINED);
     }
 
     async rateClass(classId){
