@@ -379,6 +379,7 @@ const Classroom = () => {
                                         }}>{i18next.t('classroom.files.noSharedFiles')}</span>
                                         :
                                         <SharedFilesContainer>
+                                            {sharedClassFiles && sharedClassFiles.size !== 0 ?
                                             <Ul>
                                                 {sharedClassFiles.map((file, index) => {
                                                     return (
@@ -392,6 +393,13 @@ const Classroom = () => {
                                                     )
                                                 })}
                                             </Ul>
+                                                :
+                                                <span style={{
+                                                    alignSelf: "center",
+                                                    margin: "8px 0 4px 0",
+                                                    fontSize: "20px"
+                                                }}>{i18next.t('classroom.files.empty')}</span>
+                                            }
                                         </SharedFilesContainer>
                                     }
                                 </ClassContentSide>
