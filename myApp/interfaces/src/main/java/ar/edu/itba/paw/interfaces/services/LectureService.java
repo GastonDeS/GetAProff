@@ -21,7 +21,7 @@ public interface LectureService {
 
     int setStatus(Long classId, int status);
 
-    int refreshTime(Long classId, int role);
+    int refreshTime(Long classId, int isStudent);
 
     int changeFileVisibility(Long subjectFileId, Long lectureId);
 

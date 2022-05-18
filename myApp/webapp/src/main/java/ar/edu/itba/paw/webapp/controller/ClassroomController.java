@@ -8,9 +8,10 @@ import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
 import ar.edu.itba.paw.webapp.dto.IdsDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
 import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
@@ -65,7 +66,7 @@ public class ClassroomController {
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 );
+        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 ); // TODO 1 student 0 teacher modificar criterio
         return Response.ok(
                 ClassroomDto.getClassroom(lecture)
         ).build();
@@ -94,6 +95,7 @@ public class ClassroomController {
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
+    // TODO exception
     @POST
     @Path("/{classId}/files")
     @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
@@ -107,6 +109,7 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
+    // TODO exception
     @DELETE
     @Path("/{classId}/files/{fileId}")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
@@ -128,7 +131,8 @@ public class ClassroomController {
             return Response.status(Response.Status.FORBIDDEN).entity("The user "+uploader+" doesn't belong to this classroom").build();
         }
         if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build();
-        Post post = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType()).orElseThrow(OperationFailedException::new);
+        Post post = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType())
+                .orElseThrow(() -> new ConflictException(ConflictStatusMessages.POST)); // TODO conflict or 50X
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + post.getPostId());
         LOGGER.debug("Created post with id {} to classroom with id {}", post.getPostId(), classId);
         emailService.sendNewPostMessage(uploader, lecture, uriInfo.getBaseUri().toString());

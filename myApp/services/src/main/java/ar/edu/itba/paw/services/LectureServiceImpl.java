@@ -79,8 +79,8 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public int refreshTime(Long classId, int role) {
-        return lectureDao.refreshTime(classId, role);
+    public int refreshTime(Long classId, int isStudent) {
+        return lectureDao.refreshTime(classId, isStudent);
     }
 
     @Transactional
