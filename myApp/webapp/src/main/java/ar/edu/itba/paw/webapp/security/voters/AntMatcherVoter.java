@@ -86,10 +86,10 @@ public class AntMatcherVoter {
         return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
     }
 
-    //TODO: add exception
     public boolean canAccessGetSubjectFile(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(RuntimeException::new);
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id)
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
         return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
     }
 

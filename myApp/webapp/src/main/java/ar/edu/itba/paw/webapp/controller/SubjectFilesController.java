@@ -4,8 +4,10 @@ import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
+import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -52,21 +54,20 @@ public class SubjectFilesController {
     @Path("/{fileId}")
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
-        Long uid = authFacade.getCurrentUserId();
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId)
-                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE)); // TODO security
-        if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        FileDto fileDto = FileDto.fromSubjectFile(subjectFile);
-        return Response.ok(fileDto).build();
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
+        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
+        return Response.ok(subjectFileDto).build();
     }
 
+    // TODO return deleted file on success ?
     @DELETE
     @Path("/{file}")
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response deleteUserSubjectFile(@PathParam("file") Long file) {
         int success = subjectFileService.deleteSubjectFile(file);
-        return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        if (success == 0) throw new NoContentException(NoContentStatusMessages.SUBJECT_FILE);
+        return Response.ok().build();
     }
 
     //TODO: Cambiar este endpoint

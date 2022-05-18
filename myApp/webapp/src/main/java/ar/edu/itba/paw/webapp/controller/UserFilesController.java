@@ -6,8 +6,10 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.UserFileDto;
+import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -59,9 +61,10 @@ public class UserFilesController {
     @DELETE
     @Path("/{fileId}")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response deleteUserSubjectFile(@PathParam("fileId") Long fileId) {
+    public Response deleteUserCertificationFile(@PathParam("fileId") Long fileId) {
         int success = userFileService.deleteFile(fileId);
-        return success == 1 ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        if (success == 0) throw new NoContentException(NoContentStatusMessages.CERTIFICATION);
+        return Response.ok().build();
     }
 
     @POST
