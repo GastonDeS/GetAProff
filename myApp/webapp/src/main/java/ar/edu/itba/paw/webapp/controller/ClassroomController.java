@@ -9,9 +9,11 @@ import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
 import ar.edu.itba.paw.webapp.dto.IdsDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
+import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
+import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
@@ -109,13 +111,12 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
-    // TODO exception
     @DELETE
     @Path("/{classId}/files/{fileId}")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @PathParam("fileId") Long fileId){
         int ans = lectureService.stopSharingFileInLecture(fileId, classId);
-        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
+        if(ans == 0) throw new NoContentException(NoContentStatusMessages.SUBJECT_FILE_NOT_SHARED);
         return Response.ok().build();
     }
 
