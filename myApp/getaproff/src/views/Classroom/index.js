@@ -32,7 +32,7 @@ import { classStatus } from "../../assets/constants";
 const Classroom = () => {
     const files = 1;
     const [classInfo, setClassInfo] = useState();
-    const [classStatus, setClassStatus] = useState();
+    const [classStatus, setClassStatus] = useState(-1);
     const [classPosts, setClassPosts] = useState();
     const [refreshPosts, setRefreshPosts] = useState(true);
     const [page, setPage] = useState(1);
@@ -68,20 +68,26 @@ const Classroom = () => {
     }
 
     const acceptClass = async () =>{
-        const res = await classroomService.changeClassStatus(id.id, classStatus.ACCEPTED, user.id);
+        const res = await classroomService.changeClassStatus(id.id, 1);
         handleService(res, navigate);
-        setClassStatus(classStatus.ACCEPTED);
+        setClassStatus(1);
     }
 
     const finishClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, classStatus.FINISHED, user.id);
+        const res = await classroomService.changeClassStatus(id.id, 2);
         handleService(res, navigate);
-        setClassStatus(classStatus.FINISHED);
+        setClassStatus(2);
     }
     const declineClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, classStatus.DECLINED, user.id);
-        handleService(res, navigate);
-        setClassStatus(classStatus.DECLINED);
+        await classroomService.changeClassStatus(id.id, 5);
+        setClassStatus(5);
+        navigateToMyClasses()
+    }
+
+    const cancelClassS = async () => {
+        const res = await classroomService.changeClassStatus(id.id, 3);
+        setClassStatus(3);
+        navigateToMyClasses();
     }
 
     const rateTeacher = () => {
@@ -167,11 +173,11 @@ const Classroom = () => {
                                     : (classInfo.status === 1) ? <ClassStatus style={{background: "green"}}>
                                             <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.active')}</h6>
                                         </ClassStatus>
-                                        : <> {classInfo.status === classStatus.FINISHED &&
+                                        : <> {classInfo.status === 2 &&
                                                     <ClassStatus style={{background: "#d3d3d3"}}>
                                                         <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.finished')}</h6>
                                                     </ClassStatus>}
-                                             {classInfo.status === classStatus.RATED &&
+                                             {classInfo.status === 6 &&
                                                  <ClassStatus style={{background: "#d3d3d3"}}>
                                                  <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.rated')}</h6>
                                                  </ClassStatus>
@@ -183,16 +189,21 @@ const Classroom = () => {
                                         {isTeacherClassroom &&
                                             <Button text={i18next.t('classroom.accept')} callback={acceptClass}/>
                                         }
-                                        <Button text={i18next.t('classroom.decline')} color={'#FFC300'} fontColor={'black'} callback={declineClass}/>
-                                    </ButtonContainer>
+                                        {isTeacherClassroom &&
+                                            <Button text={i18next.t('classroom.decline')} color={'#FFC300'} fontColor={'black'} callback={declineClass}/>
+                                        }
+                                        {!isTeacherClassroom &&
+                                            <Button text={i18next.t('classroom.cancel')} color={'#FFC300'} fontColor={'black'} callback={cancelClassS}/>
+                                        }
+                                       </ButtonContainer>
                                 ) :
-                                    classInfo.status !== classStatus.FINISHED &&  classInfo.status !== classStatus.RATED  && (
+                                    classInfo.status !== 2 &&  classInfo.status !== 6 && (
                                     <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={finishClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
-                            {(classInfo.status !== classStatus.FINISHED && classInfo.status !== classStatus.RATED) ?
+                            {(classInfo.status !== 2 && classInfo.status !== 6) ?
                                 <PostFormContainer onSubmit={handleSubmit(publishPost)}>
                                     <Textarea name="postTextInput" register={register} placeholder={i18next.t('classroom.post.placeholder')} style={{
                                         borderRadius: "10px",
@@ -232,7 +243,7 @@ const Classroom = () => {
                                 }}>
                                     <h2>{i18next.t('classroom.classOver')}</h2>
                                     <Button text={i18next.t('classroom.back')} callback={navigateToMyClasses}/>
-                                    {!isTeacherClassroom && classInfo.status === classStatus.FINISHED &&
+                                    {!isTeacherClassroom && classInfo.status === 2 &&
                                     <Button text={i18next.t('classroom.rate')} callback={rateTeacher}/>}
                                 </div>
                             }
@@ -261,7 +272,7 @@ const Classroom = () => {
                             {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
-                            {(isTeacherClassroom && classInfo.status !== classStatus.FINISHED) ?
+                            {(isTeacherClassroom && classInfo.status !== 2) ?
                                 <>
                                     <ClassContentSide>
                                         <h2>{i18next.t('classroom.files.myFiles')}</h2>

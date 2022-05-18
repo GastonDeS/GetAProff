@@ -69,8 +69,8 @@ const MyClasses = () => {
       .then(() => setReloadCards(true));
   }
 
-  const handleRejectClass = async (classId) => {
-    await classroomService.rejectClass(classId)
+  const handleDeclineClass = async (classId) => {
+    await classroomService.declineClass(classId)
         .then(() => setReloadCards(true));
   }
 
@@ -122,9 +122,9 @@ const MyClasses = () => {
   const handler = {
     rateClass: handleRate,
     enterClassroom: handleEnterClassroom,
-    finishClass: handleFinishClass,
     acceptClass: handleAcceptClass,
-    rejectClass: handleRejectClass,
+    finishClass: handleFinishClass,
+    declineClass: handleDeclineClass,
     cancelClassS: handleCancelClassS,
   }
 
