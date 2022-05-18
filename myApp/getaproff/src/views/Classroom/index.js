@@ -150,8 +150,9 @@ const Classroom = () => {
 
 
     const openSubjectFileInNewWindow = async (fileId) => {
-        let res = await filesService.getSubjectFile(fileId);
-        window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(res.data.file)], { type: "application/pdf" })))
+        const res = await filesService.getSubjectFile(fileId);
+        const data = handleService(res, navigate);
+        window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(data.file)], { type: "application/pdf" })))
     }
 
 

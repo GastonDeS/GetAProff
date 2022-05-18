@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserFileService;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserFile;
+import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.UserFileDto;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.apache.commons.io.IOUtils;
@@ -32,17 +36,28 @@ public class UserFilesController {
     @Context
     private UriInfo uriInfo;
 
+    @Autowired
+    private UserService userService;
+
     private final static Logger LOGGER = LoggerFactory.getLogger(UserFilesController.class);
 
     @GET
-    @Path("/{uid}")
-    public Response getAllFilesFromUser(@PathParam("uid") Long uid) {
-        final List<UserFileDto> userFileDtos = userFileService.getAllUserFiles(uid).stream()
+    public Response getAllFilesFromUser(@QueryParam("id") Long id) {
+        final User user = userService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
+        final List<UserFileDto> userFileDtos = userFileService.getAllUserFiles(user.getId()).stream()
                 .map(UserFileDto::fromUser).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserFileDto>>(userFileDtos){}).build();
     }
 
-    // TODO return optional
+    @GET
+    @Path("/{fileId}")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response getUserFile(@PathParam("fileId") Long fileId) {
+        final UserFile userFile = userFileService.getFileById(fileId)
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CERTIFICATION));
+        return Response.ok(FileDto.fromUserFile(userFile)).build();
+    }
+
     @DELETE
     @Path("/{fileId}")
     @Produces("application/vnd.getaproff.api.v1+json")

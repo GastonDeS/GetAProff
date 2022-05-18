@@ -1,5 +1,5 @@
 import { axiosService } from "./index";
-import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
+import { paths } from "../assets/constants";
 import { handleResponse } from "../handlers/responseHandler";
 
 const USER_FILE_PATH = paths.USER_FILES
@@ -7,13 +7,6 @@ const SUBJECT_FILE_PATH = paths.SUBJECT_FILES
 const POST_PATH = paths.POST
 
 export class FilesService {
-  // async getUserFile (id, setLink) {
-  //   axios.get('/files/user/' + id)
-  //     .then(res => {
-  //       setLink(window.URL.createObjectURL(new Blob([res.data])));
-  //     })
-  //     .catch(error => {});
-  // };
 
   base64ToArrayBuffer (base64) {
     var binaryString = window.atob(base64);
@@ -27,8 +20,11 @@ export class FilesService {
 
   async getUserCertifications (uid) {
     try {
-      let config = {}
-      const res = await axiosService.authAxiosWrapper(axiosService.GET, `${USER_FILE_PATH}/${uid}`, config);
+      let config = {};
+      config['params'] = {
+        id: Number(uid)
+      };
+      const res = await axiosService.authAxiosWrapper(axiosService.GET, `${USER_FILE_PATH}`, config);
       return handleResponse(res);
     } catch (error) {return handleResponse(error.response)}
   }
@@ -44,6 +40,13 @@ export class FilesService {
     try {
         const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `/${USER_FILE_PATH}/${fileId}`, {});
         return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
+  }
+
+  async getCertificationById (fileId) {
+    try {
+      const res = await axiosService.authAxiosWrapper(axiosService.GET, `${USER_FILE_PATH}/${fileId}`, {});
+      return handleResponse(res);
     } catch (error) {return handleResponse(error.response)}
   }
 

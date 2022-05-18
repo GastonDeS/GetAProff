@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -54,8 +56,8 @@ public class SubjectFilesController {
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
-        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
-        return Response.ok(subjectFileDto).build();
+        FileDto fileDto = FileDto.fromSubjectFile(subjectFile);
+        return Response.ok(fileDto).build();
     }
 
     // TODO return deleted file on success ?

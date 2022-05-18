@@ -30,7 +30,7 @@ const App = () => {
       <GlobalStyle/>
       <Routes>
         <Route path='/' element={ <Home/> }/> 
-        <Route path='/users/login/*' element={ <Login/> }/>
+        <Route path='/users/login' element={ <Login/> }/>
         <Route path='/users/new' element={ <Register/> }/>
         <Route path='/users/:id/favorites' element={ <Favorites/> }/>
         <Route path='/users/:id/classes' element={ <MyClasses/> }/>

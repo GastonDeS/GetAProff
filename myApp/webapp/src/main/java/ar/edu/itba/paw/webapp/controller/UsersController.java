@@ -99,6 +99,7 @@ public class UsersController {
         return response.header("Authorization", authenticationTokenService.issueToken(newUser.get().getMail(), authoritySet)).build();
     }
 
+    // TODO exception
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response findBySubject(@QueryParam("search") String search,
@@ -131,6 +132,8 @@ public class UsersController {
 //        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
 //    }
 
+
+    // TODO this is okey ?
     @GET
     @Path("/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -161,6 +164,7 @@ public class UsersController {
     }
 
     // Edit profile
+    // TODO exception
     @POST
     @Path("/{uid}/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -179,6 +183,7 @@ public class UsersController {
                 Response.ok(AuthDto.fromUser(user.get())).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    // TODO exception
     @POST
     @Path("/{uid}/student")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -199,16 +204,6 @@ public class UsersController {
         return Response.ok(new GenericEntity<List<SubjectInfoDto>>(subjectInfoDtos){}).build();
     }
 
-//    //TODO: SE PODRIA BORRAR
-//    @GET
-//    @Path("/subjects/levels/{id}")
-//    @Produces("application/vnd.getaproff.api.v1+json")
-//    public Response getSubjectsAndLevelsTaughtByUser(@PathParam("id") Long id) {
-//        final List<SubjectLevelDto> subjectLevelDtos = teachesService.getSubjectAndLevelsTaughtByUser(id)
-//                .entrySet().stream().map(entry -> SubjectLevelDto.fromSubjectLevel(uriInfo, entry)).collect(Collectors.toList());
-//        return Response.ok(new GenericEntity<List<SubjectLevelDto>>(subjectLevelDtos){}).build();
-//    }
-
     @GET
     @Path("/available-subjects/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -222,14 +217,13 @@ public class UsersController {
     @Path("/{uid}")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response addSubjectToUser(@PathParam("uid") Long userId, @Valid @RequestBody SubjectRequestDto newSubjectDto) {
-        final Optional<Teaches> newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
-                newSubjectDto.getPrice(), newSubjectDto.getLevel());
-        if (newTeaches.isPresent()) {
+        final Teaches newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
+                newSubjectDto.getPrice(), newSubjectDto.getLevel()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.ADD_SUBJECT_TO_TEACHER));
             LOGGER.debug("Subject with id {} added to user with id: {}", newSubjectDto.getSubjectId() ,userId);
-        }
-        return newTeaches.isPresent() ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        return Response.ok().build(); // TODO maybe return location for getSubjects? or created status
     }
 
+    // TODO exception
     @DELETE
     @Path("/{userId}/{subjectId}/{level}")
     public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
@@ -242,7 +236,6 @@ public class UsersController {
     public Response getUserImage(@PathParam("uid") Long uid) {
         Image image = imageService.findImageById(uid).orElseThrow(() -> new NoContentException(NoContentStatusMessages.IMAGE));
         return Response.ok(ImageDto.fromUser(image)).build();
-
     }
 
     @POST
