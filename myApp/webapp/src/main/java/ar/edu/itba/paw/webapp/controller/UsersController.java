@@ -63,6 +63,7 @@ public class UsersController {
     private UriInfo uriInfo;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UsersController.class);
+    private static final String MAX_PRICE = "2147483647"; // INTEGER.MAX_VALUE
 
     @POST
     @Path("/teacher")
@@ -101,7 +102,7 @@ public class UsersController {
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response findBySubject(@QueryParam("search") String search,
-                                  @QueryParam("maxPrice") @DefaultValue("10000") Integer price, //TODO define better defaults not my
+                                  @QueryParam("maxPrice") @DefaultValue(MAX_PRICE) Integer price,
                                   @QueryParam("level") @DefaultValue("0") Integer level,
                                   @QueryParam("rating") @DefaultValue("0") Integer rating,
                                   @QueryParam("order") @DefaultValue("0") Integer order,
