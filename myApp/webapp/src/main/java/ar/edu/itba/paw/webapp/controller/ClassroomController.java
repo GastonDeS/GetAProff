@@ -37,9 +37,6 @@ import java.util.stream.Collectors;
 @Controller
 public class ClassroomController {
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private LectureService lectureService;
 
     @Autowired
@@ -48,8 +45,6 @@ public class ClassroomController {
     @Autowired
     private AuthFacade authFacade;
 
-    @Autowired
-    private SubjectFileService subjectFileService;
 
     @Autowired
     private EmailService emailService;

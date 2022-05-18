@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Path("/api/favourites")
 @Controller
 public class FavoritesController {
-    private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0; // TODO transform this into exceptions
+    private static final int SUCCESS = 1;
 
     @Autowired
     private UserService userService;
@@ -64,7 +64,7 @@ public class FavoritesController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response addNewFavoriteUser(@PathParam("teacherId") Long teacherId) {
         int result = userService.addFavourite(teacherId, authFacade.getCurrentUserId());
-        if (result == ALREADY_INSERTED) throw new ConflictException(ConflictStatusMessages.FAVORITE);
+        if (result != SUCCESS) throw new ConflictException(ConflictStatusMessages.FAVORITE);
         return Response.ok().build();
     }
 
@@ -72,7 +72,7 @@ public class FavoritesController {
     @Path("/{teacherId}")
     public Response removeFavoriteUser(@PathParam("teacherId") Long teacherId) {
         int result = userService.removeFavourite(teacherId, authFacade.getCurrentUserId());
-        if (result == NO_CONTENT_TO_DELETE) throw new NoContentException(NoContentStatusMessages.FAVORITE);
+        if (result != SUCCESS) throw new NoContentException(NoContentStatusMessages.FAVORITE);
         return Response.ok().build();
     }
 }
