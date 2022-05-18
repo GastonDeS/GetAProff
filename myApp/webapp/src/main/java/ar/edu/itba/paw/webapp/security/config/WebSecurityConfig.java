@@ -146,7 +146,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.GET, API_PREFIX+"/favourites").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.GET,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")
-                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")// TODO check if this works if not separate into the 4 endpoints all with USER_STUDENT
+                        .antMatchers(HttpMethod.DELETE,API_PREFIX+"/favourites/{teacherId}").hasAuthority("USER_STUDENT")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/ratings/{teacherId}").access("@antMatcherVoter.canRate(authentication, #teacherId)")
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/subjects").hasAuthority("USER_TEACHER")
                         .antMatchers("/**").permitAll()
