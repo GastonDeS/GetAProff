@@ -54,7 +54,8 @@ public class UserFilesController {
     public Response uploadUserFiles(@PathParam("uid") Long uid, @FormDataParam("file") InputStream uploadedInputStream,
                                     @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
-        final UserFile userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid).orElseThrow(CertificationNotFoundException::new);
+        final UserFile userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid)
+                .orElseThrow(CertificationNotFoundException::new);
         LOGGER.debug("File uploaded successfully");
         return Response.ok(UserFileDto.fromUser(userFile)).build();
     }

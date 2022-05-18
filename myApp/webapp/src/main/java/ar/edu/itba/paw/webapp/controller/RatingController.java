@@ -57,6 +57,7 @@ public class RatingController {
         }
     }
 
+    // TODO exception
     @POST
     @Path("/{teacherId}")
     @Produces(value = { "application/vnd.getaproff.api.v1+json" })

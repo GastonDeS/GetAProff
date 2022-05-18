@@ -75,15 +75,11 @@ public class ClassroomController {
     public Response getClassroomComments(@PathParam("classId") final Long classId,
                                          @QueryParam("page") @DefaultValue("1") Integer page,
                                          @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-//        try {
-            final Page<Post> posts = postService.retrievePosts(classId, page, pageSize);
-            Response.ResponseBuilder builder = Response.ok(
-                    new GenericEntity<List<PostDto>>(posts.getContent().stream().map(PostDto::getPostDto).collect(Collectors.toList())) {
-                    });
-            return PaginationBuilder.build(posts, builder, uriInfo, pageSize);
-//        } catch (IllegalArgumentException exception) { //TODO mensaje exacto se maneja con exception
-//            return Response.status(Response.Status.BAD_REQUEST).build();
-//        }
+        final Page<Post> posts = postService.retrievePosts(classId, page, pageSize);
+        Response.ResponseBuilder builder = Response.ok(
+                new GenericEntity<List<PostDto>>(posts.getContent().stream().map(PostDto::getPostDto).collect(Collectors.toList())) {
+                });
+        return PaginationBuilder.build(posts, builder, uriInfo, pageSize);
     }
 
     @GET
@@ -95,6 +91,7 @@ public class ClassroomController {
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
+    //TODO fix this so it uploads every file
     @POST
     @Path("/{classId}/files")
     public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
@@ -102,6 +99,7 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
+    //TODO fix this so it deletes every file
     @DELETE
     @Path("/{classId}/files")
     public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
@@ -109,7 +107,7 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
-
+    //TODO security on this
     @POST
     @Path("/{classId}/posts")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
@@ -128,6 +126,7 @@ public class ClassroomController {
         return Response.created(location).build();
     }
 
+    // TODO exception for not success
     @POST
     @Path("/{classId}/status")
     @Consumes("application/vnd.getaproff.api.v1+json")
