@@ -9,6 +9,16 @@ public class NewRatingDto {
 
     private String review;
 
+    private Long teacherId;
+
+    public Long getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
+    }
+
     public float getRate() {
         return rate;
     }

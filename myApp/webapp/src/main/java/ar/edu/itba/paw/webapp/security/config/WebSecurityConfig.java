@@ -173,7 +173,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/user-files")
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/user-files/{fileId}")
-                .antMatchers(HttpMethod.GET,API_PREFIX+"/ratings/{id}")
+                .antMatchers(HttpMethod.GET,API_PREFIX+"/ratings")
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/subjects/**" /*all public*/)
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/users")
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/users/{id}")
