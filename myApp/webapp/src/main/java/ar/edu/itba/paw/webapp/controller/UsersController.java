@@ -199,7 +199,7 @@ public class UsersController {
         final Teaches newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.ADD_SUBJECT_TO_TEACHER));
             LOGGER.debug("Subject with id {} added to user with id: {}", newSubjectDto.getSubjectId() ,userId);
-        return Response.ok().build(); // TODO return location of list at least
+        return Response.created(URI.create(uriInfo.getBaseUri()+"/"+userId+"/subjects")).build();
     }
 
     @DELETE

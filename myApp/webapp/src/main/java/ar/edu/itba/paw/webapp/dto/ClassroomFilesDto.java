@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.SubjectFile;
-import ar.edu.itba.paw.webapp.controller.FilesController;
 import ar.edu.itba.paw.webapp.controller.SubjectFilesController;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Links;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
-import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

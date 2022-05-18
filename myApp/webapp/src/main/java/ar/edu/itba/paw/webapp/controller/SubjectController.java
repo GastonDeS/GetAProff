@@ -47,7 +47,6 @@ public class SubjectController {
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
-    //TODO: CHEQUEAR SI SE USA
     @GET
     @Path("/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")

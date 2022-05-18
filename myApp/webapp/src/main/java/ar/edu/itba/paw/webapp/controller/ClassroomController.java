@@ -61,7 +61,7 @@ public class ClassroomController {
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 ); // TODO 1 student 0 teacher modificar criterio
+        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 );
         return Response.ok(
                 ClassroomDto.getClassroom(lecture)
         ).build();
@@ -111,7 +111,6 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
-    //TODO security on this
     @POST
     @Path("/{classId}/posts")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
@@ -119,10 +118,7 @@ public class ClassroomController {
                                 @FormDataParam("uploader") final Long uploader, @FormDataParam("file") InputStream uploadedInputStream,
                                 @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        if (!(lecture.getTeacher().getId().equals(uploader) || lecture.getStudent().getId().equals(uploader))) { // TODO fix this to the future handler
-            return Response.status(Response.Status.FORBIDDEN).entity("The user "+uploader+" doesn't belong to this classroom").build();
-        }
-        if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build();
+        if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build(); // TODO validate params
         Post post = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType())
                 .orElseThrow(() -> new ConflictException(ConflictStatusMessages.POST)); // TODO conflict or 50X
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + post.getPostId());

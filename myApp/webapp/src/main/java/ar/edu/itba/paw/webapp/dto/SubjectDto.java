@@ -14,6 +14,7 @@ public class SubjectDto {
 
     private Link url;
 
+    //TODO remove url
     public static SubjectDto get(Subject subject) {
         SubjectDto subjectDto = new SubjectDto();
         subjectDto.name = subject.getName();
