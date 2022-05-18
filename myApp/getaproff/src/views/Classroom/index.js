@@ -90,7 +90,7 @@ const Classroom = () => {
     }
 
     const rateTeacher = () => {
-        navigate(`/users/${classInfo.teacher.id}/reviews`)
+        navigate(`/users/${classInfo.teacher.id}/reviews/${id.id}`);
     }
 
     const publishPost = async (data) => {

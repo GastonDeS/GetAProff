@@ -54,8 +54,8 @@ const MyClasses = () => {
     setStatus(e.target.value);
   }
 
-  const handleRate = (uid) => {
-    navigate(`/users/${uid}/reviews`);
+  const handleRate = (uid, classId) => {
+    navigate(`/users/${uid}/reviews/${classId}`);
   }
 
   const handleEnterClassroom = (classId) => {
@@ -63,22 +63,22 @@ const MyClasses = () => {
   }
 
   const handleFinishClass = async (classId) => {
-    await classroomService.finishClass(classId, currUser.id)
+    await classroomService.finishClass(classId)
       .then(() => setReloadCards(true));
   }
 
   const handleRejectClass = async (classId) => {
-    await classroomService.rejectClass(classId, currUser.id)
+    await classroomService.rejectClass(classId)
         .then(() => setReloadCards(true));
   }
 
   const handleCancelClassS = async (classId) => {
-    await classroomService.cancelClassS(classId, currUser.id)
+    await classroomService.cancelClassS(classId)
         .then(() => setReloadCards(true));
   }
 
   const handleAcceptClass = async (classId) => {
-    await classroomService.acceptClass(classId, currUser.id)
+    await classroomService.acceptClass(classId)
       .then(() => setReloadCards(true));
   }
 

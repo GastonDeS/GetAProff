@@ -70,8 +70,7 @@ const ClassCard = ({ subject, user, level, price, statusCode, isTeacher, classId
             }
           </>}
           {statusCode === 1 && isTeacher && <Button text={i18next.t('classCard.finish')} color='red' fontSize='1rem' callback={handlers.finishClass}/>}
-          {statusCode === 2 && !isTeacher && <Button text={i18next.t('classCard.rate')} fontSize='1rem'  callback={() => handlers.rateClass(user.id)}/>}
-
+          {statusCode === 2 && !isTeacher && <Button text={i18next.t('classCard.rate')} fontSize='1rem'  callback={() => handlers.rateClass(user.id, classId)}/>}
 
         </ButtonContainer>
       </Body>

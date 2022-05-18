@@ -24,7 +24,7 @@ public class FilesController {
     @Context
     private UriInfo uriInfo;
 
-    //TODO: CHEQUEAR ESTO
+    //TODO: NO SE USA CREO
     @GET
     @Path("/user/{id}")
     public Response getUserFile(@PathParam("id") Long id) {

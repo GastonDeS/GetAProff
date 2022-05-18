@@ -1,5 +1,7 @@
 export const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
+
 export const API_PREFIX = '/api'
+
 export const paths = {
   USERS: 'users',
   FAVOURITES: 'favourites',
@@ -17,4 +19,13 @@ export const status = {
   NO_CONTENT: 204,
   UNAUTHORIZED: 401,
   PAGE_NOT_FOUND: 404
+}
+
+export const classStatus = {
+  ACCEPTED: 1,
+  FINISHED: 2,
+  CANCELLEDS: 3,
+  CANCELLEDT: 4,
+  REJECTED: 5,
+  RATED: 6
 }

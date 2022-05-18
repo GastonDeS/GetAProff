@@ -93,7 +93,7 @@ public class ClassroomController {
     @POST
     @Path("/{classId}/files")
     @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
-    public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
+    public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId) {
         int ans = 1;
         for(Long id : filesId.getIds()) {
             ans *= lectureService.shareFileInLecture(id, classId);
@@ -107,7 +107,7 @@ public class ClassroomController {
     @DELETE
     @Path("/{classId}/files")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
-    public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
+    public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId) {
         int ans = 1;
         for(Long id : filesId.getIds()) {
             ans *= lectureService.stopSharingFileInLecture(id, classId);
@@ -137,17 +137,12 @@ public class ClassroomController {
 
     // TODO exception for not success
     @POST
-    @Path("/{classId}/status")
-    @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatus) throws IOException{
+    @Path("/{classId}/{status}")
+    public Response changeStatus(@PathParam("classId") final Long classId, @PathParam("status") final int status) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
-        //TODO: el alumno no la puede cancelar?
-//        if( newStatus.getStatus() == 4)
-//            if (!Objects.equals(lecture.getTeacher().getId(), newStatus.getUserId()))
-//                return Response.status(Response.Status.FORBIDDEN).build();
-        int updated = lectureService.setStatus(classId, newStatus.getStatus());
-        emailService.sendStatusChangeMessage(lecture, newStatus.getStatus(),uriInfo.getBaseUri().toString());
-        LOGGER.debug("Changed status of classroom with id {} to {}", classId, newStatus.getStatus());
+        int updated = lectureService.setStatus(classId, status);
+        emailService.sendStatusChangeMessage(lecture, status,uriInfo.getBaseUri().toString());
+        LOGGER.debug("Changed status of classroom with id {} to {}", classId, status);
         return updated == SUCCESS ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 }
