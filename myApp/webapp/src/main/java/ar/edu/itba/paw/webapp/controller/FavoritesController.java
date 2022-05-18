@@ -50,7 +50,6 @@ public class FavoritesController {
         return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
     }
 
-    // TODO make service return the user on optional
     @GET
     @Path("/{teacherId}")
     @Produces({"application/vnd.getaproff.api.v1+json"})
@@ -60,7 +59,6 @@ public class FavoritesController {
         return Response.ok(LinkUserDto.fromUserId(teacherId.toString())).build();
     }
 
-    // TODO make service return the Added user on optional
     @POST
     @Path("/{teacherId}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -70,7 +68,6 @@ public class FavoritesController {
         return Response.ok().build();
     }
 
-    // TODO make service return the removed user on optional
     @DELETE
     @Path("/{teacherId}")
     public Response removeFavoriteUser(@PathParam("teacherId") Long teacherId) {

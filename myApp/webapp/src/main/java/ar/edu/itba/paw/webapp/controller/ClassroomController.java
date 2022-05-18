@@ -8,14 +8,12 @@ import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
 import ar.edu.itba.paw.webapp.dto.IdsDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
-import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
-import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
-import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
-import ar.edu.itba.paw.webapp.util.PaginationBuilder;
+import ar.edu.itba.paw.webapp.util.*;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -97,7 +95,6 @@ public class ClassroomController {
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
-    // TODO exception
     @POST
     @Path("/{classId}/files")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -106,8 +103,7 @@ public class ClassroomController {
         for(Long id : filesId.getIds()) {
             ans *= lectureService.shareFileInLecture(id, classId);
         }
-        //TODO: add exception here
-        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
+        if(ans == 0) throw new ConflictException(ConflictStatusMessages.SUBJECT_FILE);
         return Response.ok().build();
     }
 
@@ -140,7 +136,6 @@ public class ClassroomController {
         return Response.created(location).build();
     }
 
-    // TODO exception for not success
     @POST
     @Path("/{classId}/{status}")
     public Response changeStatus(@PathParam("classId") final Long classId, @PathParam("status") final int status) {
@@ -148,6 +143,7 @@ public class ClassroomController {
         int updated = lectureService.setStatus(classId, status);
         emailService.sendStatusChangeMessage(lecture, status,uriInfo.getBaseUri().toString());
         LOGGER.debug("Changed status of classroom with id {} to {}", classId, status);
-        return updated == SUCCESS ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
+        if (updated != SUCCESS) throw new BadRequestException(BadRequestStatusMessages.STATUS_CHANGE);
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 }
