@@ -80,7 +80,6 @@ export class UserService {
     //UsersController
     async getUserInfo(uid) {
         try {
-            let data;
             const res = await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, {});
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}

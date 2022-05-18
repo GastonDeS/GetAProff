@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -64,7 +65,7 @@ public class ClassesController {
     // TODO handle exception for create
     @POST
     @Consumes(value = "application/vnd.getaproff.api.v1+json")
-    public Response requestClass(ClassRequestDto classRequestDto) {
+    public Response requestClass(@RequestBody ClassRequestDto classRequestDto) {
         Optional<Lecture> newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
                 classRequestDto.getSubjectId(), classRequestDto.getPrice());
         if(!newLecture.isPresent()){

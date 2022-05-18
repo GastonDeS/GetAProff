@@ -13,7 +13,7 @@ public class UserFileDto {
 
     private Link url;
 
-    private byte[] file;
+//    private byte[] file;
 
     //TODO i think here we dont need the link it points to itself
     public static UserFileDto fromUser(UserFile file) {
@@ -21,17 +21,17 @@ public class UserFileDto {
         userFileDto.url = JaxRsLinkBuilder.linkTo(FilesController.class).slash("user").slash(file.getFileId()).withRel(file.getFileId().toString());
         userFileDto.id = file.getFileId();
         userFileDto.name = file.getFileName();
-        userFileDto.file = file.getFile();
+//        userFileDto.file = file.getFile();
         return userFileDto;
     }
 
-    public byte[] getFile() {
-        return file;
-    }
-
-    public void setFile(byte[] file) {
-        this.file = file;
-    }
+//    public byte[] getFile() {
+//        return file;
+//    }
+//
+//    public void setFile(byte[] file) {
+//        this.file = file;
+//    }
 
     public Long getId() {
         return id;

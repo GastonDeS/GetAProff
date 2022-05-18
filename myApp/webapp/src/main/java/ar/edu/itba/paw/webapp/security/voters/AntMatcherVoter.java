@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.webapp.security.voters;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.SubjectFile;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserFile;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
+import ar.edu.itba.paw.webapp.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.api.models.BasicAuthenticationToken;
@@ -14,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class AntMatcherVoter {
@@ -34,7 +36,11 @@ public class AntMatcherVoter {
     private SubjectFileService subjectFileService;
 
     @Autowired
-    UserFileService userFileService;
+    private UserFileService userFileService;
+
+    @Autowired
+    private TeachesService teachesService;
+
 
     private Long getUserId(Authentication authentication) {
         return getUser(authentication).getUserid();
@@ -103,5 +109,25 @@ public class AntMatcherVoter {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
         return ratingService.availableToRate(teacherId, getUserId(authentication));
     }
+
+    public boolean canRequestClass(Authentication authentication, Long teacherId) {
+        if(authentication instanceof AnonymousAuthenticationToken) return false;
+        User teacher = userService.findById(teacherId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
+        return !teacher.isTeacher() && teacherId.equals(getUserId(authentication));
+    }
+
+    public boolean canAccessRate(Authentication authentication, Long teacherId, Long classId) {
+        if(authentication instanceof AnonymousAuthenticationToken) return false;
+        Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
+        return ratingService.availableToRate(teacherId, getUserId(authentication));
+    }
+
+    public boolean canAccessProfile(Authentication authentication, Long uid) {
+        User user = userService.findById(uid).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
+        if (user.isTeacher()) return true;
+        if (authentication instanceof AnonymousAuthenticationToken) return false;
+        return uid.equals(getUserId(authentication));
+    }
+
 }
 

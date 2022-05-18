@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.webapp.exceptions.ConflictException;
-import ar.edu.itba.paw.webapp.exceptions.NoContentException;
-import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.security.api.models.ApiErrorDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,8 +35,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ApiErrorDetails> ConflictException(ConflictException exception) {
+    public ResponseEntity<ApiErrorDetails> conflictException(ConflictException exception) {
         return getExceptionResponseByStatusAndMessage(Response.Status.CONFLICT, exception.getMessage());
+    }
+
+    @ExceptionHandler({InvalidParameterException.class, InvalidOperationException.class})
+    public ResponseEntity<ApiErrorDetails> badRequestException(RuntimeException exception) {
+        return getExceptionResponseByStatusAndMessage(Response.Status.BAD_REQUEST, exception.getMessage());
     }
 
     private ResponseEntity<ApiErrorDetails> getExceptionResponseByStatusAndMessage(Response.Status status, String message) {

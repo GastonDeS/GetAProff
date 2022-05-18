@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -55,8 +57,8 @@ public class SubjectFilesController {
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE)); // TODO security
         if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
             return Response.status(Response.Status.UNAUTHORIZED).build();
-        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
-        return Response.ok(subjectFileDto).build();
+        FileDto fileDto = FileDto.fromSubjectFile(subjectFile);
+        return Response.ok(fileDto).build();
     }
 
     @DELETE

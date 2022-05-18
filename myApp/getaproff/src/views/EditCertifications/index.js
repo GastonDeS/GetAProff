@@ -106,7 +106,7 @@ const EditCertifications = () => {
   };
 
   const fetchCertifications = async () => {
-    const res = await filesService.getUserCertifications(currentUser.id);
+    const res = await filesService.getUserCertifications();
     const data = handleService(res, navigate);
     data.forEach((file) => {
         setCertifications((previous) => [

@@ -19,7 +19,7 @@ import {
 import Banner from '../../assets/img/matematica_banner.png';
 import Button from "../../components/Button";
 import Textarea from "../../components/Textarea";
-import {classroomService} from "../../services"
+import {classroomService, filesService} from "../../services"
 import authService from "../../services/authService";
 import {useNavigate, useParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
