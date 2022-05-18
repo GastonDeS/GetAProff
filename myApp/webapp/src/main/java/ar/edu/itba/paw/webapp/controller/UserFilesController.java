@@ -8,7 +8,6 @@ import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.UserFileDto;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
-import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.apache.commons.io.IOUtils;
@@ -45,7 +44,7 @@ public class UserFilesController {
     public Response getAllFilesFromUser(@QueryParam("id") Long id) {
         final User user = userService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
         final List<UserFileDto> userFileDtos = userFileService.getAllUserFiles(user.getId()).stream()
-                .map(UserFileDto::fromUser).collect(Collectors.toList());
+                .map(u -> UserFileDto.fromUser(u,true)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserFileDto>>(userFileDtos){}).build();
     }
 
@@ -77,7 +76,7 @@ public class UserFilesController {
         final UserFile userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CERTIFICATION));
         LOGGER.debug("File uploaded successfully");
-        return Response.ok(UserFileDto.fromUser(userFile)).build();
+        return Response.ok(UserFileDto.fromUser(userFile,false)).build();
     }
 
 }

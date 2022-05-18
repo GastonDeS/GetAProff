@@ -13,10 +13,9 @@ public class UserFileDto {
 
     private Link url;
 
-    //TODO i think here we dont need the link it points to itself
-    public static UserFileDto fromUser(UserFile file) {
+    public static UserFileDto fromUser(UserFile file, boolean withLink) {
         UserFileDto userFileDto = new UserFileDto();
-        userFileDto.url = JaxRsLinkBuilder.linkTo(UserFilesController.class).slash(file.getFileId()).withRel(file.getFileId().toString());
+        if (withLink) userFileDto.url = JaxRsLinkBuilder.linkTo(UserFilesController.class).slash(file.getFileId()).withRel(file.getFileId().toString());
         userFileDto.id = file.getFileId();
         userFileDto.name = file.getFileName();
         return userFileDto;

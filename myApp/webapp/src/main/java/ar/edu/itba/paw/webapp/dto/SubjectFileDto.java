@@ -17,11 +17,11 @@ public class SubjectFileDto {
 
     private Link url;
 
-    public static SubjectFileDto fromUser(SubjectFile subjectFile) {
+    public static SubjectFileDto fromSubjectFile(SubjectFile subjectFile) {
         SubjectFileDto subjectFileDto = new SubjectFileDto();
         subjectFileDto.id = subjectFile.getFileId();
         subjectFileDto.name = subjectFile.getFileName();
-        subjectFileDto.subject = SubjectDto.get(subjectFile.getTeachesInfo().getSubject());
+        subjectFileDto.subject = SubjectDto.get(subjectFile.getTeachesInfo().getSubject(), true);
         subjectFileDto.level = subjectFile.getTeachesInfo().getLevel();
         subjectFileDto.url = JaxRsLinkBuilder.linkTo(SubjectFilesController.class).slash(subjectFile.getFileId()).withRel(subjectFile.getFileId().toString());
         return subjectFileDto;

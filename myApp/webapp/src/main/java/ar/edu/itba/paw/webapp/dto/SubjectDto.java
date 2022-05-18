@@ -14,12 +14,11 @@ public class SubjectDto {
 
     private Link url;
 
-    //TODO remove url
-    public static SubjectDto get(Subject subject) {
+    public static SubjectDto get(Subject subject, boolean withLink) {
         SubjectDto subjectDto = new SubjectDto();
         subjectDto.name = subject.getName();
         subjectDto.subjectId = subject.getSubjectId();
-        subjectDto.url = JaxRsLinkBuilder.linkTo(SubjectController.class).slash(subject.getSubjectId()).withRel(subject.getSubjectId().toString());
+        if (withLink) subjectDto.url = JaxRsLinkBuilder.linkTo(SubjectController.class).slash(subject.getSubjectId()).withRel(subject.getSubjectId().toString());
         return subjectDto;
     }
 
