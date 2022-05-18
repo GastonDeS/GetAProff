@@ -4,9 +4,10 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.webapp.dto.SubjectDto;
-import ar.edu.itba.paw.webapp.exceptions.SubjectNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.requestDto.NewSubjectDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,8 @@ public class SubjectController {
     @Path("/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getSubject(@PathParam("id") Long id) {
-        final Subject subject = subjectService.findById(id).orElseThrow(SubjectNotFoundException::new);
+        final Subject subject = subjectService.findById(id)
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT));
         return Response.ok(SubjectDto.get(subject)).build();
     }
 

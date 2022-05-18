@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.security.api.models.ApiErrorDetails;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +15,7 @@ public class ExceptionHandlingController {
         return getExceptionResponseByStatusAndMessage(Response.Status.UNAUTHORIZED, exception.getMessage());
     }
 
-    @ExceptionHandler({ProfileNotFoundException.class,
+    @ExceptionHandler({
             OperationFailedException.class,
             InvalidOperationException.class,
             InvalidParameterException.class})
@@ -24,13 +23,13 @@ public class ExceptionHandlingController {
         return getExceptionResponseByStatusAndMessage(Response.Status.FORBIDDEN, exception.getMessage());
     }
 
-    @ExceptionHandler(ClassNotFoundException.class)
-    public Response classNotFoundException(ClassNotFoundException exception) {
+    @ExceptionHandler({NotFoundException.class})
+    public Response notFoundException(NotFoundException exception) {
         return getExceptionResponseByStatusAndMessage(Response.Status.NOT_FOUND, exception.getMessage());
     }
 
-    @ExceptionHandler({NoContentException.class, ImageNotFoundException.class})
-    public Response noContentException(ImageNotFoundException exception) {
+    @ExceptionHandler({NoContentException.class})
+    public Response noContentException(NoContentException exception) {
         return getExceptionResponseByStatusAndMessage(Response.Status.NO_CONTENT, exception.getMessage());
     }
 

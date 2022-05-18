@@ -4,10 +4,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
-import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
+import ar.edu.itba.paw.webapp.dto.ClassroomDto;
+import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
+import ar.edu.itba.paw.webapp.dto.IdsDto;
+import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.OperationFailedException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -60,7 +64,7 @@ public class ClassroomController {
     @Path("/{classId}")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
-        Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
+        Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         return Response.ok(
                 ClassroomDto.getClassroom(lecture)
         ).build();
@@ -118,7 +122,7 @@ public class ClassroomController {
     public Response uploadPosts(@PathParam("classId") final Long classId, @FormDataParam("message") final String message,
                                 @FormDataParam("uploader") final Long uploader, @FormDataParam("file") InputStream uploadedInputStream,
                                 @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
-        Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
+        Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         if (!(lecture.getTeacher().getId().equals(uploader) || lecture.getStudent().getId().equals(uploader))) { // TODO fix this to the future handler
             return Response.status(Response.Status.FORBIDDEN).entity("The user "+uploader+" doesn't belong to this classroom").build();
         }
@@ -134,7 +138,7 @@ public class ClassroomController {
     @POST
     @Path("/{classId}/{status}")
     public Response changeStatus(@PathParam("classId") final Long classId, @PathParam("status") final int status) {
-        Lecture lecture = lectureService.findById(classId).orElseThrow(ClassNotFoundException::new);
+        Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         int updated = lectureService.setStatus(classId, status);
         emailService.sendStatusChangeMessage(lecture, status,uriInfo.getBaseUri().toString());
         LOGGER.debug("Changed status of classroom with id {} to {}", classId, status);

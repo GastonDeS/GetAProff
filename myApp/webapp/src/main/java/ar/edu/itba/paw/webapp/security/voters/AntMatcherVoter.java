@@ -5,10 +5,11 @@ import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserFile;
-import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.api.models.BasicAuthenticationToken;
 import ar.edu.itba.paw.webapp.security.models.PawUser;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,34 +53,37 @@ public class AntMatcherVoter {
 
     public boolean canAccessClassroom(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = lectureService.findById(id).orElseThrow(ClassNotFoundException::new);
+        Lecture lecture = lectureService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessClassroomAsTeacher(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = lectureService.findById(id).orElseThrow(ClassNotFoundException::new);
+        Lecture lecture = lectureService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessPostFile(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = postService.getPost(id).orElseThrow(PostNotFoundException::new).getAssociatedLecture();
+        Lecture lecture = postService.getPost(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.POST))
+                .getAssociatedLecture();
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessDeleteSubjectFile(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(SubjectFileNotFoundException::new);
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id)
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
         return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
     }
 
     public boolean canAccessDeleteCertification(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
-        UserFile certification = userFileService.getFileById(id).orElseThrow(CertificationNotFoundException::new);
+        UserFile certification = userFileService.getFileById(id)
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CERTIFICATION));
         return certification.getFileOwner().getId().equals(getUserId(authentication));
     }
 
