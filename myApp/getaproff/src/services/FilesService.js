@@ -54,7 +54,7 @@ export class FilesService {
     } catch (error) {return handleResponse(error.response)}
   }
 
-  async getSubjectFile (fileId) {
+  async getSubjectFile(fileId) {
     try {
       const res = await axiosService.authAxiosWrapper(axiosService.GET, `${SUBJECT_FILE_PATH}/${parseInt(fileId)}`, {});
       return handleResponse(res);

@@ -124,6 +124,7 @@ export class UserService {
                 level : parseInt(queryParams.level),
                 rating : parseInt(queryParams.rating),
                 search: queryParams.search,
+                order: parseInt(queryParams.order),
                 page: page,
                 pageSize: 9
             };

@@ -34,7 +34,7 @@ const Tutors = () => {
   const searchQuery = new URLSearchParams(search).get('search');
 
   const {register, handleSubmit, getValues, reset, control} = useForm(
-      {defaultValues: {"maxPrice": 5000, "level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
+      {defaultValues: {"maxPrice": 10000, "level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
   );
   const {dirtyFields} = useFormState({control})
   const orders = [
@@ -71,7 +71,8 @@ const Tutors = () => {
   }
 
   const checkIfDirty = () =>{
-    return dirtyFields.level || dirtyFields.price || dirtyFields.rating || dirtyFields.order;
+    console.log(dirtyFields);
+    return dirtyFields.level || dirtyFields.maxPrice || dirtyFields.rating || dirtyFields.order;
   }
 
   let items = [];
