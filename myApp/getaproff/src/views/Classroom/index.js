@@ -282,7 +282,7 @@ const Classroom = () => {
                                                                     <li key={index}>
                                                                         <SubjectsRow>
                                                                             <a style={{fontWeight: "bold"}}
-                                                                               href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                                               href={file.href}
                                                                                target="_blank">{file.title}</a>
                                                                             <input {...shareFilesRegister("filesToChangeVisibility")}
                                                                                    type="checkbox"
@@ -364,27 +364,28 @@ const Classroom = () => {
                                 :
                                 <ClassContentSide>
                                     <h2>{i18next.t('classroom.files.classFiles')}</h2>
-                                    {(files === 0) ?
-                                        <span style={{
-                                            alignSelf: "center",
-                                            margin: "8px 0 4px 0",
-                                            fontSize: "20px"
-                                        }}>{i18next.t('classroom.files.noSharedFiles')}</span>
-                                        :
                                         <SharedFilesContainer>
-                                            <Ul>
-                                                {sharedClassFiles && sharedClassFiles.map((file, index) => {
-                                                    return (
-                                                        <li key={index}>
-                                                            <SubjectsRow>
-                                                                <a style={{fontWeight: "bold"}}
-                                                                   href={file.href}
-                                                                   target="_blank">file.title</a>
-                                                            </SubjectsRow>
-                                                        </li>
+                                            {sharedClassFiles && sharedClassFiles.length !== 0 ?
+                                                <Ul>
+                                                    {sharedClassFiles.map((file, index) => {
+                                                        return (
+                                                            <li key={index}>
+                                                                <SubjectsRow>
+                                                                    <a style={{fontWeight: "bold"}}
+                                                                       href={file.href}
+                                                                       target="_blank">file.title</a>
+                                                                </SubjectsRow>
+                                                            </li>
                                                     )
                                                 })}
                                             </Ul>
+                                                :
+                                                <span style={{
+                                                    alignSelf: "center",
+                                                    margin: "8px 0 4px 0",
+                                                    fontSize: "20px"
+                                                }}>{i18next.t('classroom.files.noSharedFiles')}</span>
+                                            }
                                         </SharedFilesContainer>
                                     }
                                 </ClassContentSide>
