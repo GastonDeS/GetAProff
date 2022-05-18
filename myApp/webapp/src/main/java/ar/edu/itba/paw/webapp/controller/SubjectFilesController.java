@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -60,7 +59,6 @@ public class SubjectFilesController {
         return Response.ok(fileDto).build();
     }
 
-    // TODO return deleted file on success ?
     @DELETE
     @Path("/{file}")
     @Produces("application/vnd.getaproff.api.v1+json")

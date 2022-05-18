@@ -5,8 +5,10 @@ import ar.edu.itba.paw.interfaces.services.RatingService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Rating;
 import ar.edu.itba.paw.webapp.dto.RatingDto;
+import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.requestDto.NewRatingDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/api/ratings")
@@ -53,19 +54,16 @@ public class RatingController {
         return PaginationBuilder.build(ratingDtos, builder, uriInfo, pageSize);
     }
 
-    // TODO exception
     @POST
     @Path("/{teacherId}")
     @Produces("application/vnd.getaproff.api.v1+json")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response rateTeacher(@PathParam("teacherId") Long teacherId, @Valid @RequestBody NewRatingDto newRatingDto){
-        final Optional<Rating> rating = ratingService.addRating(teacherId, authFacade.getCurrentUserId(),
-                newRatingDto.getRate(), newRatingDto.getReview());
-        if (!rating.isPresent())
-            return Response.status(Response.Status.CONFLICT).build();
+        final Rating rating = ratingService.addRating(teacherId, authFacade.getCurrentUserId(),
+                newRatingDto.getRate(), newRatingDto.getReview()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.RATE));
         //TODO: cual seria el id de la review? teacherid y userid
         URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
-        emailService.sendRatedMessage(teacherId, authFacade.getCurrentUserId(), rating.get(), uriInfo.getBaseUri().toString());
+        emailService.sendRatedMessage(teacherId, authFacade.getCurrentUserId(), rating, uriInfo.getBaseUri().toString());
         return Response.created(location).build();
     }
 }
