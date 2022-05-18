@@ -65,8 +65,9 @@ export const useMyFilesFetch = () => {
   };
 
   const fetchFiles = async () => {
-    await filesService.getSubjectFiles().then(files => {
-      files.forEach((item) => {
+    const res = await filesService.getSubjectFiles();
+    const data = handleService(res, navigate);
+    data.forEach((item) => {
         setAllFiles((previous) => [
           ...previous,
           {
@@ -79,7 +80,6 @@ export const useMyFilesFetch = () => {
             selected: false
           },
         ]);
-      });
     });
     setReload(false);
   };

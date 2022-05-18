@@ -2,10 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Lecture;
-import ar.edu.itba.paw.models.Page;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ClassNotFoundException;
@@ -44,13 +41,13 @@ public class ClassroomController {
     private PostService postService;
 
     @Autowired
+    private AuthFacade authFacade;
+
+    @Autowired
     private SubjectFileService subjectFileService;
 
     @Autowired
     private EmailService emailService;
-
-    @Autowired
-    private AuthFacade authFacade;
 
     @Context
     private UriInfo uriInfo;
@@ -86,7 +83,8 @@ public class ClassroomController {
     @Path("/{classId}/files")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
-        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, authFacade.getCurrentUserId());
+        User currUser = authFacade.getCurrentUser();
+        Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, currUser.getId());
         final ClassroomFilesDto ans = ClassroomFilesDto.getClassroomFilesDto(files.getValue1(), files.getValue2());
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
@@ -94,16 +92,27 @@ public class ClassroomController {
     //TODO fix this so it uploads every file
     @POST
     @Path("/{classId}/files")
+    @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
     public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
-        lectureService.shareFileInLecture(filesId.getIds().get(0), classId); // TODO handle if this change
+        int ans = 1;
+        for(Long id : filesId.getIds()) {
+            ans *= lectureService.shareFileInLecture(id, classId);
+        }
+        //TODO: add exception here
+        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.ok().build();
     }
 
     //TODO fix this so it deletes every file
     @DELETE
     @Path("/{classId}/files")
+    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
-        lectureService.stopSharingFileInLecture(filesId.getIds().get(0), classId); // TODO handle if this change
+        int ans = 1;
+        for(Long id : filesId.getIds()) {
+            ans *= lectureService.stopSharingFileInLecture(id, classId);
+        }
+        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.ok().build();
     }
 

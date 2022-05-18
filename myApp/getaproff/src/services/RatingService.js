@@ -1,12 +1,12 @@
 import {axiosService} from "./index";
 import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
+import { handleResponse } from "../handlers/responseHandler";
 
 const PATH = paths.RATINGS
 
 export class RatingService {
   async getUserReviews(uid, page) {
     try {
-
         let config = {
             headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
         }
@@ -14,12 +14,9 @@ export class RatingService {
             page: page,
             pageSize: 5
         }
-
-        return await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}`, config)
-    }
-    catch (err) {
-        console.log(err);
-    }
+        const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${uid}`, config);
+        return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
   }
 
   //RatingController
@@ -32,11 +29,9 @@ export class RatingService {
         let config = {
           headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
         }
-        return await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${teacherId}`, config, form);
-    }
-    catch (err) {
-        console.log(err);
-    }
+        const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${teacherId}`, config, form);
+        return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
 }
 
 }

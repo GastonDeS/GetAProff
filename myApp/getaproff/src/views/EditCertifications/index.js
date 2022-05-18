@@ -17,6 +17,7 @@ import Rows from "../../components/Rows";
 import Button from "../../components/Button";
 import CheckBox from "../../components/CheckBox";
 import { useNavigate } from "react-router-dom";
+import { handleService } from "../../handlers/serviceHandler";
 
 const EditCertifications = () => {
   const [currentUser, setCurrentUser] = useState();
@@ -46,7 +47,8 @@ const EditCertifications = () => {
   const handleDelete = async () => {
     const files = certifications.filter((file) => file.selected);
     for (var i = 0; i < files.length; i++) {
-      await filesService.removeCertification(files[i].id);
+      const res = await filesService.removeCertification(files[i].id);
+      handleService(res, navigate);
     }
     setCertifications([]);
     setReload(true);
@@ -58,7 +60,8 @@ const EditCertifications = () => {
       if (certifications.filter(item => item.name === files[i].name).length === 0) {
         const form = new FormData();
         form.append("file", files[i]);
-        await filesService.addCertification(currentUser.id, form);
+        const res = await filesService.addCertification(currentUser.id, form);
+        handleService(res, navigate);
       };
     };
     setCertifications([]);
@@ -103,8 +106,9 @@ const EditCertifications = () => {
   };
 
   const fetchCertifications = async () => {
-    await filesService.getUserCertifications(currentUser.id).then(res => {
-      res.forEach((file) => {
+    const res = await filesService.getUserCertifications(currentUser.id);
+    const data = handleService(res, navigate);
+    data.forEach((file) => {
         setCertifications((previous) => [
           ...previous,
           {
@@ -112,8 +116,7 @@ const EditCertifications = () => {
             selected: false,
           },
         ]);
-      });
-    })
+    });
     setReload(false);
   }
 

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import i18next from "i18next";
-
+import { useNavigate } from "react-router-dom";
+import { handleService } from "../../handlers/serviceHandler";
 import Navbar from "../../components/Navbar";
 import { MainContainer, Wrapper } from "../../GlobalStyle";
 import {
@@ -22,10 +23,11 @@ import {
   useMyFilesFetch,
   ALL_LEVELS,
 } from "../../hooks/useMyFilesFetch";
-import { axiosService, filesService } from "../../services";
+import { filesService } from "../../services";
 
 const MyFiles = () => {
   const inputFile = useRef(null);
+  const navigate = useNavigate();
   const {
     subject,
     level,
@@ -54,7 +56,8 @@ const MyFiles = () => {
     for (var i = 0; i < newFiles.length; i++) {
       const form = new FormData();
       form.append("file", newFiles[i].file);
-      await filesService.addSubjectFiles(currentUser.id, level, subject.id, form);
+      const res = await filesService.addSubjectFiles(currentUser.id, level, subject.id, form);
+      handleService(res, navigate);
     }
     setAllFiles([]);
     setNewFiles([]);
@@ -91,7 +94,8 @@ const MyFiles = () => {
   const handleDelete = async () => {
     for (var i = 0; i < filteredFiles.length; i++) {
       if (filteredFiles[i].selected) {
-        await filesService.removeSubjectFiles(filteredFiles[i].id);
+        const res = await filesService.removeSubjectFiles(filteredFiles[i].id);
+        handleService(res, navigate);
       }
     }
     setAllFiles([]);

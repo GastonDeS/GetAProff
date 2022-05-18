@@ -1,5 +1,5 @@
 import {axiosService} from "./index";
-import {instanceOf} from "prop-types";
+import { handleResponse } from "../handlers/responseHandler";
 
 const PATH = '/classroom'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
@@ -9,7 +9,6 @@ export class ClassroomService {
 
     async createPost(classId, data, uid) {
         try {
-            let response;
             let formData = new FormData();
             formData.append("message", data.postTextInput);
             formData.append("file", data.file[0]);
@@ -17,43 +16,24 @@ export class ClassroomService {
             let config = {
                 headers:  {'Content-Type' : 'multipart/form-data'}
             }
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classId}/posts`, config, formData )
-                .then(res => response = res)
-            return response;
-        }
-        catch (err) {
-            console.log(err);
-        }
+            const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classId}/posts`, config, formData);
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     async fetchClassroomInfo(classId) {
         try {
-            let data;
-            let config = {}
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classId}`, config)
-                .then(res => data = res.data);
-            return data;
-        }
-        catch (err) {
-            console.log(err);
-        }
+            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classId}`, {});
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
+
     async fetchClassroomPosts(classId, page) {
         try {
-            let response = {}
             let config = {params: {page: page, pageSize: 5}}
-            await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classId}/posts`, config)
-                .then(
-                    res => {
-                        response['data'] = res.data;
-                        response['pageQty'] =(parseInt(res.headers['x-total-pages']))
-                    }
-                )
-            return response;
-        }
-        catch (err) {
-            console.log(err);
-        }
+            const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classId}/posts`, config);
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     async acceptClass(classId, uid) {
@@ -81,69 +61,44 @@ export class ClassroomService {
             let config = {
                 headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
-            return await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData);
-        }
-        catch (err) {
-            console.log(err)
-        }
+            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, config, postData);
+            return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     async startSharingFile(fileIds, classroomId) {
-        {
-            try {
+        try {
                 let config = {};
-                let data = []
-                console.log(typeof fileIds);
-                console.log(typeof fileIds === 'string')
+                let data = [];
                 if (typeof fileIds === 'string')
                     data[0] = parseInt(fileIds)
                 else {
                     data = fileIds.map(item  => parseInt(item))
                 }
-                await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data)
-            }
-            catch(err) {
-                console.log(err)
-            }
-        }
+                const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data);
+                return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     async stopSharingFile(fileIds, classroomId){
-        {
-            try {
+        try {
                 let config = {};
-                let data = []
-                console.log(typeof fileIds);
-                console.log(typeof fileIds === 'string')
+                let data = [];
                 if (typeof fileIds === 'string')
                     data[0] = parseInt(fileIds)
                 else {
                     data = fileIds.map(item  => parseInt(item))
                 }
-                await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files`,config, data)
-            }
-            catch(err) {
-                console.log(err)
-            }
-        }
+                const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files`,config, data);
+                return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
     async getClassroomFiles(classroomId) {
-        {
-            try {
-                let data = {
-                    shared: [],
-                    notShared: [],
-                }
-                await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classroomId}/files`, {})
-                    .then(res => {data=res.data});
-
-                return data;
-            }
-            catch(err) {
-                console.log(err)
-            }
-        }
+        try {
+                const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${classroomId}/files`, {})
+                return handleResponse(res);
+        } catch (error) {return handleResponse(error.response)}
     }
 
 }

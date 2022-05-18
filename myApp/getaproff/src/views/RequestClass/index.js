@@ -35,7 +35,7 @@ const RequestClass = () => {
 
   useEffect(async () => {
     const res = await userService.getUserInfo(teacher.id);
-    const data = handleService(data, navigate);
+    const data = handleService(res, navigate);
     setTeacherInfo(data);
   }, [])
 
@@ -86,7 +86,7 @@ const RequestClass = () => {
             <p>{i18next.t('requestClass.selectSubject')}</p>
             {!loading && <SelectDropdown value={subject.id} handler={handleSubject}
                             options={subjects} disabled={subjects.length === 1}/>}
-            <p>{i18next.t('requestClass.selectLevel')}l</p>
+            <p>{i18next.t('requestClass.selectLevel')}</p>
             {!loading && <SelectDropdown value={level} handler={handleIndex} options={levels} disabled={levels.length === 1}/>}
           </InputContainer>
           <Button text={i18next.t('requestClass.sendRequest')} fontSize='1rem' callback={handleClassRequest}/>

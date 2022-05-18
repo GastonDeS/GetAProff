@@ -26,6 +26,7 @@ import {useForm} from "react-hook-form";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
+import { handleService } from "../../handlers/serviceHandler";
 
 const Classroom = () => {
     const files = 1;
@@ -35,12 +36,13 @@ const Classroom = () => {
     const [classInfo, setClassInfo] = useState();
     const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
-    const [refreshPosts, setRefreshPosts] = useState();
-    const [page, setPage] = useState(1)
-    const [pageQty, setPageQty] = useState(1)
+    const [refreshPosts, setRefreshPosts] = useState(true);
+    const [page, setPage] = useState(1);
+    const [pageQty, setPageQty] = useState(1);
     const [notSharedClassFiles, setNonSharedClassFiles] = useState();
     const [sharedClassFiles, setSharedClassFiles] = useState();
     const [fileVisibilityChanged, setFileVisibilityChanged] = useState(false);
+    const [isTeacherClassroom, setIsTeacherClassroom] = useState(false);
 
     const {register, handleSubmit, watch, reset} = useForm();
     const {register: shareFilesRegister, handleSubmit: shareFilesHandleSubmit} = useForm();
@@ -50,7 +52,6 @@ const Classroom = () => {
     const watchFileName = watch("file");
     const user = authService.getCurrentUser();
     const navigate = useNavigate();
-    const [isTeacherClassroom, setIsTeacherClassroom] = useState(false)
 
     let items = [];
     for (let number = 1; number <= pageQty; number++) {
@@ -58,92 +59,81 @@ const Classroom = () => {
             <PageItem
                 key={number}
                 active={number === page}
-                onClick={() => setPage(number)}
+                onClick={() => {
+                    setPage(number);
+                    setRefreshPosts(true);
+                }}
             >
                 {number}
             </PageItem>
         );
     }
 
-    const acceptClass = () =>{
-        classroomService.changeClassStatus(id.id, ACCEPTED, user.id)
-          .then(
-            data => {
-                console.log(data);
-                setClassStatus(1)
-            });
+    const acceptClass = async () =>{
+        const res = await classroomService.changeClassStatus(id.id, ACCEPTED, user.id);
+        handleService(res, navigate);
+        setClassStatus(1);
     }
 
-    const cancelClass = () => {
-        classroomService.changeClassStatus(id.id, FINISHED, user.id)
-          .then(
-            data => {
-                console.log(data);
-                setClassStatus(3)
-            });
+    const cancelClass = async () => {
+        const res = await classroomService.changeClassStatus(id.id, FINISHED, user.id);
+        handleService(res, navigate);
+        setClassStatus(3);
     }
 
     const rateTeacher = () => {
         navigate(`/users/${classInfo.teacher.id}/reviews`)
     }
 
-    const publishPost = data => {
-        classroomService.createPost(id.id, data, user.id)
-            .then(
-                () => {
-                    setRefreshPosts(true);
-                });
+    const publishPost = async (data) => {
+        const res = await classroomService.createPost(id.id, data, user.id);
+        handleService(res, navigate);
+        setPage(1);
+        setRefreshPosts(true);
         reset();
     }
 
-    const stopSharingFiles = data => {
+    const stopSharingFiles = async (data) => {
         setFileVisibilityChanged(!fileVisibilityChanged);
-        classroomService.stopSharingFile(data.filesToChangeVisibility,id.id)
-            .then(r => console.log(r));
+        const res = classroomService.stopSharingFile(data.filesToChangeVisibility,id.id);
+        handleService(res, navigate);
     }
 
-    const shareFiles = data => {
+    const shareFiles = async (data) => {
         setFileVisibilityChanged(!fileVisibilityChanged);
-        classroomService.startSharingFile(data.filesToChangeVisibility,id.id)
-            .then(r => console.log(r));
+        const res = await classroomService.startSharingFile(data.filesToChangeVisibility,id.id);
+        handleService(res, navigate);
     }
 
     const navigateToMyClasses = () => {
         navigate(`/users/${user.id}/classes`)
     }
 
-    useEffect(() => {
-        classroomService.fetchClassroomInfo(id.id)
-            .then(data => {
-                setClassInfo(data);
-            });
-    }, [classStatus]);
+    useEffect(async () => {
+        const res = await classroomService.fetchClassroomInfo(id.id);
+        setClassInfo(handleService(res, navigate));
+    }, [classStatus])
 
     useEffect(() => {
         if (classInfo && classInfo.teacher)
             setIsTeacherClassroom(classInfo.teacher.id === user.id)
-    }, [classInfo]);
+    }, [classInfo])
 
-    useEffect(() => {
-        console.log(isTeacherClassroom);
-        classroomService.getClassroomFiles(id.id)
-            .then(data => {
-                console.log(data);
-                    setSharedClassFiles(data.shared);
-                    if(isTeacherClassroom)
-                        setNonSharedClassFiles(data.notShared)
-                }
-            )
+    useEffect(async () => {
+        const res = await classroomService.getClassroomFiles(id.id);
+        const data = await handleService(res, navigate);
+        setSharedClassFiles(data.shared);
+        if(isTeacherClassroom) setNonSharedClassFiles(data.notShared);
     }, [isTeacherClassroom, fileVisibilityChanged])
 
-    useEffect(() => {
-        classroomService.fetchClassroomPosts(id.id, page)
-            .then(res => {
-                setClassPosts(res.data);
-                setPageQty(res.pageQty)
-            });
-        setPage(1);
-    }, [refreshPosts, page]);
+    useEffect(async () => {
+        if (refreshPosts) {
+            const res = await classroomService.fetchClassroomPosts(id.id, page);
+            if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
+            setClassPosts(handleService(res, navigate));
+            setRefreshPosts(false);
+        }
+    }, [refreshPosts])
 
 
     return (

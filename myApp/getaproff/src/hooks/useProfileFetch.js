@@ -33,13 +33,12 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     setCurrentUser(AuthService.getCurrentUser());
-    const res = await userService.getUserInfo(id);
+    const userRes = await userService.getUserInfo(id);
+    const userData = handleService(userRes, navigate);
+    setUser(userData);
+    const res = await favouritesService.checkIfTeacherIsFaved(id);
     const data = handleService(res, navigate);
-    setUser(data);
-    await favouritesService.checkIfTeacherIsFaved(id)
-      .then(res => {
-        if(res) setIsFaved(true);
-      })
+    if(data) setIsFaved(true);
   }, [id])
   
   useEffect(async () => {
@@ -61,8 +60,8 @@ export const useProfileFetch = (id) => {
           })
         })
 
-        await filesService.getUserCertifications(user.id)
-            .then(data => setCertifications(data));
+        const certificacionsRes = await filesService.getUserCertifications(user.id);
+        setCertifications(handleService(certificacionsRes, navigate));
       }
       setLoading(false);
     }
@@ -70,11 +69,9 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     if (user) {
-      await ratingService.getUserReviews(user.id, page)
-            .then(res => {
-              setPageQty((parseInt(res.headers['x-total-pages'])));
-              setReviews(res.data);
-            });
+      const res = await ratingService.getUserReviews(user.id, page);
+      if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
+      setReviews(handleService(res, navigate));
     }
   }, [user, page])
 

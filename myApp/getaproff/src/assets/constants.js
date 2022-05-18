@@ -1,14 +1,14 @@
 export const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
-
+export const API_PREFIX = '/api'
 export const paths = {
-  USERS: '/users',
-  FAVOURITES: '/favourites',
-  RATINGS: '/ratings',
-  CLASSES: '/classes',
-  CLASSROOM: '/classroom',
-  USER_FILES: '/user-files',
-  SUBJECT_FILES: '/subject-files',
-  SUBJECTS: '/subjects'
+  USERS: 'users',
+  FAVOURITES: 'favourites',
+  RATINGS: 'ratings',
+  CLASSES: 'classes',
+  CLASSROOM: 'classroom',
+  USER_FILES: 'user-files',
+  SUBJECT_FILES: 'subject-files',
+  SUBJECTS: 'subjects'
 }
 
 export const status = {

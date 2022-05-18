@@ -1,10 +1,8 @@
 import {axiosService} from "./index";
 
-const API_URL = "/user";
+const API_URL = "user";
 
 const login = async (mail, password) => {
-  const credentials = mail + ":" + password;
-  const hash = btoa(credentials);
   try {
     let config = {}
     config['headers'] =  {Authorization: axiosService.getBasicToken(mail, password)}
