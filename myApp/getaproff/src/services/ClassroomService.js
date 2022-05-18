@@ -69,11 +69,11 @@ export class ClassroomService {
     async startSharingFile(fileIds, classroomId) {
         try {
                 let config = {};
-                let data = [];
+                let data ={ids : []}
                 if (typeof fileIds === 'string')
-                    data[0] = parseInt(fileIds)
+                    data.ids[0] = parseInt(fileIds)
                 else {
-                    data = fileIds.map(item  => parseInt(item))
+                    data.ids = fileIds.map(item  => parseInt(item))
                 }
                 const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data);
                 return handleResponse(res);
