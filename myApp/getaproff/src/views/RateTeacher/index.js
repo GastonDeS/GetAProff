@@ -6,23 +6,26 @@ import {FormContainer, FormInput, PageContainer} from "./RateTeacher.styles";
 import Textarea from "../../components/Textarea";
 import Button from "../../components/Button";
 import {useForm} from "react-hook-form";
-import { userService, ratingService } from "../../services";
+import { userService, ratingService, classroomService } from "../../services";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../services/authService";
 import {Error} from "../Login/Login.styles";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
+import { classStatus } from "../../assets/constants";
 
 const RateTeacher = () => {
     const navigate = useNavigate();
     const {register, handleSubmit, formState: {errors}} = useForm();
     const [teacherInfo, setTeacherInfo] = useState();
     const currUser = AuthService.getCurrentUser();
-    const teacher = useParams()
+    const teacher = useParams();
 
     const onSubmit = async (data) => {
         const res = await ratingService.rateTeacher(teacher.id, data);
         handleService(res, navigate);
+        const rateRes = await classroomService.changeClassStatus(teacher.classId, classStatus.RATED);
+        handleService(rateRes, navigate);
         navigate(`/users/${currUser.id}/classes`);
     }
 

@@ -21,12 +21,20 @@ const ClassCard = ({ subject, user, level, price, statusCode, isTeacher, classId
       status= 'finished';
       break;
     case 3:
-      color = 'grey';
-      status= 'rated';
+      color = 'red';
+      status= 'cancelledStudent';
       break;
     case 4:
       color = 'red';
-      status = 'cancelled';
+      status = 'cancelledTeacher';
+      break;
+    case 5:
+      color = 'red';
+      status = 'declined';
+      break;
+      case 6:
+      color = 'grey';
+      status = 'rated';
       break;
     default:
       color = 'red';
@@ -51,19 +59,18 @@ const ClassCard = ({ subject, user, level, price, statusCode, isTeacher, classId
           <p>{i18next.t('classCard.price')}: ${price}/{i18next.t('classCard.hour')}</p>
         </ClassInfo>
         <ButtonContainer>
-          {statusCode !== 4 && <Button text={i18next.t('classCard.enter')} fontSize='1rem' callback={() => handlers.enterClassroom(classId)}/>}
+          {statusCode !== 4 && statusCode !== 3 && <Button text={i18next.t('classCard.enter')} fontSize='1rem' callback={() => handlers.enterClassroom(classId)}/>}
           {statusCode === 0 && <>
             {isTeacher ?
                 <>
               <Button text={i18next.t('classCard.accept')} fontSize='1rem' callback={() => handlers.acceptClass(classId)}/>
-              <Button text={i18next.t('classCard.decline')} fontSize='1rem' callback={() => handlers.cancelClass(classId)}/>
+              <Button text={i18next.t('classCard.decline')} fontSize='1rem' callback={() => handlers.rejectClass(classId)}/>
               </> :
-                <Button text={i18next.t('classCard.cancel')} fontSize='1rem' callback={() => handlers.cancelClass(classId)}/>
+                <Button text={i18next.t('classCard.cancel')} fontSize='1rem' callback={() => handlers.cancelClassS(classId)}/>
             }
           </>}
           {statusCode === 1 && isTeacher && <Button text={i18next.t('classCard.finish')} color='red' fontSize='1rem' callback={handlers.finishClass}/>}
-          {statusCode === 2 && !isTeacher && <Button text={i18next.t('classCard.rate')} fontSize='1rem'  callback={() => handlers.rateClass(user.id)}/>}
-
+          {statusCode === 2 && !isTeacher && <Button text={i18next.t('classCard.rate')} fontSize='1rem'  callback={() => handlers.rateClass(user.id, classId)}/>}
 
         </ButtonContainer>
       </Body>

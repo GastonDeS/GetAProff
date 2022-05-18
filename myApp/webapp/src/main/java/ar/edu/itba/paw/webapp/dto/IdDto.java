@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+//TODO: NO SE USA
 public class IdDto {
     private Long id;
 

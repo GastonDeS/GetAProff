@@ -32,7 +32,10 @@ const Classroom = () => {
     const files = 1;
     const ACCEPTED = 1;
     const FINISHED = 2;
-    const RATED = 3;
+    const CANCELEDS = 3;
+    const CANCELLEDT = 4;
+    const DECLINED = 5;
+    const RATED = 6;
     const [classInfo, setClassInfo] = useState();
     const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
@@ -75,14 +78,19 @@ const Classroom = () => {
         setClassStatus(1);
     }
 
-    const cancelClass = async () => {
+    const finishClass = async () => {
         const res = await classroomService.changeClassStatus(id.id, FINISHED, user.id);
         handleService(res, navigate);
         setClassStatus(3);
     }
+    const declineClass = async () => {
+        const res = await classroomService.changeClassStatus(id.id, DECLINED, user.id);
+        handleService(res, navigate);
+        setClassStatus(6);
+    }
 
     const rateTeacher = () => {
-        navigate(`/users/${classInfo.teacher.id}/reviews`)
+        navigate(`/users/${classInfo.teacher.id}/reviews/${id.id}`);
     }
 
     const publishPost = async (data) => {
@@ -181,11 +189,11 @@ const Classroom = () => {
                                         {isTeacherClassroom &&
                                             <Button text={i18next.t('classroom.accept')} callback={acceptClass}/>
                                         }
-                                        <Button text={i18next.t('classroom.cancel')} color={'#FFC300'} fontColor={'black'}/>
+                                        <Button text={i18next.t('classroom.decline')} color={'#FFC300'} fontColor={'black'} callback={declineClass}/>
                                     </ButtonContainer>
                                 ) :
                                     classInfo.status !== FINISHED &&  classInfo.status !== RATED  && (
-                                    <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={cancelClass} fontColor={'black'}/>
+                                    <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={finishClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
@@ -230,7 +238,7 @@ const Classroom = () => {
                                 }}>
                                     <h2>{i18next.t('classroom.classOver')}</h2>
                                     <Button text={i18next.t('classroom.back')} callback={navigateToMyClasses}/>
-                                    {!isTeacherClassroom && classInfo.status !== RATED &&
+                                    {!isTeacherClassroom && classInfo.status === FINISHED &&
                                     <Button text={i18next.t('classroom.rate')} callback={rateTeacher}/>}
                                 </div>
                             }

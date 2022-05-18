@@ -25,11 +25,10 @@ export class ClassesService {
     async requestClass(requestData) {
         try {
             let config = {
-            headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
             let level = parseInt(requestData.level)
             let priceIdx = requestData.subject.levels.indexOf(level)
-            let response;
             const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}`, config, {
                 teacherId: requestData.teacherId,
                 subjectId: requestData.subject.id,

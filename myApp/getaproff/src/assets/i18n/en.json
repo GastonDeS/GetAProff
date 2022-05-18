@@ -76,7 +76,9 @@
       "active": "Active",
       "finished": "Finished",
       "rated": "Rated",
-      "cancelled": "Cancelled",
+      "cancelledTeacher": "Cancelled",
+      "cancelledStudent": "Cancelled",
+      "declined": "Declined",
       "error": "Error"
     },
     "enter": "Enter",
@@ -135,7 +137,8 @@
     "hour": "hour",
     "accept": "Accept",
     "cancel": "Cancel",
-    "finish": "Finish"
+    "finish": "Finish",
+    "decline": "Decline"
   },
   "certifications": {
     "title": "Edit certifications",
