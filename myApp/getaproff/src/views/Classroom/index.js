@@ -68,24 +68,24 @@ const Classroom = () => {
     }
 
     const acceptClass = async () =>{
-        const res = await classroomService.changeClassStatus(id.id, 1, user.id);
+        const res = await classroomService.changeClassStatus(id.id, 1);
         handleService(res, navigate);
         setClassStatus(1);
     }
 
     const finishClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, 2, user.id);
+        const res = await classroomService.changeClassStatus(id.id, 2);
         handleService(res, navigate);
         setClassStatus(2);
     }
     const declineClass = async () => {
-        await classroomService.changeClassStatus(id.id, 5, user.id);
+        await classroomService.changeClassStatus(id.id, 5);
         setClassStatus(5);
         navigateToMyClasses()
     }
 
     const cancelClassS = async () => {
-        const res = await classroomService.changeClassStatus(id.id, 3, user.id);
+        const res = await classroomService.changeClassStatus(id.id, 3);
         setClassStatus(3);
         navigateToMyClasses();
     }

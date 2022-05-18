@@ -37,27 +37,27 @@ export class ClassroomService {
 
     async acceptClass(classId) {
         return await this.changeClassStatus(classId, classStatus.ACCEPTED);
-    }
+    };
 
     async finishClass(classId){
         return await this.changeClassStatus(classId, classStatus.FINISHED);
-    }
+    };
 
     async cancelClassS(classId){
         return await this.changeClassStatus(classId, classStatus.CANCELLEDS);
-    }
+    };
 
     async cancelClassT(classId){
         return await this.changeClassStatus(classId, classStatus.CANCELLEDT);
-    }
+    };
 
     async declineClass(classId){
         return await this.changeClassStatus(classId, classStatus.DECLINED);
-    }
+    };
 
     async rateClass(classId){
         return await this.changeClassStatus(classId, classStatus.RATED);
-    }
+    };
 
     async changeClassStatus(classId, newStatus) {
         try {

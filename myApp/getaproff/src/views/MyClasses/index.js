@@ -122,8 +122,8 @@ const MyClasses = () => {
   const handler = {
     rateClass: handleRate,
     enterClassroom: handleEnterClassroom,
-    finishClass: handleFinishClass,
     acceptClass: handleAcceptClass,
+    finishClass: handleFinishClass,
     declineClass: handleDeclineClass,
     cancelClassS: handleCancelClassS,
   }
