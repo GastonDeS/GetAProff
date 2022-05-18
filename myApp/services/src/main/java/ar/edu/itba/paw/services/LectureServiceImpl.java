@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -110,7 +109,7 @@ public class LectureServiceImpl implements LectureService {
         Pair<List<SubjectFile>, List<SubjectFile>> lectureFiles = new Pair<>(null, null);
         Optional<Lecture> lecture = lectureDao.get(lectureId);
         if (!lecture.isPresent())
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(); //TODO handle exception
         if (lecture.get().getTeacher().getId().equals(userId)) {
             lectureFiles.setValue2(this.getFilesNotSharedInLecture(lectureId, userId));
         }
@@ -123,7 +122,8 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId){
         List<SubjectFile> nonSharedFiles= new ArrayList<>();
-        List<SubjectFile> allFilesForLecture = subjectFileDao.getAllSubjectFilesFromUser(teacherId);
+        Lecture lecture = lectureDao.get(lectureId).orElseThrow(NoSuchElementException::new); //TODO handleException
+        List<SubjectFile> allFilesForLecture = subjectFileDao.getAllSubjectFilesFromUserBySubjectIdAndLevel(teacherId, lecture.getSubject().getSubjectId(), lecture.getLevel());
         List<SubjectFile> sharedFiles  = lectureDao.getSharedFilesByTeacher(lectureId);
         for(SubjectFile file : allFilesForLecture){
             if(!sharedFiles.contains(file))

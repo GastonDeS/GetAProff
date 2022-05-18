@@ -1,24 +1,32 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.TeachesService;
+import ar.edu.itba.paw.interfaces.services.UserRoleService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.ConflictException;
+import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.UserAlreadyExistException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.requestDto.*;
+import ar.edu.itba.paw.webapp.requestDto.EditUserDto;
+import ar.edu.itba.paw.webapp.requestDto.NewUserDto;
+import ar.edu.itba.paw.webapp.requestDto.SubjectRequestDto;
 import ar.edu.itba.paw.webapp.security.api.models.Authority;
 import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
+import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
+import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -227,22 +235,11 @@ public class UsersController {
         return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
-
-    //Returns all the classes that involve the user
-//    @GET
-//    @Path("/{uid}/classes")
-//    public Response getClassesFromUser(@PathParam("uid") Long uid){
-//        List<Lecture> lectures = lectureService.findClassesByTeacherAndStatus(uid, 3);
-//        if (lectures.isEmpty())
-//            return Response.status(Response.Status.NO_CONTENT).build();
-//        List<ClassroomDto> dtos = lectures.stream().map(lecture -> ClassroomDto.getClassroom(uriInfo,lecture)).collect(Collectors.toList());
-//        return Response.ok(new GenericEntity<List<ClassroomDto>>(dtos){}).build();
-//    }
-
+    
     @GET
     @Path("/{uid}/image")
     public Response getUserImage(@PathParam("uid") Long uid) {
-        Image image = imageService.findImageById(uid).orElseThrow(ImageNotFoundException::new);
+        Image image = imageService.findImageById(uid).orElseThrow(() -> new NoContentException(NoContentStatusMessages.IMAGE));
         return Response.ok(ImageDto.fromUser(image)).build();
 
     }
@@ -252,11 +249,10 @@ public class UsersController {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response postImage(@PathParam("uid") Long uid, @FormDataParam("image") InputStream fileStream,
                               @FormDataParam("image") FormDataContentDisposition fileMetadata) throws IOException {
-        Optional<Image> image = imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream)); // TOdo some exception 409
-        if (image.isPresent()) {
-            LOGGER.debug("Image uploaded for user {}", uid);
-        }
-        return image.isPresent() ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
+        imageService.createOrUpdate(uid, IOUtils.toByteArray(fileStream))
+                .orElseThrow(() -> new ConflictException(ConflictStatusMessages.IMAGE));
+        LOGGER.debug("Image uploaded for user {}", uid);
+        return Response.status(Response.Status.OK).build();
     }
 }
 

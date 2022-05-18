@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
-import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.SubjectFile;
-import ar.edu.itba.paw.models.UserFile;
 
 import java.util.List;
 
@@ -16,4 +14,7 @@ public interface SubjectFileDao {
     List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level);
 
     SubjectFile getSubjectFileById(Long fileId);
+
+    List<SubjectFile> getAllSubjectFilesFromUserBySubjectIdAndLevel(Long ownerId, Long subjectId, int level);
+
 }
