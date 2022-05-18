@@ -154,11 +154,6 @@ const Classroom = () => {
         window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(res.data.file)], { type: "application/pdf" })))
     }
 
-    const openPostFileInNewWindow = async (postId) => {
-        let res = await filesService.getPostFile(postId);
-        console.log(res.data)
-        window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(res.data)], { type: "application/pdf" })))
-    }
 
     return (
         <Wrapper>
