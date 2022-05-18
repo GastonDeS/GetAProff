@@ -67,8 +67,13 @@ const MyClasses = () => {
       .then(() => setReloadCards(true));
   }
 
-  const handleCancelClass = async (classId) => {
-    await classroomService.cancelClass(classId, currUser.id)
+  const handleRejectClass = async (classId) => {
+    await classroomService.rejectClass(classId, currUser.id)
+        .then(() => setReloadCards(true));
+  }
+
+  const handleCancelClassS = async (classId) => {
+    await classroomService.cancelClassS(classId, currUser.id)
         .then(() => setReloadCards(true));
   }
 
@@ -104,7 +109,8 @@ const MyClasses = () => {
     enterClassroom: handleEnterClassroom,
     finishClass: handleFinishClass,
     acceptClass: handleAcceptClass,
-    cancelClass: handleCancelClass
+    rejectClass: handleRejectClass,
+    cancelClassS: handleCancelClassS,
   }
 
   useEffect(() => {

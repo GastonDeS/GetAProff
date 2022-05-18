@@ -44,12 +44,20 @@ export class ClassroomService {
         return await this.changeClassStatus(classId, 2, uid);
     }
 
-    async cancelClass(classId, uid){
+    async cancelClassS(classId, uid){
+        return await this.changeClassStatus(classId, 3, uid);
+    }
+
+    async cancelClassT(classId, uid){
         return await this.changeClassStatus(classId, 4, uid);
     }
 
+    async rejectClass(classId, uid){
+        return await this.changeClassStatus(classId, 5, uid);
+    }
+
     async rateClass(classId, uid){
-        return await this.changeClassStatus(classId, 3, uid);
+        return await this.changeClassStatus(classId, 6, uid);
     }
 
     async changeClassStatus(classId, newStatus, uid) {

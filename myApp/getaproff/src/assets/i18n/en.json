@@ -76,7 +76,9 @@
       "active": "Active",
       "finished": "Finished",
       "rated": "Rated",
-      "cancelled": "Cancelled",
+      "cancelledTeacher": "Cancelled",
+      "cancelledStudent": "Cancelled",
+      "declined": "Declined",
       "error": "Error"
     },
     "enter": "Enter",
