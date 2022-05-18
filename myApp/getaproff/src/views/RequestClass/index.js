@@ -25,8 +25,9 @@ const RequestClass = () => {
       subject: subject,
       level: level
     };
-    await classesService.requestClass(requestData)
-        .then(res => navigate(`/classroom/${res.headers.location.split('/').pop()}`));
+    const res = await classesService.requestClass(requestData);
+    handleService(res, navigate);
+    navigate(`/classroom/${res.headers.location.split('/').pop()}`);
   }
 
   const handleIndex = (e) => setLevel(e.target.value);

@@ -20,6 +20,7 @@ const Favorites = () => {
     const [currentUser, setCurrentUser] = useState();
     const [page, setPage] = useState(1);
     const [pageQty, setPageQty] = useState(1);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     let items = [];
@@ -37,23 +38,23 @@ const Favorites = () => {
 
     useEffect(() => {
         setCurrentUser(AuthService.getCurrentUser());
-    }, []);
+    }, [])
 
     useEffect(async () => {
         if(currentUser) {
-            let res = await favouritesService.getFavoriteTeachers(page);
+            const res = await favouritesService.getFavoriteTeachers(page);
             if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
-            const data = handleService(res, navigate);
-            setFavoriteUsersList(data);
+            setFavoriteUsersList(handleService(res, navigate));
+            setLoading(false);
         }
-    },[page, currentUser]);
+    },[page, currentUser])
 
     return (
         <Wrapper>
         <Navbar/>
         <PageContainer>
             <h1>{i18next.t('favourites.title')}</h1>
-            { (favoriteUsersList.length === 0) ?
+            { !loading && (favoriteUsersList.length === 0) ?
                 <TextContainer>
                     <h2>{i18next.t('favourites.empty')}</h2>
                 </TextContainer>
