@@ -105,6 +105,9 @@ const Classroom = () => {
     }
 
     const stopSharingFiles = async (data) => {
+        if (typeof data.filesToChangeVisibility === "string") {
+            data.filesToChangeVisibility = [data.filesToChangeVisibility];
+        }
         for (const fileId of data.filesToChangeVisibility) {
             const res = await classroomService.stopSharingFile(fileId,id.id);
             handleService(res, navigate);
@@ -133,8 +136,10 @@ const Classroom = () => {
 
 
     useEffect(async () => {
-        if (classInfo) setIsTeacherClassroom(classInfo.teacher.id === user.id)
-        handleClassroomStatus(classInfo.status, navigate);
+        if (classInfo) {
+            handleClassroomStatus(classInfo.status, navigate);
+            setIsTeacherClassroom(classInfo.teacher.id === user.id);
+        }
     }, [classInfo])
 
     useEffect(async () => {
