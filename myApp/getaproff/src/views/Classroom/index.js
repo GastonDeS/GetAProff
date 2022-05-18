@@ -45,8 +45,8 @@ const Classroom = () => {
     const [isTeacherClassroom, setIsTeacherClassroom] = useState(false);
 
     const {register, handleSubmit, watch, reset} = useForm();
-    const {register: shareFilesRegister, handleSubmit: shareFilesHandleSubmit} = useForm();
-    const {register: stopSharingFilesRegister, handleSubmit: stopSharingFilesHandleSubmit} = useForm();
+    const {register: shareFilesRegister, handleSubmit: shareFilesHandleSubmit, reset: shareFilesReset} = useForm();
+    const {register: stopSharingFilesRegister, handleSubmit: stopSharingFilesHandleSubmit,  reset: stopSharingFilesReset} = useForm();
 
     const id = useParams();
     const watchFileName = watch("file");
@@ -94,15 +94,20 @@ const Classroom = () => {
     }
 
     const stopSharingFiles = async (data) => {
+        for (const fileId of data.filesToChangeVisibility) {
+            const res = await classroomService.stopSharingFile(fileId,id.id);
+            handleService(res, navigate);
+        }
         setFileVisibilityChanged(!fileVisibilityChanged);
-        const res = classroomService.stopSharingFile(data.filesToChangeVisibility,id.id);
-        handleService(res, navigate);
+        stopSharingFilesReset()
+
     }
 
     const shareFiles = async (data) => {
-        setFileVisibilityChanged(!fileVisibilityChanged);
         const res = await classroomService.startSharingFile(data.filesToChangeVisibility,id.id);
         handleService(res, navigate);
+        setFileVisibilityChanged(!fileVisibilityChanged);
+        shareFilesReset()
     }
 
     const navigateToMyClasses = () => {
@@ -367,13 +372,17 @@ const Classroom = () => {
                                         :
                                         <SharedFilesContainer>
                                             <Ul>
-                                                <li>
-                                                    <SubjectsRow>
-                                                        <a style={{fontWeight: "bold"}}
-                                                           href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                           target="_blank">{i18next.t('classroom.files.name')}</a>
-                                                    </SubjectsRow>
-                                                </li>
+                                                {sharedClassFiles.map((file, index) => {
+                                                    return (
+                                                        <li key={index}>
+                                                            <SubjectsRow>
+                                                                <a style={{fontWeight: "bold"}}
+                                                                   href={file.href}
+                                                                   target="_blank">file.title</a>
+                                                            </SubjectsRow>
+                                                        </li>
+                                                    )
+                                                })}
                                             </Ul>
                                         </SharedFilesContainer>
                                     }

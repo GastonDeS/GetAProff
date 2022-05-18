@@ -1,7 +1,7 @@
 import {axiosService} from "./index";
 import { handleResponse } from "../handlers/responseHandler";
 
-const PATH = '/classroom'
+const PATH = 'classroom'
 const APPLICATION_V1_JSON_TYPE = 'application/vnd.getaproff.api.v1+json'
 
 
@@ -68,28 +68,22 @@ export class ClassroomService {
 
     async startSharingFile(fileIds, classroomId) {
         try {
-                let config = {};
-                let data = [];
-                if (typeof fileIds === 'string')
-                    data[0] = parseInt(fileIds)
-                else {
-                    data = fileIds.map(item  => parseInt(item))
-                }
-                const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data);
-                return handleResponse(res);
+            let config = {};
+            let data = {ids: []};
+            if (typeof fileIds === 'string')
+                data.ids[0] = parseInt(fileIds)
+            else {
+                data.ids = fileIds.map(item => parseInt(item))
+            }
+            const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`, config, data);
+            return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }
 
-    async stopSharingFile(fileIds, classroomId){
+    async stopSharingFile(fileId, classroomId){
         try {
-                let config = {};
-                let data = [];
-                if (typeof fileIds === 'string')
-                    data[0] = parseInt(fileIds)
-                else {
-                    data = fileIds.map(item  => parseInt(item))
-                }
-                const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files`,config, data);
+            let config = {};
+            const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files/${fileId}`,config);
                 return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }

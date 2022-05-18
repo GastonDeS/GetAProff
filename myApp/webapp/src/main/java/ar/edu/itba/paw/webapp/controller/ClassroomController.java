@@ -89,12 +89,12 @@ public class ClassroomController {
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
-    //TODO fix this so it uploads every file
     @POST
     @Path("/{classId}/files")
     @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
     public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
         int ans = 1;
+        System.out.println(filesId.getIds());
         for(Long id : filesId.getIds()) {
             ans *= lectureService.shareFileInLecture(id, classId);
         }
@@ -103,15 +103,11 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
-    //TODO fix this so it deletes every file
     @DELETE
-    @Path("/{classId}/files")
+    @Path("/{classId}/files/{fileId}")
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
-    public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId){
-        int ans = 1;
-        for(Long id : filesId.getIds()) {
-            ans *= lectureService.stopSharingFileInLecture(id, classId);
-        }
+    public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @PathParam("fileId") Long fileId){
+        int ans = lectureService.stopSharingFileInLecture(fileId, classId);
         if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.ok().build();
     }

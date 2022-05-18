@@ -1,5 +1,6 @@
 // import axios from "../api"
 import axios from "axios";
+import {APPLICATION_V1_JSON_TYPE} from "../assets/constants";
 
 export class AxiosService {
 
@@ -20,13 +21,14 @@ export class AxiosService {
     }
 
      async axiosWrapper(action, path, config, data = {}) {
-         const aux = '/api/' + path
+        const aux = '/api/' + path
         switch (action) {
             case this.GET:
                 return await axios.get(aux, config);
             case this.PUT:
                 return await axios.put(aux, data, config)
             case this.POST:
+                config.headers['Content-Type'] =  APPLICATION_V1_JSON_TYPE
                 return await axios.post(aux, data, config);
             case this.DELETE:
                 return await axios.delete(aux, config);
