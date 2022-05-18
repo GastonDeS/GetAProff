@@ -347,8 +347,7 @@ const Classroom = () => {
                                                                                 height: "18px",
                                                                                 marginRight: "4px"
                                                                             }}
-                                                                            value={file.rel}
-                                                                            onClick={() => console.log('click')}/>
+                                                                            value={file.rel}/>
                                                                     </SubjectsRow>
                                                                 </li>
                                                             );

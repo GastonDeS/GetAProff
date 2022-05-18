@@ -1,6 +1,6 @@
 import {axiosService} from "./index";
 import { handleResponse } from "../handlers/responseHandler";
-import {classStatus, paths} from "../assets/constants";
+import { paths, classStatus } from "../assets/constants";
 
 const PATH = paths.CLASSROOM
 
@@ -84,7 +84,7 @@ export class ClassroomService {
         try {
             let config = {};
             const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files/${fileId}`,config);
-                return handleResponse(res);
+            return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }
 
