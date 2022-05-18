@@ -9,11 +9,12 @@ import SelectDropdown from '../../components/SelectDropdown';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
 import AuthService from "../../services/authService";
 import {classesService, classroomService} from "../../services";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import i18next from "i18next";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import { classStatus } from '../../assets/constants';
+import { handleIdentity } from '../../handlers/accessHandler';
 
 const MyClasses = () => {
   const navigate = useNavigate();
@@ -24,7 +25,9 @@ const MyClasses = () => {
   const [reloadCards, setReloadCards] = useState(false);
   const [page, setPage] = useState(1);
   const [pageQty, setPageQty] = useState(1);
-  const currUser = AuthService.getCurrentUser();
+  const [loading, setLoading] = useState(true);
+  const [currUser, setCurrUser] = useState();
+  const uid = useParams();
   const options = [
     {
       name: i18next.t('myClasses.status.any'),
@@ -103,9 +106,10 @@ const MyClasses = () => {
     const resTeacher = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDT, page);
     if (!resTeacher.failure) pages += parseInt(resTeacher.headers['x-total-pages'])
     const dataTeacher = handleService(resTeacher, navigate);
-    const resStudent = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDT, page);
+    const resStudent = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDS, page);
     if (!resStudent.failure) pages += parseInt(resStudent.headers['x-total-pages'])
     const dataStudent = handleService(resStudent, navigate);
+    setPageQty(pages);
     setClasses(classes.concat(dataTeacher).concat(dataStudent));
   }
 
@@ -142,16 +146,24 @@ const MyClasses = () => {
   }, [reloadCards]);
 
   useEffect(async () => {
-    let asTeacher = tabIndex === 1;
-    let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
-    fetchClasses(setClasses, asTeacher);
-  }, [tabIndex, status, page])
+    if (currUser) {
+      let asTeacher = tabIndex === 1;
+      let setClasses = asTeacher ? setOfferedClasses : setRequestedClasses;
+      fetchClasses(setClasses, asTeacher);
+      setLoading(false);
+    }
+  }, [currUser, tabIndex, status, page])
 
+  useEffect(() => {
+    handleIdentity(uid.id, navigate);
+    setCurrUser(AuthService.getCurrentUser());
+  }, [])
 
   return (
     <Wrapper>
       <Navbar/>
       <MainContainer>
+        { !loading && 
         <Content>
           <FilterContainer>
             <Tab setIndex={setTabIndex} flexDirection='column'>
@@ -184,6 +196,7 @@ const MyClasses = () => {
             {pageQty > 1 && <StyledPagination>{items}</StyledPagination>}
           </CardContainer>
         </Content>
+        }
       </MainContainer>
     </Wrapper>
   );

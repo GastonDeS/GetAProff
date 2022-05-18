@@ -11,5 +11,23 @@ export const handleTeacherRole = (navigate) => {
     navigate(`/users/login?code=${status.UNAUTHORIZED}`);
     return;
   }
-  if (!user.teacher)navigate(`/error?code=${status.UNAUTHORIZED}`);
+  if (!user.teacher) {navigate(`/error?code=${status.UNAUTHORIZED}`)};
+}
+
+export const handleTeacherAndIdentity = (id, navigate) => {
+  const user = authService.getCurrentUser();
+  if (!user) {
+    navigate(`/users/login?code=${status.UNAUTHORIZED}`);
+    return;
+  }
+  if (!user.teacher || user.id !== parseInt(id)) {navigate(`/error?code=${status.UNAUTHORIZED}`)};
+}
+
+export const handleIdentity = (id, navigate) => {
+  const user = authService.getCurrentUser();
+  if (!user) {
+    navigate(`/users/login?code=${status.UNAUTHORIZED}`);
+    return;
+  }
+  if (user.id !== parseInt(id)) {navigate(`/error?code=${status.UNAUTHORIZED}`)};
 }

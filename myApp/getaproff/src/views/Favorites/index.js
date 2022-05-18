@@ -1,6 +1,5 @@
 import Navbar from "../../components/Navbar";
 import React, {useEffect, useState} from "react";
-import AuthService from '../../services/authService'
 import {
     Wrapper,
     PageContainer,
@@ -12,16 +11,17 @@ import { favouritesService } from "../../services";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { handleService } from "../../handlers/serviceHandler";
+import { handleTeacherAndIdentity } from "../../handlers/accessHandler";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);
-    const [currentUser, setCurrentUser] = useState();
     const [page, setPage] = useState(1);
     const [pageQty, setPageQty] = useState(1);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const uid = useParams();
 
     let items = [];
     for (let number = 1; number <= pageQty; number++) {
@@ -37,17 +37,15 @@ const Favorites = () => {
     }
 
     useEffect(() => {
-        setCurrentUser(AuthService.getCurrentUser());
+        handleTeacherAndIdentity(uid.id, navigate);
     }, [])
 
     useEffect(async () => {
-        if(currentUser) {
-            const res = await favouritesService.getFavoriteTeachers(page);
-            if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
-            setFavoriteUsersList(handleService(res, navigate));
-            setLoading(false);
-        }
-    },[page, currentUser])
+        const res = await favouritesService.getFavoriteTeachers(page);
+        if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
+        setFavoriteUsersList(handleService(res, navigate));
+        setLoading(false);
+    },[page])
 
     return (
         <Wrapper>

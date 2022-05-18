@@ -8,6 +8,7 @@ import { userService, classesService }  from "../../services";
 import { useNavigate,  useParams} from "react-router-dom";
 import i18next from "i18next";
 import { handleService } from '../../handlers/serviceHandler';
+import { handleAuthentication } from '../../handlers/accessHandler';
 
 const RequestClass = () => {
   const [subject, setSubject] = useState();
@@ -16,7 +17,8 @@ const RequestClass = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const teacher = useParams();
-  const [teacherInfo , setTeacherInfo] = useState()
+  const [teacherInfo , setTeacherInfo] = useState();
+  const [fetch, setFetch] = useState(false);
   const navigate = useNavigate();
 
   const handleClassRequest = async () => {
@@ -34,11 +36,18 @@ const RequestClass = () => {
 
   const handleSubject = (e) => setSubject(subjects.filter(s => s.id == e.target.value)[0]);
 
-  useEffect(async () => {
-    const res = await userService.getUserInfo(teacher.id);
-    const data = handleService(res, navigate);
-    setTeacherInfo(data);
+  useEffect(() => {
+    handleAuthentication(navigate);
+    setFetch(true);
   }, [])
+
+  useEffect(async () => {
+    if (fetch) {
+      const res = await userService.getUserInfo(teacher.id);
+      const data = handleService(res, navigate);
+      setTeacherInfo(data);
+    }
+  }, [fetch])
 
   useEffect(async () => {
     if (teacherInfo) {

@@ -136,7 +136,7 @@ const Profile = () => {
                   <Button text={i18next.t('profile.editProfile')} fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
                   <>
-                    <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>
+                    {subjects.length > 0 && <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>}
                     <Button text={!isFaved ? i18next.t('profile.addFavourites') : i18next.t('profile.removeFavourites')} callback={handleFavoriteState} fontSize="1rem"/>
                     <Button text={i18next.t('profile.share')} callback={shareProfile} fontSize="1rem"/>
                   </>
@@ -168,7 +168,6 @@ const Profile = () => {
                     <ul>
                       {certifications.map((certification) => {
                         return (
-                          // <a href="#" onClick={() => handleOpenFile(certification.id)}>{certification.name}</a>
                         <li key={certification.id}>
                           <Request>
                             <button onClick={() => handleOpenFile(certification.id)}>{certification.name}</button>
