@@ -13,7 +13,6 @@ export const handleResponse = (response) => {
       }
     }
     return {
-      headers: response.headers,
       status: response.status,
       failure: true
     };

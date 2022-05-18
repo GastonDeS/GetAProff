@@ -28,7 +28,7 @@ export const classStatus = {
   FINISHED: 2,
   CANCELLEDS: 3,
   CANCELLEDT: 4,
-  REJECTED: 5,
+  DECLINED: 5,
   RATED: 6,
   ALLCANCELLED: 7
 }
