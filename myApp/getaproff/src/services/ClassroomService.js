@@ -1,5 +1,6 @@
 import {axiosService} from "./index";
 import { handleResponse } from "../handlers/responseHandler";
+import { paths, classStatus } from "../assets/constants";
 
 const PATH = paths.CLASSROOM
 
@@ -68,11 +69,11 @@ export class ClassroomService {
     async startSharingFile(fileIds, classroomId) {
         try {
                 let config = {};
-                let data = [];
+                let data ={ids : []}
                 if (typeof fileIds === 'string')
-                    data[0] = parseInt(fileIds)
+                    data.ids[0] = parseInt(fileIds)
                 else {
-                    data = fileIds.map(item  => parseInt(item))
+                    data.ids = fileIds.map(item  => parseInt(item))
                 }
                 const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${classroomId}/files`,config, data);
                 return handleResponse(res);
@@ -83,7 +84,7 @@ export class ClassroomService {
         try {
             let config = {};
             const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${classroomId}/files/${fileId}`,config);
-                return handleResponse(res);
+            return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }
 

@@ -19,7 +19,7 @@ import {
 import Banner from '../../assets/img/matematica_banner.png';
 import Button from "../../components/Button";
 import Textarea from "../../components/Textarea";
-import {classroomService, filesService} from "../../services"
+import {classroomService} from "../../services"
 import authService from "../../services/authService";
 import {useNavigate, useParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
@@ -27,15 +27,10 @@ import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
+import { classStatus } from "../../assets/constants";
 
 const Classroom = () => {
     const files = 1;
-    const ACCEPTED = 1;
-    const FINISHED = 2;
-    const CANCELEDS = 3;
-    const CANCELLEDT = 4;
-    const DECLINED = 5;
-    const RATED = 6;
     const [classInfo, setClassInfo] = useState();
     const [classStatus, setClassStatus] = useState();
     const [classPosts, setClassPosts] = useState();
@@ -73,20 +68,20 @@ const Classroom = () => {
     }
 
     const acceptClass = async () =>{
-        const res = await classroomService.changeClassStatus(id.id, ACCEPTED, user.id);
+        const res = await classroomService.changeClassStatus(id.id, classStatus.ACCEPTED, user.id);
         handleService(res, navigate);
-        setClassStatus(1);
+        setClassStatus(classStatus.ACCEPTED);
     }
 
     const finishClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, FINISHED, user.id);
+        const res = await classroomService.changeClassStatus(id.id, classStatus.FINISHED, user.id);
         handleService(res, navigate);
-        setClassStatus(3);
+        setClassStatus(classStatus.FINISHED);
     }
     const declineClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, DECLINED, user.id);
+        const res = await classroomService.changeClassStatus(id.id, classStatus.DECLINED, user.id);
         handleService(res, navigate);
-        setClassStatus(6);
+        setClassStatus(classStatus.DECLINED);
     }
 
     const rateTeacher = () => {
@@ -107,19 +102,18 @@ const Classroom = () => {
             handleService(res, navigate);
         }
         setFileVisibilityChanged(!fileVisibilityChanged);
-        stopSharingFilesReset()
-
+        stopSharingFilesReset();
     }
 
     const shareFiles = async (data) => {
         const res = await classroomService.startSharingFile(data.filesToChangeVisibility,id.id);
         handleService(res, navigate);
         setFileVisibilityChanged(!fileVisibilityChanged);
-        shareFilesReset()
+        shareFilesReset();
     }
 
     const navigateToMyClasses = () => {
-        navigate(`/users/${user.id}/classes`)
+        navigate(`/users/${user.id}/classes`);
     }
 
     useEffect(async () => {
@@ -173,11 +167,11 @@ const Classroom = () => {
                                     : (classInfo.status === 1) ? <ClassStatus style={{background: "green"}}>
                                             <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.active')}</h6>
                                         </ClassStatus>
-                                        : <> {classInfo.status === FINISHED &&
+                                        : <> {classInfo.status === classStatus.FINISHED &&
                                                     <ClassStatus style={{background: "#d3d3d3"}}>
                                                         <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.finished')}</h6>
                                                     </ClassStatus>}
-                                             {classInfo.status === RATED &&
+                                             {classInfo.status === classStatus.RATED &&
                                                  <ClassStatus style={{background: "#d3d3d3"}}>
                                                  <h6 style={{color: "black", margin: "0"}}>{i18next.t('classroom.status.rated')}</h6>
                                                  </ClassStatus>
@@ -192,13 +186,13 @@ const Classroom = () => {
                                         <Button text={i18next.t('classroom.decline')} color={'#FFC300'} fontColor={'black'} callback={declineClass}/>
                                     </ButtonContainer>
                                 ) :
-                                    classInfo.status !== FINISHED &&  classInfo.status !== RATED  && (
+                                    classInfo.status !== classStatus.FINISHED &&  classInfo.status !== classStatus.RATED  && (
                                     <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={finishClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
                         </ClassroomSidePanel>
                         <ClassroomCenterPanel>
-                            {(classInfo.status !== FINISHED && classInfo.status !== RATED) ?
+                            {(classInfo.status !== classStatus.FINISHED && classInfo.status !== classStatus.RATED) ?
                                 <PostFormContainer onSubmit={handleSubmit(publishPost)}>
                                     <Textarea name="postTextInput" register={register} placeholder={i18next.t('classroom.post.placeholder')} style={{
                                         borderRadius: "10px",
@@ -238,7 +232,7 @@ const Classroom = () => {
                                 }}>
                                     <h2>{i18next.t('classroom.classOver')}</h2>
                                     <Button text={i18next.t('classroom.back')} callback={navigateToMyClasses}/>
-                                    {!isTeacherClassroom && classInfo.status === FINISHED &&
+                                    {!isTeacherClassroom && classInfo.status === classStatus.FINISHED &&
                                     <Button text={i18next.t('classroom.rate')} callback={rateTeacher}/>}
                                 </div>
                             }
@@ -267,7 +261,7 @@ const Classroom = () => {
                             {pageQty !== 1 && <StyledPagination>{items}</StyledPagination>}
                         </ClassroomCenterPanel>
                         <ClassroomSidePanel>
-                            {(isTeacherClassroom && classInfo.status !== FINISHED) ?
+                            {(isTeacherClassroom && classInfo.status !== classStatus.FINISHED) ?
                                 <>
                                     <ClassContentSide>
                                         <h2>{i18next.t('classroom.files.myFiles')}</h2>
@@ -288,7 +282,7 @@ const Classroom = () => {
                                                                     <li key={index}>
                                                                         <SubjectsRow>
                                                                             <a style={{fontWeight: "bold"}}
-                                                                               href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
+                                                                               href={file.href}
                                                                                target="_blank">{file.title}</a>
                                                                             <input {...shareFilesRegister("filesToChangeVisibility")}
                                                                                    type="checkbox"
@@ -347,8 +341,7 @@ const Classroom = () => {
                                                                                 height: "18px",
                                                                                 marginRight: "4px"
                                                                             }}
-                                                                            value={file.rel}
-                                                                            onClick={() => console.log('click')}/>
+                                                                            value={file.rel}/>
                                                                     </SubjectsRow>
                                                                 </li>
                                                             );
@@ -371,27 +364,28 @@ const Classroom = () => {
                                 :
                                 <ClassContentSide>
                                     <h2>{i18next.t('classroom.files.classFiles')}</h2>
-                                    {(files === 0) ?
-                                        <span style={{
-                                            alignSelf: "center",
-                                            margin: "8px 0 4px 0",
-                                            fontSize: "20px"
-                                        }}>{i18next.t('classroom.files.noSharedFiles')}</span>
-                                        :
                                         <SharedFilesContainer>
-                                            <Ul>
-                                                {sharedClassFiles.map((file, index) => {
-                                                    return (
-                                                        <li key={index}>
-                                                            <SubjectsRow>
-                                                                <a style={{fontWeight: "bold"}}
-                                                                   href={file.href}
-                                                                   target="_blank">file.title</a>
-                                                            </SubjectsRow>
-                                                        </li>
+                                            {sharedClassFiles && sharedClassFiles.length !== 0 ?
+                                                <Ul>
+                                                    {sharedClassFiles.map((file, index) => {
+                                                        return (
+                                                            <li key={index}>
+                                                                <SubjectsRow>
+                                                                    <a style={{fontWeight: "bold"}}
+                                                                       href={file.href}
+                                                                       target="_blank">file.title</a>
+                                                                </SubjectsRow>
+                                                            </li>
                                                     )
                                                 })}
                                             </Ul>
+                                                :
+                                                <span style={{
+                                                    alignSelf: "center",
+                                                    margin: "8px 0 4px 0",
+                                                    fontSize: "20px"
+                                                }}>{i18next.t('classroom.files.noSharedFiles')}</span>
+                                            }
                                         </SharedFilesContainer>
                                     }
                                 </ClassContentSide>
