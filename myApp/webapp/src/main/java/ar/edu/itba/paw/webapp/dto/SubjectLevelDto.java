@@ -13,7 +13,6 @@ public class SubjectLevelDto extends SubjectDto{
 
     private List<Integer> levels;
     private String name;
-    private Link url;
     private Long subjectId;
 
     public static SubjectLevelDto fromSubjectLevel(Map.Entry<Subject, List<Integer>> subjectAndLevels) {
@@ -21,7 +20,6 @@ public class SubjectLevelDto extends SubjectDto{
         subjectLevelDto.levels = subjectAndLevels.getValue().stream().sorted().collect(Collectors.toList());
         subjectLevelDto.name = subjectAndLevels.getKey().getName();
         subjectLevelDto.subjectId = subjectAndLevels.getKey().getSubjectId();
-        subjectLevelDto.url = JaxRsLinkBuilder.linkTo(SubjectController.class).slash(subjectAndLevels.getKey().getSubjectId()).withRel(subjectAndLevels.getKey().getSubjectId().toString());
         return subjectLevelDto;
     }
 
@@ -41,16 +39,6 @@ public class SubjectLevelDto extends SubjectDto{
     @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public Link getUrl() {
-        return url;
-    }
-
-    @Override
-    public void setUrl(Link url) {
-        this.url = url;
     }
 
     @Override
