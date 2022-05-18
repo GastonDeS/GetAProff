@@ -22,10 +22,13 @@ export const status = {
 }
 
 export const classStatus = {
+  ANY: -1,
+  PENDING: 0,
   ACCEPTED: 1,
   FINISHED: 2,
   CANCELLEDS: 3,
   CANCELLEDT: 4,
   REJECTED: 5,
-  RATED: 6
+  RATED: 6,
+  ALLCANCELLED: 7
 }

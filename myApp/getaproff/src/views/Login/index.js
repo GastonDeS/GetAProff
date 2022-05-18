@@ -17,6 +17,7 @@ import AuthService from "../../services/authService";
 import {useForm} from "react-hook-form";
 import {Request, Wrapper, MainContainer} from "../../GlobalStyle";
 import i18next from "i18next";
+import { useQuery, getQuery } from "../../hooks/useQuery";
 
 const EMAIL_PATTERN = /^$|^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$/;
 
@@ -25,6 +26,8 @@ const Login = () => {
   const {register, formState: {errors}, handleSubmit} = useForm();
   const [invalidCredentials, setInvalidCredentials] = useState(false);
   const [error, setError] = useState(false);
+  let query = useQuery();
+  let errorStatus = getQuery(query, "code", undefined);
 
   const navigate = useNavigate();
 
@@ -56,7 +59,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit(handleLogin)}>
               <InputContainer>
                 {invalidCredentials && <Error>{i18next.t('login.invalidCredentials')}</Error>}
-                {error && <Error>{i18next.t('login.invalidCredentials')}</Error>}
+                {errorStatus && <Error>{i18next.t('login.unauthorized')}</Error>}
                 <InputWrapper>
                   <StyledInput
                       placeholder={i18next.t('form.emailPlaceholder')}

@@ -8,16 +8,17 @@ import TabItem from '../../components/TabItem'
 import SelectDropdown from '../../components/SelectDropdown';
 import { Wrapper, MainContainer } from "../../GlobalStyle";
 import AuthService from "../../services/authService";
-import {classesService, classroomService, userService} from "../../services";
+import {classesService, classroomService} from "../../services";
 import {useNavigate} from "react-router-dom";
 import i18next from "i18next";
 import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
+import { classStatus } from '../../assets/constants';
 
 const MyClasses = () => {
   const navigate = useNavigate();
   const [tabIndex, setTabIndex] = useState(0);
-  const [status, setStatus] = useState(0);
+  const [status, setStatus] = useState(-1);
   const [requestedClasses, setRequestedClasses] = useState([]);
   const [offeredClasses, setOfferedClasses] = useState([]);
   const [reloadCards, setReloadCards] = useState(false);
@@ -27,31 +28,32 @@ const MyClasses = () => {
   const options = [
     {
       name: i18next.t('myClasses.status.any'),
-      id: 0
+      id: classStatus.ANY
     },
     {
       name: i18next.t('myClasses.status.pending'),
-      id: 1
+      id: classStatus.PENDING
     },
     {
       name: i18next.t('myClasses.status.active'),
-      id: 2
+      id: classStatus.ACCEPTED
     },
     {
       name: i18next.t('myClasses.status.finished'),
-      id: 3
+      id: classStatus.FINISHED
     },
     {
       name: i18next.t('myClasses.status.rated'),
-      id: 4
+      id: classStatus.RATED
     },
     {
       name: i18next.t('myClasses.status.cancelled'),
-      id: 5
+      id: classStatus.ALLCANCELLED
     }];
 
   const handleFilter = (e) => {
     setStatus(e.target.value);
+    setPage(1);
   }
 
   const handleRate = (uid, classId) => {
@@ -95,8 +97,23 @@ const MyClasses = () => {
     );
   };
 
+  const fetchCancelledClasses = async (setClasses, asTeacher) => {
+    let classes = [];
+    let pages = 0;
+    const resTeacher = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDT, page);
+    if (!resTeacher.failure) pages += parseInt(resTeacher.headers['x-total-pages'])
+    const dataTeacher = handleService(resTeacher, navigate);
+    const resStudent = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDT, page);
+    if (!resStudent.failure) pages += parseInt(resStudent.headers['x-total-pages'])
+    const dataStudent = handleService(resStudent, navigate);
+    setClasses(classes.concat(dataTeacher).concat(dataStudent));
+  }
+
   const fetchClasses = async (setClasses, asTeacher) => {
-    const res = await classesService.getUserClasses(asTeacher, status - 1, page);
+    if (Number(status) === classStatus.ALLCANCELLED) {
+      return fetchCancelledClasses(setClasses, asTeacher);
+    }
+    const res = await classesService.getUserClasses(asTeacher, status, page);
     if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
     setClasses(handleService(res, navigate));
     setReloadCards(false);
@@ -112,8 +129,9 @@ const MyClasses = () => {
   }
 
   useEffect(() => {
+    setStatus(-1);
     setPage(1);
-  }, [tabIndex, status])
+  }, [tabIndex])
 
   useEffect(() => {
     if (reloadCards) {
@@ -146,7 +164,7 @@ const MyClasses = () => {
             </Tab>
             <Filter>{i18next.t('myClasses.filter')}</Filter>
             <SelectContainer>
-              <SelectDropdown options={options} handler={handleFilter}/>
+              <SelectDropdown options={options} handler={handleFilter} value={status}/>
             </SelectContainer>
           </FilterContainer>
           <CardContainer>

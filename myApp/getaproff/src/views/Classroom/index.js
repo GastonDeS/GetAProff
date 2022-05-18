@@ -347,8 +347,7 @@ const Classroom = () => {
                                                                                 height: "18px",
                                                                                 marginRight: "4px"
                                                                             }}
-                                                                            value={file.rel}
-                                                                            onClick={() => console.log('click')}/>
+                                                                            value={file.rel}/>
                                                                     </SubjectsRow>
                                                                 </li>
                                                             );
@@ -380,7 +379,7 @@ const Classroom = () => {
                                         :
                                         <SharedFilesContainer>
                                             <Ul>
-                                                {sharedClassFiles.map((file, index) => {
+                                                {sharedClassFiles && sharedClassFiles.map((file, index) => {
                                                     return (
                                                         <li key={index}>
                                                             <SubjectsRow>
