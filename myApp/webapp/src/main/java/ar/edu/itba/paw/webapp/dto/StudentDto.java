@@ -7,11 +7,6 @@ import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 public class StudentDto {
 
-//    @Value("${spring.data.rest.basePath}")
-//    private static String apiBaseUrl;
-
-    private Link url;
-
     private String name, mail;
 
     private Long id;
@@ -23,13 +18,12 @@ public class StudentDto {
         studentDto.mail = user.getMail();
         studentDto.name = user.getName();
         studentDto.id = user.getId();
-        studentDto.isTeacher = user.isTeacher();
-        studentDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(user.getId()).withRel(user.getId().toString());
+        studentDto.isTeacher = false;
         return studentDto;
     }
 
     public boolean isTeacher() {
-        return isTeacher;
+        return false;
     }
 
     public void setTeacher(boolean teacher) {
@@ -42,14 +36,6 @@ public class StudentDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Link getUrl() {
-        return url;
-    }
-
-    public void setUrl(Link url) {
-        this.url = url;
     }
 
     public String getMail() {

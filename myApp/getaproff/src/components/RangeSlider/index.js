@@ -2,17 +2,15 @@ import React, {useRef} from "react";
 import {RangeContainer, RangeTagContainer} from "./RangeSlider.styles";
 import PropTypes from "prop-types";
 
-const RangeSlider = ({register, value, minValue, maxValue,name, onChange, getValues, ...rest}) => {
+const RangeSlider = ({register, value, minValue, maxValue,name, ...rest}) => {
 
     const rangeV = useRef();
 
     const handleInput = (e) => {
-        console.log(e.target.value)
-        const newValue = Number((getValues("maxPrice") - minValue) * 100 / (maxValue - minValue)), newPosition = 10 - (newValue * 0.2);
-            rangeV.current.innerHTML = `<span>$${getValues("maxPrice")}</span>`;
+        const newValue = Number((e.target.value - minValue) * 100 / (maxValue - minValue)), newPosition = 10 - (newValue * 0.2);
+            rangeV.current.innerHTML = `<span>$${e.target.value}</span>`;
             rangeV.current.style.left = `calc(${newValue}% + (${newPosition}px))`;
     }
-    document.addEventListener("DOMContentLoaded", handleInput);
 
     return (
         <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -21,6 +19,7 @@ const RangeSlider = ({register, value, minValue, maxValue,name, onChange, getVal
             <input type="range" id="priceRange" min="1" max={maxValue}
                    {...register(name, {
                        onChange: handleInput,
+                       onBlur: handleInput
                    })}
                    />
         </RangeContainer>
@@ -32,7 +31,6 @@ RangeSlider.propTypes = {
     value: PropTypes.number,
     maxValue: PropTypes.number,
     name: PropTypes.string,
-    onChange: PropTypes.func,
     getValues: PropTypes.func,
 
 };

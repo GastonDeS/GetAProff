@@ -8,6 +8,7 @@ import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 public class TeacherDto {
 
     private String name, mail, description, schedule;
+
     private Link url;
 
     private Long id;
@@ -16,6 +17,7 @@ public class TeacherDto {
 
     private float rate;
 
+    private boolean isTeacher;
 
     public static TeacherDto getTeacher(TeacherInfo teacher) {
         TeacherDto teacherDto = new TeacherDto();
@@ -28,8 +30,17 @@ public class TeacherDto {
         teacherDto.mail = teacher.getMail();
         teacherDto.id = teacher.getUserId();
         teacherDto.reviewsQty = teacher.getReviews();
-        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).withRel(teacher.getUserId().toString());
+        teacherDto.isTeacher = true;
+//        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).withRel(teacher.getUserId().toString());
         return teacherDto;
+    }
+
+    public boolean isTeacher() {
+        return true;
+    }
+
+    public void setTeacher(boolean teacher) {
+        isTeacher = teacher;
     }
 
     public int getReviewsQty() {

@@ -206,7 +206,8 @@
     "student": "Student",
     "signUp": "Sign Up",
     "alreadyRegistered": "Already have an account?",
-    "login": "Login"
+    "login": "Login",
+    "invalidCredentials": "User is already registered"
   },
   "requestClass": {
     "title": "Request Class from",
@@ -254,7 +255,7 @@
     "confirmPasswordPlaceholder": "Confirm password",
     "descriptionPlaceholder": "Description",
     "schedulePlaceholder": "Schedule",
-    "mailPlaceholder": "example@gmail.com,",
+    "mailPlaceholder": "example@gmail.com",
     "namePlaceholder": "Name",
     "notMatchingPasswords": "The passwords don't match",
     "price": "Price value must be greater than zero"

@@ -59,7 +59,7 @@ const ClassCard = ({ subject, user, level, price, statusCode, isTeacher, classId
           <p>{i18next.t('classCard.price')}: ${price}/{i18next.t('classCard.hour')}</p>
         </ClassInfo>
         <ButtonContainer>
-          {statusCode !== 4 && statusCode !== 3 && <Button text={i18next.t('classCard.enter')} fontSize='1rem' callback={() => handlers.enterClassroom(classId)}/>}
+          {statusCode !== 4 && statusCode !== 3 && statusCode !== 5 && <Button text={i18next.t('classCard.enter')} fontSize='1rem' callback={() => handlers.enterClassroom(classId)}/>}
           {statusCode === 0 && <>
             {isTeacher ?
                 <>

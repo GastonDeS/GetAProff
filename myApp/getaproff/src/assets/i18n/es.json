@@ -206,7 +206,8 @@
     "student": "Alumno",
     "signUp": "Registrarse",
     "alreadyRegistered": "Ya tienes una cuenta?",
-    "login": "Ingresar"
+    "login": "Ingresar",
+    "invalidCredentials": "Usuario ya está registrado"
   },
   "requestClass": {
     "title": "Solicitar clase a",
@@ -256,6 +257,7 @@
     "schedulePlaceholder": "Horarios",
     "mailPlaceholder": "ejemplo@gmail.com",
     "namePlaceholder": "Nombre",
-    "notMatchingPasswords": "Las contraseñas no coinciden"
+    "notMatchingPasswords": "Las contraseñas no coinciden",
+    "price": "El precio debe ser mayor que cero"
   }
 }

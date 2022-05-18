@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Repository
 public class UserRoleDaoJpa implements UserRoleDao {
@@ -15,10 +16,12 @@ public class UserRoleDaoJpa implements UserRoleDao {
     private EntityManager entityManager;
 
     @Override
-    public boolean addRoleToUser(Long userId, Long roleId) {
-        final User user = entityManager.getReference(User.class, userId);
-        final UserRole userRole = new UserRole(roleId, user);
-        user.getUserRoles().add(userRole);
-        return user.getUserRoles().contains(userRole);
+    public UserRole addRoleToUser(Long userId, Long roleId) {
+        final Optional<User> user = Optional.ofNullable(entityManager.getReference(User.class, userId));
+        if (!user.isPresent()) return null;
+        final UserRole userRole = new UserRole(roleId, user.get());
+        entityManager.persist(userRole);
+        user.get().getUserRoles().add(userRole);
+        return userRole;
     }
 }

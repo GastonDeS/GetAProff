@@ -8,10 +8,13 @@ export const handleService = (response, navigate, defaultValue=undefined) => {
       } else {
         if (response.status === status.UNAUTHORIZED) {
           navigate(`/users/login?code=${status.UNAUTHORIZED}`);
+          return;
         } else if (response.status === status.PAGE_NOT_FOUND) {
           navigate("/404");
+          return;
         } else {
           navigate(`/error?code=${response.status}`);
+          return;
         }
       }
     } else {

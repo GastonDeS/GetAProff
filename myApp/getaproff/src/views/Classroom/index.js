@@ -26,8 +26,8 @@ import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
-import { classStatus } from "../../assets/constants";
-import { handleAuthentication } from "../../handlers/accessHandler";
+import {classStatus, status} from "../../assets/constants";
+import {handleAuthentication, handleClassroomStatus} from "../../handlers/accessHandler";
 import authService from "../../services/authService";
 
 const Classroom = () => {
@@ -131,8 +131,10 @@ const Classroom = () => {
         }
     }, [classStatus, user])
 
+
     useEffect(async () => {
         if (classInfo) setIsTeacherClassroom(classInfo.teacher.id === user.id)
+        handleClassroomStatus(classInfo.status, navigate);
     }, [classInfo])
 
     useEffect(async () => {
