@@ -111,16 +111,16 @@ public class TeachesDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements
         String orderBy;
         switch (order) {
             case 1:
-                orderBy= "ORDER BY a2.maxprice ASC ";
+                orderBy= "ORDER BY a3.maxprice ASC ";
                 break;
             case 2:
-                orderBy= "ORDER BY a2.maxprice DESC ";
+                orderBy= "ORDER BY a3.maxprice DESC ";
                 break;
             case 3:
-                orderBy= "ORDER BY a2.rate ASC ";
+                orderBy= "ORDER BY a3.rate ASC ";
                 break;
             case 4:
-                orderBy= "ORDER BY a2.rate DESC ";
+                orderBy= "ORDER BY a3.rate DESC ";
                 break;
             default:
                 orderBy = "";

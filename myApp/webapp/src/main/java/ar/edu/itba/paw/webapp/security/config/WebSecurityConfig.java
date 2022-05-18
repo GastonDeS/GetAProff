@@ -152,6 +152,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST,API_PREFIX+"/subjects").hasAuthority("USER_TEACHER")
                         .antMatchers("/**").permitAll()
                 .and()
+                    .antMatcher("/**").authorizeRequests()
+                        .antMatchers("/users/{id}/favorites").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers("/users/{id}/classes").access("@antMatcherVoter.canAccessWithSameId(authentication, #id)")
+                        .antMatchers("/edit-subjects").hasAuthority("USER_TEACHER")
+                        .antMatchers("/my-files").hasAuthority("USER_TEACHER")
+                        .antMatchers("/request-subject").hasAuthority("USER_TEACHER")
+                        .antMatchers("/users/{id}/class-request").access("@antMatcherVoter.canRequestClass(authentication, #id)")
+                        .antMatchers("/edit-certifications").hasAuthority("USER_TEACHER")
+                        .antMatchers("/edit-profile").hasAuthority("USER_STUDENT")
+                        .antMatchers("/classroom/{classId}").access("@antMatcherVoter.canAccessClassroom(authentication, #classId)")
+                        .antMatchers("/users/{id}/reviews/{classId}").access("@antMatcherVoter.canRate(authentication, #id)")
+                        .antMatchers("/users/{id}").access("@antMatcherVoter.canAccessProfile(authentication, #id)")
+                .and()
                     .addFilterBefore(bridgeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -171,7 +184,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers(HttpMethod.GET,API_PREFIX+"/user-files/{id}")
+                .antMatchers(HttpMethod.GET,API_PREFIX+"/user-files")
+                .antMatchers(HttpMethod.GET,API_PREFIX+"/user-files/{fileId}")
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/ratings/{id}")
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/subjects/**" /*all public*/)
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/users")
@@ -183,7 +197,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/users/top-rated")
                 .antMatchers(HttpMethod.POST, API_PREFIX+"/users/teacher")
                 .antMatchers(HttpMethod.POST, API_PREFIX+"/users/student")
-                .antMatchers(HttpMethod.GET,API_PREFIX+"/files/user/{id}")
+                .antMatchers("/error")
+                .antMatchers("/users/login")
+                .antMatchers("/users/new")
+                .antMatchers("/tutors")
                 .antMatchers("/")
                 .antMatchers("/*.js")
                 .antMatchers("/*.css")

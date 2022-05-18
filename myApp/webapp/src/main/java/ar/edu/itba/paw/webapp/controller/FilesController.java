@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -25,11 +26,12 @@ public class FilesController {
     @Context
     private UriInfo uriInfo;
 
-    //TODO: NO SE USA CREO
+    //TODO: BOORAR
     @GET
-    @Path("/user/{id}")
-    public Response getUserFile(@PathParam("id") Long id) {
-        final UserFile userFile = userFileService.getFileById(id)
+    @Path("/user/{fileId}")
+    @Produces("application/vnd.getaproff.api.v1+json")
+    public Response getUserFile(@PathParam("fileId") Long fileId) {
+        final UserFile userFile = userFileService.getFileById(fileId)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CERTIFICATION));
         return Response.ok(FileDto.fromUserFile(userFile)).build();
     }

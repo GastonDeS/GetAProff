@@ -236,7 +236,6 @@ public class UsersController {
     public Response getUserImage(@PathParam("uid") Long uid) {
         Image image = imageService.findImageById(uid).orElseThrow(() -> new NoContentException(NoContentStatusMessages.IMAGE));
         return Response.ok(ImageDto.fromUser(image)).build();
-
     }
 
     @POST

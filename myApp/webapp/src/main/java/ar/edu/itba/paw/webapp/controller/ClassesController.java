@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -66,7 +67,7 @@ public class ClassesController {
     }
 
     @POST
-    @Consumes(value = "application/vnd.getaproff.api.v1+json")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response requestClass(ClassRequestDto classRequestDto) {
         Lecture newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
                 classRequestDto.getSubjectId(), classRequestDto.getPrice()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.LECTURE_CREATE));

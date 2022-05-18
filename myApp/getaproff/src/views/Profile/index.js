@@ -72,6 +72,14 @@ const Profile = () => {
     );
   };
 
+  const handleOpenFile = async (fileId) => {
+    const res = await filesService.getCertificationById(fileId);
+    console.log(res)
+    const data = handleService(res, navigate);
+    console.log(data)
+    window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(data.file)], { type: "application/pdf" })))
+  }
+
   const handleFavoriteState = async () => {
     let teacherId = id;
     let setFavoriteStatus = favouritesService.addTeacherToFavorites;
@@ -162,9 +170,10 @@ const Profile = () => {
                     <ul>
                       {certifications.map((certification) => {
                         return (
+                          // <a href="#" onClick={() => handleOpenFile(certification.id)}>{certification.name}</a>
                         <li key={certification.id}>
                           <Request>
-                            <button onClick={() => window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(certification.file)], { type: "application/pdf" })))}>{certification.name}</button>
+                            <button onClick={() => handleOpenFile(certification.id)}>{certification.name}</button>
                           </Request>
                         </li>
                       )})}

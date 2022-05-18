@@ -7,6 +7,7 @@ const RangeSlider = ({register, value, minValue, maxValue,name, onChange, getVal
     const rangeV = useRef();
 
     const handleInput = (e) => {
+        console.log(e.target.value)
         const newValue = Number((getValues("maxPrice") - minValue) * 100 / (maxValue - minValue)), newPosition = 10 - (newValue * 0.2);
             rangeV.current.innerHTML = `<span>$${getValues("maxPrice")}</span>`;
             rangeV.current.style.left = `calc(${newValue}% + (${newPosition}px))`;
@@ -19,10 +20,9 @@ const RangeSlider = ({register, value, minValue, maxValue,name, onChange, getVal
             <RangeTagContainer ref={rangeV}/>
             <input type="range" id="priceRange" min="1" max={maxValue}
                    {...register(name, {
-                       value: value,
-                       onChange: handleInput
+                       onChange: handleInput,
                    })}
-                   {...rest}/>
+                   />
         </RangeContainer>
         </div>
 );};

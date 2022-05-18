@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+//TODO: DELETE
 public class NewStatusDto {
     private Long userId;
     private int status;

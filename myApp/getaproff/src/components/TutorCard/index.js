@@ -13,11 +13,11 @@ const TutorCard = ({ user }) => {
 
   const navigate = useNavigate();
 
-  // useEffect(async () => {
-  //   const res = await userService.getUserImg(user.id);
-  //   const data = handleService(res, navigate);
-  //   if (data) setImage('data:image/png;base64,' + data.image);
-  // }, []);
+  useEffect(async () => {
+    const res = await userService.getUserImg(user.id);
+    const data = handleService(res, navigate);
+    if (data) setImage('data:image/png;base64,' + data.image);
+  }, []);
 
   return (
     <Card onClick={() => navigate('/users/' + user.id)}>

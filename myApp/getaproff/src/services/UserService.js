@@ -80,7 +80,6 @@ export class UserService {
     //UsersController
     async getUserInfo(uid) {
         try {
-            let data;
             const res = await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, {});
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
@@ -124,6 +123,7 @@ export class UserService {
                 level : parseInt(queryParams.level),
                 rating : parseInt(queryParams.rating),
                 search: queryParams.search,
+                order: parseInt(queryParams.order),
                 page: page,
                 pageSize: 9
             };

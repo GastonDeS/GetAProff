@@ -38,7 +38,7 @@ public class FavoritesController {
 
     //Return all favorite users of user with uid
     @GET
-    @Produces({"application/vnd.getaproff.api.v1+json"})
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getUserFavorites(@QueryParam("page") @DefaultValue("1") Integer page,
                                      @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
         final Page<TeacherInfo> favourites = userService.getFavourites(authFacade.getCurrentUserId(), page, pageSize);
@@ -63,7 +63,7 @@ public class FavoritesController {
     // TODO make service return the Added user on optional
     @POST
     @Path("/{teacherId}")
-    @Produces({"application/vnd.getaproff.api.v1+json"})
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response addNewFavoriteUser(@PathParam("teacherId") Long teacherId) {
         int result = userService.addFavourite(teacherId, authFacade.getCurrentUserId());
         if (result == ALREADY_INSERTED) throw new ConflictException(ConflictStatusMessages.FAVORITE);
