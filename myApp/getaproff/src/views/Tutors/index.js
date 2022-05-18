@@ -71,7 +71,6 @@ const Tutors = () => {
   }
 
   const checkIfDirty = () =>{
-    console.log(dirtyFields);
     return dirtyFields.level || dirtyFields.maxPrice || dirtyFields.rating || dirtyFields.order;
   }
 
@@ -116,7 +115,6 @@ const Tutors = () => {
                   minValue={1}
                   maxValue={10000}
                   value={getValues("price")}
-                  getValues = {getValues}
               />
             </FilterSection>
             <FilterSection>
