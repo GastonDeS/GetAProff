@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import ProfileImg from '../assets/img/no_profile_pic.jpeg';
 import { userService, filesService, ratingService, favouritesService } from '../services';
 import { handleService } from '../handlers/serviceHandler';
+import { status } from '../assets/constants';
 
 export const useProfileFetch = (id) => {
   const [index, setIndex] = useState(0);
@@ -20,8 +21,17 @@ export const useProfileFetch = (id) => {
   const [isFaved, setIsFaved] = useState(false);
   const [pageQty, setPageQty] = useState(1);
   const [page, setPage] = useState(1);
+  const [fetch, setFetch] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(async () => {
+    if (isTeacher && fetch) {
+      const res = await favouritesService.checkIfTeacherIsFaved(id);
+      const data = handleService(res, navigate);
+      if(data) setIsFaved(true);
+    }
+  }, [isTeacher, fetch])
 
   useEffect(() => {
     if (currentUser) {
@@ -32,17 +42,13 @@ export const useProfileFetch = (id) => {
   }, [currentUser])
 
   useEffect(async () => {
-    setCurrentUser(AuthService.getCurrentUser());
     const userRes = await userService.getUserInfo(id);
     const userData = handleService(userRes, navigate);
     setUser(userData);
-    const res = await favouritesService.checkIfTeacherIsFaved(id);
-    const data = handleService(res, navigate);
-    if(data) setIsFaved(true);
   }, [id])
-  
+
   useEffect(async () => {
-    if (user) {
+    if (fetch) {
       const res = await userService.getUserImg(user.id);
       const data = handleService(res, navigate);
       if (data) setImage('data:image/png;base64,' + data.image);
@@ -64,6 +70,15 @@ export const useProfileFetch = (id) => {
         setCertifications(handleService(certificationsRes, navigate));
       }
       setLoading(false);
+    }
+  }, [fetch, isTeacher])
+  
+  useEffect(async () => {
+    const auxUser = AuthService.getCurrentUser();
+    if (user) {
+      if (!user.teacher && user.id !== auxUser.id) navigate(`/error?code=${status.UNAUTHORIZED}`);
+      setFetch(true);
+      setCurrentUser(auxUser);
     }
   },[user])
 
