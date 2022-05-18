@@ -25,6 +25,16 @@ public class SubjectFileDaoJpa implements SubjectFileDao {
     }
 
     @Override
+    public List<SubjectFile> getAllSubjectFilesFromUserBySubjectIdAndLevel(Long ownerId, Long subjectId, int level) {
+        final User owner = entityManager.getReference(User.class, ownerId);
+        TypedQuery<SubjectFile> query = entityManager.createQuery("from SubjectFile sf join fetch sf.teachesInfo t where t.teacher = :owner and t.level = :level and t.subject.id = :subjectId", SubjectFile.class);
+        query.setParameter("subjectId", subjectId);
+        query.setParameter("level", level);
+        query.setParameter("owner", owner);
+        return query.getResultList();
+    }
+
+    @Override
     public SubjectFile saveNewSubjectFile(byte[] file, String fileName, Long ownerId, Long subjectId, Integer level) {
         final TeachesId teachesId = new TeachesId(ownerId, subjectId, level);
         final Teaches teaches = entityManager.find(Teaches.class, teachesId);
