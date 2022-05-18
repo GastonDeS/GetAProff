@@ -137,7 +137,8 @@
     "hour": "hour",
     "accept": "Accept",
     "cancel": "Cancel",
-    "finish": "Finish"
+    "finish": "Finish",
+    "decline": "Decline"
   },
   "certifications": {
     "title": "Edit certifications",

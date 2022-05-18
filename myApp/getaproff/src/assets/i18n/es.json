@@ -137,7 +137,8 @@
     "hour": "hora",
     "accept": "Aceptar",
     "cancel": "Cancelar",
-    "finish": "Finalizar"
+    "finish": "Finalizar",
+    "decline": "Rechazar"
   },
   "certifications": {
     "title": "Editar certificaciones",
