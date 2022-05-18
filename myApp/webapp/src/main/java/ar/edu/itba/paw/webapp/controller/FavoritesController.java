@@ -5,7 +5,11 @@ import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.webapp.dto.LinkUserDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
+import ar.edu.itba.paw.webapp.exceptions.ConflictException;
+import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
+import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,44 +41,41 @@ public class FavoritesController {
     @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getUserFavorites(@QueryParam("page") @DefaultValue("1") Integer page,
                                      @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        try {
-            final Page<TeacherInfo> favourites = userService.getFavourites(authFacade.getCurrentUserId(), page, pageSize);
-            Response.ResponseBuilder builder = Response.ok(
-                    new GenericEntity<List<TeacherDto>>(favourites.getContent().stream()
-                            .map(TeacherDto::getTeacher)
-                            .collect(Collectors.toList())) {
-                    });
-            return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
-        } catch (IllegalArgumentException exception) { // TODO mensaje exacto
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        final Page<TeacherInfo> favourites = userService.getFavourites(authFacade.getCurrentUserId(), page, pageSize);
+        Response.ResponseBuilder builder = Response.ok(
+                new GenericEntity<List<TeacherDto>>(favourites.getContent().stream()
+                        .map(TeacherDto::getTeacher)
+                        .collect(Collectors.toList())) {
+                });
+        return PaginationBuilder.build(favourites, builder, uriInfo, pageSize);
     }
 
+    // TODO make service return the user on optional
     @GET
     @Path("/{teacherId}")
     @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getFavedTeacher(@PathParam("teacherId") Long teacherId) {
         boolean isFaved = userService.isFaved(teacherId, authFacade.getCurrentUserId());
-        if (!isFaved) return Response.status(Response.Status.NO_CONTENT).build();
+        if (!isFaved) throw new NoContentException(NoContentStatusMessages.FAVORITE);;
         return Response.ok(LinkUserDto.fromUserId(teacherId.toString())).build();
     }
 
-    //TODO exception for already inserted
+    // TODO make service return the Added user on optional
     @POST
     @Path("/{teacherId}")
     @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response addNewFavoriteUser(@PathParam("teacherId") Long teacherId) {
         int result = userService.addFavourite(teacherId, authFacade.getCurrentUserId());
-        if (result == ALREADY_INSERTED) return Response.status(Response.Status.NO_CONTENT).build();
+        if (result == ALREADY_INSERTED) throw new ConflictException(ConflictStatusMessages.FAVORITE);
         return Response.ok().build();
     }
 
+    // TODO make service return the removed user on optional
     @DELETE
     @Path("/{teacherId}")
     public Response removeFavoriteUser(@PathParam("teacherId") Long teacherId) {
         int result = userService.removeFavourite(teacherId, authFacade.getCurrentUserId());
-        if (result == NO_CONTENT_TO_DELETE)
-            return Response.status(Response.Status.NO_CONTENT).build();
+        if (result == NO_CONTENT_TO_DELETE) throw new NoContentException(NoContentStatusMessages.FAVORITE);
         return Response.ok().build();
     }
 }

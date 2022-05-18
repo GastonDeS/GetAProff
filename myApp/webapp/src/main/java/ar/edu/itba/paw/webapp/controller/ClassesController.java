@@ -7,8 +7,10 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.webapp.dto.ClassroomDto;
+import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.requestDto.ClassRequestDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/api/classes")
@@ -61,18 +65,14 @@ public class ClassesController {
         return PaginationBuilder.build(lectures, builder, uriInfo, pageSize);
     }
 
-    // TODO handle exception for create
     @POST
     @Consumes(value = "application/vnd.getaproff.api.v1+json")
     public Response requestClass(ClassRequestDto classRequestDto) {
-        Optional<Lecture> newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
-                classRequestDto.getSubjectId(), classRequestDto.getPrice());
-        if(!newLecture.isPresent()){
-            return Response.status(Response.Status.CONFLICT).build();
-        }
+        Lecture newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
+                classRequestDto.getSubjectId(), classRequestDto.getPrice()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.LECTURE_CREATE));
         LOGGER.debug("requested class of subject with id {} from teacher with id{}, level: {}, price: {}", classRequestDto.getSubjectId(),classRequestDto.getTeacherId(), classRequestDto.getLevel(), classRequestDto.getPrice());
-        emailService.sendNewClassMessage(newLecture.get().getTeacher().getMail(), newLecture.get().getStudent().getName(), newLecture.get().getSubject().getName(), newLecture.get().getClassId(), uriInfo.getBaseUri().toString());
-        URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.get().getClassId());
+        emailService.sendNewClassMessage(newLecture.getTeacher().getMail(), newLecture.getStudent().getName(), newLecture.getSubject().getName(), newLecture.getClassId(), uriInfo.getBaseUri().toString());
+        URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.getClassId());
         return Response.created(location).build();
     }
 
