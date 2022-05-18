@@ -24,7 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -41,7 +41,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/api/users")
-@Component
+@Controller
 public class UsersController {
 
     private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0;
