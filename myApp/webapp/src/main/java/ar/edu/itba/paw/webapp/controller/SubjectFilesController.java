@@ -77,10 +77,9 @@ public class SubjectFilesController {
                                            @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
-        //TODO poner la location bien
-        URI location = URI.create("/");
         final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
+        URI location = URI.create(uriInfo.getBaseUri()+"/"+subjectFile.getFileId());
         LOGGER.debug("Subject file uploaded successfully");
         return Response.created(location).build();
     }

@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @Controller
 public class UsersController {
 
-    private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0;
+    private static final int SUCCESS = 1;
 
     @Autowired
     AuthenticationTokenService authenticationTokenService;
@@ -98,7 +98,6 @@ public class UsersController {
         return response.header("Authorization", authenticationTokenService.issueToken(newUser.get().getMail(), authoritySet)).build();
     }
 
-    // TODO exception
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })
     public Response findBySubject(@QueryParam("search") String search,
@@ -116,16 +115,6 @@ public class UsersController {
                 });
         return PaginationBuilder.build(filteredTeaches, builder, uriInfo, pageSize);
    }
-//    @GET
-//    @Path("/filters")
-//    @Produces(value = { "application/vnd.getaproff.api.v1+json", })
-//    public Response filterTeachers(@QueryParam("page") int page, @QueryParam("search") String search, @QueryParam("price") Integer price,
-//                                   @QueryParam("level") Integer level, @QueryParam("rating") Integer rating, @QueryParam("order") Integer order) {
-//        final List<TeacherDto> filteredTeachers = teachesService.filterUsers(search, order, price, level, rating, page).stream()
-//                .map(teacherInfo -> TeacherDto.getTeacher(uriInfo, teacherInfo)).collect(Collectors.toList());
-//        int total = teachesService.getPageQty(search, price, level, rating);
-//        return addPaginationHeaders(page, total, Response.ok(new GenericEntity<List<TeacherDto>>(filteredTeachers){}));
-//    }
 
     @GET
     @Path("/{id}")
@@ -168,7 +157,7 @@ public class UsersController {
         int sch = userService.setUserSchedule(uid, editUserDto.getSchedule());
         int name = userService.setUserName(uid, editUserDto.getName());
         if (editUserDto.getSwitchRole().equals("false")) {
-            if (!(desc == 1 && sch == 1 && name == 1)) throw new BadRequestException(BadRequestStatusMessages.USER_CREATE);
+            if (!(desc == SUCCESS && sch == SUCCESS && name == SUCCESS)) throw new BadRequestException(BadRequestStatusMessages.USER_CREATE);
             return Response.status(Response.Status.ACCEPTED).build();
         }
         Optional<User> user = userService.findById(uid);
@@ -184,7 +173,7 @@ public class UsersController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response editProfileStudent(@PathParam("uid") Long uid, @Validated(EditUserDto.Student.class) @RequestBody EditUserDto editUserDto) {
         int name = userService.setUserName(uid, editUserDto.getName());
-        if (name != 1) throw new ConflictException(ConflictStatusMessages.USER_NAME);
+        if (name != SUCCESS) throw new ConflictException(ConflictStatusMessages.USER_NAME);
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
@@ -214,14 +203,14 @@ public class UsersController {
         final Teaches newTeaches = teachesService.addSubjectToUser(userId, newSubjectDto.getSubjectId(),
                 newSubjectDto.getPrice(), newSubjectDto.getLevel()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.ADD_SUBJECT_TO_TEACHER));
             LOGGER.debug("Subject with id {} added to user with id: {}", newSubjectDto.getSubjectId() ,userId);
-        return Response.ok().build(); // TODO return location of list at least
+        return Response.created(URI.create(uriInfo.getBaseUri()+"/"+userId+"/subjects")).build();
     }
 
     @DELETE
     @Path("/{userId}/{subjectId}/{level}")
     public Response removeSubjectsTaughtFromUser(@PathParam("userId") Long userId, @PathParam("subjectId") Long subjectId, @PathParam("level") int level) {
         int success = teachesService.removeSubjectToUser(userId, subjectId, level);
-        if (success != 1) throw new ConflictException(ConflictStatusMessages.REMOVE_SUBJECT_TO_TEACHER);
+        if (success != SUCCESS) throw new ConflictException(ConflictStatusMessages.REMOVE_SUBJECT_TO_TEACHER);
         return Response.status(Response.Status.OK).build();
     }
 
