@@ -2,10 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.webapp.exceptions.PostFileNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.PostNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 
 @Path("/api/post")
-@Component
+@Controller
 public class PostFileController {
     @Autowired
     private PostService postService;
@@ -24,8 +24,8 @@ public class PostFileController {
     @GET
     @Path("/{postId}/file")
     public Response getPostFile(@PathParam("postId") final Long postId) {
-        Post post = postService.getPost(postId).orElseThrow(PostNotFoundException::new);
-        if (post.getFile() == null || post.getFile().length == 0) throw new PostFileNotFoundException();
+        Post post = postService.getPost(postId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.POST));
+        if (post.getFile() == null || post.getFile().length == 0) throw new NotFoundException(NotFoundStatusMessages.POST_FILE);
         Response.ResponseBuilder response = Response.ok(new ByteArrayInputStream(post.getFile()));
         response.header("Content-Disposition", "attachment; filename=\"" + post.getFilename() + "\"" );
         return response.build();

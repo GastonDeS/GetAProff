@@ -27,7 +27,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
     @Override
     public Page<Lecture> findClassesByStudentId(Long studentId, PageRequest pageRequest) {
         final User student = entityManager.getReference(User.class, studentId);
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student", Lecture.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student order by c.studentLastTime desc", Lecture.class);
         query.setParameter("student", student);
         return listBy(query, pageRequest);
     }
@@ -35,7 +35,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
     @Override
     public Page<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status, PageRequest pageRequest) {
         final User student = entityManager.getReference(User.class, studentId);
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student and c.status = :status", Lecture.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student and c.status = :status order by c.studentLastTime desc", Lecture.class);
         query.setParameter("student", student).setParameter("status", status);
         return listBy(query, pageRequest);
     }
@@ -43,7 +43,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
     @Override
     public Page<Lecture> findClassesByStudentAndMultipleStatus(Long studentId, Integer status, PageRequest pageRequest) {
         final User student = entityManager.getReference(User.class, studentId);
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student and c.status >= :status", Lecture.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.student = :student and c.status >= :status order by c.studentLastTime desc", Lecture.class);
         query.setParameter("student", student).setParameter("status", status);
         return listBy(query, pageRequest);
     }
@@ -51,7 +51,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
     @Override
     public Page<Lecture> findClassesByTeacherId(Long teacherId, PageRequest pageRequest) {
         final User teacher = entityManager.getReference(User.class, teacherId);
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher", Lecture.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher order by c.teacherLastTime desc", Lecture.class);
         query.setParameter("teacher", teacher);
         return listBy(query, pageRequest);
     }
@@ -59,7 +59,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
     @Override
     public Page<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status, PageRequest pageRequest) {
         final User teacher = entityManager.getReference(User.class, teacherId);
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher and c.status = :status", Lecture.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher and c.status = :status order by c.teacherLastTime desc", Lecture.class);
         query.setParameter("teacher", teacher).setParameter("status", status);
         return listBy(query, pageRequest);
     }
@@ -67,7 +67,7 @@ public class LectureDaoJpa extends BasePaginationDaoImpl<Lecture> implements Lec
     @Override
     public Page<Lecture> findClassesByTeacherAndMultipleStatus(Long teacherId, Integer status, PageRequest pageRequest) {
         final User teacher = entityManager.getReference(User.class, teacherId);
-        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher and c.status >= :status", Lecture.class);
+        final TypedQuery<Lecture> query = entityManager.createQuery("from Lecture c where c.teacher = :teacher and c.status >= :status order by c.teacherLastTime desc", Lecture.class);
         query.setParameter("teacher", teacher).setParameter("status", status);
         return listBy(query, pageRequest);
     }

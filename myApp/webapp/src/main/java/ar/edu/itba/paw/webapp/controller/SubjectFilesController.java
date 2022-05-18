@@ -3,15 +3,16 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
-import ar.edu.itba.paw.webapp.exceptions.SubjectFileNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/api/subject-files")
-@Component
+@Controller
 public class SubjectFilesController {
 
     @Autowired
@@ -51,7 +52,7 @@ public class SubjectFilesController {
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
         Long uid = authFacade.getCurrentUserId();
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId)
-                .orElseThrow(SubjectFileNotFoundException::new); // TODO security
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE)); // TODO security
         if(!subjectFile.getTeachesInfo().getTeacher().getId().equals(uid))
             return Response.status(Response.Status.UNAUTHORIZED).build();
         SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
@@ -78,7 +79,7 @@ public class SubjectFilesController {
         //TODO poner la location bien
         URI location = URI.create("/");
         final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level)
-                .orElseThrow(SubjectFileNotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
         LOGGER.debug("Subject file uploaded successfully");
         return Response.created(location).build();
     }

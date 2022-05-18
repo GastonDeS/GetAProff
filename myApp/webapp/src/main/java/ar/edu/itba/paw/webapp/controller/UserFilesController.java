@@ -3,14 +3,15 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserFileService;
 import ar.edu.itba.paw.models.UserFile;
 import ar.edu.itba.paw.webapp.dto.UserFileDto;
-import ar.edu.itba.paw.webapp.exceptions.CertificationNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/api/user-files")
-@Component
+@Controller
 public class UserFilesController {
 
     @Autowired
@@ -55,7 +56,7 @@ public class UserFilesController {
                                     @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
         final UserFile userFile = userFileService.saveNewFile(file, fileDetail.getFileName(), uid)
-                .orElseThrow(CertificationNotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CERTIFICATION));
         LOGGER.debug("File uploaded successfully");
         return Response.ok(UserFileDto.fromUser(userFile)).build();
     }

@@ -8,8 +8,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
-import ar.edu.itba.paw.webapp.exceptions.UserAlreadyExistException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.requestDto.EditUserDto;
 import ar.edu.itba.paw.webapp.requestDto.NewUserDto;
 import ar.edu.itba.paw.webapp.requestDto.SubjectRequestDto;
@@ -17,6 +16,7 @@ import ar.edu.itba.paw.webapp.security.api.models.Authority;
 import ar.edu.itba.paw.webapp.security.services.AuthenticationTokenService;
 import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
 import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
+import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -24,7 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -41,7 +41,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/api/users")
-@Component
+@Controller
 public class UsersController {
 
     private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0;
@@ -83,7 +83,8 @@ public class UsersController {
     }
 
     private Response commonRegister(NewUserDto newUserDto) {
-        userService.findByEmail(newUserDto.getMail()).orElseThrow(UserAlreadyExistException::new);
+        userService.findByEmail(newUserDto.getMail())
+                .orElseThrow(() -> new ConflictException(ConflictStatusMessages.USER));
         Optional<User> newUser = userService.create(newUserDto.getName(), newUserDto.getMail(), newUserDto.getPassword(),
                 newUserDto.getDescription(), newUserDto.getSchedule(), newUserDto.getRole());
         if(!newUser.isPresent())
@@ -134,7 +135,7 @@ public class UsersController {
     @Path("/{id}")
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getTeacherInfo(@PathParam("id") Long id) {
-        final User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
+        final User user = userService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
         TeacherInfo teacherInfo = teachesService.getTeacherInfo(user.getId())
                     .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
                             user.getMail(), 0));
@@ -235,7 +236,7 @@ public class UsersController {
         return teachesService.removeSubjectToUser(userId, subjectId, level) == 1 ?
                 Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
-    
+
     @GET
     @Path("/{uid}/image")
     public Response getUserImage(@PathParam("uid") Long uid) {

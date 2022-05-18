@@ -8,7 +8,7 @@ import ar.edu.itba.paw.webapp.dto.TeacherDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.PaginationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/api/favourites")
-@Component
+@Controller
 public class FavoritesController {
     private static final int ALREADY_INSERTED = 0, NO_CONTENT_TO_DELETE = 0; // TODO transform this into exceptions
 
