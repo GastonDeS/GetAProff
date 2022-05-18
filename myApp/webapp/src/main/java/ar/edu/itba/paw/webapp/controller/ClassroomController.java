@@ -87,7 +87,7 @@ public class ClassroomController {
 
     @GET
     @Path("/{classId}/files")
-    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getClassroomFiles(@PathParam("classId") final Long classId) {
         User currUser = authFacade.getCurrentUser();
         Pair<List<SubjectFile>, List<SubjectFile>> files = lectureService.getTeacherFiles(classId, currUser.getId());
@@ -98,7 +98,7 @@ public class ClassroomController {
     // TODO exception
     @POST
     @Path("/{classId}/files")
-    @Consumes(value = {"application/vnd.getaproff.api.v1+json"})
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response shareFileInLecture(@PathParam("classId") final Long classId, @Valid @RequestBody IdsDto filesId) {
         int ans = 1;
         for(Long id : filesId.getIds()) {
@@ -112,7 +112,7 @@ public class ClassroomController {
     // TODO exception
     @DELETE
     @Path("/{classId}/files/{fileId}")
-    @Produces(value = {"application/vnd.getaproff.api.v1+json"})
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response stopSharingFileInLecture(@PathParam("classId") final Long classId, @PathParam("fileId") Long fileId){
         int ans = lectureService.stopSharingFileInLecture(fileId, classId);
         if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();

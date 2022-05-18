@@ -56,8 +56,8 @@ public class SubjectFilesController {
     public Response getUserSubjectFile(@PathParam("fileId") Long fileId) {
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(fileId)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
-        SubjectFileDto subjectFileDto = SubjectFileDto.fromUser(subjectFile);
-        return Response.ok(subjectFileDto).build();
+        FileDto fileDto = FileDto.fromSubjectFile(subjectFile);
+        return Response.ok(fileDto).build();
     }
 
     // TODO return deleted file on success ?

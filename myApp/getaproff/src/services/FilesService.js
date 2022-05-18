@@ -1,5 +1,5 @@
 import { axiosService } from "./index";
-import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
+import { paths } from "../assets/constants";
 import { handleResponse } from "../handlers/responseHandler";
 
 const USER_FILE_PATH = paths.USER_FILES

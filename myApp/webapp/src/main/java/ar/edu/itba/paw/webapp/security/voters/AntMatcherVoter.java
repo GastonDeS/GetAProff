@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.security.voters;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.exceptions.InvalidOperationException;
-import ar.edu.itba.paw.webapp.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.api.models.BasicAuthenticationToken;
@@ -14,8 +12,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class AntMatcherVoter {
@@ -37,9 +33,6 @@ public class AntMatcherVoter {
 
     @Autowired
     private UserFileService userFileService;
-
-    @Autowired
-    private TeachesService teachesService;
 
 
     private Long getUserId(Authentication authentication) {

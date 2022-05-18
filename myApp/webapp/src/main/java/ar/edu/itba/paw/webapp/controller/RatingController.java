@@ -56,8 +56,8 @@ public class RatingController {
     // TODO exception
     @POST
     @Path("/{teacherId}")
-    @Produces(value = { "application/vnd.getaproff.api.v1+json" })
-    @Consumes(value = { "application/vnd.getaproff.api.v1+json" })
+    @Produces("application/vnd.getaproff.api.v1+json")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response rateTeacher(@PathParam("teacherId") Long teacherId, @Valid @RequestBody NewRatingDto newRatingDto){
         final Optional<Rating> rating = ratingService.addRating(teacherId, authFacade.getCurrentUserId(),
                 newRatingDto.getRate(), newRatingDto.getReview());

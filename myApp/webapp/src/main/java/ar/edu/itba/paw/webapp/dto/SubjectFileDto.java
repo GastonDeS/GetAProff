@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.SubjectFile;
-import ar.edu.itba.paw.webapp.controller.FilesController;
 import ar.edu.itba.paw.webapp.controller.SubjectFilesController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
-
-import javax.ws.rs.core.UriInfo;
 
 public class SubjectFileDto {
 
@@ -18,14 +15,11 @@ public class SubjectFileDto {
 
     private SubjectDto subject;
 
-//    private byte[] file;
-
     private Link url;
 
     public static SubjectFileDto fromUser(SubjectFile subjectFile) {
         SubjectFileDto subjectFileDto = new SubjectFileDto();
         subjectFileDto.id = subjectFile.getFileId();
-//        subjectFileDto.file = subjectFile.getFile();
         subjectFileDto.name = subjectFile.getFileName();
         subjectFileDto.subject = SubjectDto.get(subjectFile.getTeachesInfo().getSubject());
         subjectFileDto.level = subjectFile.getTeachesInfo().getLevel();

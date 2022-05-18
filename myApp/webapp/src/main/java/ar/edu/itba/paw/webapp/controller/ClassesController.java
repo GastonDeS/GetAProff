@@ -67,7 +67,7 @@ public class ClassesController {
     }
 
     @POST
-    @Consumes(value = "application/vnd.getaproff.api.v1+json")
+    @Consumes("application/vnd.getaproff.api.v1+json")
     public Response requestClass(ClassRequestDto classRequestDto) {
         Lecture newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
                 classRequestDto.getSubjectId(), classRequestDto.getPrice()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.LECTURE_CREATE));
