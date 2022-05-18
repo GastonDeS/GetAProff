@@ -68,6 +68,7 @@ public class UsersController {
     @Path("/teacher")
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response registerTeacher(@Validated(NewUserDto.Teacher.class) @RequestBody NewUserDto newUserDto) {
+
         LOGGER.debug("Registering teacher of name {}", newUserDto.getName());
         return commonRegister(newUserDto);
     }
@@ -81,8 +82,8 @@ public class UsersController {
     }
 
     private Response commonRegister(NewUserDto newUserDto) {
-        userService.findByEmail(newUserDto.getMail())
-                .orElseThrow(() -> new ConflictException(ConflictStatusMessages.USER));
+        Optional<User> maybeUser = userService.findByEmail(newUserDto.getMail());
+        if (maybeUser.isPresent()) throw new ConflictException(ConflictStatusMessages.USER);
         Optional<User> newUser = userService.create(newUserDto.getName(), newUserDto.getMail(), newUserDto.getPassword(),
                 newUserDto.getDescription(), newUserDto.getSchedule(), newUserDto.getRole());
         if(!newUser.isPresent())
@@ -131,10 +132,13 @@ public class UsersController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getTeacherInfo(@PathParam("id") Long id) {
         final User user = userService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
-        TeacherInfo teacherInfo = teachesService.getTeacherInfo(user.getId())
-                    .orElse(new TeacherInfo(user.getId(), user.getName(), 0, 0, user.getDescription(), 0.0f, user.getSchedule(),
-                            user.getMail(), 0));
-        return Response.ok(TeacherDto.getTeacher(teacherInfo)).build();
+        if (user.isTeacher()) {
+            TeacherInfo teacherInfo = teachesService.getTeacherInfo(user.getId())
+                    .orElse(new TeacherInfo.Builder(user.getMail(), user.getName(), user.getUserid()).reviews(0)
+                            .schedule(user.getSchedule()).description(user.getDescription()).build());
+            return Response.ok(TeacherDto.getTeacher(teacherInfo)).build();
+        }
+        return Response.ok(StudentDto.fromUser(user)).build();
     }
 
     @GET
@@ -168,9 +172,9 @@ public class UsersController {
             return Response.status(Response.Status.ACCEPTED).build();
         }
         Optional<User> user = userService.findById(uid);
-        boolean added = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId());
+        userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
         userService.setTeacherAuthorityToUser();
-        if (!(desc == 1 && sch == 1 && name == 1 && added && user.isPresent())) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
+        if (!(desc == 1 && sch == 1 && name == 1 && user.isPresent())) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
         return Response.ok(AuthDto.fromUser(user.get())).build();
     }
 

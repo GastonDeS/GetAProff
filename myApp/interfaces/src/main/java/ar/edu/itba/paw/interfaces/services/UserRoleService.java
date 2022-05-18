@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.UserRole;
+
+import java.util.Optional;
+
 public interface UserRoleService {
 
-    boolean addRoleToUser(Long userId, Long roleId);
+    Optional<UserRole> addRoleToUser(Long userId, Long roleId);
 
 }

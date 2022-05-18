@@ -25,6 +25,7 @@ import {Error} from "../Login/Login.styles";
 import AuthService from "../../services/authService";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
+import { status } from "../../assets/constants";
 
 
 const Register = () => {
@@ -32,6 +33,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [image, setImage] = useState();
   const [displayImage, setDisplayImage] = useState(Default);
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
   const {register, formState: {errors}, handleSubmit, getValues, setValue, clearErrors} = useForm( {defaultValues: {"Role" : 1}});
 
   const EMAIL_PATTERN = /^$|^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$/;
@@ -48,7 +50,8 @@ const Register = () => {
   };
 
   const onSubmit = async (data) => {
-
+      setInvalidCredentials(false);
+      
       let formData = {
         "mail": data.MailInput,
         "name": data.NameInput,
@@ -65,8 +68,13 @@ const Register = () => {
       
       const res = await userService.register(formData);
       if (!res.failure) localStorage.setItem('token', res.headers.authorization);
-      const userData = handleService(res, navigate);
-      localStorage.setItem('user', JSON.stringify(userData));
+      if (res.status === status.CONFLICT) {
+        setInvalidCredentials(true);
+        return;
+      } else {
+        const userData = handleService(res, navigate);
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
       
       if (image) {
         var imgData = new FormData();
@@ -78,6 +86,7 @@ const Register = () => {
 
       navigate("/");
   };
+
   return (
     <Wrapper>
       <Navbar empty={true} />
@@ -103,6 +112,7 @@ const Register = () => {
               <DisplayImage  register={register} name="ImgInput" image={displayImage} onImageChange={onImageChange}/>
               </div>
               <InputWrapper>
+              {invalidCredentials && <Error>{i18next.t('register.invalidCredentials')}</Error>}
                 <Input register={register} name="NameInput" options={{required: {value: true, message: i18next.t('form.requiredField')}}} type="text" placeholder={i18next.t('form.namePlaceholder')} />
                 {errors.NameInput && <Error>{errors.NameInput.message}</Error>}
                 <Input register={register} name="MailInput"
