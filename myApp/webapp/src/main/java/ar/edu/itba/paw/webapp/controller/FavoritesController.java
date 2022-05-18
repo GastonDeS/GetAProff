@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.TeacherInfo;
-import ar.edu.itba.paw.webapp.dto.IdDto;
 import ar.edu.itba.paw.webapp.dto.LinkUserDto;
 import ar.edu.itba.paw.webapp.dto.TeacherDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
@@ -60,6 +59,7 @@ public class FavoritesController {
         return Response.ok(LinkUserDto.fromUserId(teacherId.toString())).build();
     }
 
+    //TODO exception for already inserted
     @POST
     @Path("/{teacherId}")
     @Produces({"application/vnd.getaproff.api.v1+json"})

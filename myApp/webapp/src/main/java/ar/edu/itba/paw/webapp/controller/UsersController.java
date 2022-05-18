@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UserAlreadyExistException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.requestDto.*;
 import ar.edu.itba.paw.webapp.security.api.models.Authority;
@@ -76,9 +77,7 @@ public class UsersController {
     }
 
     private Response commonRegister(NewUserDto newUserDto) {
-        Optional<User> mayBeUser = userService.findByEmail(newUserDto.getMail());
-        if(mayBeUser.isPresent())
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        userService.findByEmail(newUserDto.getMail()).orElseThrow(UserAlreadyExistException::new);
         Optional<User> newUser = userService.create(newUserDto.getName(), newUserDto.getMail(), newUserDto.getPassword(),
                 newUserDto.getDescription(), newUserDto.getSchedule(), newUserDto.getRole());
         if(!newUser.isPresent())
