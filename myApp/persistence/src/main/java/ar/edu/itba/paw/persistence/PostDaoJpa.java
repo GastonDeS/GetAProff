@@ -35,6 +35,6 @@ public class PostDaoJpa extends BasePaginationDaoImpl<Post> implements PostDao {
 
     @Override
     public Post getPostById(Long postId) {
-        return entityManager.getReference(Post.class, postId);
+        return entityManager.find(Post.class, postId);
     }
 }

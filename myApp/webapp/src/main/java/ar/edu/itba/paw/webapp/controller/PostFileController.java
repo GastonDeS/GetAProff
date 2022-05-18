@@ -20,9 +20,9 @@ public class PostFileController {
     @Autowired
     private PostService postService;
 
+    //TODO: produces?
     @GET
     @Path("/{postId}/file")
-    @Produces({"application/vnd.getaproff.api.v1+json"})
     public Response getPostFile(@PathParam("postId") final Long postId) {
         Post post = postService.getPost(postId).orElseThrow(PostNotFoundException::new);
         if (post.getFile() == null || post.getFile().length == 0) throw new PostFileNotFoundException();

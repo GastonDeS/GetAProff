@@ -67,11 +67,18 @@ public class AntMatcherVoter {
     public boolean canAccessPostFile(Authentication authentication, Long id) {
         if(authentication instanceof AnonymousAuthenticationToken) return false;
         Lecture lecture = postService.getPost(id).orElseThrow(PostNotFoundException::new).getAssociatedLecture();
+        System.out.println("PIKETE");
         Long loggedUserId = getUserId(authentication);
         return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
     }
 
     public boolean canAccessDeleteSubjectFile(Authentication authentication, Long id){
+        if (authentication instanceof AnonymousAuthenticationToken) return false;
+        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(SubjectFileNotFoundException::new);
+        return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
+    }
+
+    public boolean canAccessGetSubjectFile(Authentication authentication, Long id){
         if (authentication instanceof AnonymousAuthenticationToken) return false;
         SubjectFile subjectFile = subjectFileService.getSubjectFileById(id).orElseThrow(SubjectFileNotFoundException::new);
         return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));

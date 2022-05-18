@@ -29,6 +29,7 @@ public class PostServiceImpl implements PostService {
         return postDao.retrievePosts(classId, new PageRequest(page, pageSize));
     }
 
+    @Transactional
     @Override
     public Optional<Post> getPost(Long postId) {
         return Optional.ofNullable(postDao.getPostById(postId));

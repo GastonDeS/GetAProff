@@ -12,17 +12,19 @@ public class PostDto {
     private Timestamp time;
     private String uploader;
     private Link file;
+    private Long id;
 
     public static PostDto getPostDto(Post post) {
         PostDto postDto = new PostDto();
         if (post.getFilename() == null || post.getFilename().isEmpty())
             postDto.file = null;
         else {
-            postDto.file = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(post.getPostId()).slash("file").withRel(post.getPostId().toString()).withTitle(post.getFilename());
+            postDto.file = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(post.getPostId()).slash("file").withRel(post.getPostId().toString()+"/file").withTitle(post.getFilename());
         }
         postDto.message = post.getMessage();
         postDto.time = post.getTime();
         postDto.uploader = post.getUploader().getName();
+        postDto.id = post.getPostId();
         return postDto;
     }
 
@@ -56,5 +58,13 @@ public class PostDto {
 
     public void setTime(Timestamp time) {
         this.time = time;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

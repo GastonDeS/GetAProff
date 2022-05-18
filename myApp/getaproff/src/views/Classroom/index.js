@@ -149,6 +149,17 @@ const Classroom = () => {
     }, [refreshPosts])
 
 
+    const openSubjectFileInNewWindow = async (fileId) => {
+        let res = await filesService.getSubjectFile(fileId);
+        window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(res.data.file)], { type: "application/pdf" })))
+    }
+
+    const openPostFileInNewWindow = async (postId) => {
+        let res = await filesService.getPostFile(postId);
+        console.log(res.data)
+        window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(res.data)], { type: "application/pdf" })))
+    }
+
     return (
         <Wrapper>
             <Navbar/>
@@ -252,13 +263,13 @@ const Classroom = () => {
                                             </ButtonHolder>
                                             <p>{post.message}</p>
                                             {post.file &&
-                                            <a target="_blank" href={post.file.uri}
+                                            <a href={post.file.href}
                                                style={{
-                                                   color: "blue",
-                                                   textDecoration: "underline",
+                                                   fontWeight: "bold",
                                                    marginTop: "5px"
-                                               }}>
-                                                {post.file.name}
+                                               }}
+                                            >
+                                                {post.file.title}
                                             </a>}
                                         </PostBox>
                                     )
@@ -288,8 +299,10 @@ const Classroom = () => {
                                                                     <li key={index}>
                                                                         <SubjectsRow>
                                                                             <a style={{fontWeight: "bold"}}
-                                                                               href={file.href}
-                                                                               target="_blank">{file.title}</a>
+                                                                               href="#"
+                                                                               onClick={ () => openSubjectFileInNewWindow(file.rel)}
+                                                                            >
+                                                                                {file.title}</a>
                                                                             <input {...shareFilesRegister("filesToChangeVisibility")}
                                                                                    type="checkbox"
                                                                                    className="form-check-input"
@@ -336,8 +349,9 @@ const Classroom = () => {
                                                                 <li key={index}>
                                                                     <SubjectsRow>
                                                                         <a style={{fontWeight: "bold"}}
-                                                                           href="${pageContext.request.contextPath}/classFile/${currentClass.classId}/${file.fileId}"
-                                                                           target="_blank">{file.title}</a>
+                                                                           href="#"
+                                                                           onClick={ () => openSubjectFileInNewWindow(file.rel)}
+                                                                        >{file.title}</a>
                                                                         <input
                                                                             {...stopSharingFilesRegister("filesToChangeVisibility")}
                                                                             type="checkbox"
@@ -378,8 +392,9 @@ const Classroom = () => {
                                                             <li key={index}>
                                                                 <SubjectsRow>
                                                                     <a style={{fontWeight: "bold"}}
-                                                                       href={file.href}
-                                                                       target="_blank">file.title</a>
+                                                                       href="#"
+                                                                       onClick={ () => openSubjectFileInNewWindow(file.rel)}
+                                                                    >{file.title}</a>
                                                                 </SubjectsRow>
                                                             </li>
                                                     )
@@ -393,7 +408,6 @@ const Classroom = () => {
                                                 }}>{i18next.t('classroom.files.noSharedFiles')}</span>
                                             }
                                         </SharedFilesContainer>
-                                    }
                                 </ClassContentSide>
                             }
                         </ClassroomSidePanel>

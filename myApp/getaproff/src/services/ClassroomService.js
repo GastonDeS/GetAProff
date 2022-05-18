@@ -1,6 +1,6 @@
 import {axiosService} from "./index";
 import { handleResponse } from "../handlers/responseHandler";
-import { paths, classStatus } from "../assets/constants";
+import {classStatus, paths} from "../assets/constants";
 
 const PATH = paths.CLASSROOM
 

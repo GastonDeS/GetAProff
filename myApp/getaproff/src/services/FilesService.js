@@ -4,6 +4,7 @@ import { handleResponse } from "../handlers/responseHandler";
 
 const USER_FILE_PATH = paths.USER_FILES
 const SUBJECT_FILE_PATH = paths.SUBJECT_FILES
+const POST_PATH = paths.POST
 
 export class FilesService {
   // async getUserFile (id, setLink) {
@@ -49,6 +50,20 @@ export class FilesService {
   async getSubjectFiles () {
     try {
       const res = await axiosService.authAxiosWrapper(axiosService.GET, `${SUBJECT_FILE_PATH}`, {});
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
+  }
+
+  async getSubjectFile (fileId) {
+    try {
+      const res = await axiosService.authAxiosWrapper(axiosService.GET, `${SUBJECT_FILE_PATH}/${parseInt(fileId)}`, {});
+      return handleResponse(res);
+    } catch (error) {return handleResponse(error.response)}
+  }
+
+  async getPostFile (postId) {
+    try {
+      const res = await axiosService.authAxiosWrapper(axiosService.GET, `${POST_PATH}/${parseInt(postId)}/file`, {});
       return handleResponse(res);
     } catch (error) {return handleResponse(error.response)}
   }
