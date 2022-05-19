@@ -20,6 +20,7 @@ const Favorites = () => {
     const [page, setPage] = useState(1);
     const [pageQty, setPageQty] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [fetch, setFetch] = useState(false);
     const navigate = useNavigate();
     const uid = useParams();
 
@@ -38,14 +39,17 @@ const Favorites = () => {
 
     useEffect(() => {
         handleTeacherAndIdentity(uid.id, navigate);
+        setFetch(true);
     }, [])
 
     useEffect(async () => {
-        const res = await favouritesService.getFavoriteTeachers(page);
-        if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
-        setFavoriteUsersList(handleService(res, navigate));
-        setLoading(false);
-    },[page])
+        if (fetch) {
+            const res = await favouritesService.getFavoriteTeachers(page);
+            if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
+            setFavoriteUsersList(handleService(res, navigate));
+            setLoading(false);
+        }
+    },[page, fetch])
 
     return (
         <Wrapper>
