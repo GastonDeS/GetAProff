@@ -29,9 +29,9 @@ const RequestSubject = () => {
       return;
     };
     const requestData = {
-      subject : subject,
-      message : message
-    };
+      subject: subject,
+      message: message
+    }
     const res = await subjectService.requestSubject(requestData);
     handleService(res, navigate);
     navigate('/users/' + AuthService.getCurrentUser().id);
