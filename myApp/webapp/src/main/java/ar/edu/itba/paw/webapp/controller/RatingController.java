@@ -42,10 +42,9 @@ public class RatingController {
 
     // TODO pasar id a query param
     @GET
-    @Path("/{id}")
     @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response getTeacherRatings(@PathParam("id") Long id,
+    public Response getTeacherRatings(@QueryParam("id") Long id,
                                       @QueryParam("page") @DefaultValue("1") Integer page,
                                       @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
         final Page<Rating> ratingDtos = ratingService.getTeacherRatings(id, page, pageSize);
@@ -56,14 +55,14 @@ public class RatingController {
     }
 
     @POST
-    @Path("/{teacherId}")
     @Produces("application/vnd.getaproff.api.v1+json")
     @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response rateTeacher(@PathParam("teacherId") Long teacherId, @Valid @RequestBody NewRatingDto newRatingDto){
-        final Rating rating = ratingService.addRating(teacherId, authFacade.getCurrentUserId(),
+    public Response rateTeacher(@Valid @RequestBody NewRatingDto newRatingDto){
+        if (!ratingService.availableToRate(newRatingDto.getTeacherId(), authFacade.getCurrentUserId())) throw new ForbiddenException();
+        final Rating rating = ratingService.addRating(newRatingDto.getTeacherId(), authFacade.getCurrentUserId(),
                 newRatingDto.getRate(), newRatingDto.getReview()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.RATE));
         URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
-        emailService.sendRatedMessage(teacherId, authFacade.getCurrentUserId(), rating, uriInfo.getBaseUri().toString());
+        emailService.sendRatedMessage(newRatingDto.getTeacherId(), authFacade.getCurrentUserId(), rating, uriInfo.getBaseUri().toString());
         return Response.created(location).build();
     }
 }

@@ -43,7 +43,7 @@ public class SubjectController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getAllSubjects() {
         final List<SubjectDto> subjectDtos = subjectService.list().stream()
-                .map(SubjectDto::get).collect(Collectors.toList());
+                .map(s -> SubjectDto.get(s,true)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
@@ -53,7 +53,7 @@ public class SubjectController {
     public Response getSubject(@PathParam("id") Long id) {
         final Subject subject = subjectService.findById(id)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT));
-        return Response.ok(SubjectDto.get(subject)).build();
+        return Response.ok(SubjectDto.get(subject, false)).build();
     }
 
     @GET
@@ -61,7 +61,7 @@ public class SubjectController {
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getMostRequestedSubjects() {
         final List<SubjectDto> subjectDtos = subjectService.getHottestSubjects().stream()
-                .map(SubjectDto::get).collect(Collectors.toList());
+                .map(e -> SubjectDto.get(e, true)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<SubjectDto>>(subjectDtos){}).build();
     }
 
