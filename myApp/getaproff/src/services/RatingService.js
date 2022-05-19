@@ -20,7 +20,6 @@ export class RatingService {
     } catch (error) {return handleResponse(error.response)}
   }
 
-  //RatingController
   async rateTeacher(teacherId, data) {
     try {
         let form = {

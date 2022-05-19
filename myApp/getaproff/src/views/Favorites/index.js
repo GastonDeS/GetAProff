@@ -13,7 +13,7 @@ import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleService } from "../../handlers/serviceHandler";
-import { handleTeacherAndIdentity } from "../../handlers/accessHandler";
+import { handleIdentity } from "../../handlers/accessHandler";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);
@@ -38,7 +38,7 @@ const Favorites = () => {
     }
 
     useEffect(() => {
-        handleTeacherAndIdentity(uid.id, navigate);
+        handleIdentity(uid.id, navigate);
         setFetch(true);
     }, [])
 

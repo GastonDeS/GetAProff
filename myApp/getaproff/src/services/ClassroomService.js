@@ -1,6 +1,6 @@
 import {axiosService} from "./index";
 import { handleResponse } from "../handlers/responseHandler";
-import {classStatus, paths} from "../assets/constants";
+import {classStatus, paths, APPLICATION_V1_JSON_TYPE} from "../assets/constants";
 
 const PATH = paths.CLASSROOM
 
@@ -59,9 +59,17 @@ export class ClassroomService {
         return await this.changeClassStatus(classId, classStatus.RATED);
     };
 
-    async changeClassStatus(classId, newStatus) {
+    async changeClassStatus(classId, newStatus, uid) {
         try {
-            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/${newStatus}`, {});
+            let config = {
+                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            }
+            config['params'] = {
+                classId: classId,
+                status: newStatus,
+                uid: uid
+            }
+            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}`, config);
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }

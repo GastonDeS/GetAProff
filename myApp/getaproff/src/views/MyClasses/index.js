@@ -184,7 +184,7 @@ const MyClasses = () => {
                 <>
                   {offeredClasses.length === 0 && <h1>{i18next.t('myClasses.noOffered')}</h1>}
                   {offeredClasses.map((Class, index) => {
-                  return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.teacher}
+                  return <ClassCard key={index} classId={Class.classId} subject={Class.subjectName} user={Class.student}
                   price={Class.price} level={Class.level} statusCode={Class.status} isTeacher={true} handlers={handler}/>
                 })}
                 </>

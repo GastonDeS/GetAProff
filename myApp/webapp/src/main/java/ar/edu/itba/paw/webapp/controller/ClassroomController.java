@@ -45,14 +45,13 @@ public class ClassroomController {
     @Autowired
     private AuthFacade authFacade;
 
-
     @Autowired
     private EmailService emailService;
 
     @Context
     private UriInfo uriInfo;
 
-    private final Integer SUCCESS = 1;
+    private final Integer SUCCESS = 1, FINISHED = 2;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
 
@@ -128,8 +127,12 @@ public class ClassroomController {
     }
 
     @POST
-    @Path("/{classId}/{status}")
-    public Response changeStatus(@PathParam("classId") final Long classId, @PathParam("status") final int status) {
+    @Consumes("application/vnd.getaproff.api.v1+json")
+    public Response changeStatus(@QueryParam("classId") final Long classId,
+                                 @QueryParam("status") final int status,
+                                 @QueryParam("uid") final Long uid) {
+        final User user = authFacade.getCurrentUser();
+        if (!user.isTeacher() && status == FINISHED) throw new ForbiddenException();
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         int updated = lectureService.setStatus(classId, status);
         emailService.sendStatusChangeMessage(lecture, status,uriInfo.getBaseUri().toString());

@@ -68,7 +68,14 @@ const Classroom = () => {
         );
     }
 
-    const acceptClass = async () =>{
+    const handleOpenFile = async (postId) => {
+        const res = await filesService.getPostFile(postId);
+        const data = handleService(res, navigate);
+        console.log(data)
+        window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(data.file)], { type: "application/pdf" })))
+    }
+
+    const acceptClass = async () => {
         const res = await classroomService.changeClassStatus(id.id, 1);
         handleService(res, navigate);
         setClassStatus(1);
@@ -170,7 +177,6 @@ const Classroom = () => {
         const data = handleService(res, navigate);
         window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(data.file)], { type: "application/pdf" })))
     }
-
 
     return (
         <Wrapper>
@@ -280,7 +286,7 @@ const Classroom = () => {
                                             </ButtonHolder>
                                             <p>{post.message}</p>
                                             {post.file &&
-                                            <a href={post.file.href}
+                                            <a onClick={() => handleOpenFile(post.id)} href="#"
                                                style={{
                                                    fontWeight: "bold",
                                                    marginTop: "5px"
