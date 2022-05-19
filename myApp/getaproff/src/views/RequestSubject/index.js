@@ -38,7 +38,7 @@ const RequestSubject = () => {
   }
 
   useEffect(() => {
-    handleTeacherRole(navigate);
+    handleAuthentication(navigate);
   }, [])
 
   return (
