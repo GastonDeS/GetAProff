@@ -51,46 +51,70 @@ public class AntMatcherVoter {
     }
 
     public boolean canAccessClassroom(Authentication authentication, Long id) {
-        if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = lectureService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        Long loggedUserId = getUserId(authentication);
-        return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) return false;
+            Lecture lecture = lectureService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
+            Long loggedUserId = getUserId(authentication);
+            return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessClassroomAsTeacher(Authentication authentication, Long id) {
-        if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = lectureService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        Long loggedUserId = getUserId(authentication);
-        return lecture.getTeacher().getUserid().equals(loggedUserId);
+        try {
+            if(authentication instanceof AnonymousAuthenticationToken) return false;
+            Lecture lecture = lectureService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
+            Long loggedUserId = getUserId(authentication);
+            return lecture.getTeacher().getUserid().equals(loggedUserId);
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessPostFile(Authentication authentication, Long id) {
-        if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = postService.getPost(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.POST))
-                .getAssociatedLecture();
-        Long loggedUserId = getUserId(authentication);
-        return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
+        try {
+            if(authentication instanceof AnonymousAuthenticationToken) return false;
+            Lecture lecture = postService.getPost(id).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.POST))
+                    .getAssociatedLecture();
+            Long loggedUserId = getUserId(authentication);
+            return lecture.getTeacher().getUserid().equals(loggedUserId) || lecture.getStudent().getUserid().equals(loggedUserId);
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessDeleteSubjectFile(Authentication authentication, Long id){
-        if (authentication instanceof AnonymousAuthenticationToken) return false;
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id)
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) return false;
+            SubjectFile subjectFile = subjectFileService.getSubjectFileById(id)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
-        return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
+            return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessGetSubjectFile(Authentication authentication, Long id){
-        if (authentication instanceof AnonymousAuthenticationToken) return false;
-        SubjectFile subjectFile = subjectFileService.getSubjectFileById(id)
-                .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
-        return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) return false;
+                SubjectFile subjectFile = subjectFileService.getSubjectFileById(id)
+                    .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
+            return subjectFile.getTeachesInfo().getTeacher().getId().equals(getUserId(authentication));
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessDeleteCertification(Authentication authentication, Long id){
-        if (authentication instanceof AnonymousAuthenticationToken) return false;
-        UserFile certification = userFileService.getFileById(id)
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) return false;
+            UserFile certification = userFileService.getFileById(id)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CERTIFICATION));
-        return certification.getFileOwner().getId().equals(getUserId(authentication));
+            return certification.getFileOwner().getId().equals(getUserId(authentication));
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessWithSameId(Authentication authentication, Long id) {
@@ -104,22 +128,36 @@ public class AntMatcherVoter {
     }
 
     public boolean canRequestClass(Authentication authentication, Long teacherId) {
-        if(authentication instanceof AnonymousAuthenticationToken) return false;
-        User teacher = userService.findById(teacherId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
-        return !teacher.isTeacher() && teacherId.equals(getUserId(authentication));
+        try {
+
+            if(authentication instanceof AnonymousAuthenticationToken) return false;
+            User teacher = userService.findById(teacherId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
+            return !teacher.isTeacher() && teacherId.equals(getUserId(authentication));
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessRate(Authentication authentication, Long teacherId, Long classId) {
-        if(authentication instanceof AnonymousAuthenticationToken) return false;
-        Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        return ratingService.availableToRate(teacherId, getUserId(authentication));
+        try {
+
+            if(authentication instanceof AnonymousAuthenticationToken) return false;
+            Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
+            return ratingService.availableToRate(teacherId, getUserId(authentication));
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public boolean canAccessProfile(Authentication authentication, Long uid) {
-        User user = userService.findById(uid).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
-        if (user.isTeacher()) return true;
-        if (authentication instanceof AnonymousAuthenticationToken) return false;
-        return uid.equals(getUserId(authentication));
+        try {
+            User user = userService.findById(uid).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
+            if (user.isTeacher()) return true;
+            if (authentication instanceof AnonymousAuthenticationToken) return false;
+            return uid.equals(getUserId(authentication));
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
 }
