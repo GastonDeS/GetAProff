@@ -95,8 +95,8 @@ export const Button = styled.button`
 export const InputWrapper = styled.div`
   width: 80%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 1rem;
   flex-direction: column;
 `;

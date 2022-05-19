@@ -44,7 +44,15 @@ const EditSubjects = () => {
   const navigate = useNavigate();
 
   const onChangePrice = (event) => {
-    setPrice(event.target.value);
+    let auxPrice = 0
+    if (event.target.value > 1000000 ) {
+      auxPrice = 1000000;
+    } else if ( event.target.value < 0) {
+      auxPrice = 0;
+    } else {
+      auxPrice = event.target.value;
+    }
+    setPrice(auxPrice);
   }
 
   const handleAddSubject = async() => {
@@ -117,7 +125,7 @@ const EditSubjects = () => {
             }
             <SingleSelect>
               <p>{i18next.t('editSubjects.price')}</p>
-              <input type="text" placeholder="0" onChange={onChangePrice} value={price}/>
+              <input type="number" max="10000000" placeholder="0" onChange={onChangePrice} value={price}/>
             </SingleSelect>
             {
               error && <ErrorMsg>{i18next.t('form.price')}</ErrorMsg>
