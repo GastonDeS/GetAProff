@@ -220,7 +220,7 @@ const Classroom = () => {
                                         }
                                        </ButtonContainer>
                                 ) :
-                                    classInfo.status !== 2 &&  classInfo.status !== 6 && (
+                                    classInfo.status !== 2 &&  classInfo.status !== 6 && isTeacherClassroom && (
                                     <Button text={i18next.t('classroom.finish')} color={'#ffc107'} callback={finishClass} fontColor={'black'}/>
                                 )}
                             </ClassContentSide>
