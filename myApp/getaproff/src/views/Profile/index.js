@@ -97,9 +97,7 @@ const Profile = () => {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-    navigator.clipboard.writeText(window.location.href).then(r => {
-      setShow(true);
-    });
+    setShow(true);
   }
   const requestClass = () => {
     navigate(`/users/${id}/class-request`)
