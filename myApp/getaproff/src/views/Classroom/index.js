@@ -20,7 +20,6 @@ import Banner from '../../assets/img/matematica_banner.png';
 import Button from "../../components/Button";
 import Textarea from "../../components/Textarea";
 import {classroomService, filesService} from "../../services"
-import authService from "../../services/authService";
 import {useNavigate, useParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import {StyledPagination} from "../Tutors/Tutors.styles";
@@ -28,6 +27,8 @@ import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
 import { classStatus } from "../../assets/constants";
+import { handleAuthentication } from "../../handlers/accessHandler";
+import authService from "../../services/authService";
 
 const Classroom = () => {
     const files = 1;
@@ -41,6 +42,7 @@ const Classroom = () => {
     const [sharedClassFiles, setSharedClassFiles] = useState();
     const [fileVisibilityChanged, setFileVisibilityChanged] = useState(false);
     const [isTeacherClassroom, setIsTeacherClassroom] = useState(false);
+    const [user, setUser] = useState();
 
     const {register, handleSubmit, watch, reset} = useForm();
     const {register: shareFilesRegister, handleSubmit: shareFilesHandleSubmit, reset: shareFilesReset} = useForm();
@@ -48,7 +50,6 @@ const Classroom = () => {
 
     const id = useParams();
     const watchFileName = watch("file");
-    const user = authService.getCurrentUser();
     const navigate = useNavigate();
 
     let items = [];
@@ -81,11 +82,12 @@ const Classroom = () => {
     const declineClass = async () => {
         await classroomService.changeClassStatus(id.id, 5);
         setClassStatus(5);
-        navigateToMyClasses()
+        navigateToMyClasses();
     }
 
     const cancelClassS = async () => {
         const res = await classroomService.changeClassStatus(id.id, 3);
+        handleService(res, navigate);
         setClassStatus(3);
         navigateToMyClasses();
     }
@@ -123,31 +125,38 @@ const Classroom = () => {
     }
 
     useEffect(async () => {
-        const res = await classroomService.fetchClassroomInfo(id.id);
-        setClassInfo(handleService(res, navigate));
-    }, [classStatus])
+        if (user) {
+            const res = await classroomService.fetchClassroomInfo(id.id);
+            setClassInfo(handleService(res, navigate));
+        }
+    }, [classStatus, user])
 
-    useEffect(() => {
-        if (classInfo && classInfo.teacher)
-            setIsTeacherClassroom(classInfo.teacher.id === user.id)
+    useEffect(async () => {
+        if (classInfo) setIsTeacherClassroom(classInfo.teacher.id === user.id)
     }, [classInfo])
 
     useEffect(async () => {
-        const res = await classroomService.getClassroomFiles(id.id);
-        const data = await handleService(res, navigate);
-        setSharedClassFiles(data.shared);
-        if(isTeacherClassroom) setNonSharedClassFiles(data.notShared);
-    }, [isTeacherClassroom, fileVisibilityChanged])
+        if (user) {
+            const res = await classroomService.getClassroomFiles(id.id);
+            const data = await handleService(res, navigate);
+            data && setSharedClassFiles(data.shared);
+            if(isTeacherClassroom) setNonSharedClassFiles(data.notShared);
+        }
+    }, [isTeacherClassroom, fileVisibilityChanged, user])
 
     useEffect(async () => {
-        if (refreshPosts) {
+        if (refreshPosts && user) {
             const res = await classroomService.fetchClassroomPosts(id.id, page);
             if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
             setClassPosts(handleService(res, navigate));
             setRefreshPosts(false);
         }
-    }, [refreshPosts])
+    }, [refreshPosts, user])
 
+    useEffect(() => {
+        handleAuthentication(navigate);
+        setUser(authService.getCurrentUser());
+    }, [])
 
     const openSubjectFileInNewWindow = async (fileId) => {
         const res = await filesService.getSubjectFile(fileId);

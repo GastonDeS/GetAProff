@@ -8,14 +8,12 @@ import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
 import ar.edu.itba.paw.webapp.dto.IdsDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
-import ar.edu.itba.paw.webapp.util.ConflictStatusMessages;
-import ar.edu.itba.paw.webapp.util.NoContentStatusMessages;
-import ar.edu.itba.paw.webapp.util.NotFoundStatusMessages;
-import ar.edu.itba.paw.webapp.util.PaginationBuilder;
+import ar.edu.itba.paw.webapp.util.*;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -39,9 +37,6 @@ import java.util.stream.Collectors;
 @Controller
 public class ClassroomController {
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private LectureService lectureService;
 
     @Autowired
@@ -50,8 +45,6 @@ public class ClassroomController {
     @Autowired
     private AuthFacade authFacade;
 
-    @Autowired
-    private SubjectFileService subjectFileService;
 
     @Autowired
     private EmailService emailService;
@@ -68,7 +61,7 @@ public class ClassroomController {
     @Produces(value = {"application/vnd.getaproff.api.v1+json"})
     public Response getClassroom(@PathParam("classId") final Long classId) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 ); // TODO 1 student 0 teacher modificar criterio
+        lectureService.refreshTime(classId, authFacade.getCurrentUserId().equals(lecture.getStudent().getId())? 1 : 0 );
         return Response.ok(
                 ClassroomDto.getClassroom(lecture)
         ).build();
@@ -97,7 +90,6 @@ public class ClassroomController {
         return Response.ok(new GenericEntity<ClassroomFilesDto>(ans){}).build();
     }
 
-    // TODO exception
     @POST
     @Path("/{classId}/files")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -106,8 +98,7 @@ public class ClassroomController {
         for(Long id : filesId.getIds()) {
             ans *= lectureService.shareFileInLecture(id, classId);
         }
-        //TODO: add exception here
-        if(ans == 0) return Response.status(Response.Status.BAD_REQUEST).build();
+        if(ans == 0) throw new ConflictException(ConflictStatusMessages.SUBJECT_FILE);
         return Response.ok().build();
     }
 
@@ -120,7 +111,6 @@ public class ClassroomController {
         return Response.ok().build();
     }
 
-    //TODO security on this
     @POST
     @Path("/{classId}/posts")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA })
@@ -128,10 +118,7 @@ public class ClassroomController {
                                 @FormDataParam("uploader") final Long uploader, @FormDataParam("file") InputStream uploadedInputStream,
                                 @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        if (!(lecture.getTeacher().getId().equals(uploader) || lecture.getStudent().getId().equals(uploader))) { // TODO fix this to the future handler
-            return Response.status(Response.Status.FORBIDDEN).entity("The user "+uploader+" doesn't belong to this classroom").build();
-        }
-        if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build();
+        if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build(); // TODO validate params
         Post post = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType())
                 .orElseThrow(() -> new ConflictException(ConflictStatusMessages.POST)); // TODO conflict or 50X
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + post.getPostId());
@@ -140,7 +127,6 @@ public class ClassroomController {
         return Response.created(location).build();
     }
 
-    // TODO exception for not success
     @POST
     @Path("/{classId}/{status}")
     public Response changeStatus(@PathParam("classId") final Long classId, @PathParam("status") final int status) {
@@ -148,6 +134,7 @@ public class ClassroomController {
         int updated = lectureService.setStatus(classId, status);
         emailService.sendStatusChangeMessage(lecture, status,uriInfo.getBaseUri().toString());
         LOGGER.debug("Changed status of classroom with id {} to {}", classId, status);
-        return updated == SUCCESS ? Response.status(Response.Status.ACCEPTED).build() : Response.status(Response.Status.BAD_REQUEST).build();
+        if (updated != SUCCESS) throw new BadRequestException(BadRequestStatusMessages.STATUS_CHANGE);
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 }

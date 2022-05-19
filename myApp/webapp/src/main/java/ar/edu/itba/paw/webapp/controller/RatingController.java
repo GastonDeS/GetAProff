@@ -40,6 +40,7 @@ public class RatingController {
     @Autowired
     private AuthFacade authFacade;
 
+    // TODO pasar id a query param
     @GET
     @Path("/{id}")
     @Consumes("application/vnd.getaproff.api.v1+json")
@@ -61,7 +62,6 @@ public class RatingController {
     public Response rateTeacher(@PathParam("teacherId") Long teacherId, @Valid @RequestBody NewRatingDto newRatingDto){
         final Rating rating = ratingService.addRating(teacherId, authFacade.getCurrentUserId(),
                 newRatingDto.getRate(), newRatingDto.getReview()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.RATE));
-        //TODO: cual seria el id de la review? teacherid y userid
         URI location = URI.create(uriInfo.getBaseUri() + "/reviews/");
         emailService.sendRatedMessage(teacherId, authFacade.getCurrentUserId(), rating, uriInfo.getBaseUri().toString());
         return Response.created(location).build();

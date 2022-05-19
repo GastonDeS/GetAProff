@@ -13,11 +13,13 @@ import {Error} from "../Login/Login.styles";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
 import { classStatus } from "../../assets/constants";
+import { handleAuthentication } from "../../handlers/accessHandler";
 
 const RateTeacher = () => {
     const navigate = useNavigate();
     const {register, handleSubmit, formState: {errors}} = useForm();
     const [teacherInfo, setTeacherInfo] = useState();
+    const [fetch, setFetch] = useState(false);
     const currUser = AuthService.getCurrentUser();
     const teacher = useParams();
 
@@ -30,9 +32,16 @@ const RateTeacher = () => {
     }
 
     useEffect(async () => {
-        const res = await userService.getUserInfo(teacher.id);
-        const data = handleService(res, navigate);
-        setTeacherInfo(data);
+        if (fetch) {
+            const res = await userService.getUserInfo(teacher.id);
+            const data = handleService(res, navigate);
+            setTeacherInfo(data);
+        }
+    }, [fetch]);
+
+    useEffect(() => {
+        handleAuthentication(navigate);
+        setFetch(true);
     }, [])
 
     return (

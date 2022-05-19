@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Wrapper, MainContainer, Title } from '../../GlobalStyle';
 import { Content, InputContainer } from './RequestSubject.styles';
@@ -9,6 +9,7 @@ import { subjectService } from "../../services";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/authService";
 import { handleService } from '../../handlers/serviceHandler';
+import { handleTeacherRole } from '../../handlers/accessHandler';
 
 const RequestSubject = () => {
   const [subject, setSubject] = useState();
@@ -35,6 +36,10 @@ const RequestSubject = () => {
     handleService(res, navigate);
     navigate('/users/' + AuthService.getCurrentUser().id);
   }
+
+  useEffect(() => {
+    handleTeacherRole(navigate);
+  }, [])
 
   return (
     <Wrapper>

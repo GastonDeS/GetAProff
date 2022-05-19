@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -60,7 +59,6 @@ public class SubjectFilesController {
         return Response.ok(fileDto).build();
     }
 
-    // TODO return deleted file on success ?
     @DELETE
     @Path("/{file}")
     @Produces("application/vnd.getaproff.api.v1+json")
@@ -79,10 +77,9 @@ public class SubjectFilesController {
                                            @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
-        //TODO poner la location bien
-        URI location = URI.create("/");
         final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
+        URI location = URI.create(uriInfo.getBaseUri()+"/"+subjectFile.getFileId());
         LOGGER.debug("Subject file uploaded successfully");
         return Response.created(location).build();
     }

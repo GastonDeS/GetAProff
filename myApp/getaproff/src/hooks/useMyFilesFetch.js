@@ -4,6 +4,7 @@ import { filesService, userService } from '../services'
 import AuthService from '../services/authService'
 import { useNavigate } from "react-router-dom";
 import { handleService } from "../handlers/serviceHandler";
+import { handleTeacherRole } from "../handlers/accessHandler";
 
 export const ALL_LEVELS = 4;
 export const ALL_SUBJECTS = 0;
@@ -107,6 +108,7 @@ export const useMyFilesFetch = () => {
   }, [currentUser, reload]);
 
   useEffect(() => {
+    handleTeacherRole(navigate);
     setCurrentUser(AuthService.getCurrentUser());
   }, []);
 

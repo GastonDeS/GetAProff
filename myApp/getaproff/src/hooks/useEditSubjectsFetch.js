@@ -4,6 +4,7 @@ import AuthService from "../services/authService";
 import { userService } from "../services";
 import { useNavigate } from "react-router-dom";
 import { handleService } from "../handlers/serviceHandler";
+import { handleTeacherRole } from "../handlers/accessHandler";
 
 export const useEditSubjectsFetch = () => {
   const [subject, setSubject] = useState();
@@ -76,6 +77,7 @@ export const useEditSubjectsFetch = () => {
   }, [subjectsTaught])
 
   useEffect(() => {
+    handleTeacherRole(navigate);
     setCurrentUser(AuthService.getCurrentUser());
   }, [])
 

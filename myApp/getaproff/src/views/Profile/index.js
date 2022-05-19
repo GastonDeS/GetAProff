@@ -74,9 +74,7 @@ const Profile = () => {
 
   const handleOpenFile = async (fileId) => {
     const res = await filesService.getCertificationById(fileId);
-    console.log(res)
     const data = handleService(res, navigate);
-    console.log(data)
     window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(data.file)], { type: "application/pdf" })))
   }
 
@@ -138,7 +136,7 @@ const Profile = () => {
                   <Button text={i18next.t('profile.editProfile')} fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
                   <>
-                    <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>
+                    {subjects.length > 0 && <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>}
                     <Button text={!isFaved ? i18next.t('profile.addFavourites') : i18next.t('profile.removeFavourites')} callback={handleFavoriteState} fontSize="1rem"/>
                     <Button text={i18next.t('profile.share')} callback={shareProfile} fontSize="1rem"/>
                   </>
@@ -170,7 +168,6 @@ const Profile = () => {
                     <ul>
                       {certifications.map((certification) => {
                         return (
-                          // <a href="#" onClick={() => handleOpenFile(certification.id)}>{certification.name}</a>
                         <li key={certification.id}>
                           <Request>
                             <button onClick={() => handleOpenFile(certification.id)}>{certification.name}</button>

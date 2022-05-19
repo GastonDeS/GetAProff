@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AuthService from "../../services/authService";
 import { filesService } from "../../services";
 import i18next from "i18next";
+import { handleAuthentication, handleTeacherRole } from "../../handlers/accessHandler";
 
 import {
   Wrapper,
@@ -42,7 +43,7 @@ const EditCertifications = () => {
         };
       }));
     };
-  };
+  }
 
   const handleDelete = async () => {
     const files = certifications.filter((file) => file.selected);
@@ -52,7 +53,7 @@ const EditCertifications = () => {
     }
     setCertifications([]);
     setReload(true);
-  };
+  }
 
   const handleUpload = async (event) => {
     const files = event.target.files;
@@ -66,7 +67,7 @@ const EditCertifications = () => {
     };
     setCertifications([]);
     setReload(true);
-  };
+  }
 
   const handleCheckedFile = (checked, data) => {
     setCertifications(
@@ -75,7 +76,7 @@ const EditCertifications = () => {
         return file;
       })
     );
-  };
+  }
 
   const displayDeleteButton = () => {
     return (
@@ -84,7 +85,7 @@ const EditCertifications = () => {
         <Button text={i18next.t('certifications.delete')} fontSize="1rem" color="red" callback={handleDelete}/>
       </DeleteButton>
     )
-  };
+  }
 
   const displayButtons = () => {
     return (
@@ -103,12 +104,12 @@ const EditCertifications = () => {
         <Button text={i18next.t('certifications.save')} fontSize="1rem" callback={() => navigate('/users/' + currentUser.id)}/>
       </ButtonContainer>
     );
-  };
+  }
 
   const fetchCertifications = async () => {
-    const res = await filesService.getUserCertifications();
+    const res = await filesService.getUserCertifications(currentUser.id);
     const data = handleService(res, navigate);
-    data.forEach((file) => {
+    data && data.forEach((file) => {
         setCertifications((previous) => [
           ...previous,
           {
@@ -121,8 +122,9 @@ const EditCertifications = () => {
   }
 
   useEffect(() => {
+    handleTeacherRole(navigate);
     setCurrentUser(AuthService.getCurrentUser());
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (reload && currentUser) {
