@@ -13,13 +13,14 @@ import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleService } from "../../handlers/serviceHandler";
-import { handleTeacherAndIdentity } from "../../handlers/accessHandler";
+import { handleIdentity } from "../../handlers/accessHandler";
 
 const Favorites = () => {
     const [favoriteUsersList, setFavoriteUsersList] = useState([]);
     const [page, setPage] = useState(1);
     const [pageQty, setPageQty] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [fetch, setFetch] = useState(false);
     const navigate = useNavigate();
     const uid = useParams();
 
@@ -37,15 +38,18 @@ const Favorites = () => {
     }
 
     useEffect(() => {
-        handleTeacherAndIdentity(uid.id, navigate);
+        handleIdentity(uid.id, navigate);
+        setFetch(true);
     }, [])
 
     useEffect(async () => {
-        const res = await favouritesService.getFavoriteTeachers(page);
-        if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
-        setFavoriteUsersList(handleService(res, navigate));
-        setLoading(false);
-    },[page])
+        if (fetch) {
+            const res = await favouritesService.getFavoriteTeachers(page);
+            if (!res.failure) setPageQty(parseInt(res.headers['x-total-pages']));
+            setFavoriteUsersList(handleService(res, navigate));
+            setLoading(false);
+        }
+    },[page, fetch])
 
     return (
         <Wrapper>

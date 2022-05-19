@@ -91,7 +91,8 @@
     "teacher": "Teacher",
     "level": "Level",
     "price": "Price",
-    "subject": "Subject"
+    "subject": "Subject",
+    "student": "Student"
   },
   "displayImage": {
     "choose": "Choose image"

@@ -26,17 +26,14 @@ export const useProfileFetch = (id) => {
   const navigate = useNavigate();
 
   useEffect(async () => {
-    if (isTeacher && fetch) {
-      const res = await favouritesService.checkIfTeacherIsFaved(id);
-      const data = handleService(res, navigate);
-      if(data) setIsFaved(true);
-    }
-  }, [isTeacher, fetch])
-
-  useEffect(() => {
     if (currentUser) {
       if (Number(currentUser.id) === Number(id) && !currentUser.teacher) {
         setIsTeacher(false);
+      }
+      if (Number(currentUser.id) !== Number(id) && user.teacher) {
+        const res = await favouritesService.checkIfTeacherIsFaved(id);
+        const data = handleService(res, navigate);
+        if (data) setIsFaved(true);
       }
     }
   }, [currentUser])
@@ -76,7 +73,7 @@ export const useProfileFetch = (id) => {
   useEffect(async () => {
     const auxUser = AuthService.getCurrentUser();
     if (user) {
-      if (!user.teacher && user.id !== auxUser.id) navigate(`/error?code=${status.UNAUTHORIZED}`);
+      if ((!auxUser && !user.teacher) || (auxUser && !user.teacher && user.id !== auxUser.id)) navigate(`/error?code=${status.UNAUTHORIZED}`);
       setFetch(true);
       setCurrentUser(auxUser);
     }

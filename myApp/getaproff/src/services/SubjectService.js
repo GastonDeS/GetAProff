@@ -17,12 +17,7 @@ export class SubjectService {
       let config = {
         headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
       }
-      let subject = requestData.subject
-      let message = requestData.text
-      const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}`, config, {
-        subject: subject,
-        message: message,
-      });
+      const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}`, config, requestData);
       return handleResponse(res);
     } catch (error) {return handleResponse(error.response)}
   }
