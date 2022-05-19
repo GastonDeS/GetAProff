@@ -46,10 +46,6 @@ export const useProfileFetch = (id) => {
 
   useEffect(async () => {
     if (fetch) {
-      const res = await userService.getUserImg(user.id);
-      const data = handleService(res, navigate);
-      if (data) setImage('data:image/png;base64,' + data.image);
-      
       if (isTeacher) {
         const res = await userService.getUserSubjects(user.id);
         const data = await handleService(res, navigate);
@@ -84,6 +80,9 @@ export const useProfileFetch = (id) => {
       const res = await ratingService.getUserReviews(user.id, page);
       if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
       setReviews(handleService(res, navigate));
+      const imgRes = await userService.getUserImg(user.id);
+      const imgData = handleService(imgRes, navigate);
+      if (imgData) setImage('data:image/png;base64,' + imgData.image);
     }
   }, [user, page])
 
