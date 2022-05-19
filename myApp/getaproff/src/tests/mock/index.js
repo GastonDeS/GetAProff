@@ -98,6 +98,36 @@ export const classroom1files = {
     ]
 }
 
+//Subjects
+
+export const subject1 = {
+    name: "Math",
+    subjectId: 1,
+}
+export const subject2 = {
+    name: "Math II",
+    subjectId: 2,
+}
+export const subject3 = {
+    name: "Math III",
+    subjectId: 3,
+}
+
+//Reviews
+
+export const review1 = {
+    rate: 5.0,
+    review: "Great class",
+    student: "Matt",
+    teacherId: 1
+}
+export const review2 = {
+    rate: 3.0,
+    review: "I hope he can be more polite in the next class",
+    student: "Aaron",
+    teacherId: 1
+}
+
 export const successfulResponseMock = (httpCode, headers, body={}) => {
     global.localStorage = new LocalStorageMock()
     return (global.fetch = jest.fn().mockImplementationOnce(() => {

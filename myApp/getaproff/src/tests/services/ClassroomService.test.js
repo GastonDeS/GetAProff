@@ -33,15 +33,16 @@ describe("Fetching classroom ", () => {
 })
 
 describe("Modifying classroom", () => {
-    test("It should accept the pending class", () => {
-        const response = {
-            status: 200,
+    test("It should accept the pending class", async () => {
+        const request = {
+            status: 204,
             data: {
                 status: 1
             }
         }
-        axios.post.mockImplementationOnce(() => Promise.resolve(response))
-        classroomService.acceptClass()
+        await classroomService.acceptClass(1)
+            .then(res => console.log(res))
+
     })
     }
 )

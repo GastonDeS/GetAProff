@@ -71,9 +71,9 @@ export class FilesService {
     } catch (error) {return handleResponse(error.response)}
   }
 
-  async addSubjectFiles (uid, level, subject, form) {
+  async addSubjectFiles (form) {
     try {
-      const res = await axiosService.authAxiosWrapper(axiosService.POST, `${SUBJECT_FILE_PATH}/${uid}/${subject}/${level}`, {}, form);
+      const res = await axiosService.authAxiosWrapper(axiosService.POST, `${SUBJECT_FILE_PATH}`, {}, form);
       return handleResponse(res);
     } catch (error) {return handleResponse(error.response)}
   }

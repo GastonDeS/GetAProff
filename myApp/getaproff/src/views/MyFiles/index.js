@@ -56,7 +56,9 @@ const MyFiles = () => {
     for (var i = 0; i < newFiles.length; i++) {
       const form = new FormData();
       form.append("file", newFiles[i].file);
-      const res = await filesService.addSubjectFiles(currentUser.id, level, subject.id, form);
+      form.append("level", level);
+      form.append("subject", subject.id)
+      const res = await filesService.addSubjectFiles(form);
       handleService(res, navigate);
     }
     setAllFiles([]);
