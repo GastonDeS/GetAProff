@@ -61,7 +61,10 @@ export class ClassroomService {
 
     async changeClassStatus(classId, newStatus) {
         try {
-            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/${newStatus}`, {});
+            const data = {
+                status: newStatus
+            }
+            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, {}, data);
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }

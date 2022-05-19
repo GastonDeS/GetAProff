@@ -1,4 +1,3 @@
-import MockLocalStorage, {LocalStorageMock} from "./MockLocalStorage";
 
 export const user1 = {
     description: "I\'m John",
@@ -35,6 +34,68 @@ export const user3 = {
     reviewsQty: 1,
     schedule: "Tue-Thu 10-22",
 
+}
+
+//Classroom Mocks
+
+export const classroom1 = {
+    classId: 1,
+    files: {
+        rel: 1,
+        href: "http://localhost:8080/api/classroom/1/files"
+    },
+    level: 1,
+    notifications: 0,
+    posts: {
+        rel: 1,
+        href: "http://localhost:8080/api/classroom/1/posts"
+    },
+    price: 2000,
+    status: 1,
+    student: user1,
+    subjectName: "Mate 1",
+    teacher: user2
+}
+
+export const pendingClassroom = {
+    classId: 2,
+    files: {
+        rel: 2,
+        href: "http://localhost:8080/api/classroom/2/files"
+    },
+    level: 1,
+    notifications: 0,
+    posts: {
+        rel: 2,
+        href: "http://localhost:8080/api/classroom/2/posts"
+    },
+    price: 2000,
+    status: 0,
+    student: user1,
+    subjectName: "Mate 2",
+    teacher: user2
+}
+
+export const classroom1files = {
+    notShared: [
+        {
+            rel: 1,
+            href: "http://localhost:8080/api/subject-files/17",
+            title: "file1.pdf"
+        }
+    ],
+    shared: [
+        {
+            rel: 2,
+            href: "http://localhost:8080/api/subject-files/18",
+            title: "file2.pdf"
+        },
+        {
+            rel: 3,
+            href: "http://localhost:8080/api/subject-files/12",
+            title: "file3.pdf"
+        }
+    ]
 }
 
 export const successfulResponseMock = (httpCode, headers, body={}) => {

@@ -4,10 +4,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
-import ar.edu.itba.paw.webapp.dto.ClassroomDto;
-import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
-import ar.edu.itba.paw.webapp.dto.IdsDto;
-import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
@@ -128,12 +125,12 @@ public class ClassroomController {
     }
 
     @POST
-    @Path("/{classId}/{status}")
-    public Response changeStatus(@PathParam("classId") final Long classId, @PathParam("status") final int status) {
+    @Path("/{classId}/status")
+    public Response changeStatus(@PathParam("classId") final Long classId, NewStatusDto newStatusDto) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        int updated = lectureService.setStatus(classId, status);
-        emailService.sendStatusChangeMessage(lecture, status,uriInfo.getBaseUri().toString());
-        LOGGER.debug("Changed status of classroom with id {} to {}", classId, status);
+        int updated = lectureService.setStatus(classId, newStatusDto.getStatus());
+        emailService.sendStatusChangeMessage(lecture, newStatusDto.getStatus(), uriInfo.getBaseUri().toString());
+        LOGGER.debug("Changed status of classroom with id {} to {}", classId, newStatusDto.getStatus());
         if (updated != SUCCESS) throw new BadRequestException(BadRequestStatusMessages.STATUS_CHANGE);
         return Response.status(Response.Status.ACCEPTED).build();
     }
