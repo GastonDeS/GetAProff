@@ -59,7 +59,7 @@ const RequestSubject = () => {
               messageError && <p>{i18next.t('form.requiredField')}</p>
             }
           </InputContainer>
-          <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem' callback={submitRequest}/>
+          <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem' callback={()=>submitRequest()}/>
         </Content>
       </MainContainer>
     </Wrapper>
