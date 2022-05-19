@@ -48,18 +48,18 @@ const RequestSubject = () => {
         <Content>
           <Title>{i18next.t('requestSubject.title')}</Title>
           <InputContainer>
-            <h3>{i18next.t('requestSubject.insertSubject')}</h3>
+            <h3>{i18next.t('requestSubject.insertSubject')} *</h3>
             <input placeholder={i18next.t('requestSubject.insertSubjectPlaceholder')} onChange={(e) => setSubject(e.target.value)}/>
             {
               subjectError && <p>{i18next.t('form.requiredField')}</p>
             }
-            <h3>{i18next.t('requestSubject.insertMessage')}</h3>
+            <h3>{i18next.t('requestSubject.insertMessage')} *</h3>
             <textarea placeholder={i18next.t('requestSubject.insertMessagePlaceholder')} onChange={(e) => setMessage(e.target.value)}/>
             {
               messageError && <p>{i18next.t('form.requiredField')}</p>
             }
           </InputContainer>
-          <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem' callback={submitRequest}/>
+          <Button text={i18next.t('requestSubject.sendRequest')} fontSize='1rem' callback={()=>submitRequest()}/>
         </Content>
       </MainContainer>
     </Wrapper>

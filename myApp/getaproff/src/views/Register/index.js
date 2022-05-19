@@ -113,8 +113,10 @@ const Register = () => {
               </div>
               <InputWrapper>
               {invalidCredentials && <Error>{i18next.t('register.invalidCredentials')}</Error>}
+                  <p>{i18next.t('form.name')} *</p>
                 <Input register={register} name="NameInput" options={{required: {value: true, message: i18next.t('form.requiredField')}}} type="text" placeholder={i18next.t('form.namePlaceholder')} />
                 {errors.NameInput && <Error>{errors.NameInput.message}</Error>}
+                  <p>{i18next.t('form.email')} *</p>
                 <Input register={register} name="MailInput"
                        options={{
                          required: {
@@ -125,8 +127,9 @@ const Register = () => {
                            value: EMAIL_PATTERN,
                            message: i18next.t('form.invalidFormat')
                          }
-                       }} type="text" placeholder={i18next.t('form.mailPlaceholder')} />
+                       }} type="text" placeholder={i18next.t('form.emailPlaceholder')} />
                 {errors.MailInput && <Error>{errors.MailInput.message}</Error>}
+                  <p>{i18next.t('form.password')} *</p>
                 <Input register={register} name="PassInput"
                        options={{
                          required: {
@@ -139,6 +142,7 @@ const Register = () => {
                          }
                        }} type="password" placeholder={i18next.t('form.passwordPlaceholder')}  />
                 {errors.PassInput && <Error>{errors.PassInput.message}</Error>}
+                  <p>{i18next.t('form.confirmPassword')} *</p>
                 <Input register={register} name="ConfirmPassInput"
                        options={{
                          required: {
@@ -149,6 +153,7 @@ const Register = () => {
                 {errors.ConfirmPassInput && <Error>{errors.ConfirmPassInput.message}</Error>}
                 {index === 0 ? (
                   <>
+                      <p>{i18next.t('form.description')} *</p>
                     <Textarea register={register} options={{
                          required: {
                            value: true,
@@ -156,6 +161,7 @@ const Register = () => {
                          }
                        }} name="DescriptionInput" placeholder={i18next.t('form.descriptionPlaceholder')} />
                     {errors.DescriptionInput && <Error>{errors.DescriptionInput.message}</Error>}
+                      <p>{i18next.t('form.schedule')} *</p>
                     <Textarea register={register} options={{
                          required: {
                            value: true,
