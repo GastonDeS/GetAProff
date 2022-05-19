@@ -96,7 +96,10 @@ const Profile = () => {
     });
   }
   const requestClass = () => {
-    navigate(`/users/${id}/class-request`)
+    if (currentUser) {
+      navigate(`/users/${id}/class-request`);
+    }
+    navigate(`/users/login`);
   }
 
   return (
@@ -137,7 +140,7 @@ const Profile = () => {
                 ) : (
                   <>
                     {subjects.length > 0 && <Button text={i18next.t('profile.request')} fontSize="1rem" callback={() => requestClass()}/>}
-                    <Button text={!isFaved ? i18next.t('profile.addFavourites') : i18next.t('profile.removeFavourites')} callback={handleFavoriteState} fontSize="1rem"/>
+                    {currentUser && <Button text={!isFaved ? i18next.t('profile.addFavourites') : i18next.t('profile.removeFavourites')} callback={handleFavoriteState} fontSize="1rem"/>}
                     <Button text={i18next.t('profile.share')} callback={() => shareProfile()} fontSize="1rem"/>
                   </>
                 )}

@@ -69,10 +69,10 @@ public class UserDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements Us
 
     @Override
     public Boolean isFaved(Long teacherId, Long studentId) {
-        final User student = entityManager.find(User.class, studentId);
-        final User teacher = entityManager.find(User.class, teacherId);
-        if (student != null) {
-            return student.getFavourites().contains(teacher);
+        final Optional<User> student = Optional.ofNullable(entityManager.find(User.class, studentId));
+        final Optional<User> teacher = Optional.ofNullable(entityManager.find(User.class, teacherId));
+        if (student.isPresent() && teacher.isPresent()) {
+            return student.get().getFavourites().contains(teacher.get());
         }
         return false;
     }
