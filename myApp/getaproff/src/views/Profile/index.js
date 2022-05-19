@@ -91,7 +91,12 @@ const Profile = () => {
   const [show, setShow] = useState(false);
 
   const shareProfile = () => {
-    console.log('hola');
+    const el = document.createElement('textarea');
+    el.value = window.location.href;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
     navigator.clipboard.writeText(window.location.href).then(r => {
       setShow(true);
     });
