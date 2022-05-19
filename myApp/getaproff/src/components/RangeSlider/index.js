@@ -15,7 +15,7 @@ const RangeSlider = ({register, value, minValue, maxValue,name, ...rest}) => {
     return (
         <div style={{display: 'flex', flexDirection: 'column'}}>
         <RangeContainer>
-            <RangeTagContainer ref={rangeV} on/>
+            <RangeTagContainer ref={rangeV}/>
             <input type="range" id="priceRange" min="1" max={maxValue}
                    {...register(name, {
                        onChange: handleInput,
