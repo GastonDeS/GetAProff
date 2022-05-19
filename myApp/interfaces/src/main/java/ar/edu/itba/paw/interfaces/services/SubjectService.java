@@ -9,7 +9,7 @@ public interface SubjectService {
 
     Optional<Subject> findById(Long id);
 
-    Subject create(String subject); // TODO unused remove
+    Subject create(String subject);
 
     List<Subject> list();
 
