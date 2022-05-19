@@ -91,15 +91,13 @@ const Profile = () => {
   const [show, setShow] = useState(false);
 
   const shareProfile = () => {
+    console.log('hola');
     navigator.clipboard.writeText(window.location.href).then(r => {
       setShow(true);
     });
   }
   const requestClass = () => {
-    if (currentUser) {
-      navigate(`/users/${id}/class-request`);
-    }
-    navigate(`/users/login`);
+    navigate(`/users/${id}/class-request`)
   }
 
   return (
@@ -134,7 +132,7 @@ const Profile = () => {
                   isTeacher ? 
                   <>
                     <Dropdown brand={i18next.t('profile.edit.edit')} options={editOptions} size="1rem" color="white" background="var(--secondary)" radius="2rem" padding="0.45em 1.3em"/>
-                    <Button text={i18next.t('profile.share')} fontSize="1rem"/>
+                    <Button text={i18next.t('profile.share')} fontSize="1rem" callback={() =>shareProfile()}/>
                   </> : 
                   <Button text={i18next.t('profile.editProfile')} fontSize="1rem" callback={() => navigate('/edit-profile')}/>
                 ) : (
