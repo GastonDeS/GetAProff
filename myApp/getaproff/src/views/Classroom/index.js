@@ -382,7 +382,7 @@ const Classroom = () => {
                                                             }}>
                                                     </Button>
                                                 </form>
-                                                    : <h1>{i18next.t('classroom.files.empty')}</h1>
+                                                    : <h3>{i18next.t('classroom.files.empty')}</h3>
                                                 }
                                             </SharedFilesContainer>
                                     </ClassContentSide>

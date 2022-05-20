@@ -79,18 +79,16 @@ const EditProfile = () => {
     }
 
     if (currentUser.teacher || change) {
-      formData = {...formData, 
+      formData = {
+        ...formData,
         "id": currentUser.id,
         "switchRole": change ? true : false,
         "description": data.description,
         "schedule": data.schedule
       }
-      const res = await userService.editProfile(currentUser.id, 'teacher', formData);
-      const userData = handleService(res, navigate);
-      if (change) AuthService.toTeacher(userData);
+      await userService.editProfile(currentUser.id, 'teacher', formData);
     } else {
-      const res = await userService.editProfile(currentUser.id, 'student', formData);
-      handleService(res, navigate);
+      await userService.editProfile(currentUser.id, 'student', formData);
     }
     navigate("/users/" + currentUser.id);
   }
