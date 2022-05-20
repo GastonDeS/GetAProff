@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
 import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
-import ar.edu.itba.paw.webapp.dto.IdsDto;
+import ar.edu.itba.paw.webapp.requestDto.IdsDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
