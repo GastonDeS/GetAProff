@@ -340,7 +340,7 @@ const Classroom = () => {
                                                                 }}>
                                                         </Button>
                                                     </form>
-                                                        : <h3>{i18next.t(classroom.files.noFiles)}</h3>
+                                                        : <h3>{i18next.t('classroom.files.noFiles')}</h3>
                                                     }
                                                 </SharedFilesContainer>
                                     </ClassContentSide>
@@ -382,7 +382,7 @@ const Classroom = () => {
                                                             }}>
                                                     </Button>
                                                 </form>
-                                                    : <h1>{i18next.t(classroom.files.empty)}</h1>
+                                                    : <h1>{i18next.t('classroom.files.empty')}</h1>
                                                 }
                                             </SharedFilesContainer>
                                     </ClassContentSide>
