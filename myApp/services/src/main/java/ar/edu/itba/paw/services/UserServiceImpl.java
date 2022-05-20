@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
         return modified;
     }
 
+    @Transactional
     @Override
     public boolean isFaved(Long teacherId, Long studentId) {
         return userDao.isFaved(teacherId, studentId);
