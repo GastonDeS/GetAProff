@@ -101,7 +101,7 @@ public class UsersController {
 
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })
-    public Response findBySubject(@QueryParam("search") String search,
+    public Response findBySubject(@QueryParam("search") @DefaultValue("") String search,
                                   @QueryParam("maxPrice") @DefaultValue(MAX_PRICE) Integer price,
                                   @QueryParam("level") @DefaultValue("0") Integer level,
                                   @QueryParam("rating") @DefaultValue("0") Integer rating,
