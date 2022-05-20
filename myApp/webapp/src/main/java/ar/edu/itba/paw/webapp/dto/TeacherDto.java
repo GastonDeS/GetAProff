@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.TeacherInfo;
-import ar.edu.itba.paw.webapp.controller.UsersController;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
+
 
 public class TeacherDto {
 

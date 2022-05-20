@@ -104,10 +104,10 @@ const MyClasses = () => {
     let classes = [];
     let pages = 0;
     const resTeacher = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDT, page);
-    if (!resTeacher.failure) pages += parseInt(resTeacher.headers['x-total-pages'])
+    if (!resTeacher.failure) pages = parseInt(resTeacher.headers['x-total-pages'])
     const dataTeacher = handleService(resTeacher, navigate);
     const resStudent = await classesService.getUserClasses(asTeacher, classStatus.CANCELLEDS, page);
-    if (!resStudent.failure) pages += parseInt(resStudent.headers['x-total-pages'])
+    if (!resStudent.failure) pages = parseInt(resStudent.headers['x-total-pages'])
     const dataStudent = handleService(resStudent, navigate);
     setPageQty(pages);
     setClasses(classes.concat(dataTeacher).concat(dataStudent));

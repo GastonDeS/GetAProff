@@ -407,11 +407,11 @@ const Classroom = () => {
                                                 })}
                                             </Ul>
                                                 :
-                                                <span style={{
+                                                <h3 style={{
                                                     alignSelf: "center",
                                                     margin: "8px 0 4px 0",
                                                     fontSize: "20px"
-                                                }}>{i18next.t('classroom.files.noSharedFiles')}</span>
+                                                }}>{i18next.t('classroom.files.noSharedFiles')}</h3>
                                             }
                                         </SharedFilesContainer>
                                 </ClassContentSide>

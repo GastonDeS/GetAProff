@@ -48,6 +48,7 @@ const Tutors = () => {
   const rating = [0, 1, 2, 3, 4];
 
   const resetForm = () => {
+    setPage(1);
     reset(
         {
           search: getValues("search"),
@@ -111,7 +112,6 @@ const Tutors = () => {
                   name={"order"}
                   register={register}
                   options={orders}
-                  type="Choose an order"
               />
             </FilterSection>
             <FilterSection>
