@@ -17,23 +17,6 @@ const login = async (mail, password) => {
     console.log(err);
   }
 };
-
-const refreshAuthedUser = async () => {
-  try {
-    let config = {}
-    config['headers'] =  {Authorization: axiosService.getBearerToken()}
-    const response = await axiosService.axiosWrapper(axiosService.GET, `${API_URL}`, config);
-    const token = response.headers.authorization.split(" ")[1];
-
-    if (token) localStorage.setItem('token', token);
-    if (response.data) localStorage.setItem('user', JSON.stringify(response.data));
-
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-
 const toTeacher = (user) => {
   localStorage.setItem('user', JSON.stringify(user));
 }
@@ -51,6 +34,5 @@ export default {
   login,
   getCurrentUser,
   logout,
-  toTeacher,
-  refreshAuthedUser
+  toTeacher
 };
