@@ -68,8 +68,7 @@ public class SubjectFilesController {
         if (success == 0) throw new NoContentException(NoContentStatusMessages.SUBJECT_FILE);
         return Response.ok().build();
     }
-
-    //TODO: Cambiar este endpoint
+    
     @POST
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
     @Produces("application/vnd.getaproff.api.v1+json")

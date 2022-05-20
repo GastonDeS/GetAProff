@@ -29,7 +29,6 @@ export const StyledInput = styled.input`
   }
 
   &::placeholder {
-    /* color: black; */
     font-weight: 100;
     font-size: var(--fontSmall);
   }

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from "styled-components";
-import i18next from "i18next";
 
 
 const Select = styled.select`

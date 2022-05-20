@@ -4,12 +4,10 @@ import {APPLICATION_V1_JSON_TYPE} from "../assets/constants";
 
 export class AxiosService {
 
-    //Constantes para el wrapper
     GET = 0;
     PUT = 1
     POST = 2
     DELETE = 3
-
 
     async authAxiosWrapper(action, path, config, data = {}) {
         if(!config.hasOwnProperty('headers'))
