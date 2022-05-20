@@ -102,6 +102,7 @@ public class TeachesServiceImpl implements TeachesService {
         return availableSubjects;
     }
 
+    @Transactional
     @Override
     public Integer getMostExpensiveUserFee(String searchedSubject) {
         return teachesDao.getMostExpensiveUserFee(searchedSubject);
