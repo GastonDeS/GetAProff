@@ -28,6 +28,8 @@ const Tutors = () => {
   const [isFormReseted, setIsFormReseted] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [tutors, setTutors] = useState([]);
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [mostExpensivePrice, setMostExpensivePrice] = useState();
 
   const navigate = useNavigate();
   const search = useLocation().search;
@@ -51,7 +53,7 @@ const Tutors = () => {
           search: getValues("search"),
           rating: 0,
           level: 0,
-          maxPrice: getValues('maxPrice'),
+          maxPrice: mostExpensivePrice,
           order: 1
         }
     );
@@ -60,7 +62,11 @@ const Tutors = () => {
 
   useEffect(async () => {
     const resExpensive  = await userService.getMostExpensiveUserTeaching(getValues("search"));
-    reset({maxPrice: resExpensive.data.price});
+    if(firstLoad) {
+      setMostExpensivePrice(resExpensive.data.price);
+      reset({maxPrice: resExpensive.data.price});
+      setFirstLoad(false)
+    }
     const res = await userService.getUsers(getValues(), page);
     if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
     setTutors(handleService(res, navigate));
@@ -114,7 +120,7 @@ const Tutors = () => {
                   register={register}
                   name="maxPrice"
                   minValue={1}
-                  maxValue={getValues("maxPrice")}
+                  maxValue={mostExpensivePrice}
               />
             </FilterSection>
             <FilterSection>

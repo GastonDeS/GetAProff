@@ -26,7 +26,7 @@ import Error from "./views/Error";
 
 const App = () => {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router basename='/paw-2021b-6/'>
       <GlobalStyle/>
       <Routes>
         <Route path='/' element={ <Home/> }/> 

@@ -26,12 +26,10 @@ import {StyledPagination} from "../Tutors/Tutors.styles";
 import {PageItem} from "react-bootstrap";
 import i18next from "i18next";
 import { handleService } from "../../handlers/serviceHandler";
-import {classStatus, status} from "../../assets/constants";
 import {handleAuthentication, handleClassroomStatus} from "../../handlers/accessHandler";
 import authService from "../../services/authService";
 
 const Classroom = () => {
-    const files = 1;
     const [classInfo, setClassInfo] = useState();
     const [classStatus, setClassStatus] = useState(-1);
     const [classPosts, setClassPosts] = useState();
@@ -304,16 +302,9 @@ const Classroom = () => {
                                 <>
                                     <ClassContentSide>
                                         <h2>{i18next.t('classroom.files.myFiles')}</h2>
-                                        {(files === 0) ?
-                                            <span style={{
-                                                alignSelf: "center",
-                                                margin: "8px 0 4px 0",
-                                                fontSize: "20px"
-                                            }}>{i18next.t('classroom.files.noFiles')}</span>
-                                            :
                                                 <SharedFilesContainer>
                                                     <h6 style={{margin: "2px 0 2px 0"}}>{i18next.t('classroom.files.choose')}</h6>
-                                                    {notSharedClassFiles &&
+                                                    {notSharedClassFiles && notSharedClassFiles.length !== 0 ?
                                                     <form onSubmit={shareFilesHandleSubmit(shareFiles)}>
                                                         <Ul>
                                                             {notSharedClassFiles.map((file, index) => {
@@ -349,21 +340,14 @@ const Classroom = () => {
                                                                 }}>
                                                         </Button>
                                                     </form>
+                                                        : <h3>{i18next.t(classroom.files.noFiles)}</h3>
                                                     }
                                                 </SharedFilesContainer>
-                                        }
                                     </ClassContentSide>
                                     <ClassContentSide>
                                         <h2>{i18next.t('classroom.files.shared')}</h2>
-                                        {(files === 0) ?
-                                            <span style={{
-                                                alignSelf: "center",
-                                                margin: "8px 0 4px 0",
-                                                fontSize: "20px"
-                                            }}>{i18next.t('classroom.files.empty')}</span>
-                                            :
                                             <SharedFilesContainer>
-                                                {sharedClassFiles &&
+                                                {sharedClassFiles && sharedClassFiles.length !== 0 ?
                                                 <form onSubmit={stopSharingFilesHandleSubmit(stopSharingFiles)}>
                                                     <Ul>
                                                         {sharedClassFiles.map((file, index) => {
@@ -398,9 +382,9 @@ const Classroom = () => {
                                                             }}>
                                                     </Button>
                                                 </form>
+                                                    : <h1>{i18next.t(classroom.files.empty)}</h1>
                                                 }
                                             </SharedFilesContainer>
-                                        }
                                     </ClassContentSide>
                                 </>
                                 :

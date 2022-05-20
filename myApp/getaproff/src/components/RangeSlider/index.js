@@ -19,7 +19,6 @@ const RangeSlider = ({register, value, minValue, maxValue,name, ...rest}) => {
             <input type="range" id="priceRange" min="1" max={maxValue}
                    {...register(name, {
                        onChange: handleInput,
-                       onBlur: handleInput
                    })}
                    />
         </RangeContainer>
