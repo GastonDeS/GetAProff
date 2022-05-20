@@ -34,12 +34,6 @@ public class SubjectFileServiceImpl implements SubjectFileService {
         return subjectFileDao.deleteSubjectFile(fileId);
     }
 
-    @Transactional
-    @Override
-    public List<SubjectFile> filterUserSubjectFilesBySubjectAndLevel(Long userId, Long subjectId, Integer level) {
-        return subjectFileDao.filterUserSubjectFilesBySubjectAndLevel(userId,subjectId,level);
-    }
-
     @Override
     public Optional<SubjectFile> getSubjectFileById(Long fileId) {
         return Optional.ofNullable(subjectFileDao.getSubjectFileById(fileId));

@@ -15,8 +15,6 @@ public class ClassroomDto {
     private StudentDto student;
     private int level, price, status, notifications;
 
-
-
     public static ClassroomDto getClassroom(Lecture lecture) {
         ClassroomDto classroomDto = new ClassroomDto();
         classroomDto.student = StudentDto.fromUser(lecture.getStudent());
@@ -28,6 +26,8 @@ public class ClassroomDto {
         classroomDto.level = lecture.getLevel();
         classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").withRel(lecture.getClassId().toString());
         classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").withRel(lecture.getClassId().toString());
+        if (lecture.getNotifications() != null)
+            classroomDto.notifications = lecture.getNotifications();
         return classroomDto;
     }
 

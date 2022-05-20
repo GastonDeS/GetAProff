@@ -18,11 +18,6 @@ public class RatingServiceImpl implements RatingService {
     @Autowired
     private RatingDao ratingDao;
 
-    @Override
-    public Pair<Float, Integer> getRatingById(Long teacherId) {
-        return ratingDao.getRatingById(teacherId);
-    }
-
     @Transactional
     @Override
     public Optional<Rating> addRating(Long teacherId, Long studentId, float rate, String review) {

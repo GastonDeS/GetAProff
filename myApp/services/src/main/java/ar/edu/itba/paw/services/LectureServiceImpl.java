@@ -95,15 +95,6 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public int changeFileVisibility(Long subjectFileId, Long lectureId) {
-        if (lectureDao.getSharedFilesByTeacher(lectureId).stream().map(e -> e.getFileId().equals(subjectFileId)).count() == 1) {
-            return lectureDao.stopSharingFileInLecture(subjectFileId,lectureId);
-        }
-        return lectureDao.addSharedFileToLecture(subjectFileId, lectureId);
-    }
-
-    @Transactional
-    @Override
     public int stopSharingFileInLecture(Long subjectFileId, Long lecture){
         return lectureDao.stopSharingFileInLecture(subjectFileId, lecture);
     }
