@@ -12,6 +12,8 @@ import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.requestDto.IdsDto;
+import ar.edu.itba.paw.webapp.requestDto.NewStatusDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.*;
 import org.apache.commons.io.IOUtils;
@@ -41,6 +43,9 @@ public class ClassroomController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AuthFacade authFacade;
@@ -129,7 +134,7 @@ public class ClassroomController {
     @POST
     @Path("/{classId}/status")
     @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response changeStatus(@PathParam("classId") final Long classId, NewStatusDto newStatusDto) {
+    public Response changeStatus(@PathParam("classId") final Long classId, @RequestBody NewStatusDto newStatusDto) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         int updated = lectureService.setStatus(classId, newStatusDto.getStatus());
         emailService.sendStatusChangeMessage(lecture, newStatusDto.getStatus(), uriInfo.getBaseUri().toString());
