@@ -162,8 +162,10 @@ public class UsersController {
             return Response.status(Response.Status.ACCEPTED).build();
         }
         userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
-        if (!(desc == 1 && sch == 1 && name == 1 )) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
-        return Response.accepted().build();
+        userService.setTeacherAuthorityToUser();
+        User user = userService.findById(uid).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
+        if (!(desc == 1 && sch == 1 && name == 1)) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
+        return Response.ok(AuthDto.fromUser(user)).build();
     }
 
     @POST
