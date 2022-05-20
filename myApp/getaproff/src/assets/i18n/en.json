@@ -70,7 +70,8 @@
     "requested": "Requested",
     "offered": "Offered",
     "filter": "Filter by status:",
-    "noOffered": "You have no classes"
+    "noOffered": "You have no classes",
+    "noRequested": "You have no classes"
   },
   "classCard": {
     "status": {

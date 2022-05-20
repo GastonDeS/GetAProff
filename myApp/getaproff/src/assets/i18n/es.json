@@ -70,7 +70,8 @@
     "requested": "Solicitadas",
     "offered": "Ofrecidas",
     "filter": "Filtrar por estado:",
-    "noOffered": "Parece que aún no tienes clases"
+    "noOffered": "Parece que aún no tienes clases",
+    "noRequested": "Parece que aún no tienes clases"
   },
   "classCard": {
     "status": {
