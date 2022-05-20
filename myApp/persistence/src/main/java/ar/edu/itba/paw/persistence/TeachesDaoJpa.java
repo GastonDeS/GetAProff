@@ -8,13 +8,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class TeachesDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements TeachesDao {
-
-    private static final Integer PAGE_SIZE = 9;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -71,7 +70,7 @@ public class TeachesDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements
         final User teacher = entityManager.getReference(User.class, teacherId);
         final TypedQuery<Teaches> query = entityManager.createQuery("from Teaches t where t.teacher = :teacher", Teaches.class);
         query.setParameter("teacher", teacher);
-        return query.getResultList();
+        return query.getResultList().isEmpty() ? new ArrayList<>() : query.getResultList();
     }
 
     @Override

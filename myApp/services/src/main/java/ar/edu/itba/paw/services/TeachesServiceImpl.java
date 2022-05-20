@@ -67,6 +67,7 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.getMostRequested();
     }
 
+    @Transactional
     @Override
     public Map<Subject, List<Integer>> getSubjectAndLevelsTaughtByUser(Long userId) {
         Map<Subject, List<Integer>> subjectsAndLevels = new HashMap<>();
@@ -83,6 +84,7 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.getTeacherInfo(teacherId);
     }
 
+    @Transactional
     @Override
     public Map<Subject, List<Integer>> getSubjectAndLevelsAvailableForUser(Long userId) {
         Map<Subject, List<Integer>> availableSubjects = new HashMap<>();
@@ -108,6 +110,7 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.getMostExpensiveUserFee(searchedSubject);
     }
 
+    @Transactional
     @Override
     public List<Teaches> get(Long teacherId) {
         return teachesDao.get(teacherId);
