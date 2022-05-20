@@ -71,29 +71,28 @@ const Classroom = () => {
     const handleOpenFile = async (postId) => {
         const res = await filesService.getPostFile(postId);
         const data = handleService(res, navigate);
-        console.log(data)
         window.open(URL.createObjectURL(new Blob([filesService.base64ToArrayBuffer(data.file)], { type: "application/pdf" })))
     }
 
     const acceptClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, 1);
+        const res = await classroomService.acceptClass(id.id);
         handleService(res, navigate);
         setClassStatus(1);
     }
 
     const finishClass = async () => {
-        const res = await classroomService.changeClassStatus(id.id, 2);
+        const res = await classroomService.finishClass(id.id);
         handleService(res, navigate);
         setClassStatus(2);
     }
     const declineClass = async () => {
-        await classroomService.changeClassStatus(id.id, 5);
+        await classroomService.declineClass(id.id);
         setClassStatus(5);
         navigateToMyClasses();
     }
 
     const cancelClassS = async () => {
-        const res = await classroomService.changeClassStatus(id.id, 3);
+        const res = await classroomService.cancelClassS(id.id);
         handleService(res, navigate);
         setClassStatus(3);
         navigateToMyClasses();

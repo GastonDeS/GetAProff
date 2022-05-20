@@ -82,7 +82,7 @@ describe("Modifying classroom", () => {
     test("It should share a subject file", async () => {
         const response = { status: 200}
         axios.post.mockImplementationOnce(() => Promise.resolve(response));
-        classroomService.startSharingFile(subjectFile1.id, classroom1.classId)
+        classroomService.startSharingFile([subjectFile1.id], classroom1.classId)
             .then(response => {
                 expect(response.failure).toBeFalsy();
                 expect(response.status).toBe(200);
