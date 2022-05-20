@@ -59,17 +59,12 @@ const Tutors = () => {
   }
 
   useEffect(async () => {
+    const resExpensive  = await userService.getMostExpensiveUserTeaching(getValues("search"));
+    reset({maxPrice: resExpensive.data.price});
     const res = await userService.getUsers(getValues(), page);
     if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
     setTutors(handleService(res, navigate));
   }, [page, formSubmitted, isFormReseted])
-
-  useEffect(async () => {
-    const res  = await userService.getMostExpensiveUserTeaching(getValues("search"));
-    console.log(res);
-    setValue('maxPrice', res.data.price);
-  }, [isFormReseted, formSubmitted])
-
 
   const onSubmit = () => {
     setFormSubmitted(!formSubmitted);

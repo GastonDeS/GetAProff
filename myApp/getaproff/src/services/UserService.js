@@ -121,15 +121,14 @@ export class UserService {
     async getUsers(queryParams, page) {
         try {
             let config = {};
-            config['params'] = {
-                maxPrice: queryParams.maxPrice ?? 10000,
-                level: parseInt(queryParams.level ?? '0') ,
-                rating: parseInt(queryParams.rating?? '0') ,
-                search: queryParams.search,
-                order: parseInt(queryParams.order ?? '1') ,
-                page: page,
-                pageSize: 9
-            };
+            config.params = {}
+            config.params.maxPrice = parseInt(queryParams.maxPrice ?? 1000000);
+            config.params.level = parseInt(queryParams.level ?? '0') ;
+            config.params.rating = parseInt(queryParams.rating?? '0') ;
+            config.params.search = queryParams.search;
+            config.params.order = parseInt(queryParams.order ?? '1') ;
+            config.params.page = page;
+            config.params.pageSize = 9;
 
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}`, config)
             return handleResponse(res);
