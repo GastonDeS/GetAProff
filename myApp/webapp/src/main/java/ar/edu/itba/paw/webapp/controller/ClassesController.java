@@ -72,9 +72,8 @@ public class ClassesController {
     @Consumes("application/vnd.getaproff.api.v1+json")
     public Response requestClass(@Valid @RequestBody ClassRequestDto classRequestDto) {
         Lecture newLecture = lectureService.create(authFacade.getCurrentUserId(), classRequestDto.getTeacherId(), classRequestDto.getLevel(),
-                classRequestDto.getSubjectId(), classRequestDto.getPrice()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.LECTURE_CREATE));
+                classRequestDto.getSubjectId(), classRequestDto.getPrice(), uriInfo.getBaseUri().toString()).orElseThrow(() -> new ConflictException(ConflictStatusMessages.LECTURE_CREATE));
         LOGGER.debug("requested class of subject with id {} from teacher with id{}, level: {}, price: {}", classRequestDto.getSubjectId(),classRequestDto.getTeacherId(), classRequestDto.getLevel(), classRequestDto.getPrice());
-        emailService.sendNewClassMessage(newLecture.getTeacher().getMail(), newLecture.getStudent().getName(), newLecture.getSubject().getName(), newLecture.getClassId(), uriInfo.getBaseUri().toString());
         URI location = URI.create(uriInfo.getBaseUri() + "classroom/" + newLecture.getClassId());
         return Response.created(location).build();
     }

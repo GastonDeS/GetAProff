@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.LectureDao;
 import ar.edu.itba.paw.interfaces.daos.SubjectFileDao;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.models.Lecture;
 import ar.edu.itba.paw.models.Page;
@@ -27,6 +28,9 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private SubjectFileDao subjectFileDao;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public Optional<Lecture> findById(Long id) {
@@ -68,8 +72,13 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price) {
-        return Optional.ofNullable(lectureDao.create(studentId, teacherId, level, subjectId, price));
+    public Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price, String uri) {
+        Optional<Lecture> maybeLecture = Optional.ofNullable(lectureDao.create(studentId, teacherId, level, subjectId, price));
+        if (!maybeLecture.isPresent()) return Optional.empty();
+        emailService.sendNewClassMessage(maybeLecture.get().getTeacher().getMail(),
+                maybeLecture.get().getStudent().getName(), maybeLecture.get().getSubject().getName(),
+                maybeLecture.get().getClassId(), uri);
+        return maybeLecture;
     }
 
     @Transactional

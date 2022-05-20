@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.MimeMessage;
 import java.util.NoSuchElementException;
@@ -54,6 +55,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Transactional
     @Override
     @Async
     public void sendNewClassMessage(String to, String userFrom, String subject, long classId, String localAddr) {
@@ -65,6 +67,7 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
+    @Transactional
     @Override
     @Async
     public void sendStatusChangeMessage(Lecture myLecture, int status,String localAddr) {
@@ -120,6 +123,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Transactional
     @Override
     @Async
     public void sendRatedMessage(long teacherId, long studentId, Rating rating, String localAddr) {
@@ -136,6 +140,7 @@ public class EmailServiceImpl implements EmailService {
         sendSimpleMessage(teacher.get().getMail(),mailSubject, text);
     }
 
+    @Transactional
     @Override
     @Async
     public void sendSubjectRequest(Long uid, String subject, String message) {
@@ -144,6 +149,7 @@ public class EmailServiceImpl implements EmailService {
         sendSimpleMessage("getaproff@gmail.com", mailSubject,text);
     }
 
+    @Transactional
     @Override
     @Async
     public void sendNewPostMessage(long posterId, Lecture lecture, String localAddr) {
