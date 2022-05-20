@@ -1,7 +1,6 @@
 import {axiosService} from "./index";
 import { paths, APPLICATION_V1_JSON_TYPE } from "../assets/constants";
 import { handleResponse } from "../handlers/responseHandler";
-import authService from "./authService";
 
 const PATH = paths.USERS
 
@@ -113,8 +112,8 @@ export class UserService {
             let config = {
                 headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
             }
-            await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/${role}`, config, form);
-            await authService.refreshAuthedUser();
+            const res =  await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/${role}`, config, form);
+            return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }
 
