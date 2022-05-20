@@ -17,7 +17,7 @@ public interface LectureService {
 
 //    List<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status);
 
-    Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price);
+    Optional<Lecture> create(Long studentId, Long teacherId, int level, Long subjectId, int price, String uri);
 
     int setStatus(Long classId, int status);
 
