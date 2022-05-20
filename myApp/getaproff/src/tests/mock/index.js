@@ -1,3 +1,5 @@
+import {LocalStorageMock} from "./MockLocalStorage";
+import axios from "axios";
 
 export const user1 = {
     description: "I\'m John",
@@ -34,6 +36,46 @@ export const user3 = {
     reviewsQty: 1,
     schedule: "Tue-Thu 10-22",
 
+}
+
+//Classes mocks
+
+export const class1 = {
+    classId: 2,
+    files: {
+        rel: 2,
+        href: "http://localhost:8080/api/post/2/files"
+    },
+    level: 0,
+    notifications: 0,
+    posts: {
+        rel: 2,
+        href: "http://localhost:8080/api/classroom/73/posts"
+    },
+    price: 1000,
+    status: 1,
+    student: user1,
+    subjectName: "Math I",
+    teacher: user3
+}
+
+export const class2 = {
+    classId: 3,
+    files: {
+        rel: 3,
+        href: "http://localhost:8080/api/post/3/files"
+    },
+    level: 1,
+    notifications: 0,
+    posts: {
+        rel: 3,
+        href: "http://localhost:8080/api/classroom/3/posts"
+    },
+    price: 1000,
+    status: 1,
+    student: user2,
+    subjectName: "Math I",
+    teacher: user3
 }
 
 //Classroom Mocks
@@ -80,19 +122,19 @@ export const classroom1files = {
     notShared: [
         {
             rel: 1,
-            href: "http://localhost:8080/api/subject-files/17",
+            href: "http://localhost:8080/api/subject-files/1",
             title: "file1.pdf"
         }
     ],
     shared: [
         {
             rel: 2,
-            href: "http://localhost:8080/api/subject-files/18",
+            href: "http://localhost:8080/api/subject-files/2",
             title: "file2.pdf"
         },
         {
             rel: 3,
-            href: "http://localhost:8080/api/subject-files/12",
+            href: "http://localhost:8080/api/subject-files/3",
             title: "file3.pdf"
         }
     ]
@@ -128,18 +170,97 @@ export const review2 = {
     teacherId: 1
 }
 
-export const successfulResponseMock = (httpCode, headers, body={}) => {
-    global.localStorage = new LocalStorageMock()
-    return (global.fetch = jest.fn().mockImplementationOnce(() => {
+//Subject Files
+
+export const subjectFile1 = {
+    id: 1,
+    level: 3,
+    name: "FirstFile.pdf",
+    subject: {
+        name: "Math II",
+        subjectId: 2,
+        url: {
+            rel: "2",
+            href: "http://localhost:8080/api/subjects/2"
+        }
+    },
+    url: {
+        rel: "1",
+        href: "http://localhost:8080/api/subject-files/1"
+    }
+}
+
+export const subjectFile2 = {
+    id: 2,
+    level: 2,
+    name: "SecondFile.pdf",
+    subject: {
+        name: "Math I",
+        subjectId: 1,
+        url: {
+            rel: "1",
+            href: "http://localhost:8080/api/subjects/1"
+        }
+    },
+    url: {
+        rel: "2",
+        href: "http://localhost:8080/api/subject-files/2"
+    }
+}
+
+//User subjects
+
+export const userSubject1 = {
+    id: 1,
+    levels: [
+        1,
+        0
+    ],
+    prices: [
+        2000,
+        900
+    ],
+    subject: "Math"
+}
+
+export const userSubject2 = {
+    id: 2,
+    levels: [
+        2,
+        1
+    ],
+    prices: [
+        3000,
+        1900
+    ],
+    subject: "Math II"
+}
+
+
+//Classroom posts
+export const post1 = {
+    id: 1,
+    message: "Keen on learning about maths!",
+    time: "2022-03-19T23:25:40.749-03:00",
+    uploader: user1.name
+}
+
+export const post2 = {
+    id: 2,
+    message: "Hello student",
+    time: "2022-03-20T23:25:40.749-03:00",
+    uploader: user2.name
+}
+
+export const successfulResponseMock = (httpCode, headers, body = {}) => {
+    axios.get.mockImplementationOnce(() => {
         return new Promise((resolve, reject) => {
             resolve({
                 ok: true,
                 status: httpCode,
                 headers: headers,
-                json: () => {
-                    return body;
-                }
+                data: body
             });
         });
-    }));
+    });
 }

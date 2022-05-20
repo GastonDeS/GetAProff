@@ -25,14 +25,3 @@ export class LocalStorageMock {
   }
 }
 
-global.localStorage = new LocalStorageMock();
-test("", () => {});
-
-// describe('storage', () => {
-//   beforeAll(() => {
-//     Object.defineProperty(window, 'localStorage', {
-//       value: localStorage,
-//     });
-//   });
-// });
-

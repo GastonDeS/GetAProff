@@ -14,7 +14,7 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Get subjects being taugh by teacher
+    // Get subjects being taught by teacher
     async getUserSubjects(uid) {
         try {
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {});
@@ -22,7 +22,7 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Get subjects not being taugh by teacher
+    // Get subjects not being taught by teacher
     async getUserAvailableSubjects(uid) {
         try {
             const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/available-subjects/${uid}`, {});
@@ -107,15 +107,11 @@ export class UserService {
     async getUsers(queryParams, page) {
         try {
             let config = {};
-            config['params'] = {
-                maxPrice : queryParams.maxPrice,
-                level : parseInt(queryParams.level),
-                rating : parseInt(queryParams.rating),
-                search: queryParams.search,
-                order: parseInt(queryParams.order),
-                page: page,
-                pageSize: 9
-            };
+            config.params = {}
+            for (const key in queryParams)
+                config[key] = queryParams[key]
+            config.params[page] = page;
+
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}`, config)
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
