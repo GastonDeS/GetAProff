@@ -167,6 +167,7 @@ const Profile = () => {
                     <h3>{i18next.t('profile.schedule')}</h3>
                     <p>{user.schedule}</p>
                   </ProfileDataContainer>
+                  {certifications.length > 0 && 
                   <ProfileDataContainer> 
                     <h3>{i18next.t('profile.certifications')}</h3>
                     <ul>
@@ -180,6 +181,7 @@ const Profile = () => {
                       )})}
                     </ul>
                   </ProfileDataContainer>
+                  }
                 </SectionInfo>
               ) : index === 1 ? (
                 <ProfileSubjects>
@@ -192,24 +194,31 @@ const Profile = () => {
                         </Row>
                       </thead>
                       <tbody>
-                        {subjects.map((item, index) => {
+                        {subjects.length > 0 ? 
+                        <>
+                          {subjects.map((item, index) => {
                             return <Rows key={index} edit={false} data={item}/>
-                        })}
+                          })}
+                        </> :
+                        <p>{i18next.t('profile.noSubjects')}</p>
+                        }
                       </tbody>
                     </Table>
                 </ProfileSubjects>
               ) : (
                 <SectionInfo>
                   {
-                    reviews.map((option) => {
-                      return <ProfileDataContainer>
-                        <ReviewTitle>
-                          <h3>{option.student}</h3>
-                          <RatingStar count={5} value={option.rate} size={18} edit={false} />
-                        </ReviewTitle>
-                        <p>{option.review}</p>
-                      </ProfileDataContainer>
-                    })
+                    reviews.length > 0 ? <>{
+                      reviews.map((option) => {
+                        return <ProfileDataContainer>
+                          <ReviewTitle>
+                            <h3>{option.student}</h3>
+                            <RatingStar count={5} value={option.rate} size={18} edit={false} />
+                          </ReviewTitle>
+                          <p>{option.review}</p>
+                        </ProfileDataContainer>
+                      })
+                    }</> : <p>{i18next.t('profile.noSubjects')}</p>
                   }
                   {pageQty > 1 && <StyledPagination>{items}</StyledPagination>}
                 </SectionInfo>
