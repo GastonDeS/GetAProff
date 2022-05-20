@@ -34,7 +34,7 @@ const Tutors = () => {
   const searchQuery = new URLSearchParams(search).get('search');
 
   const {register, handleSubmit, getValues, reset, control, setValue} = useForm(
-      {defaultValues: {"maxPrice": 10000, "level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
+      {defaultValues: {"level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
   );
   const {dirtyFields} = useFormState({control})
   const orders = [
@@ -51,7 +51,7 @@ const Tutors = () => {
           search: getValues("search"),
           rating: 0,
           level: 0,
-          maxPrice: 10000,
+          maxPrice: getValues('maxPrice'),
           order: 1
         }
     );
@@ -66,7 +66,8 @@ const Tutors = () => {
 
   useEffect(async () => {
     const res  = await userService.getMostExpensiveUserTeaching(getValues("search"));
-    if (!res.failure) setValue('maxPrice', res.data);
+    console.log(res);
+    setValue('maxPrice', res.data.price);
   }, [isFormReseted, formSubmitted])
 
 
@@ -118,8 +119,7 @@ const Tutors = () => {
                   register={register}
                   name="maxPrice"
                   minValue={1}
-                  maxValue={10000}
-                  value={getValues("price")}
+                  maxValue={getValues("maxPrice")}
               />
             </FilterSection>
             <FilterSection>

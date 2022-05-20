@@ -100,9 +100,9 @@ export class UserService {
                 }
             }
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/maxPrice`, config);
-            return handleResponse(res);
+            return res;
         }
-        catch (err) { return handleResponse(error.response)}
+        catch (err) { return handleResponse(err.response)}
     }
 
 
@@ -121,10 +121,15 @@ export class UserService {
     async getUsers(queryParams, page) {
         try {
             let config = {};
-            config.params = {}
-            for (const key in queryParams)
-                config[key] = queryParams[key]
-            config.params[page] = page;
+            config['params'] = {
+                maxPrice: queryParams.maxPrice ?? 10000,
+                level: parseInt(queryParams.level) ?? 0,
+                rating: parseInt(queryParams.rating) ?? 0,
+                search: queryParams.search,
+                order: parseInt(queryParams.order) ?? 1,
+                page: page,
+                pageSize: 9
+            };
 
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}`, config)
             return handleResponse(res);

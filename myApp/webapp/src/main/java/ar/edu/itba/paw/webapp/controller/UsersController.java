@@ -223,7 +223,8 @@ public class UsersController {
     }
 
     @GET
-    @Path("/mostExpensiveUserFee")
+    @Path("/maxPrice")
+    @Produces("application/vnd.getaproff.api.v1+json")
     public Response getUserMostExpensiveFee(@QueryParam("forSearch") String search){
         int maxPrice = teachesService.getMostExpensiveUserFee(search);
         return Response.ok(MaxPriceDto.fromPrice(maxPrice)).build();

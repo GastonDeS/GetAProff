@@ -184,6 +184,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,API_PREFIX+"/users/top-rated")
                 .antMatchers(HttpMethod.POST, API_PREFIX+"/users/teacher")
                 .antMatchers(HttpMethod.POST, API_PREFIX+"/users/student")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "/users/maxPrice")
                 .antMatchers("/")
                 .antMatchers("/*.js")
                 .antMatchers("/*.css")

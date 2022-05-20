@@ -8,4 +8,12 @@ public class MaxPriceDto {
         maxPriceDto.price = price;
         return maxPriceDto;
     }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 }
