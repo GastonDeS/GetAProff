@@ -40,7 +40,6 @@ public class RatingController {
     @Autowired
     private AuthFacade authFacade;
 
-    // TODO pasar id a query param
     @GET
     @Consumes("application/vnd.getaproff.api.v1+json")
     @Produces("application/vnd.getaproff.api.v1+json")
