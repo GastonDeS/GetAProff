@@ -33,12 +33,6 @@ public class TeachesServiceImpl implements TeachesService {
         return teachesDao.removeSubjectToUser(userId, subjectId, level);
     }
 
-//    @Transactional
-//    @Override
-//    public List<Teaches> getSubjectInfoListByUser(Long teacherId) {
-//        return teachesDao.getSubjectInfoListByUser(teacherId);
-//    }
-
     @Override
     public List<Subject> getListOfAllSubjectsTaughtByUser(Long userId) {
         return teachesDao.getListOfAllSubjectsTeachedByUser(userId);
@@ -49,13 +43,6 @@ public class TeachesServiceImpl implements TeachesService {
     public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
         return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
     }
-
-//    @Transactional
-//    @Override
-//    public List<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer offset) {
-//        return teachesDao.filterUsers(searchedSubject,
-//                teachesDao.getMostExpensiveUserFee(searchedSubject), ANY_LEVEL, MAX_LEVEL, ANY_RATING, RAND_ORDER, offset);
-//    }
 
     @Transactional
     @Override
@@ -69,17 +56,6 @@ public class TeachesServiceImpl implements TeachesService {
         if (price > maxPrice) price = maxPrice;
         return teachesDao.filterUsers(searchedSubject, price, minLevel, maxLevel, rating, order, new PageRequest(page, pageSize));
     }
-
-//    @Override
-//    public Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating) {
-//        List<TeacherInfo> teachersListResult = filterUsers(searchedSubject, RAND_ORDER, price, level, rating, GET_ALL);
-//        return (int) Math.ceil(teachersListResult.size()/(double) PAGE_SIZE);
-//    }
-
-//    @Override
-//    public Integer getPageQty(String searchedSubject) {
-//        return (int) Math.ceil(findTeachersTeachingSubject(searchedSubject, GET_ALL).size()/(double) PAGE_SIZE);
-//    }
 
     @Override
     public List<TeacherInfo> getTopRatedTeachers() {

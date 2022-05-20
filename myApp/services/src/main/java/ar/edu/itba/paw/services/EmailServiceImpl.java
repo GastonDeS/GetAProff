@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.LectureService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Lecture;
@@ -41,12 +40,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private MessageSource messageSource;
-
-    @Autowired
-    private LectureService lectureService;
-
-
-
+    
     private void sendSimpleMessage(String to, String subject, String text) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

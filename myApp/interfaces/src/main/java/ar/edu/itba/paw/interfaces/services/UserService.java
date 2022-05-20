@@ -21,8 +21,6 @@ public interface UserService {
 
     Optional<User> findByEmail(String mail);
 
-    Optional<User> getCurrentUser();
-
     int setUserSchedule(Long userId, String schedule);
 
     int setUserDescription(Long userId, String description);
