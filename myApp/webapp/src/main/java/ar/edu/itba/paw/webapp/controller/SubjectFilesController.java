@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SubjectFileService;
 import ar.edu.itba.paw.models.SubjectFile;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.FileDto;
 import ar.edu.itba.paw.webapp.dto.SubjectFileDto;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
@@ -70,14 +71,14 @@ public class SubjectFilesController {
 
     //TODO: Cambiar este endpoint
     @POST
-    @Path("/{uid}/{subject}/{level}")
     @Consumes(value = { MediaType.MULTIPART_FORM_DATA, })
     @Produces("application/vnd.getaproff.api.v1+json")
-    public Response uploadUserSubjectFiles(@PathParam("uid") Long uid, @PathParam("subject") Long subject,
-                                           @PathParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
+    public Response uploadUserSubjectFiles(@FormDataParam("subject") Long subject,
+                                           @FormDataParam("level") Integer level, @FormDataParam("file") InputStream uploadedInputStream,
                                            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         byte[] file = IOUtils.toByteArray(uploadedInputStream);
-        final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), uid, subject, level)
+        User currUser = authFacade.getCurrentUser();
+        final SubjectFile subjectFile = subjectFileService.saveNewSubjectFile(file, fileDetail.getFileName(), currUser.getId(), subject, level)
                 .orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.SUBJECT_FILE));
         URI location = URI.create(uriInfo.getBaseUri()+"/"+subjectFile.getFileId());
         LOGGER.debug("Subject file uploaded successfully");

@@ -59,17 +59,12 @@ export class ClassroomService {
         return await this.changeClassStatus(classId, classStatus.RATED);
     };
 
-    async changeClassStatus(classId, newStatus, uid) {
+    async changeClassStatus(classId, newStatus) {
         try {
-            let config = {
-                headers:  {'Content-Type' : APPLICATION_V1_JSON_TYPE}
+            const data = {
+                status: newStatus
             }
-            config['params'] = {
-                classId: classId,
-                status: newStatus,
-                uid: uid
-            }
-            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}`, config);
+            const res = await axiosService.authAxiosWrapper(axiosService.POST,`${PATH}/${classId}/status`, {}, data);
             return handleResponse(res);
         } catch (error) {return handleResponse(error.response)}
     }

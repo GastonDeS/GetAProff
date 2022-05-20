@@ -3,8 +3,7 @@ import { status } from "../assets/constants";
 export const handleResponse = (response) => {
   if (response) {
     if (response.status >= status.OK && 
-      response.status <= status.SUCCESS_LIMIT &&
-      response.status !== status.NO_CONTENT) {
+      response.status <= status.SUCCESS_LIMIT) {
       return {
           headers: response.headers,
           status: response.status,
