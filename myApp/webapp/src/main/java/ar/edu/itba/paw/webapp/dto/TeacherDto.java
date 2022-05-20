@@ -9,8 +9,6 @@ public class TeacherDto {
 
     private String name, mail, description, schedule;
 
-    private Link url;
-
     private Long id;
 
     private int minPrice, maxPrice, reviewsQty;
@@ -31,7 +29,6 @@ public class TeacherDto {
         teacherDto.id = teacher.getUserId();
         teacherDto.reviewsQty = teacher.getReviews();
         teacherDto.isTeacher = true;
-//        teacherDto.url = JaxRsLinkBuilder.linkTo(UsersController.class).slash(teacher.getUserId()).withRel(teacher.getUserId().toString());
         return teacherDto;
     }
 
@@ -81,14 +78,6 @@ public class TeacherDto {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
-    }
-
-    public Link getUrl() {
-        return url;
-    }
-
-    public void setUrl(Link url) {
-        this.url = url;
     }
 
     public Long getId() {

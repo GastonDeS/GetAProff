@@ -42,7 +42,9 @@
     "removeFavourites": "Remover de favoritos",
     "description": "Descripción",
     "schedule": "Horarios",
-    "certifications": "Certificaciones"
+    "certifications": "Certificaciones",
+    "noSubjects": "El profesor no tiene materias disponibles",
+    "noReviews": "El profesor no tiene reseñas"
   },
   "editSubjects": {
     "request": {

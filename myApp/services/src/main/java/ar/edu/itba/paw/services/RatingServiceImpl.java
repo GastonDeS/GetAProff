@@ -29,6 +29,7 @@ public class RatingServiceImpl implements RatingService {
         return Optional.ofNullable(ratingDao.addRating(teacherId, studentId, rate, review));
     }
 
+    @Transactional
     @Override
     public Page<Rating> getTeacherRatings(Long teacherId, Integer page, Integer pageSize) {
         return ratingDao.getTeacherRatings(teacherId, new PageRequest(page, pageSize));

@@ -42,7 +42,9 @@
     "removeFavourites": "Remove from favourites",
     "description": "Description",
     "schedule": "Schedule",
-    "certifications": "Certifications"
+    "certifications": "Certifications",
+    "noSubjects": "Teacher has no subjects available",
+    "noReviews": "Teacher has no reviews"
   },
   "editSubjects": {
     "request": {

@@ -22,6 +22,7 @@ export const useProfileFetch = (id) => {
   const [pageQty, setPageQty] = useState(1);
   const [page, setPage] = useState(1);
   const [fetch, setFetch] = useState(false);
+  const [newUser, setNewUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -44,12 +45,18 @@ export const useProfileFetch = (id) => {
     setUser(userData);
   }, [id])
 
+
   useEffect(async () => {
-    if (fetch) {
-      const res = await userService.getUserImg(user.id);
-      const data = handleService(res, navigate);
-      if (data) setImage('data:image/png;base64,' + data.image);
-      
+    const res = await ratingService.getUserReviews(user.id, page);
+    if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
+    setReviews(handleService(res, navigate));
+  }, [page]) 
+
+  useEffect(async () => {
+    if (newUser) {
+      const imgRes = await userService.getUserImg(user.id);
+      const imgData = handleService(imgRes, navigate);
+      if (imgData) setImage('data:image/png;base64,' + imgData.image);
       if (isTeacher) {
         const res = await userService.getUserSubjects(user.id);
         const data = await handleService(res, navigate);
@@ -63,12 +70,17 @@ export const useProfileFetch = (id) => {
           })
         })
 
+        const reviewRes = await ratingService.getUserReviews(user.id, page);
+        if (!reviewRes.failure) setPageQty((parseInt(reviewRes.headers['x-total-pages'])));
+        setReviews(handleService(reviewRes, navigate));
+
         const certificationsRes = await filesService.getUserCertifications(user.id);
         setCertifications(handleService(certificationsRes, navigate));
       }
       setLoading(false);
+      setNewUser(false);
     }
-  }, [fetch, isTeacher])
+  }, [newUser])
   
   useEffect(async () => {
     const auxUser = AuthService.getCurrentUser();
@@ -80,12 +92,12 @@ export const useProfileFetch = (id) => {
   },[user])
 
   useEffect(async () => {
-    if (user) {
-      const res = await ratingService.getUserReviews(user.id, page);
-      if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
-      setReviews(handleService(res, navigate));
+    if (user && fetch) {
+      setNewUser(true);
+      setSubjects([]);
+      setReviews([]);
     }
-  }, [user, page])
+  }, [user, fetch])
 
   return {
     currentUser,

@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/authService";
 import { handleService } from '../../handlers/serviceHandler';
 import { handleAuthentication} from "../../handlers/accessHandler";
-import { handleTeacherRole } from '../../handlers/accessHandler';
 
 const RequestSubject = () => {
   const [subject, setSubject] = useState();
