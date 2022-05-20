@@ -101,4 +101,15 @@ public class UserServiceImpl implements UserService {
         return userDao.removeFavourite(teacherId, studentId);
     }
 
+    @Override
+    public void setTeacherAuthorityToUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+        updatedAuthorities.add(new SimpleGrantedAuthority(Roles.TEACHER.getName()));
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
+
 }

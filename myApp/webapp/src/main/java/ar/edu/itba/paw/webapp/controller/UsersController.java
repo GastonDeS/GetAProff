@@ -162,8 +162,7 @@ public class UsersController {
             if (!(desc == SUCCESS && sch == SUCCESS && name == SUCCESS)) throw new BadRequestException(BadRequestStatusMessages.USER_CREATE);
             return Response.status(Response.Status.ACCEPTED).build();
         }
-
-        UserRole userRole = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
+        userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
         if (!(desc == 1 && sch == 1 && name == 1 )) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
         return Response.accepted().build();
     }
