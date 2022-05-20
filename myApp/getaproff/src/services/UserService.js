@@ -123,10 +123,10 @@ export class UserService {
             let config = {};
             config['params'] = {
                 maxPrice: queryParams.maxPrice ?? 10000,
-                level: parseInt(queryParams.level) ?? 0,
-                rating: parseInt(queryParams.rating) ?? 0,
+                level: parseInt(queryParams.level ?? '0') ,
+                rating: parseInt(queryParams.rating?? '0') ,
                 search: queryParams.search,
-                order: parseInt(queryParams.order) ?? 1,
+                order: parseInt(queryParams.order ?? '1') ,
                 page: page,
                 pageSize: 9
             };

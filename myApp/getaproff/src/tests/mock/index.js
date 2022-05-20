@@ -1,4 +1,3 @@
-import {LocalStorageMock} from "./MockLocalStorage";
 import axios from "axios";
 
 export const user1 = {
