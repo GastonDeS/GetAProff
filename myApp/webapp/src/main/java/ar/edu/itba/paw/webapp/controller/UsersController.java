@@ -222,6 +222,13 @@ public class UsersController {
         return Response.ok(ImageDto.fromUser(image)).build();
     }
 
+    @GET
+    @Path("/mostExpensiveUserFee")
+    public Response getUserMostExpensiveFee(@QueryParam("forSearch") String search){
+        int maxPrice = teachesService.getMostExpensiveUserFee(search);
+        return Response.ok(MaxPriceDto.fromPrice(maxPrice)).build();
+    }
+
     @POST
     @Path("/{uid}/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})

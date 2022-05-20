@@ -33,7 +33,7 @@ const Tutors = () => {
   const search = useLocation().search;
   const searchQuery = new URLSearchParams(search).get('search');
 
-  const {register, handleSubmit, getValues, reset, control} = useForm(
+  const {register, handleSubmit, getValues, reset, control, setValue} = useForm(
       {defaultValues: {"maxPrice": 10000, "level" : 0, "rating" : 0, "order": 1, "search": searchQuery}}
   );
   const {dirtyFields} = useFormState({control})
@@ -63,6 +63,11 @@ const Tutors = () => {
     if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
     setTutors(handleService(res, navigate));
   }, [page, formSubmitted, isFormReseted])
+
+  useEffect(async () => {
+    const res  = await userService.getMostExpensiveUserTeaching(getValues("search"));
+    if (!res.failure) setValue('maxPrice', res.data);
+  }, [isFormReseted, formSubmitted])
 
 
   const onSubmit = () => {

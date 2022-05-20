@@ -92,6 +92,20 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
+    async getMostExpensiveUserTeaching(search) {
+        try {
+            const config = {
+                params : {
+                    forSearch: search
+                }
+            }
+            const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/maxPrice`, config);
+            return handleResponse(res);
+        }
+        catch (err) { return handleResponse(error.response)}
+    }
+
+
     // Edit students and teachers' profile
     async editProfile (uid, role, form) {
         try {

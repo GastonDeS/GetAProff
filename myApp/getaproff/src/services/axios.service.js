@@ -1,4 +1,4 @@
-// import axios from "../api"
+ // import axios from "../api"
 import axios from "axios";
 import {APPLICATION_V1_JSON_TYPE} from "../assets/constants";
 
@@ -21,7 +21,7 @@ export class AxiosService {
     }
 
      async axiosWrapper(action, path, config, data = {}) {
-        const aux = '/api/' + path
+        const aux = + "api/" + path
         switch (action) {
             case this.GET:
                 return await axios.get(aux, config);

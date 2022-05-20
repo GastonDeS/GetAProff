@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.requestDto.IdsDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.*;
 import org.apache.commons.io.IOUtils;
