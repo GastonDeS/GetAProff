@@ -39,10 +39,6 @@ public class AntMatcherVoter {
         return getUser(authentication).getUserid();
     }
 
-    private boolean isTeacher(Authentication authentication) {
-        return getUser(authentication).isTeacher();
-    }
-
     private User getUser(Authentication authentication) {
         if(authentication instanceof BasicAuthenticationToken) {
             return userService.findByEmail(((BasicAuthenticationToken)authentication).getPrincipal()).orElseThrow(NoUserLoggedException::new);
@@ -127,38 +123,6 @@ public class AntMatcherVoter {
         return ratingService.availableToRate(teacherId, getUserId(authentication));
     }
 
-    public boolean canRequestClass(Authentication authentication, Long teacherId) {
-        try {
-
-            if(authentication instanceof AnonymousAuthenticationToken) return false;
-            User teacher = userService.findById(teacherId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
-            return !teacher.isTeacher() && teacherId.equals(getUserId(authentication));
-        } catch (RuntimeException e) {
-            return false;
-        }
-    }
-
-    public boolean canAccessRate(Authentication authentication, Long teacherId, Long classId) {
-        try {
-
-            if(authentication instanceof AnonymousAuthenticationToken) return false;
-            Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-            return ratingService.availableToRate(teacherId, getUserId(authentication));
-        } catch (RuntimeException e) {
-            return false;
-        }
-    }
-
-    public boolean canAccessProfile(Authentication authentication, Long uid) {
-        try {
-            User user = userService.findById(uid).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.USER));
-            if (user.isTeacher()) return true;
-            if (authentication instanceof AnonymousAuthenticationToken) return false;
-            return uid.equals(getUserId(authentication));
-        } catch (RuntimeException e) {
-            return false;
-        }
-    }
 
 }
 
