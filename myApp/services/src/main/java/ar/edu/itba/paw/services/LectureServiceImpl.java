@@ -33,6 +33,7 @@ public class LectureServiceImpl implements LectureService {
         return lectureDao.get(id);
     }
 
+    @Transactional
     @Override
     public Page<Lecture> findClasses(Long uid, boolean asTeacher, Integer status, Integer page, Integer pageSize) {
         if (asTeacher)
@@ -42,7 +43,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     private Page<Lecture> findClassesByStudentAndStatus(Long studentId, Integer status, PageRequest pageRequest) {
-        Page<Lecture> lecturepage = null;
+        Page<Lecture> lecturepage;
         if (status == ANY_STATUS) {
             lecturepage = lectureDao.findClassesByStudentId(studentId, pageRequest);
         }
@@ -54,7 +55,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     private Page<Lecture> findClassesByTeacherAndStatus(Long teacherId, Integer status, PageRequest pageRequest) {
-        Page<Lecture> lecturepage = null;
+        Page<Lecture> lecturepage;
         if (status == ANY_STATUS) {
             lecturepage = lectureDao.findClassesByTeacherId(teacherId, pageRequest);
         }
@@ -104,16 +105,19 @@ public class LectureServiceImpl implements LectureService {
         return lectureDao.addSharedFileToLecture(subjectFileId, lecture);
     }
 
+    @Transactional
     @Override
     public Pair<List<SubjectFile>, List<SubjectFile>> getTeacherFiles(Long lectureId, Long userId) {
-        Pair<List<SubjectFile>, List<SubjectFile>> lectureFiles = new Pair<>(null, null);
+        Pair<List<SubjectFile>, List<SubjectFile>> lectureFiles = new Pair<>(new ArrayList<>(), new ArrayList<>());
         Optional<Lecture> lecture = lectureDao.get(lectureId);
         if (!lecture.isPresent())
             throw new NoSuchElementException(); //TODO handle exception
         if (lecture.get().getTeacher().getId().equals(userId)) {
-            lectureFiles.setValue2(this.getFilesNotSharedInLecture(lectureId, userId));
+            List<SubjectFile> subjectFilesNotShared = this.getFilesNotSharedInLecture(lectureId, userId);
+            lectureFiles.getValue2().addAll(subjectFilesNotShared);
         }
-        lectureFiles.setValue1(this.getFilesSharedInLecture(lectureId));
+        List<SubjectFile> sharedSubjectFiles = this.getFilesSharedInLecture(lectureId);
+        lectureFiles.getValue1().addAll(sharedSubjectFiles);
         return lectureFiles;
     }
 

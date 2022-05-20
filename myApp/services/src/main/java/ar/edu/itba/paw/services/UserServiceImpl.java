@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.daos.UserDao;
-import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.InsertException;
 import ar.edu.itba.paw.models.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,18 +28,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-//    void setRoleService(RoleService roleService) {
-//        this.roleService = roleService;
-//    }
 
     @Override
     public Optional<User> findById(Long userId) {
@@ -68,16 +57,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String mail) {
         return userDao.findByEmail(mail);
-    }
-
-    @Override
-    public Optional<User> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-            String userMail = authentication.getName();
-            return this.findByEmail(userMail);
-        }
-        return Optional.empty();
     }
 
     @Transactional

@@ -27,7 +27,7 @@ public class Lecture {
     @ManyToOne(optional = false)
     private Subject subject;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "shared",
             joinColumns = @JoinColumn(
