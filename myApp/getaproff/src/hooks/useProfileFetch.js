@@ -58,7 +58,11 @@ export const useProfileFetch = (id) => {
     if (newUser) {
       const imgRes = await userService.getUserImg(user.id);
       const imgData = handleService(imgRes, navigate);
-      if (imgData) setImage('data:image/png;base64,' + imgData.image);
+      if (imgData) {
+        setImage('data:image/png;base64,' + imgData.image);
+      } else {
+        setImage(ProfileImg);
+      }
       if (isTeacher) {
         const res = await userService.getUserSubjects(user.id);
         const data = await handleService(res, navigate);
