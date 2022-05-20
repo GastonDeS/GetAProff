@@ -138,7 +138,7 @@ const EditCertifications = () => {
 
   return (
     <Wrapper>
-      <Navbar empty={true} />
+      <Navbar/>
       <MainContainer>
         <Content>
           <Title>{i18next.t('certifications.title')}</Title>

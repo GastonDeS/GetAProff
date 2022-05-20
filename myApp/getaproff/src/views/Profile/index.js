@@ -215,7 +215,7 @@ const Profile = () => {
                           <p>{option.review}</p>
                         </ProfileDataContainer>
                       })
-                    }</> : <p>{i18next.t('profile.noSubjects')}</p>
+                    } </> : <p>{i18next.t('profile.noReviews')}</p>
                   }
                   {pageQty > 1 && <StyledPagination>{items}</StyledPagination>}
                 </SectionInfo>

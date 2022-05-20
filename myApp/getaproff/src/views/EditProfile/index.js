@@ -97,7 +97,7 @@ const EditProfile = () => {
 
   return (
     <Wrapper>
-      <Navbar empty={true} />
+      <Navbar/>
       <MainContainer>
         <Content>
           <Title>{i18next.t('editProfile.title')}</Title>

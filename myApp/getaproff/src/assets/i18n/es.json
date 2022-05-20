@@ -252,7 +252,7 @@
   "form": {
     "emailPlaceholder": "ejemplo@gmail.com",
     "email": "Email",
-    "passwordPlaceholder": "tu contraseña",
+    "passwordPlaceholder": "contraseña",
     "password": "Contraseña",
     "requiredField": "Este campo es obligatorio",
     "invalidFormat": "Debes ingresar un email válido",

@@ -115,7 +115,7 @@ const EditSubjects = () => {
 
   return (
     <Wrapper>
-      <Navbar empty={true} />
+      <Navbar/>
       <MainContainer>
         <Content>
           <Title>{i18next.t('editSubjects.title')}</Title>
