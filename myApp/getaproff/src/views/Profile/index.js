@@ -185,6 +185,7 @@ const Profile = () => {
                 </SectionInfo>
               ) : index === 1 ? (
                 <ProfileSubjects>
+                  {subjects.length > 0 ? 
                   <Table>
                       <thead>
                         <Row>
@@ -194,23 +195,19 @@ const Profile = () => {
                         </Row>
                       </thead>
                       <tbody>
-                        {subjects.length > 0 ? 
-                        <>
                           {subjects.map((item, index) => {
                             return <Rows key={index} edit={false} data={item}/>
                           })}
-                        </> :
-                        <p>{i18next.t('profile.noSubjects')}</p>
-                        }
                       </tbody>
-                    </Table>
+                    </Table> :
+                    <p>{i18next.t('profile.noSubjects')}</p>}
                 </ProfileSubjects>
               ) : (
                 <SectionInfo>
                   {
                     reviews.length > 0 ? <>{
-                      reviews.map((option) => {
-                        return <ProfileDataContainer>
+                      reviews.map((option, index) => {
+                        return <ProfileDataContainer key={index}>
                           <ReviewTitle>
                             <h3>{option.student}</h3>
                             <RatingStar count={5} value={option.rate} size={18} edit={false} />

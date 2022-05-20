@@ -21,7 +21,6 @@ public class UserRoleDaoJpa implements UserRoleDao {
         if (!user.isPresent()) return null;
         final UserRole userRole = new UserRole(roleId, user.get());
         entityManager.persist(userRole);
-        user.get().getUserRoles().add(userRole);
         return userRole;
     }
 }
