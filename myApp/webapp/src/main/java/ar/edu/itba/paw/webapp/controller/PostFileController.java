@@ -21,7 +21,6 @@ public class PostFileController {
     @Autowired
     private PostService postService;
 
-    //TODO: produces?
     @GET
     @Path("/{postId}/file")
     public Response getPostFile(@PathParam("postId") final Long postId) {

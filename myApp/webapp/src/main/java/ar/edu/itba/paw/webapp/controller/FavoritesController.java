@@ -36,7 +36,6 @@ public class FavoritesController {
     @Context
     private UriInfo uriInfo;
 
-    //Return all favorite users of user with uid
     @GET
     @Produces("application/vnd.getaproff.api.v1+json")
     public Response getUserFavorites(@QueryParam("page") @DefaultValue("1") Integer page,

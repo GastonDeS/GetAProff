@@ -12,7 +12,6 @@ import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.requestDto.IdsDto;
-import ar.edu.itba.paw.webapp.requestDto.IdsDto;
 import ar.edu.itba.paw.webapp.requestDto.NewStatusDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.*;
@@ -43,9 +42,6 @@ public class ClassroomController {
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AuthFacade authFacade;
@@ -122,9 +118,9 @@ public class ClassroomController {
                                 @FormDataParam("uploader") final Long uploader, @FormDataParam("file") InputStream uploadedInputStream,
                                 @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
-        if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build(); // TODO validate params
+        if (uploadedInputStream == null || fileDetail == null) return Response.status(Response.Status.BAD_REQUEST).entity("file was empty").build();
         Post post = postService.post(uploader, classId, fileDetail.getFileName(), IOUtils.toByteArray(uploadedInputStream), message, fileDetail.getType())
-                .orElseThrow(() -> new ConflictException(ConflictStatusMessages.POST)); // TODO conflict or 50X
+                .orElseThrow(() -> new ConflictException(ConflictStatusMessages.POST));
         URI location = URI.create(uriInfo.getAbsolutePath() + "/" + post.getPostId());
         LOGGER.debug("Created post with id {} to classroom with id {}", post.getPostId(), classId);
         emailService.sendNewPostMessage(uploader, lecture, uriInfo.getBaseUri().toString());

@@ -13,7 +13,7 @@ import java.util.*;
 @Service
 public class TeachesServiceImpl implements TeachesService {
 
-    private static final Integer ANY_LEVEL = 0, ANY_RATING = 0, RAND_ORDER = 0, MAX_LEVEL = 3, GET_ALL = 0, PAGE_SIZE = 9;
+    private static final Integer ANY_LEVEL = 0, MAX_LEVEL = 3;
 
     @Autowired
     private TeachesDao teachesDao;
@@ -31,17 +31,6 @@ public class TeachesServiceImpl implements TeachesService {
     @Override
     public int removeSubjectToUser(Long userId, Long subjectId, int level) {
         return teachesDao.removeSubjectToUser(userId, subjectId, level);
-    }
-
-    @Override
-    public List<Subject> getListOfAllSubjectsTaughtByUser(Long userId) {
-        return teachesDao.getListOfAllSubjectsTeachedByUser(userId);
-    }
-
-    @Transactional
-    @Override
-    public Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level) {
-        return teachesDao.findByUserAndSubjectAndLevel(userId, subjectId, level);
     }
 
     @Transactional
