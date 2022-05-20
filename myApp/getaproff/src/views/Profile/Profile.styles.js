@@ -117,6 +117,7 @@ export const ProfileSubjects = styled.div`
   display: flex;
   width: 96%;
   margin: auto;
+  padding: 0.7rem 0;
 `;
 
 export const ReviewTitle = styled.div`

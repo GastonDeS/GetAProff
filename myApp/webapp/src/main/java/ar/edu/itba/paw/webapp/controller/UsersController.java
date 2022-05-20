@@ -101,7 +101,7 @@ public class UsersController {
 
     @GET
     @Produces(value = { "application/vnd.getaproff.api.v1+json", })
-    public Response findBySubject(@QueryParam("search") String search,
+    public Response findBySubject(@QueryParam("search") @DefaultValue("") String search,
                                   @QueryParam("maxPrice") @DefaultValue(MAX_PRICE) Integer price,
                                   @QueryParam("level") @DefaultValue("0") Integer level,
                                   @QueryParam("rating") @DefaultValue("0") Integer rating,
@@ -162,9 +162,10 @@ public class UsersController {
             return Response.status(Response.Status.ACCEPTED).build();
         }
         Optional<User> user = userService.findById(uid);
-        userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
+        UserRole userRole = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
         userService.setTeacherAuthorityToUser();
         if (!(desc == 1 && sch == 1 && name == 1 && user.isPresent())) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
+        user.get().getUserRoles().add(userRole);
         return Response.ok(AuthDto.fromUser(user.get())).build();
     }
 

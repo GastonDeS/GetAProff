@@ -11,4 +11,12 @@ public class ExceptionMapperUtil {
         errorDetails.setTitle(status.getReasonPhrase());
         errorDetails.setMessage(message);
         return Response.status(errorDetails.getStatus()).entity(errorDetails).build();
-    }}
+    }
+
+    public static Response parseException(Response.Status status) {
+        ApiErrorDetails errorDetails = new ApiErrorDetails();
+        errorDetails.setStatus(status.getStatusCode());
+        errorDetails.setTitle(status.getReasonPhrase());
+        return Response.status(errorDetails.getStatus()).entity(errorDetails).build();
+    }
+}

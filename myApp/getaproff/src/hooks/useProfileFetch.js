@@ -47,10 +47,12 @@ export const useProfileFetch = (id) => {
 
 
   useEffect(async () => {
-    const res = await ratingService.getUserReviews(user.id, page);
-    if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
-    setReviews(handleService(res, navigate));
-  }, [page]) 
+    if (user && isTeacher && fetch) {
+      const res = await ratingService.getUserReviews(user.id, page);
+      if (!res.failure) setPageQty((parseInt(res.headers['x-total-pages'])));
+      setReviews(handleService(res, navigate));
+    }
+  }, [page, isTeacher, user, fetch])
 
   useEffect(async () => {
     if (newUser) {
@@ -69,10 +71,6 @@ export const useProfileFetch = (id) => {
             }])
           })
         })
-
-        const reviewRes = await ratingService.getUserReviews(user.id, page);
-        if (!reviewRes.failure) setPageQty((parseInt(reviewRes.headers['x-total-pages'])));
-        setReviews(handleService(reviewRes, navigate));
 
         const certificationsRes = await filesService.getUserCertifications(user.id);
         setCertifications(handleService(certificationsRes, navigate));
