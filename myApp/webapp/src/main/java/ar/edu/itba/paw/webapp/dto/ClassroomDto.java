@@ -15,8 +15,6 @@ public class ClassroomDto {
     private StudentDto student;
     private int level, price, status, notifications;
 
-
-
     public static ClassroomDto getClassroom(Lecture lecture) {
         ClassroomDto classroomDto = new ClassroomDto();
         classroomDto.student = StudentDto.fromUser(lecture.getStudent());

@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface RatingService {
 
-    Pair<Float, Integer> getRatingById(Long teacherId);
-
     Optional<Rating> addRating(Long teacherId, Long studentId, float rate, String review);
 
     Page<Rating> getTeacherRatings(Long teacherId, Integer page, Integer pageSize);

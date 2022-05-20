@@ -111,3 +111,10 @@ export const ButtonContainer = styled.div`
   align-items: center;
   width: 100%;
 `;
+
+export const MainCardContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+`;

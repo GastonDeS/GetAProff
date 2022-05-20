@@ -9,5 +9,4 @@ public interface ImageService {
 
     Optional<Image> findImageById(Long userId);
 
-    Integer hasImage(Long userId);
 }
