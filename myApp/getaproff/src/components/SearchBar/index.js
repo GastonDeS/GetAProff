@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Wrapper } from './SearchBar.styles'
 import PropTypes from "prop-types";
-// Icon
 import SearchIcon from '../../assets/img/search_icon.png'
 import Button from "../Button";
 import {useNavigate} from "react-router-dom";

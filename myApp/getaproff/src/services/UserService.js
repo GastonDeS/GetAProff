@@ -6,7 +6,6 @@ const PATH = paths.USERS
 
 export class UserService {
 
-    //Get most rated and most requested teachers
     async getHomeTeachers(type) {
         try {
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${type}`, {});
@@ -14,7 +13,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Get subjects being taught by teacher
     async getUserSubjects(uid) {
         try {
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/subjects`, {});
@@ -22,7 +20,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Get subjects not being taught by teacher
     async getUserAvailableSubjects(uid) {
         try {
             const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/available-subjects/${uid}`, {});
@@ -30,7 +27,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Add new subject to teacher
     async addSubjectToUser(uid, subjecId, price, level) {
         try {
             let config = {
@@ -45,7 +41,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Delete subject taugh by teacher
     async deleteSubjectsFromUser(uid, subject) {
         try {
             const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${uid}` + subject.url, {});
@@ -53,7 +48,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Get user's image
     async getUserImg(uid) {
         try {
             const res = await axiosService.axiosWrapper(axiosService.GET, `${PATH}/${uid}/image`, {});
@@ -61,7 +55,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    //Add image to user
     async addUserImg (uid, imgData) {
         try {
             const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${uid}/image`, {}, imgData);
@@ -69,7 +62,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Get user
     async getUserInfo(uid) {
         try {
             const res = await axiosService.authAxiosWrapper(axiosService.GET,`${PATH}/${uid}`, {});
@@ -77,7 +69,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Register students and teachers
     async register(formData) {
         try {
           let config = {
@@ -92,7 +83,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Edit students and teachers' profile
     async editProfile (uid, role, form) {
         try {
             let config = {
@@ -103,7 +93,6 @@ export class UserService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Filter teachers by params
     async getUsers(queryParams, page) {
         try {
             let config = {};
