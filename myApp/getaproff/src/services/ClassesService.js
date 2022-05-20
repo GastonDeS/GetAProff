@@ -6,7 +6,6 @@ const PATH = paths.CLASSES
 
 export class ClassesService {
     
-    // Get user's classes filtered by params
     async getUserClasses(asTeacher, status, page) {
         try {
             let config = {}
@@ -21,7 +20,6 @@ export class ClassesService {
         } catch (error) {return handleResponse(error.response)}
     }
 
-    // Request a class from teacher
     async requestClass(requestData) {
         try {
             let level = parseInt(requestData.level)

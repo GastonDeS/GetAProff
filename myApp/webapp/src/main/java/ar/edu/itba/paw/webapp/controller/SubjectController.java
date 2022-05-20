@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -67,7 +69,7 @@ public class SubjectController {
 
     @POST
     @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response requestSubject(NewSubjectDto newSubjectDto) {
+    public Response requestSubject(@Valid @RequestBody NewSubjectDto newSubjectDto) {
         long uid = authFacade.getCurrentUserId();
         LOGGER.debug("User {} requested subject {}, message: {}", uid, newSubjectDto.getSubject(), newSubjectDto.getMessage());
         emailService.sendSubjectRequest(uid, newSubjectDto.getSubject(), newSubjectDto.getMessage());

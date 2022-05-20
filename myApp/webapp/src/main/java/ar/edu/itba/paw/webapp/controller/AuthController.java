@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.dto.AuthDto;
+import ar.edu.itba.paw.webapp.exceptions.InternalServerErrorException;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,11 @@ public class AuthController {
 
     @GET
     public Response getUser() {
-        User user = authFacade.getCurrentUser();
-        return Response.ok(AuthDto.fromUser(user)).build();
+        try {
+            User user = authFacade.getCurrentUser();
+            return Response.ok(AuthDto.fromUser(user)).build();
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Get User");
+        }
     }
 }

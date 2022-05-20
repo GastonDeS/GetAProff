@@ -6,7 +6,6 @@ const PATH = paths.FAVOURITES
 
 export class FavouritesService {
 
-  //FavouritesController
   async checkIfTeacherIsFaved(teacherId) {
     try {
         const res = await axiosService.authAxiosWrapper(axiosService.GET, `${PATH}/${teacherId}`, {});
@@ -14,7 +13,6 @@ export class FavouritesService {
     } catch (error) {return handleResponse(error.response)}
   }
 
-  //FavouritesController
   async removeTeacherFromFavorites(teacherId) {
       try {
           const res = await axiosService.authAxiosWrapper(axiosService.DELETE, `${PATH}/${teacherId}`, {})
@@ -22,7 +20,6 @@ export class FavouritesService {
       } catch (error) {return handleResponse(error.response)}
   }
 
-  //FavouritesController
   async addTeacherToFavorites(teacherId) {
       try {
           const res = await axiosService.authAxiosWrapper(axiosService.POST, `${PATH}/${teacherId}`, {});
@@ -30,7 +27,6 @@ export class FavouritesService {
       } catch (error) {return handleResponse(error.response)}
   }
 
-  //FavouritesController
   async getFavoriteTeachers(page) {
       try {
           let config = {};

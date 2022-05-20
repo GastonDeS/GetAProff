@@ -4,7 +4,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.Pair;
-import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.ClassroomDto;
 import ar.edu.itba.paw.webapp.dto.ClassroomFilesDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
@@ -13,6 +12,8 @@ import ar.edu.itba.paw.webapp.exceptions.ConflictException;
 import ar.edu.itba.paw.webapp.exceptions.NoContentException;
 import ar.edu.itba.paw.webapp.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.requestDto.IdsDto;
+import ar.edu.itba.paw.webapp.requestDto.IdsDto;
+import ar.edu.itba.paw.webapp.requestDto.NewStatusDto;
 import ar.edu.itba.paw.webapp.security.services.AuthFacade;
 import ar.edu.itba.paw.webapp.util.*;
 import org.apache.commons.io.IOUtils;
@@ -44,6 +45,9 @@ public class ClassroomController {
     private PostService postService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private AuthFacade authFacade;
 
     @Autowired
@@ -52,7 +56,7 @@ public class ClassroomController {
     @Context
     private UriInfo uriInfo;
 
-    private final Integer SUCCESS = 1, FINISHED = 2;
+    private final Integer SUCCESS = 1;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
 
@@ -130,7 +134,7 @@ public class ClassroomController {
     @POST
     @Path("/{classId}/status")
     @Consumes("application/vnd.getaproff.api.v1+json")
-    public Response changeStatus(@PathParam("classId") final Long classId, NewStatusDto newStatusDto) {
+    public Response changeStatus(@PathParam("classId") final Long classId, @Valid @RequestBody NewStatusDto newStatusDto) {
         Lecture lecture = lectureService.findById(classId).orElseThrow(() -> new NotFoundException(NotFoundStatusMessages.CLASS));
         int updated = lectureService.setStatus(classId, newStatusDto.getStatus());
         emailService.sendStatusChangeMessage(lecture, newStatusDto.getStatus(), uriInfo.getBaseUri().toString());
