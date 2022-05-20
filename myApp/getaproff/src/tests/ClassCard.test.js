@@ -2,7 +2,6 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render} from '@testing-library/react'
 import ClassCard from "../components/ClassCard"
-import i18n from "../assets/i18n/en.json"
 
 test('renders content', () => {
     const classCard = {
@@ -22,6 +21,7 @@ test('renders content', () => {
                                         level={classCard.level} price={classCard.price} statusCode={classCard.statusCode}
                                         handlers={classCard.handlers}/>)
 
-    expect(component.container).toHaveTextContent(classCard.subject)
+    expect(component.container).toHaveTextContent(classCard.subject);
+
 
 })
