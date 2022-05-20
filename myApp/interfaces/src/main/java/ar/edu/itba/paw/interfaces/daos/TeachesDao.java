@@ -38,7 +38,5 @@ public interface TeachesDao {
 
     List<TeacherInfo> getMostRequested();
 
-//    List<Teaches> getSubjectInfoListByUser(Long teacherId);
-
     Optional<TeacherInfo> getTeacherInfo(Long teacherId);
 }

@@ -161,12 +161,9 @@ public class UsersController {
             if (!(desc == SUCCESS && sch == SUCCESS && name == SUCCESS)) throw new BadRequestException(BadRequestStatusMessages.USER_CREATE);
             return Response.status(Response.Status.ACCEPTED).build();
         }
-        Optional<User> user = userService.findById(uid);
-        UserRole userRole = userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
-        userService.setTeacherAuthorityToUser();
-        if (!(desc == 1 && sch == 1 && name == 1 && user.isPresent())) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
-        user.get().getUserRoles().add(userRole);
-        return Response.ok(AuthDto.fromUser(user.get())).build();
+        userRoleService.addRoleToUser(uid, Roles.TEACHER.getId()).orElseThrow(() -> new BadRequestException(BadRequestStatusMessages.ADD_ROLE));
+        if (!(desc == 1 && sch == 1 && name == 1 )) throw new BadRequestException(BadRequestStatusMessages.TEACHER_CREATE);
+        return Response.accepted().build();
     }
 
     @POST

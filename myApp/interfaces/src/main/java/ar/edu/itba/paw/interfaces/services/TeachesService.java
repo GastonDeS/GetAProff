@@ -14,23 +14,11 @@ public interface TeachesService {
 
     int removeSubjectToUser(Long userId, Long subjectId, int level);
 
-//    List<Teaches> getSubjectInfoListByUser(Long teacherId);
-
-    List<Subject> getListOfAllSubjectsTaughtByUser(Long userId);
-
-    Optional<Teaches> findByUserAndSubjectAndLevel(Long userId, Long subjectId, int level);
-
     List<Teaches> get(Long teacherId);
-
-//    Page<TeacherInfo> findTeachersTeachingSubject(String searchedSubject, Integer page, Integer pageSize);
 
     Page<TeacherInfo> filterUsers(String searchedSubject, Integer order, Integer price, Integer level, Integer rating, Integer page, Integer pageSize);
 
     Integer getMostExpensiveUserFee(String searchedSubject);
-
-//    Integer getPageQty(String searchedSubject, Integer price, Integer level, Integer rating);
-
-//    Integer getPageQty(String searchedSubject);
 
     List<TeacherInfo> getTopRatedTeachers();
 

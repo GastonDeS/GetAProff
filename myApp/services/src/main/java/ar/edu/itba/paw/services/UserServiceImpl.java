@@ -111,4 +111,5 @@ public class UserServiceImpl implements UserService {
 
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
+
 }

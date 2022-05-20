@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -111,7 +110,7 @@ public class LectureServiceImpl implements LectureService {
         Pair<List<SubjectFile>, List<SubjectFile>> lectureFiles = new Pair<>(new ArrayList<>(), new ArrayList<>());
         Optional<Lecture> lecture = lectureDao.get(lectureId);
         if (!lecture.isPresent())
-            throw new NoSuchElementException(); //TODO handle exception
+            return lectureFiles;
         if (lecture.get().getTeacher().getId().equals(userId)) {
             List<SubjectFile> subjectFilesNotShared = this.getFilesNotSharedInLecture(lectureId, userId);
             lectureFiles.getValue2().addAll(subjectFilesNotShared);
@@ -126,8 +125,9 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<SubjectFile> getFilesNotSharedInLecture(Long lectureId, Long teacherId){
         List<SubjectFile> nonSharedFiles= new ArrayList<>();
-        Lecture lecture = lectureDao.get(lectureId).orElseThrow(NoSuchElementException::new); //TODO handleException
-        List<SubjectFile> allFilesForLecture = subjectFileDao.getAllSubjectFilesFromUserBySubjectIdAndLevel(teacherId, lecture.getSubject().getSubjectId(), lecture.getLevel());
+        Optional<Lecture> lecture = lectureDao.get(lectureId);
+        if (!lecture.isPresent()) return nonSharedFiles;
+        List<SubjectFile> allFilesForLecture = subjectFileDao.getAllSubjectFilesFromUserBySubjectIdAndLevel(teacherId, lecture.get().getSubject().getSubjectId(), lecture.get().getLevel());
         List<SubjectFile> sharedFiles  = lectureDao.getSharedFilesByTeacher(lectureId);
         for(SubjectFile file : allFilesForLecture){
             if(!sharedFiles.contains(file))

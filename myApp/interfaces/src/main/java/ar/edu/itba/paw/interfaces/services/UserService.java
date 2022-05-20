@@ -28,4 +28,5 @@ public interface UserService {
     int setUserName(Long userId, String name);
 
     void setTeacherAuthorityToUser();
+
 }
