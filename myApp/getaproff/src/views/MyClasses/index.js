@@ -135,6 +135,7 @@ const MyClasses = () => {
   useEffect(() => {
     setStatus(-1);
     setPage(1);
+    setReloadCards(true);
   }, [tabIndex])
 
   useEffect(() => {
