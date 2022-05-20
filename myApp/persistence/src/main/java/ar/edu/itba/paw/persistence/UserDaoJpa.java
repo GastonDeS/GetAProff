@@ -37,7 +37,7 @@ public class UserDaoJpa extends BasePaginationDaoImpl<TeacherInfo> implements Us
                 "a1.description, a1.schedule, a1.mail) as a2 left outer join (SELECT r.teacherid as teacherid, " +
                 "sum(coalesce(r.rate,0))/count(coalesce(r.rate,0)) as rate, count(r.rate) as reviews " +
                 "FROM rating r group by teacherid) as a3 on a3.teacherid = a2.teacherid group by " +
-                "a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, a2.schedule, a2.mail, rate, reviews" +
+                "a2.teacherid, a2.name, a2.maxPrice, a2.minPrice, a2.description, a2.schedule, a2.mail, rate, reviews " +
                 "order by a2.teacherid ASC";
         final Query query = entityManager.createNativeQuery(queryStr, "TeacherInfoMapping");
         query.setParameter("userId", userId);
