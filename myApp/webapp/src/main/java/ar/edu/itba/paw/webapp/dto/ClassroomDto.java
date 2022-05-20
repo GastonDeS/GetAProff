@@ -28,6 +28,8 @@ public class ClassroomDto {
         classroomDto.level = lecture.getLevel();
         classroomDto.posts = JaxRsLinkBuilder.linkTo(ClassroomController.class).slash(lecture.getClassId()).slash("posts").withRel(lecture.getClassId().toString());
         classroomDto.files = JaxRsLinkBuilder.linkTo(PostFileController.class).slash(lecture.getClassId()).slash("files").withRel(lecture.getClassId().toString());
+        if (lecture.getNotifications() != null)
+            classroomDto.notifications = lecture.getNotifications();
         return classroomDto;
     }
 
