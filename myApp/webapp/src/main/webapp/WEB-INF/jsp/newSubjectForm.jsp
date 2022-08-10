@@ -18,15 +18,16 @@
 <body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="isMainPage" value="${true}"/>
+    <jsp:param name="uid" value="${userid}"/>
 </jsp:include>
 <div class="page-container">
-    <c:url value="/newSubjectForm/${uid}" var="newSubjectUrl"/>
+    <c:url value="/newSubjectForm" var="newSubjectUrl"/>
     <h1 class="d-flex justify-content-center mt-4">
         <spring:message code="new.subject.form.header"/>
     </h1>
     <form:form class="d-flex justify-content-center" modelAttribute="newSubjectForm" action="${newSubjectUrl}" method="post">
         <div class="form-container">
-            <div class="input-section">
+            <div class="input-section" style="align-items: center">
                 <div class="form-input">
                     <form:label path="subject"><spring:message code="new.subject.form.subject"/></form:label>
                     <form:input type="text" cssClass="form-control" placeHolder="${subjectPlaceHolder}" path="subject"/>
@@ -47,9 +48,7 @@
         </div>
     </form:form>
 </div>
-<jsp:include page="../components/footer.jsp">
-    <jsp:param name="" value=""/>
-</jsp:include>
+<jsp:include page="../components/footer.jsp"/>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
         integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
         crossorigin="anonymous"></script>

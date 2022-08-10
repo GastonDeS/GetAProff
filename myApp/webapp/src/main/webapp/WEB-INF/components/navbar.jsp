@@ -27,7 +27,7 @@
                             <c:set var="url" value="${pageContext.request.contextPath}/"/>
                          </c:if>
                          <c:if test="${loop.index == 2}">
-                            <c:set var="url" value="${pageContext.request.contextPath}/myClasses"/>
+                            <c:set var="url" value="${pageContext.request.contextPath}/myClasses/requested/3"/>
                          </c:if>
                          <c:if test="${loop.index == 3}">
                              <c:set var="url" value="${pageContext.request.contextPath}/favourites"/>
@@ -55,6 +55,9 @@
                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile/${param.uid}">
                              <spring:message code="nav.button.profile"/>
+                         </a></li>
+                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/myFiles">
+                             <spring:message code="nav.button.myFiles"/>
                          </a></li>
                          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
                              <spring:message code="nav.button.logout"/>

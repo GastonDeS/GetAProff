@@ -1,0 +1,273 @@
+{
+  "navbar": {
+    "explore": "Explore",
+    "myClasses": "My classes",
+    "myFavourites": "My favourites",
+    "myAccount": "My account",
+    "myProfile": "My profile",
+    "myFiles": "My files",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "subjects": {
+    "subject": "Subject",
+    "price": "Price",
+    "level": "Level",
+    "hour": "hour",
+    "levels": {
+      "0": "Not specified",
+      "1": "Elementary",
+      "2": "Middle School",
+      "3": "College/University"
+    },
+    "all": "All"
+  },
+  "profile": {
+    "personal": "Information",
+    "subjects": "Subjects",
+    "reviews": "Reviews",
+    "share": "Share profile",
+    "shareSuccess": "Profile link copied to clipboard",
+    "shareError": "Error copying profile link to clipboard",
+    "edit": {
+      "edit": "Edit",
+      "profile": "Profile",
+      "certifications": "Certifications",
+      "subjects": "Subjects"
+    },
+    "editProfile": "Edit profile",
+    "request": "Request class", 
+    "addFavourites": "Add to favourites",
+    "removeFavourites": "Remove from favourites",
+    "description": "Description",
+    "schedule": "Schedule",
+    "certifications": "Certifications",
+    "noSubjects": "Teacher has no subjects available",
+    "noReviews": "Teacher has no reviews"
+  },
+  "editSubjects": {
+    "request": {
+      "question": "Can't find the subject you want to teach?",
+      "access": "Request new subject"
+    },
+    "addSubject": "Add subject",
+    "price": "Enter price per hour:",
+    "level": "Select level:",
+    "title": "Edit subjects",
+    "deleteSubject": "Delete subjects",
+    "back": "Return"
+  },
+  "myClasses": {
+    "status": {
+      "any": "Any",
+      "pending": "Pending",
+      "active": "Active",
+      "finished": "Finished",
+      "rated": "Rated",
+      "cancelled": "Cancelled"
+    },
+    "requested": "Requested",
+    "offered": "Offered",
+    "filter": "Filter by status:",
+    "noOffered": "You have no classes",
+    "noRequested": "You have no classes"
+  },
+  "classCard": {
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "finished": "Finished",
+      "rated": "Rated",
+      "cancelledTeacher": "Cancelled",
+      "cancelledStudent": "Cancelled",
+      "declined": "Declined",
+      "error": "Error"
+    },
+    "enter": "Enter",
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancel": "Cancel",
+    "finish": "Finish",
+    "rate": "Rate",
+    "hour": "hour",
+    "teacher": "Teacher",
+    "level": "Level",
+    "price": "Price",
+    "subject": "Subject",
+    "student": "Student"
+  },
+  "displayImage": {
+    "choose": "Choose image"
+  },
+  "searchBar": {
+    "search": "Search",
+    "placeholder": "Search..."
+  },
+  "classroom": {
+    "title": "Classroom",
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "finished": "Finished",
+      "cancelled": "Cancelled",
+      "rated": "Rated",
+      "error": "Error"
+    },
+    "post": {
+      "placeholder": "Hi, I wanted to ask you about this exam question...",
+      "uploadFile": "Upload file",
+      "publish": "Publish"
+    },
+    "files": {
+      "myFiles": "My Files",
+      "noFiles": "There are no files to share",
+      "choose": "Choose the files you want to upload to this Classroom",
+      "share": "Share Files",
+      "shared": "Shared files",
+      "empty": "You haven't shared any files yet",
+      "stop": "Stop sharing",
+      "classFiles": "Classroom Files",
+      "noSharedFiles": "Teacher hasn't shared files yet",
+      "name": "File name"
+    },
+    "classOver": "Your class is over",
+    "rate": "Rate your teacher",
+    "back": "Return",
+    "subject": "Subject",
+    "student": "Student",
+    "teacher": "Teacher",
+    "price": "Price",
+    "hour": "hour",
+    "accept": "Accept",
+    "cancel": "Cancel",
+    "finish": "Finish",
+    "decline": "Decline"
+  },
+  "certifications": {
+    "title": "Edit certifications",
+    "files": "Files",
+    "save": "Save changes",
+    "delete": "Delete files",
+    "choose": "Choose files"
+  },
+  "editProfile": {
+    "title": "Edit profile",
+    "save": "Save changes",
+    "changeToTeacher" : "Want to become a teacher?",
+    "clickHere" : "Click here"
+  },
+  "favourites": {
+    "title": "Your favourite teachers",
+    "empty": "No teachers added to favourites yet!"
+  },
+  "home": {
+    "topRatedTeachers": "Top rated teachers",
+    "mostRequestedTeachers": "Most requested teachers"
+  },
+  "login":{
+    "welcome": "WELCOME",
+    "invalidCredentials": "You have entered an invalid email or password",
+    "login": "Login",
+    "notRegistered": "Don't have an account yet?",
+    "signUp": "Sign Up",
+    "unauthorized": "Please login to continue"
+  },
+  "myFiles": {
+    "file": "File",
+    "subject": "Subject",
+    "level": "Level",
+    "title": "My Files",
+    "filterBy": "Filter by:",
+    "add": "Add Files",
+    "remove": "Remove Files",
+    "new": {
+      "title": "Add File",
+      "chooseSubjects": "Choose which classes this file is available to",
+      "chooseFiles": "Choose files",
+      "cancel": "Cancel",
+      "upload": "Upload Files"
+    }
+  },
+  "rateTeacher": {
+    "title": "How was your class with",
+    "rate": "Rate",
+    "review": "Review",
+    "reviewPlaceholder": "The teacher was amazing, i learned a lot...",
+    "uploadRating": "Upload rating",
+    "starRating": {
+      "title": "Choose a rate",
+      "one": "1 star",
+      "two": "2 stars",
+      "three": "3 stars",
+      "four": "4 stars",
+      "five": "5 stars"
+    }
+  },
+  "register": {
+    "title": "WELCOME",
+    "teacher": "Teacher",
+    "student": "Student",
+    "signUp": "Sign Up",
+    "alreadyRegistered": "Already have an account?",
+    "login": "Login",
+    "invalidCredentials": "User is already registered"
+  },
+  "requestClass": {
+    "title": "Request Class from",
+    "selectSubject": "Select subject",
+    "selectLevel": "Select level",
+    "subjects": "Subjects",
+    "levels": "Levels",
+    "sendRequest": "Send Request"
+  },
+  "requestSubject": {
+    "title": "Request Subject",
+    "insertSubject": "Insert subject",
+    "insertSubjectPlaceholder": "Algebra",
+    "insertMessage": "Insert message",
+    "insertMessagePlaceholder": "Tell us why you want to add this subject",
+    "sendRequest": "Send Request"
+  },
+  "tutors": {
+    "filters": "Filters",
+    "orderBy": "Order by",
+    "maxPrice": "Choose max price",
+    "level": "Level",
+    "rating": "Rating",
+    "orMore": "or more",
+    "applyFilters": "Apply filters",
+    "clearFilters": "Clear filters",
+    "priceAsc": "Price ascending",
+    "priceDesc": "Price descending",
+    "rateAsc": "Rating ascending",
+    "rateDesc": "Rating descending",
+    "available": "Current teachers",
+    "noTeachers": "No teachers available for your search"
+  },
+  "error": {
+    "title": "Error",
+    "description": "Looks like we cannot find the page you are looking for",
+    "btnText": "Go back home"
+  }, 
+  "form": {
+    "emailPlaceholder": "example@gmail.com",
+    "email": "Email",
+    "passwordPlaceholder": "password",
+    "password": "Password",
+    "requiredField": "This field is required",
+    "invalidFormat": "You must enter a valid email",
+    "shortPassword": "Password must be at least 8 characters",
+    "confirmPasswordPlaceholder": "confirm password",
+    "confirmPassword": "Confirm password",
+    "descriptionPlaceholder": "I love teaching because...",
+    "description": "Description",
+    "schedulePlaceholder": "Mondays and Tuesdays at the morning",
+    "schedule": "Schedule",
+    "mailPlaceholder": "example@gmail.com",
+    "namePlaceholder": "John Doe",
+    "name": "Name",
+    "notMatchingPasswords": "The passwords don't match",
+    "price": "Price value must be greater than zero"
+  }
+}

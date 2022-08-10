@@ -22,8 +22,8 @@
     </jsp:include>
     <div class="page-container">
         <h1 class="error-view">${exception}</h1>
-        <c:url value="register" var="registerURL"/>
-        <form:form name="form" modelAttribute="register" action="${registerURL}"  method="post" enctype="multipart/form-data">
+        <c:url value="/register" var="registerURL"/>
+        <form:form name="form" modelAttribute="register" action="${registerURL}" method="post" enctype="multipart/form-data">
             <div class="form-container" style="margin-bottom: 15px">
                 <div class="radio-btn-container">
                     <label class="rad-label">
@@ -48,7 +48,7 @@
                     <img src="${pageContext.request.contextPath}/resources/images/add_img.png" class="profile-img" alt="teacherImg" id="img-preview">
                     <div class="edit-btn-container">
                         <label class="btn btn-custom">
-                            <form:input type="file" accept="image" name="file" style="display: none" path="imageFile" id="photo"/>
+                            <form:input type="file" accept="image/*" name="file" style="display: none" path="imageFile" id="photo"/>
                             <spring:message code="user.form.choose.image"/>
                         </label>
                     </div>
@@ -61,6 +61,7 @@
                 <div class="form-input-container">
                     <form:input type="text" class="form-control" path="mail" placeholder="${mailPlaceholder}"/>
                     <form:errors path="mail" element="p" cssClass="form-error"/>
+                    <p class="form-error" style="margin-bottom: 0">${mailException}</p>
                 </div>
                 <div class="form-input-container">
                     <form:input type="password" class="form-control" path="password" placeholder="${passPlaceholder}"/>
@@ -68,7 +69,7 @@
                 </div>
                 <div class="form-input-container">
                     <form:input type="password" class="form-control" path="confirmPass" placeholder="${confirmPassPlaceholder}"/>
-                    <form:errors path="confirmPass" element="p" cssClass="form-error"/>
+                    <form:errors element="p" path="confirmPass" cssClass="form-error"/>
                 </div>
                 <div id="description" class="form-input-container">
                     <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="description" placeholder="${descriptionPlaceholder}"/>
@@ -78,7 +79,7 @@
                     <form:textarea type="text" cssClass="form-control" cssStyle="height: 20vh" path="schedule" placeholder="${schedulePlaceholder}"/>
                     <form:errors path="schedule" element="p" cssClass="form-error"/>
                 </div>
-                <input type="submit" class="btn btn-custom sign-btn" value="<spring:message code="submit.button"/>"/>
+                <input type="submit" class="btn btn-custom sign-btn" id="submit" value="<spring:message code="submit.button"/>" onsubmit="changeAction()"/>
                 <div class="account-check-container">
                     <p class="account-check-text"><spring:message code="register.registered"/></p>
                     <a class="account-check-link" href="login">
@@ -93,15 +94,30 @@
             document.getElementById("description").style.display = id === "r1" ? 'block' : 'none';
             document.getElementById("schedule").style.display = id === "r1" ? 'block' : 'none';
         }
-        if (document.getElementById('r1').checked) {
-            change("r1");
-        }
-        if (document.getElementById('r2').checked) {
-            change("r2");
-        }
         function updateForm(control) {
             change(control.id);
+            document.getElementById("submit").setAttribute("name", control.id === "r1" ? "teacher" : "student");
         }
+    </script>
+    <script>
+        $(function(){
+            if (localStorage.input === "r1" || localStorage.input === "r2") {
+                document.getElementById(localStorage.input).checked = true;
+                change(localStorage.input);
+                document.getElementById("submit").setAttribute("name", localStorage.input === "r1" ? "teacher" : "student");
+            }
+            else {
+                window.onload = onPageLoad();
+                function onPageLoad() {
+                    document.getElementById("r1").checked = true;
+                    document.getElementById("submit").setAttribute("name", "teacher");
+                }
+            }
+        });
+
+        $('input').on('change', function() {
+            localStorage.input = document.getElementById("r1").checked ? "r1" : "r2";
+        });
     </script>
     <script>
         $(document).ready(() => {

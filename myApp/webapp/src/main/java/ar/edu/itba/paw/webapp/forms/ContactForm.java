@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.forms;
 
-import ar.edu.itba.paw.models.ClassInfo;
 import ar.edu.itba.paw.models.Teaches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -11,25 +10,25 @@ import javax.validation.constraints.Size;
 
 public class ContactForm {
 
-    @Size(max = 256)
-    private String message;
+    @NotEmpty
+    private String subject;
 
     @NotEmpty
-    private String subjectAndLevel;
+    private String level;
 
-    public String getMessage() {
-        return message;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public String getSubjectAndLevel() {
-        return subjectAndLevel;
+    public String getLevel() {
+        return level;
     }
 
-    public void setSubjectAndLevel(String subjectAndLevel) {
-        this.subjectAndLevel = subjectAndLevel;
+    public void setLevel(String level) {
+        this.level = level;
     }
 }

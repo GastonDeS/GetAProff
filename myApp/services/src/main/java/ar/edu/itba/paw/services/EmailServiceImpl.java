@@ -3,7 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.SubjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Rating;
 import ar.edu.itba.paw.models.Subject;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.MailNotSentException;
@@ -16,6 +17,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.MimeMessage;
 import java.util.NoSuchElementException;
@@ -39,9 +41,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private MessageSource messageSource;
-
-    @Override
-    public void sendSimpleMessage(String to, String subject, String text) {
+    
+    private void sendSimpleMessage(String to, String subject, String text) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
@@ -54,97 +55,122 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Transactional
     @Override
     @Async
-    public void sendContactMessage(String to, String userFrom, String subject, String message) {
+    public void sendNewClassMessage(String to, String userFrom, String subject, long classId, String localAddr) {
         String mailSubject = messageSource.getMessage("mail.subject.new.class", null, LocaleContextHolder.getLocale());
-        String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject, message}, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+        String toFormat = messageSource.getMessage("mail.subject.new.class.body", new Object[] {userFrom, subject}, LocaleContextHolder.getLocale());
+        String button = messageSource.getMessage("mail.subject.new.class.btn",null, LocaleContextHolder.getLocale());
+        String text = String.format(templateMailMessage.getText(), mailSubject,toFormat, localAddr + "classroom/" + classId, button);
         sendSimpleMessage(to,mailSubject, text);
+
     }
 
+    @Transactional
     @Override
     @Async
-    public void sendAcceptMessage(int toId, int fromId, int sid, String message) {
-        String mailSubject = messageSource.getMessage("mail.subject.accept.class", null, LocaleContextHolder.getLocale());
-        Optional<User> to = userService.findById(toId);
-        Optional<User> from = userService.findById(fromId);
-        Optional<Subject> subject = subjectService.findById(sid);
-        if (!to.isPresent() || !from.isPresent() || !subject.isPresent()) {
-            throw new NoSuchElementException();
-        }
-        String toFormat = messageSource.getMessage("mail.subject.accept.class.body", new Object[] {from.get().getName(), subject.get().getName(), message, from.get().getMail()}, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-        sendSimpleMessage(to.get().getMail(),mailSubject, text);
-    }
-
-    @Override
-    @Async
-    public void sendStatusChangeMessage(Class myClass) {
-        Optional<User> maybeS = userService.findById(myClass.getStudentId());
-        Optional<User> maybeT = userService.findById(myClass.getTeacherId());
-        Optional<Subject> maybeSub = subjectService.findById(myClass.getSubjectid());
+    public void sendStatusChangeMessage(Lecture myLecture, int status,String localAddr) {
+        Optional<User> maybeS = userService.findById(myLecture.getStudent().getId());
+        Optional<User> maybeT = userService.findById(myLecture.getTeacher().getId());
+        Optional<Subject> maybeSub = subjectService.findById(myLecture.getSubject().getSubjectId());
         if (!maybeS.isPresent() || !maybeT.isPresent() || !maybeSub.isPresent()) {
             throw new NoSuchElementException();
         }
-        int myStatus = myClass.getStatus();
         Subject mySubject = maybeSub.get();
         User student = maybeS.get();
         User teacher = maybeT.get();
         String text;
         String mailSubject;
         String format;
-        switch (myStatus) {
+        String button;
+        switch (status) {
+            case 1:
+                format = messageSource.getMessage("mail.class.accepted.body", new Object[] {teacher.getName(), mySubject.getName(), teacher.getMail()}, LocaleContextHolder.getLocale());
+                mailSubject = messageSource.getMessage("mail.class.accepted", null, LocaleContextHolder.getLocale());
+                button = messageSource.getMessage("mail.class.accepted.btn", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "classroom/" + myLecture.getClassId().toString(),button);
+                sendSimpleMessage(student.getMail(),mailSubject, text);
+                break;
             case 2:
                 format = messageSource.getMessage("mail.class.finished.body", new Object[] {mySubject.getName(), teacher.getName()}, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                button = messageSource.getMessage("mail.class.finished.btn", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr +  "classroom/" + myLecture.getClassId().toString(),button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 3:
                 format = messageSource.getMessage("mail.class.student.cancelled.body", new Object[] {student.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
-                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                mailSubject = messageSource.getMessage("mail.class.cancelled", null, LocaleContextHolder.getLocale());
+                button = messageSource.getMessage("mail.class.student.cancelled.btn", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "users/" + teacher.getId().toString() + "/classes",button);
                 sendSimpleMessage(teacher.getMail(),mailSubject, text);
                 break;
             case 4:
                 format = messageSource.getMessage("mail.class.teacher.cancelled.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
-                mailSubject = messageSource.getMessage("mail.class.finished", null, LocaleContextHolder.getLocale());
+                button = messageSource.getMessage("mail.class.teacher.cancelled.btn", null, LocaleContextHolder.getLocale());
+                mailSubject = messageSource.getMessage("mail.class.cancelled", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), mailSubject,format, localAddr + "users/" + student.getId().toString() + "/classes",button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
             case 5:
                 format = messageSource.getMessage("mail.class.rejected.body", new Object[] {teacher.getName(), mySubject.getName()}, LocaleContextHolder.getLocale());
-                text = String.format(templateMailMessage.getText(), format, "http://pawserver.it.itba.edu.ar/paw-2021b-6/myClasses","GetAProff/misClases");
+                button = messageSource.getMessage("mail.class.rejected.btn", null, LocaleContextHolder.getLocale());
                 mailSubject = messageSource.getMessage("mail.class.rejected", null, LocaleContextHolder.getLocale());
+                text = String.format(templateMailMessage.getText(), mailSubject, format, localAddr + "users/" + student.getId().toString() + "/classes",button);
                 sendSimpleMessage(student.getMail(),mailSubject, text);
                 break;
         }
     }
 
+    @Transactional
     @Override
     @Async
-    public void sendRatedMessage(Class myClass, int rating, String review) {
-        Optional<User> student = userService.findById(myClass.getStudentId());
-        Optional<User> teacher = userService.findById(myClass.getTeacherId());
-        Optional<Subject> mySubject = subjectService.findById(myClass.getSubjectid());
-        if (!student.isPresent() || !teacher.isPresent() || !mySubject.isPresent()) {
+    public void sendRatedMessage(long teacherId, long studentId, Rating rating, String localAddr) {
+        Optional<User> student = userService.findById(studentId);
+        Optional<User> teacher = userService.findById(teacherId);
+        if (!student.isPresent() || !teacher.isPresent()) {
             throw new NoSuchElementException();
         }
         String toFormat = messageSource.getMessage("mail.subject.rated.body", new Object[] {
-                student.get().getName(), mySubject.get().getName(), rating, review}, LocaleContextHolder.getLocale());
+                student.get().getName(), rating.getRate(), rating.getReview()}, LocaleContextHolder.getLocale());
         String mailSubject = messageSource.getMessage("mail.subject.rated", null, LocaleContextHolder.getLocale());
-        String text = String.format(templateMailMessage.getText(), toFormat, "http://pawserver.it.itba.edu.ar/paw-2021b-6/profile/"+ teacher.get().getId(),"GetAProff/misClases");
+        String button = messageSource.getMessage("mail.subject.rated.btn",null, LocaleContextHolder.getLocale());
+        String text = String.format(templateMailMessage.getText(), mailSubject, toFormat, localAddr + "users/"+ teacher.get().getId(),button);
         sendSimpleMessage(teacher.get().getMail(),mailSubject, text);
     }
 
+    @Transactional
     @Override
     @Async
-    public void sendSubjectRequest(int uid, String subject, String message) {
-        String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {subject}, LocaleContextHolder.getLocale());
+    public void sendSubjectRequest(Long uid, String subject, String message) {
+        String mailSubject = messageSource.getMessage("mail.subject.request", new Object[] {uid}, LocaleContextHolder.getLocale());
         String text = messageSource.getMessage("mail.subject.request.body", new Object[] {subject, message}, LocaleContextHolder.getLocale());
         sendSimpleMessage("getaproff@gmail.com", mailSubject,text);
     }
 
+    @Transactional
+    @Override
+    @Async
+    public void sendNewPostMessage(long posterId, Lecture lecture, String localAddr) {
+        String to;
+        String toFormat;
+        int status = 1;
+        if (lecture.getStudent().getId().equals(posterId)) {
+            to = lecture.getTeacher().getMail();
+            status = 0;
+        } else {
+            to = lecture.getStudent().getMail();
+        }
+        String mailSubject = messageSource.getMessage("mail.class.new.post.subject", null, LocaleContextHolder.getLocale());
+        if (status == 0){
+            toFormat = messageSource.getMessage("mail.class.new.student.post.body", new Object[] {lecture.getStudent().getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
+        } else  {
+            toFormat = messageSource.getMessage("mail.class.new.teacher.post.body", new Object[] {lecture.getTeacher().getName(), lecture.getSubject().getName()}, LocaleContextHolder.getLocale());
+        }
+        String button = messageSource.getMessage("mail.class.new.post.btn",null, LocaleContextHolder.getLocale());
+        String text = String.format(templateMailMessage.getText(), mailSubject,toFormat, localAddr + "classroom/" + lecture.getClassId(), button);
+        sendSimpleMessage(to,mailSubject, text);
+    }
 
 }

@@ -1,11 +1,19 @@
 package ar.edu.itba.paw.models.utils;
 
 public class Pair<K, T> {
-    private final K value1;
-    private final T value2;
+    private K value1;
+    private T value2;
 
     public Pair(K value1, T value2) {
         this.value1 = value1;
+        this.value2 = value2;
+    }
+
+    public void setValue1(K value1) {
+        this.value1 = value1;
+    }
+
+    public void setValue2(T value2) {
         this.value2 = value2;
     }
 

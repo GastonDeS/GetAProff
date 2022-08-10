@@ -16,7 +16,7 @@ public class SubjectServiceImpl implements SubjectService {
     private SubjectDao subjectDao;
 
     @Override
-    public Optional<Subject> findById(int id) {
+    public Optional<Subject> findById(Long id) {
         return subjectDao.findById(id);
     }
 
@@ -29,5 +29,15 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<Subject> list() {
         return subjectDao.listSubjects();
+    }
+
+    @Override
+    public List<Subject> getSubjectsMatching(String name) {
+        return subjectDao.getSubjectsMatching(name);
+    }
+
+    @Override
+    public List<Subject> getHottestSubjects() {
+        return subjectDao.getHottestSubjects();
     }
 }

@@ -1,0 +1,273 @@
+{
+  "navbar": {
+    "explore": "Explorar",
+    "myClasses": "Mis clases",
+    "myFavourites": "Mis favoritos",
+    "myAccount": "Mi cuenta",
+    "myProfile": "Mi perfil",
+    "myFiles": "Mis archivos",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse"
+  },
+  "subjects": {
+    "subject": "Materia",
+    "price": "Precio",
+    "level": "Nivel",
+    "hour": "hora",
+    "levels": {
+      "0": "No especifíca",
+      "1": "Primario",
+      "2": "Secundario",
+      "3": "Universitario"
+    },
+    "all": "Todos"
+  },
+  "profile": {
+    "personal": "Información",
+    "subjects": "Materias",
+    "reviews": "Reseñas",
+    "share": "Compartir perfil",
+    "shareSuccess": "Link del perfil copiado a portapapeles",
+    "shareError": "Error al copiar el linkdel perfil al portapapeles",
+    "edit": {
+      "edit": "Editar",
+      "profile": "Perfil",
+      "certifications": "Certificationes",
+      "subjects": "Materias"
+    },
+    "editProfile": "Editar perfil",
+    "request": "Pedir clase",
+    "addFavourites": "Agregar a favoritos",
+    "removeFavourites": "Remover de favoritos",
+    "description": "Descripción",
+    "schedule": "Horarios",
+    "certifications": "Certificaciones",
+    "noSubjects": "El profesor no tiene materias disponibles",
+    "noReviews": "El profesor no tiene reseñas"
+  },
+  "editSubjects": {
+    "request": {
+      "question": "No encotrás la materia que querés dar?",
+      "access": "Solicitá tu materia"
+    },
+    "addSubject": "Agregar materia",
+    "price": "Ingresar precio por hora:",
+    "level": "Seleccionar nivel:",
+    "title": "Editar materias",
+    "deleteSubject": "Borrar materias",
+    "back": "Volver"
+  },
+  "myClasses": {
+    "status": {
+      "any": "Todos",
+      "pending": "Pendientes",
+      "active": "Activas",
+      "finished": "Finalizadas",
+      "rated": "Calificadas",
+      "cancelled": "Canceladas"
+    },
+    "requested": "Solicitadas",
+    "offered": "Ofrecidas",
+    "filter": "Filtrar por estado:",
+    "noOffered": "Parece que aún no tienes clases",
+    "noRequested": "Parece que aún no tienes clases"
+  },
+  "classCard": {
+    "status": {
+      "pending": "Pendiente",
+      "active": "Activa",
+      "finished": "Finalizada",
+      "rated": "Calificada",
+      "cancelledTeacher": "Cancelada",
+      "cancelledStudent": "Cancelada",
+      "declined": "Rechazada",
+      "error": "Error"
+    },
+    "enter": "Ingresar",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "cancel": "Cancelar",
+    "finish": "Finalizar",
+    "rate": "Calificar",
+    "hour": "hora",
+    "teacher": "Profesor",
+    "level": "Nivel",
+    "price": "Precio",
+    "subject": "Materia",
+    "student": "Alumno"
+  },
+  "displayImage": {
+    "choose": "Seleccionar imagen"
+  },
+  "searchBar": {
+    "search": "Buscar",
+    "placeholder": "Buscar..."
+  },
+  "classroom": {
+    "title": "Aula virtual",
+    "status": {
+      "pending": "Pendiente",
+      "active": "Activo",
+      "finished": "Finalizado",
+      "cancelled": "Cancelado",
+      "rated": "Calificado",
+      "error": "Error"
+    },
+    "post": {
+      "placeholder": "Hola, te quería preguntar sobre este examen...",
+      "uploadFile": "Subir archivo",
+      "publish": "Publicar"
+    },
+    "files": {
+      "myFiles": "Mis archivos",
+      "noFiles": "No hay archivos para compartir",
+      "choose": "Seleccione los archivos para subir a esta Aula Virtual",
+      "share": "Compartir archivos",
+      "shared": "Archivos compartidos",
+      "empty": "Aún no has compartido archivos",
+      "stop": "Dejar de compartir",
+      "classFiles": "Archivos del Aula",
+      "noSharedFiles": "El profesor aún no ha compartido archivos",
+      "name": "Nombre del archivo"
+    },
+    "classOver": "La clase se terminó",
+    "back": "Volver",
+    "rate": "Calificá a tu profesor",
+    "subject": "Materia",
+    "student": "Alumno",
+    "teacher": "Profesor",
+    "price": "Precio",
+    "hour": "hora",
+    "accept": "Aceptar",
+    "cancel": "Cancelar",
+    "finish": "Finalizar",
+    "decline": "Rechazar"
+  },
+  "certifications": {
+    "title": "Editar certificaciones",
+    "files": "Archivos",
+    "save": "Guardar cambios",
+    "delete": "Borrar archivos",
+    "choose": "Subir archivos"
+  },
+  "editProfile": {
+    "title": "Editar Perfil",
+    "save": "Guardar cambios",
+    "changeToTeacher": "Quieres ser profesor?",
+    "clickHere": "Haz click aquí"
+  },
+  "favourites": {
+    "title": "Tus profesores favoritos",
+    "empty": "No tienes profesores favoritos!"
+  },
+  "home": {
+    "topRatedTeachers": "Profesores mejor calificados",
+    "mostRequestedTeachers": "Profesores más solicitados"
+  },
+  "login":{
+    "welcome": "BIENVENIDO",
+    "invalidCredentials": "Email o contraseña inválidos",
+    "login": "Ingresar",
+    "notRegistered": "Aún no estás registrado?",
+    "signUp": "Regístrate",
+    "unauthorized": "Por favor ingrese para continuar"
+  },
+  "myFiles": {
+    "file": "Archivo",
+    "subject": "Materia",
+    "level": "Nivel",
+    "title": "Mis archivos",
+    "filterBy": "Filtrar por:",
+    "add": "Agregar Archivos",
+    "remove": "Borrar archivos",
+    "new": {
+      "title": "Agregar archivo",
+      "chooseSubjects": "Elija en que clases quiere disponiblizar el archivo",
+      "chooseFiles": "Elegir Archivos",
+      "cancel": "Cancelar",
+      "upload": "Subir Archivos"
+    }
+  },
+  "rateTeacher": {
+    "title": "Como estuvo la clase con",
+    "rate": "Calificar",
+    "review": "Reseña",
+    "reviewPlaceholder": "Un groso el profe...",
+    "uploadRating": "Confirmar Calificación",
+    "starRating": {
+      "title": "Elige una calificación",
+      "one": "1 estrella",
+      "two": "2 estrellas",
+      "three": "3 estrellas",
+      "four": "4 estrellas",
+      "five": "5 estrellas"
+    }
+  },
+  "register": {
+    "title": "BIENVENIDO",
+    "teacher": "Profesor",
+    "student": "Alumno",
+    "signUp": "Registrarse",
+    "alreadyRegistered": "Ya tienes una cuenta?",
+    "login": "Ingresar",
+    "invalidCredentials": "Usuario ya está registrado"
+  },
+  "requestClass": {
+    "title": "Solicitar clase a",
+    "selectSubject": "Seleccionar materia",
+    "selectLevel": "Seleccionar nivel",
+    "subjects": "Materias",
+    "levels": "Niveles",
+    "sendRequest": "Enviar solicitud"
+  },
+  "requestSubject": {
+    "title": "Solicitar materia",
+    "insertSubject": "Ingresar materia",
+    "insertSubjectPlaceholder": "Álgebra",
+    "insertMessage": "Ingresar mensaje",
+    "insertMessagePlaceholder": "Cuéntanos porque quieres agregar esta materia",
+    "sendRequest": "Enviar solicitud"
+  },
+  "tutors":{
+    "filters": "Filtros",
+    "orderBy": "Ordenar por",
+    "maxPrice": "Elegí precio máximo",
+    "level": "Nivel",
+    "rating": "Calificación",
+    "orMore": "o más",
+    "applyFilters": "Aplicar filtros",
+    "clearFilters": "Limpiar filtros",
+    "priceAsc": "Precio ascendente",
+    "priceDesc": "Precio descendente",
+    "rateAsc": "Calificación ascendente",
+    "rateDesc": "Calificación descendente",
+    "available": "Profesores disponibles",
+    "noTeachers": "No hay profesores disponibles para tu búsqueda"
+  },
+  "error": {
+    "title": "Error",
+    "description": "Parece que no pudimos encontrar la página que buscas",
+    "btnText": "Volver al inicio"
+  },
+  "form": {
+    "emailPlaceholder": "ejemplo@gmail.com",
+    "email": "Email",
+    "passwordPlaceholder": "contraseña",
+    "password": "Contraseña",
+    "requiredField": "Este campo es obligatorio",
+    "invalidFormat": "Debes ingresar un email válido",
+    "shortPassword": "La contraseña debe tener al menos 8 caracteres",
+    "confirmPasswordPlaceholder": "confirmar contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "descriptionPlaceholder": "Me encanta enseñar y mis materias favoritas son...",
+    "description": "Descripción",
+    "schedulePlaceholder": "Lunes a Viernes de 9:00 a 18:00",
+    "schedule": "Horarios",
+    "mailPlaceholder": "ejemplo@gmail.com",
+    "namePlaceholder": "Juan Pérez",
+    "name": "Nombre",
+    "notMatchingPasswords": "Las contraseñas no coinciden",
+    "price": "El precio debe ser mayor que cero"
+  }
+}

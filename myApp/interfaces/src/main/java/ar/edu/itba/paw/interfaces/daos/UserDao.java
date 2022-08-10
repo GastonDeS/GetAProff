@@ -1,30 +1,29 @@
 package ar.edu.itba.paw.interfaces.daos;
 
-import ar.edu.itba.paw.models.CardProfile;
-import ar.edu.itba.paw.models.utils.Pair;
+import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.PageRequest;
+import ar.edu.itba.paw.models.TeacherInfo;
 import ar.edu.itba.paw.models.User;
-import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 
 public interface UserDao {
-    Optional<User> get(int id);
 
-    List<CardProfile> filterUsers(String subject, Integer order, Integer price, Integer level, Integer rating, Integer offset);
+    /**
+     * Get a user.
+     *
+     * @param userId The id of the user.
+     * @return The user.
+     */
+    Optional<User> get(Long userId);
 
-    List<CardProfile> getFavourites(int uid);
+    Page<TeacherInfo> getFavourites(Long userId, PageRequest pageRequest);
 
-    Integer getPageQty(String subject, Integer price, Integer level, Integer rating);
+    int addFavourite(Long teacherId, Long studentId);
 
-    int addFavourite(int teacherId, int studentId);
+    int removeFavourite(Long teacherId, Long studentId);
 
-    int removeFavourite(int teacherId, int studentId);
-
-    Boolean isFaved(int teacherId, int studentId);
-
-    int addRating(int teacherId, int studentId, float rate, String review);
-
-    Pair<Float, Integer> getRatingById(int teacherId);
+    Boolean isFaved(Long teacherId, Long studentId);
 
     /**
      * Create a new user.
@@ -35,11 +34,38 @@ public interface UserDao {
      */
     User create(String username, String mail, String password, String description, String schedule);
 
+    /**
+     * Find user by it's email address.
+     *
+     * @param mail The mail of the user.
+     * @return User as Optional.
+     */
     Optional<User> findByEmail(String mail);
 
-    int setUserSchedule(int userId, String schedule);
+    /**
+     * Set user's schedule.
+     *
+     * @param userId The id of the user.
+     * @param schedule The schedule of the user.
+     * @return Rows updated i.e 1 if row updated and 0 if no update.
+     */
+    int setUserSchedule(Long userId, String schedule);
 
-    int setUserDescription(int userId, String description);
+    /**
+     * Set user's description.
+     *
+     * @param userId The id of the user.
+     * @param description The description of the user.
+     * @return Rows updated i.e 1 if row updated and 0 if no update.
+     */
+    int setUserDescription(Long userId, String description);
 
-    int setUserName(int userId, String name);
+    /**
+     * Set user's name.
+     *
+     * @param userId The id of the user.
+     * @param name The name of the user.
+     * @return Rows updated i.e 1 if row updated and 0 if no update.
+     */
+    int setUserName(Long userId, String name);
 }

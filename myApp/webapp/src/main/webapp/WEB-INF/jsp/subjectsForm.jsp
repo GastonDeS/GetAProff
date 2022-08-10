@@ -5,10 +5,10 @@
 <html>
 <head>
     <title><spring:message code="subjects.form.title"/> – GetAProff</title>
-    <link rel="shortcut icon" href="<c:url value="resources/images/favicon.png"/>" type="image/x-icon">
+    <link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png"/>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="<c:url value="resources/styles/main.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/styles/main.css"/>">
     <spring:message code="subjects.form.enter" var="subjectPlaceholder"/>
     <spring:message code="subjects.form.your.subjects" var="yourSubjectPlaceholder"/>
     <spring:message code="subjects.form.price" var="pricePlaceholder"/>
@@ -29,14 +29,14 @@
         <div class="form-container">
             <p class="form-title">${subjectPlaceholder}</p>
             <div class="subject-form-container">
-                <form:select path="subjectid">
+                <form:select path="subjectId">
                     <c:forEach items="${subjects}" var="subject">
-                        <form:option value="${subject.id}" label="${subject.name}"/>
+                        <form:option value="${subject.subjectId}" label="${subject.name}"/>
                     </c:forEach>
                 </form:select>
                 <div class="price-level-container">
                     <p>${pricePlaceholder}</p>
-                    <form:input cssClass="price-form-control" type="number" max="999999999" min="1" path="price"/>
+                    <form:input cssClass="price-form-control" type="number" path="price"/>
                 </div>
                 <form:errors path="price" element="p" cssClass="form-error"/>
                 <div class="price-level-container">
@@ -53,7 +53,7 @@
             <input type="submit" class="btn btn-custom" value="${addBtnPlaceholder}"/>
             <div class="account-check-container">
                 <p class="account-check-text"><spring:message code="subject.not.registered"/></p>
-                <a class="account-check-link" href="/newSubjectForm/${userid}">
+                <a class="account-check-link" href="${pageContext.request.contextPath}/newSubjectForm">
                     <spring:message code="subject.register"/>
                 </a>
             </div>
@@ -62,7 +62,7 @@
     <div class="form-container">
         <p class="form-title">${yourSubjectPlaceholder}</p>
         <table class="subjects-table">
-            <tr class="subjects-row" style="width: 100%">
+            <tr class="subjects-row">
                 <td class="row-title" style="width: 43%">${tableSubject}</td>
                 <td class="row-title" style="width: 17%">${tablePrice}</td>
                 <td class="row-title" style="width: 40%">${tableLevel}</td>
@@ -73,10 +73,9 @@
                     <td class="row-info" style="width: 15%">$<c:out value="${subject.price}"/>/${tableHour}</td>
                     <td class="row-info" style="width: 25%"><spring:message
                             code="subjects.form.level.${subject.level}"/></td>
-                    <form action="<c:url value="/editSubjects/remove/${subject.id}"/>" method="post">
+                    <form action="<c:url value="/editSubjects/remove/${subject.subjectId}/${subject.level}"/>" method="post">
                         <td class="remove-btn">
-                            <input type="submit" class="btn btn-custom"
-                                   value="<spring:message code="subjects.form.remove"/>">
+                            <input type="submit" class="btn btn-custom" value="<spring:message code="subjects.form.remove"/>">
                         </td>
                     </form>
                 </tr>

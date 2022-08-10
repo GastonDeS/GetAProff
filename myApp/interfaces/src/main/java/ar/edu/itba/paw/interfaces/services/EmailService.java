@@ -1,18 +1,19 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Class;
+import ar.edu.itba.paw.models.Lecture;
+import ar.edu.itba.paw.models.Rating;
+
+import java.util.Optional;
 
 public interface EmailService {
-    void sendSimpleMessage(String to, String subject, String text);
 
-    void sendContactMessage(String to, String userFrom, String subject, String message);
+    void sendNewClassMessage(String to, String userFrom, String subject, long classId,String localAddr);
 
-    void sendAcceptMessage(int toId, int fromId, int sid, String message);
+    void sendStatusChangeMessage(Lecture myLecture, int status,String localAddr);
 
-    void sendStatusChangeMessage(Class myClass);
+    void sendRatedMessage(long teacherId, long studentId, Rating rating, String localAddr);
 
-    void sendRatedMessage(Class myClass, int rating, String review);
+    void sendSubjectRequest(Long uid, String Subject, String message);
 
-    void sendSubjectRequest(int uid, String Subject, String message);
-
+    void sendNewPostMessage(long posterId, Lecture myLecture, String localAddr);
 }

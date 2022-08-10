@@ -33,7 +33,6 @@
                             <option value="2"><spring:message code="tutors.orderby.priceD"/></option>
                             <option value="3"><spring:message code="tutors.orderby.ratingA"/></option>
                             <option value="4"><spring:message code="tutors.orderby.ratingD"/></option>
-
                         </select>
                     </li>
                     <li>
@@ -94,61 +93,26 @@
                     <li>
                         <h4>Rating</h4>
                         <ul class="filter-ulist">
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-4+"
-                                       value="4"
-                                >
-                                <label class="form-check-label" for="rating-4+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="4"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-3+"
-                                       value="3">
-                                <label class="form-check-label" for="rating-3+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="3"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-2+"
-                                       value="2">
-                                <label class="form-check-label" for="rating-2+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="2"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-1+"
-                                       value="1">
-                                <label class="form-check-label" for="rating-1+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="1"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
+                            <c:forEach begin="0" end="4" var="idx">
+                                <li>
+                                    <input name="rating" type="radio" class="rating-radio" id="rating-${idx}+"
+                                           value="${idx}" ${idx == 0 ? 'checked' : ''}
+                                    >
+                                    <label class="form-check-label" for="rating-${idx}+"
+                                           style="display:flex;align-items: center;">
+                                        <jsp:include page="../components/ratingStars.jsp">
+                                            <jsp:param name="rating" value="${idx}"/>
+                                        </jsp:include>
+                                        <span style="margin-left: 3px; padding-bottom: 2px;"><spring:message
+                                                code="search.filter.ratingExtraText"/></span>
+                                    </label>
 
-                            </li>
-                            <li>
-                                <input name="rating" type="radio" class="rating-radio" id="rating-0+"
-                                       value="0" checked>
-                                <label class="form-check-label" for="rating-0+">
-                                    <jsp:include page="../components/ratingStars.jsp">
-                                        <jsp:param name="rating" value="0"/>
-                                    </jsp:include>
-                                    <spring:message
-                                            code="search.filter.ratingExtraText"/></label>
-                            </li>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </li>
                 </ul>
+                <hr>
                 <div class="filter-btn-container">
                     <button type="submit" id="filter-button" class="btn btn-custom"
                             style="width: 100%; margin: 5px 0;">
@@ -184,16 +148,15 @@
                     <h1 class="not-found-header"><spring:message code="tutors.search.empty"/></h1>
                 </c:when>
                 <c:otherwise>
-                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start"> <spring:message
-                            code="tutors.search.resultTitle"/> ${searchQuery} :
+                    <h3 style="margin: 20px 0 20px 7.5%; align-self: flex-start">
+                        <spring:message code="tutors.search.resultTitle"/>: <c:out value="${searchQuery}"/>
                     </h3>
                 </c:otherwise>
             </c:choose>
-            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%; height: fit-content">
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 85%">
                 <c:forEach var="tutor" items="${tutors}" varStatus="loop">
-                    <div style="margin-top: 30px" class="col">
+                    <div style="margin-top: 30px" class="col tutor-card-container">
                         <jsp:include page="../components/tutorCard.jsp">
-                            <jsp:param name="image" value="${tutor.image}"/>
                             <jsp:param name="name" value="${tutor.name}"/>
                             <jsp:param name="uid" value="${tutor.userId}"/>
                             <jsp:param name="rate" value="${tutor.rate}"/>
@@ -208,67 +171,89 @@
     </div>
 </div>
 <div class="nav-container">
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <c:choose>
-                <c:when test="${offset == 1}">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                    </li>
+                <c:when test="${pageQty > 1 && pageQty < 4}">
+                    <c:forEach begin="1" end="3" var="idx">
+                        <c:if test="${idx <= pageQty}">
+                            <c:choose>
+                                <c:when test="${idx == offset}">
+                                    <li class="page-item"><a class="page-link custom-active "
+                                                             href="${pageContext.request.contextPath}/tutors/${idx}${urlParams}">${idx}</a>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li class="page-item"><a class="page-link"
+                                                             href="${pageContext.request.contextPath}/tutors/${idx}${urlParams}">${idx}</a>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                    </c:forEach>
                 </c:when>
-                <c:otherwise>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/tutors/${offset-1}${urlParams}"
-                           tabindex="-1" aria-disabled="true" style="color: #026670;">Previous</a>
-                    </li>
-                </c:otherwise>
-            </c:choose>
-            <c:forEach begin="0" end="2" var="idx">
-                <c:choose>
-                    <c:when test="${offset < 3}">
+                <c:when test="${pageQty >= 4}">
+                    <c:choose>
+                        <c:when test="${offset == 1}">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="${pageContext.request.contextPath}/tutors/${offset - 1}${urlParams}"
+                                   tabindex="-1" aria-disabled="true" style="color: #026670;">Previous</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:forEach begin="0" end="2" var="idx">
                         <c:choose>
-                            <c:when test="${idx + 1 == offset}">
-                                <li class="page-item"><a class="page-link custom-active "
-                                                         href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
-                                </li>
-                            </c:when>
-                            <c:otherwise>
+                            <c:when test="${offset < 4}">
                                 <c:choose>
-                                    <c:when test="${idx + 1 <= pageQty}">
-                                        <li class="page-item "><a class="page-link" style="color: #026670;"
-                                                                  href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                                    <c:when test="${idx + 1 == offset}">
+                                        <li class="page-item"><a class="page-link custom-active "
+                                                                 href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
                                         </li>
                                     </c:when>
                                     <c:otherwise>
-                                        <li class="page-item disabled"><a class="page-link "
-                                                                          href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="${pageContext.request.contextPath}/tutors/${idx + 1}${urlParams}">${idx + 1}</a>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${offset - 2 + idx == offset}">
+                                        <li class="page-item"><a class="page-link custom-active "
+                                                                 href="${pageContext.request.contextPath}/tutors/${offset - 2 + idx}${urlParams}">${offset - 2 +  idx}</a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="${pageContext.request.contextPath}/tutors/${offset - 2 +  idx}${urlParams}">${offset - 2 +  idx}</a>
                                         </li>
                                     </c:otherwise>
                                 </c:choose>
                             </c:otherwise>
                         </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="page-item"><a class="page-link "
-                                                 href="${pageContext.request.contextPath}/tutors/${offset + idx }${urlParams}">${offset + idx - 1}
-                            aa${offset}</a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
-            <c:choose>
-                <c:when test="${offset + 1 <= pageQty}">
-                    <li class="page-item">
-                        <a class="page-link" style="color: #026670;"
-                           href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
-                    </li>
+                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${offset == pageQty}">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="${pageContext.request.contextPath}/tutors/${offset+1}${urlParams}"
+                                   tabindex="-1" aria-disabled="true" style="color: #026670;">Next</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
                 </c:when>
-                <c:otherwise>
-                    <li class="page-item disabled">
-                        <a class="page-link"
-                           href="${pageContext.request.contextPath}/tutors/${offset + 1}${urlParams}">Next</a>
-                    </li>
-                </c:otherwise>
             </c:choose>
         </ul>
     </nav>

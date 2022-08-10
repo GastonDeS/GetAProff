@@ -16,8 +16,6 @@ range.addEventListener('input', setValue);
 const resetFilters = () => {
     const urlParams = new URLSearchParams(location.search);
     let url = window.location.href;
-    console.log(url);
-    console.log(location.search);
     url = url.substr(0, url.indexOf('?') + 1);
     url += 'query=' + urlParams.get('query');
     window.location.href = url;

@@ -32,12 +32,12 @@
     <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>models</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>persistence</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.parent.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -65,6 +65,10 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
     </dependency>
   </dependencies>
 
